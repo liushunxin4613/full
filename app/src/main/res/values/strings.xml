@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">财务共享机器人</string>
+    <string name="time_init">0s</string>
+    <string name="complete">完成</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MainTabBottom">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:background">#F5F5F5</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:button">@null</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:textColor">@drawable/bottom_text_color</item>
+        <item name="android:textSize">@dimen/y24</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingTop">@dimen/y12</item>
+        <item name="android:drawablePadding">@dimen/y8</item>
+        <item name="android:paddingBottom">@dimen/y12</item>
+    </style>
+
+</resources>

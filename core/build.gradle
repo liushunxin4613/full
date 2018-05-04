@@ -1,0 +1,74 @@
+apply plugin: 'com.android.library'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    //设置JDK1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api 'com.android.support.constraint:constraint-layout:1.1.0'
+    //noinspection GradleCompatible
+    api 'com.android.support:appcompat-v7:25.4.0'
+    api 'com.android.support:support-v4:25.4.0'
+    api 'com.android.support:design:25.4.0'
+    api 'com.android.support:multidex:1.0.3'//分包
+    api 'com.google.code.gson:gson:2.8.0'//gson
+    api 'com.zhy:okhttputils:2.6.2'//okHttpUtils
+    api 'com.squareup.retrofit2:retrofit:2.1.0'//retrofit2
+    api 'com.squareup.retrofit2:converter-gson:2.1.0'//retrofit2 gson
+    api 'com.squareup.retrofit2:converter-scalars:2.1.0'//retrofit2 string
+    api 'com.squareup.retrofit2:adapter-rxjava:2.1.0'//retrofit2 rxJava
+    api 'com.squareup.okhttp3:okhttp:3.7.0'//okHttp3
+    api 'com.trello:rxlifecycle:0.6.1'//rx周期
+    api 'com.trello:rxlifecycle-components:0.6.1'//rx周期
+    api 'cn.finalteam.rxgalleryfinal:library:1.1.0'//图片处理,如拍照裁剪
+    //noinspection GradleDependency
+    api 'com.jakewharton:butterknife:7.0.1'//view注解
+    api 'com.squareup.picasso:picasso:2.5.2'//图片加载
+    api 'com.github.bumptech.glide:glide:3.7.0'
+    api 'com.readystatesoftware.systembartint:systembartint:1.0.4'//沉浸式状态栏
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'//刷新组件
+    api 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'//没有使用特殊Header，可以不加这行
+    api 'com.contrarywind:Android-PickerView:3.2.5'//选择器,时间,联动
+    api 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'//权限处理
+}

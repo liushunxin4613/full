@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 设计规范颜色值 end-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!--半透明白色-->
+    <color name="transparent_white">#7fffffff</color>
+    <color name="alpha_white">#FFFFFF</color>
+    <!-- 黑白色值 -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="orange">#fe9402</color>
+    <color name="gray">#808080</color>
+    <color name="red">#FF0000</color>
+    <color name="gold">#FFD700</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="green">#009c45</color>
+    <color name="blue">#0000FF</color>
+    <color name="purple">#800080</color>
+    <color name="pink">#FFC0CB</color>
+    <color name="yellow_lemon">#FFFACD</color>
+    <color name="gray_light">#DFDFDF</color>
+    <color name="gray_white">#F5F5F5</color>
+    <color name="gray_slate">#708090</color>
+    <color name="blue_light">#0083FF</color>
+    <!-- 透明色 -->
+    <color name="Transparent">#00000000</color>
+    <!-- 其他 -->
+    <color name="bg">#FFFFFF</color>
+    <color name="zb">#EE4433</color>
+    <color name="yg">#5B9CF5</color>
+    <color name="hk">#8A8A8A</color>
+    <color name="F4F5F7">#F4F5F7</color>
+    <color name="F4F5F6">#F4F5F6</color>
+    <color name="C9B">#9B9B9B</color>
+    <color name="CA">#CACACA</color>
+    <color name="A2">#A2A2A2</color>
+    <color name="B2">#B2B2B2</color>
+    <color name="EE4433">#EE4433</color>
+    <color name="B3EE4433">#B3EE4433</color>
+    <color name="C406599">#406599</color>
+    <color name="C4B8ED1">#4B8ED1</color>
+    <!-- 自定义 -->
+    <color name="cc0">#000000</color>
+    <color name="cc1">#111111</color>
+    <color name="cc2">#222222</color>
+    <color name="cc3">#333333</color>
+    <color name="cc4">#444444</color>
+    <color name="cc5">#555555</color>
+    <color name="cc6">#666666</color>
+    <color name="cc7">#777777</color>
+    <color name="cc8">#888888</color>
+    <color name="cc9">#999999</color>
+    <color name="c80c9">#80999999</color>
+    <color name="cef">#EFEFF4</color>
+    <color name="ce43">#EE4433</color>
+
+</resources>
