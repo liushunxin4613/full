@@ -2,6 +2,7 @@ package com.leo.core.iapi.main;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -76,6 +77,13 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     FragmentActivity getFragmentActivity();
 
     /**
+     * 获取FragmentActivity
+     *
+     * @return FragmentActivity
+     */
+    <D extends Dialog> D getDialog();
+
+    /**
      * 是否绑定的是Activity上
      *
      * @return true是, false否
@@ -95,6 +103,25 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @return true是, false否
      */
     boolean isFragment();
+
+    /**
+     * 是否绑定的是dialog上
+     *
+     * @return true是, false否
+     */
+    boolean isDialog();
+
+    /**
+     * 显示dialog
+     * @return 本身
+     */
+    T dialogShow();
+
+    /**
+     * 显示dialog
+     * @return 本身
+     */
+    T dismiss();
 
     /**
      * 获取ApiBv

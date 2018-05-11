@@ -33,19 +33,19 @@ public class LogUtil {
         return getApi().getLog(obj);
     }
 
-    public static void i(Object in, Object param) {
-        getApi().i(in, param);
+    public static void ii(Object in, Object param) {
+        getApi().ii(in, param);
     }
 
-    public static void i(Object in, Object... param) {
-        getApi().i(in, param);
+    public static void ii(Object in, Object... param) {
+        getApi().ii(in, param);
     }
 
-    public static void e(Object in, Object param) {
-        getApi().e(in, param);
+    public static void ee(Object in, Object param) {
+        getApi().ee(in, param);
     }
 
-    public static void e(Object in, Object... param) {
-        getApi().e(in, param);
+    public static void ee(Object in, Object... param) {
+        getApi().ee(in, param);
     }
 }

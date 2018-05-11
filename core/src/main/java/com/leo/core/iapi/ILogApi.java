@@ -63,7 +63,7 @@ public interface ILogApi<T extends ILogApi, I, P> extends IApi {
      * @param param 输入参数
      * @return 本身
      */
-    T i(I in, P param);
+    T ii(I in, P param);
 
     /**
      * I 级输出
@@ -72,7 +72,7 @@ public interface ILogApi<T extends ILogApi, I, P> extends IApi {
      * @param param 输入参数
      * @return 本身
      */
-    T i(I in, P... param);
+    T ii(I in, P... param);
 
     /**
      * E 级输出
@@ -81,7 +81,7 @@ public interface ILogApi<T extends ILogApi, I, P> extends IApi {
      * @param param 输入参数
      * @return 本身
      */
-    T e(I in, P param);
+    T ee(I in, P param);
 
     /**
      * E 级输出
@@ -90,6 +90,6 @@ public interface ILogApi<T extends ILogApi, I, P> extends IApi {
      * @param param 输入参数
      * @return 本身
      */
-    T e(I in, P... param);
+    T ee(I in, P... param);
 
 }

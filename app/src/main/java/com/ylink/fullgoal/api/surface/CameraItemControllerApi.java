@@ -20,7 +20,7 @@ public class CameraItemControllerApi<T extends CameraItemControllerApi, C> exten
         image = findViewById(R.id.image);
         //图片
         putBindBeanCallback(ImageBean.class, (bean, position) -> {
-            e("path", bean.getPath());
+            ee("path", bean.getPath());
             setImage(image, bean.getPath());
         });
     }

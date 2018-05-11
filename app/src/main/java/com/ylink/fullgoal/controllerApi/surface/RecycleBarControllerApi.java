@@ -2,27 +2,23 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 
 import butterknife.Bind;
 
 public class RecycleBarControllerApi<T extends RecycleBarControllerApi, C> extends RecycleControllerApi<T, C> {
 
-    @Bind(R.id.bar_content_tv)
-    TextView barContentTv;
-    @Bind(R.id.bar_back_ib)
-    ImageButton barBackIb;
-    @Bind(R.id.bar_right_ib)
-    ImageButton barRightIb;
-    @Bind(R.id.bar_right_tv)
-    Button barRightTv;
-    @Bind(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @Bind(R.id.back_iv)
+    ImageView backIv;
+    @Bind(R.id.back_tv)
+    TextView backTv;
+    @Bind(R.id.center_tv)
+    TextView centerTv;
+    @Bind(R.id.right_tv)
+    TextView rightTv;
 
     public RecycleBarControllerApi(C controller) {
         super(controller);
@@ -38,35 +34,22 @@ public class RecycleBarControllerApi<T extends RecycleBarControllerApi, C> exten
         return recyclerView;
     }
 
-    public T setTitle(CharSequence title){
-        setViewText(barContentTv, title);
+    public T setTitle(CharSequence title) {
+        setText(centerTv, title);
+        setText(backTv, title);
         return getThis();
     }
 
-    public T hideBackIv(){
-        setVisibility(barBackIb, View.INVISIBLE);
+    public T hideBackIv() {
+        setVisibility(View.VISIBLE, centerTv);
+        setVisibility(View.INVISIBLE, backTv, backIv);
         return getThis();
     }
 
-    public T setRightTv(CharSequence text){
-        setViewText(barRightTv, text);
-        return getThis();
-    }
-
-    public T setOnClickListener(String name, View.OnClickListener listener){
-        if(!TextUtils.isEmpty(name)){
-            switch (name){
-                case "back":
-                    setOnClickListener(barBackIb, listener);
-                    break;
-                case "rightTv":
-                    setOnClickListener(barRightTv, listener);
-                    break;
-                case "rightIv":
-                    setOnClickListener(barRightIb, listener);
-                    break;
-            }
-        }
+    public T setRightTv(CharSequence text, View.OnClickListener listener) {
+        setVisibility(View.VISIBLE, rightTv);
+        setText(rightTv, text);
+        setOnClickListener(rightTv, listener);
         return getThis();
     }
 
@@ -79,7 +62,7 @@ public class RecycleBarControllerApi<T extends RecycleBarControllerApi, C> exten
     @Override
     public void initView() {
         super.initView();
-        setOnClickListener("back", view -> onBackPressed());
+        setOnClickListener(backIv, view -> onBackPressed());
     }
 
 }

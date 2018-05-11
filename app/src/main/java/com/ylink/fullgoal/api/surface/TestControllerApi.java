@@ -29,10 +29,10 @@ public class TestControllerApi extends SurfaceControllerApi {
         super.initView();
         ChooseDialog dialog = new ChooseDialog(getContext())
                 .setTitle("请选择部门")
-                .setItems(Arrays.asList("A", "B", "C", "D"))
+                .setData(Arrays.asList("A", "B", "C", "D"))
                 .setOnWheelViewListener((selectedIndex, item) -> {
-                    e("selectedIndex", selectedIndex);
-                    e("item", item);
+                    ee("selectedIndex", selectedIndex);
+                    ee("item", item);
                 });
         bt.setOnClickListener(v -> dialog.show());
     }

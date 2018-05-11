@@ -83,7 +83,7 @@ public class DateUtil {
         try {
             return new SimpleDateFormat(format).parse(str);
         } catch (ParseException e) {
-//            LogUtil.e("将字符串(String)转换成时间(Date)", e.toString());
+//            LogUtil.ee("将字符串(String)转换成时间(Date)", e.toString());
         }
         return null;
     }
@@ -99,7 +99,7 @@ public class DateUtil {
         try {
             return new SimpleDateFormat(format1).format(new SimpleDateFormat(format).parse(str));
         } catch (ParseException e) {
-//            LogUtil.e("将字符串(String)转换成字符串(String)", e.toString());
+//            LogUtil.ee("将字符串(String)转换成字符串(String)", e.toString());
         }
         return null;
     }

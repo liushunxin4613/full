@@ -37,6 +37,13 @@ public interface IViewApi<T extends IViewApi> extends IApi {
     T setVisibility(int visibility, View... args);
 
     /**
+     * 设置view文本
+     *
+     * @return 媒介
+     */
+    T setText(View view, CharSequence text);
+
+    /**
      * 设置TextView文本
      *
      * @param tv   TextView

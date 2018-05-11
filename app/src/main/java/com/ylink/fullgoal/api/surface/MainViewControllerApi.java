@@ -1,18 +1,13 @@
 package com.ylink.fullgoal.api.surface;
 
-import com.bigkoo.pickerview.OptionsPickerView;
-import com.google.gson.reflect.TypeToken;
-import com.leo.core.bean.BaseBean;
-import com.leo.core.iapi.IRunApi;
-import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.bean.ItemBean;
-import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.IconTvMoreBean;
+import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class MainViewControllerApi<T extends MainViewControllerApi, C> extends RecycleControllerApi<T, C> {
+/**
+ * 主View视图
+ */
+public class MainViewControllerApi<T extends MainViewControllerApi, C> extends RecycleBarControllerApi<T, C> {
 
     public MainViewControllerApi(C controller) {
         super(controller);
@@ -21,38 +16,27 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     @Override
     public void initView() {
         super.initView();
-        BaseBean<ItemBean> root = decode(getAssetsString("jsonApi.json"), new TypeToken<BaseBean<ItemBean>>() {
-        }.getType());
-        e("root", root);
-        if (root != null) {
-            Map<String, IRunApi<ItemBean>> map = new HashMap<>();
-            map.put("user", obj -> {
-                obj.setDetail("张三");
-            });
-            map.put("depart", obj -> {
-                obj.setDetail("人力资源部");
-            });
-            map.put("paperType", obj -> {
-                obj.setOnClickListener(v -> {
-                    show(obj.getNickname());
-                });
-            });
-            replaceIBAll(root.getList(), map).notifyDataSetChanged();
-        }
-    }
+        hideBackIv().setTitle("我的报销");
+        clear().addVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用普票报销", (bean, view) -> {
+            //一般费用报销
+            startSurfaceActivity(CommonControllerApi.class);
+        }), new IconTvMoreBean(R.mipmap.test_icon2, "一般费用专票报销", (bean, view) -> {
+            //一般费用报销
+            show(bean.getName());
+        })).addVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用普票报销", (bean, view) -> {
+            //出差费用报销
+            show(bean.getName());
+        }), new IconTvMoreBean(R.mipmap.test_icon2, "出差费用专票报销", (bean, view) -> {
+            //出差费用报销
+            show(bean.getName());
+        })).addVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> {
+            //报销列表
+            show(bean.getName());
+        })).notifyDataSetChanged();
 
-    private T replaceIBAll(List<ItemBean> data, Map<String, IRunApi<ItemBean>> map) {
-        if (!TextUtils.isEmpty(data) && !TextUtils.isEmpty(map)) {
-            replaceApiAll(data, true, obj -> {
-                if (!TextUtils.isEmpty(obj.getName())) {
-                    IRunApi<ItemBean> api = map.get(obj.getName());
-                    if (api != null) {
-                        api.execute(obj);
-                    }
-                }
-            });
-        }
-        return getThis();
+        //test
+        startSurfaceActivity(CommonControllerApi.class);
+
     }
 
 }

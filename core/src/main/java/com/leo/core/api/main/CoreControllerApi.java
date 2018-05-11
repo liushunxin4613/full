@@ -3,6 +3,7 @@ package com.leo.core.api.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,11 +20,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leo.core.api.core.AttachApi;
+import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IActionApi;
 import com.leo.core.iapi.IBindBeanCallback;
@@ -56,6 +59,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import butterknife.ButterKnife;
@@ -74,6 +78,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private Application application;
     private Activity activity;
     private Fragment fragment;
+    private Dialog dialog;
     private View rootView;
     private Adapter adapter;
 
@@ -139,6 +144,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         } else if (controller instanceof Application) {
             application = (Application) controller;
             context = application.getBaseContext();
+            if (context instanceof Activity) {
+                activity = (Activity) context;
+            }
+        } else if(controller instanceof Dialog){
+            dialog = (Dialog) controller;
+            context = dialog.getContext();
             if (context instanceof Activity) {
                 activity = (Activity) context;
             }
@@ -444,6 +455,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public <D extends Dialog> D getDialog() {
+        return (D) dialog;
+    }
+
+    @Override
     public Intent getIntent(Class<? extends Activity> clz, Class<? extends IControllerApi>... args) {
         return startApi().getIntent(clz, args);
     }
@@ -510,6 +526,27 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public boolean isFragment() {
         return getController() instanceof Fragment;
+    }
+
+    @Override
+    public boolean isDialog() {
+        return getController() instanceof Dialog;
+    }
+
+    @Override
+    public T dialogShow() {
+        if(isDialog() && !getDialog().isShowing()){
+            getDialog().show();
+        }
+        return getThis();
+    }
+
+    @Override
+    public T dismiss() {
+        if(isDialog()){
+            getDialog().dismiss();
+        }
+        return getThis();
     }
 
     @Override
@@ -637,16 +674,39 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         init(savedInstanceState);
         if (isActivity()) {
-            if (getRootViewClz() != null && getRootViewClzApi() != null) {
+            if (getRootViewClz() != null) {
                 rootView = getObject(getRootViewClz()
-                        , new Class[]{Class.class, Context.class}
-                        , new Object[]{getRootViewClzApi(), getContext()});
+                        , new Class[]{Context.class}
+                        , new Object[]{getContext()});
+                if(rootView instanceof BaseControllerApiView && getRootViewClzApi() != null){
+                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), null);
+                }
             }
             if (getRootViewResId() != null) {
                 getActivity().setContentView(getRootViewResId());
                 rootView = getActivity().getWindow().getDecorView();
             } else if (getRootView() != null) {
                 getActivity().setContentView(getRootView());
+            }
+            initView();
+            initData();
+        } else if(isDialog()){
+            if (getRootViewClz() != null) {
+                rootView = getObject(getRootViewClz()
+                        , new Class[]{Context.class}
+                        , new Object[]{getContext()});
+                if(rootView instanceof BaseControllerApiView && getRootViewClzApi() != null){
+                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), null);
+                }
+            }
+            if (getRootViewResId() != null) {
+                getDialog().setContentView(getRootViewResId());
+                Window window = getDialog().getWindow();
+                if(window != null){
+                    rootView = window.getDecorView();
+                }
+            } else if (getRootView() != null) {
+                getDialog().setContentView(getRootView());
             }
             initView();
             initData();
@@ -808,6 +868,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public T setText(View view, CharSequence text) {
+        viewApi().setText(view, text);
+        return getThis();
+    }
+
+    @Override
     public T setViewText(TextView tv, CharSequence text, boolean gone) {
         viewApi().setViewText(tv, text, gone);
         return getThis();
@@ -889,26 +955,26 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T i(Object obj) {
-        showApi().i(obj);
+    public T ii(Object obj) {
+        showApi().ii(obj);
         return getThis();
     }
 
     @Override
-    public T i(CharSequence text, Object obj) {
-        showApi().i(text, obj);
+    public T ii(CharSequence text, Object obj) {
+        showApi().ii(text, obj);
         return getThis();
     }
 
     @Override
-    public T e(Object obj) {
-        showApi().e(obj);
+    public T ee(Object obj) {
+        showApi().ee(obj);
         return getThis();
     }
 
     @Override
-    public T e(CharSequence text, Object obj) {
-        showApi().e(text, obj);
+    public T ee(CharSequence text, Object obj) {
+        showApi().ee(text, obj);
         return getThis();
     }
 

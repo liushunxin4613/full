@@ -51,7 +51,7 @@ public class RetrofitSubscriber<T extends RetrofitSubscriber, R> extends Subscri
 
     @Override
     public void onCompleted() {
-        LogUtil.i(this, "本次请求完成!!!");
+        LogUtil.ii(this, "本次请求完成!!!");
         onItem(new Completed(), Completed.class);
     }
 

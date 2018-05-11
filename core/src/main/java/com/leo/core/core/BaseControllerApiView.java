@@ -13,31 +13,29 @@ import android.widget.FrameLayout;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
 public class BaseControllerApiView<T extends BaseControllerApiView, C extends IControllerApi> extends FrameLayout implements IAFVApi<T, C> {
 
-    private Bundle savedInstanceState;//数据存储
+    private AttributeSet attrs;
     private IControllerApi controllerApi;
-    private Class<? extends IControllerApi> viewControllerApiClz;
+    private Class<? extends IControllerApi> apiClz;
 
-    public BaseControllerApiView(Class<? extends IControllerApi> viewControllerApiClz, Context context) {
+    public BaseControllerApiView(Context context) {
         super(context);
-        init(viewControllerApiClz, context, null);
     }
 
-    public BaseControllerApiView(Class<? extends IControllerApi> viewControllerApiClz, Context context, @Nullable AttributeSet attrs) {
+    public BaseControllerApiView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(viewControllerApiClz, context, attrs);
+        this.attrs = attrs;
     }
 
     @Override
     public IControllerApi<C, T> controllerApi() {
         if(controllerApi == null){
-            if(viewControllerApiClz != null){
-                controllerApi = (IControllerApi) ObjectUtil.getObject(viewControllerApiClz, Object.class, this);
+            if(apiClz != null){
+                controllerApi = (IControllerApi) ObjectUtil.getObject(apiClz, Object.class, this);
             } else {
                 controllerApi = newControllerApi();
             }
@@ -55,15 +53,16 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
 
     /**
      *  自定义初始化
-     * @param context context
-     * @param attrs attrs
+     * @param clz clz
+     * @param layoutResId layoutResId
      */
-    protected void init(Class<? extends IControllerApi> viewControllerApiClz, Context context, @Nullable AttributeSet attrs){
-        this.viewControllerApiClz = viewControllerApiClz;
+    public T init(Class<? extends IControllerApi> clz, Integer layoutResId){
+        this.apiClz = clz;
         if(controllerApi() != null){
-            savedInstanceState = new Bundle();
-            controllerApi().onCreateView(LayoutInflater.from(context), this, savedInstanceState);
-            if(controllerApi().getStyleableRes() != null){
+            Bundle savedInstanceState = new Bundle();
+            controllerApi().setRootViewResId(layoutResId);
+            controllerApi().onCreateView(LayoutInflater.from(getContext()), this, savedInstanceState);
+            if(attrs != null && controllerApi().getStyleableRes() != null){
                 TypedArray a = getContext().obtainStyledAttributes(attrs, controllerApi().getStyleableRes());
                 try {
                     controllerApi().initStyleable(a);
@@ -73,6 +72,7 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
             }
             controllerApi().onViewCreated(this, savedInstanceState);
         }
+        return (T) this;
     }
 
     @Override

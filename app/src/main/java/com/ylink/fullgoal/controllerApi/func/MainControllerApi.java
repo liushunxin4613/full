@@ -4,6 +4,9 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 import static com.ylink.fullgoal.config.Config.BACK_PRESSED_INTERVAL;
 
+/**
+ * 主功能视图
+ */
 public class MainControllerApi<T extends SurfaceControllerApi, C> extends SurfaceControllerApi<T, C> {
 
     private int interval = BACK_PRESSED_INTERVAL;

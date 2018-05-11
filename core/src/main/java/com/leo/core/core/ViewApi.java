@@ -41,6 +41,16 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public T setText(View view, CharSequence text) {
+        if(checkView(view)){
+            if(view instanceof TextView){
+                ((TextView) view).setText(text);
+            }
+        }
+        return getThis();
+    }
+
+    @Override
     public T setViewText(TextView tv, CharSequence text, boolean gone) {
         if (checkView(tv)) {
             if (!TextUtils.isTrimEmpty(text)) {

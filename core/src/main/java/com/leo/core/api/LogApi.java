@@ -80,7 +80,7 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public LogApi i(Object obj, Object log) {
+    public LogApi ii(Object obj, Object log) {
         if (check(obj, log) && i) {
             Log.i(name, getLog(log));
         }
@@ -88,7 +88,7 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public LogApi i(Object obj, Object... param) {
+    public LogApi ii(Object obj, Object... param) {
         if (check(obj, param) && i) {
             Log.i(name, getLog(param));
         }
@@ -96,7 +96,7 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public LogApi e(Object obj, Object log) {
+    public LogApi ee(Object obj, Object log) {
         if (check(obj, log) && e) {
             Log.e(name, getLog(log));
         }
@@ -104,7 +104,7 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public LogApi e(Object obj, Object... param) {
+    public LogApi ee(Object obj, Object... param) {
         if (check(obj, param) && e) {
             Log.e(name, getLog(param));
         }
@@ -122,9 +122,7 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
             } else {
                 name = ClassApiUtil.getClassName(obj);
             }
-            if (!contains(name)) {
-                return true;
-            }
+            return !contains(name);
         }
         return false;
     }

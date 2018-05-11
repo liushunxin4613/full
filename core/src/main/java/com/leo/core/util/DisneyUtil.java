@@ -47,7 +47,7 @@ public class DisneyUtil {
     /**
      * 获取屏幕分辨率
      */
-    public static IDisplayApi.ScreenDisplay getScreenDispaly() {
+    public static IDisplayApi.ScreenDisplay getScreenDisplay() {
         return getApi(Px2DipContextApi.class).getWindowScreenDisplay();
     }
 

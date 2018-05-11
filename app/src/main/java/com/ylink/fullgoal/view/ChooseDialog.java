@@ -29,7 +29,9 @@ public class ChooseDialog extends Dialog {
     Button finishBt;
 
     private String title;
-    private List<String> items;
+    private List<String> data;
+    private int mSelectedIndex;
+    private String mItem;
     private WheelView.OnWheelViewListener onWheelViewListener;
 
     public ChooseDialog(@NonNull Context context) {
@@ -41,8 +43,8 @@ public class ChooseDialog extends Dialog {
         return this;
     }
 
-    public ChooseDialog setItems(List<String> items) {
-        this.items = items;
+    public ChooseDialog setData(List<String> data) {
+        this.data = data;
         return this;
     }
 
@@ -52,14 +54,10 @@ public class ChooseDialog extends Dialog {
     }
 
     public ChooseDialog setSeletion(int position){
-        if(position < TextUtils.count(items)){
+        if(position < TextUtils.count(data)){
             wheelView.setSeletion(position);
         }
         return this;
-    }
-
-    public WheelView getWheelView() {
-        return wheelView;
     }
 
     @Override
@@ -72,13 +70,21 @@ public class ChooseDialog extends Dialog {
             dialogWindow.setGravity(Gravity.BOTTOM);
             dialogWindow.setWindowAnimations(R.style.DialogStyle); // 添加动画
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.width = DisneyUtil.getScreenDispaly().getX();
+            lp.width = DisneyUtil.getScreenDisplay().getX();
             dialogWindow.setAttributes(lp);
         }
-        finishBt.setOnClickListener(v -> dismiss());
+        finishBt.setOnClickListener(v -> {
+            dismiss();
+            if(onWheelViewListener != null){
+                onWheelViewListener.onSelected(mSelectedIndex, mItem);
+            }
+        });
         nameTv.setText(title);
-        wheelView.setItems(items);
-        wheelView.setOnWheelViewListener(onWheelViewListener);
+        wheelView.setItems(data);
+        wheelView.setOnWheelViewListener((selectedIndex, item) -> {
+            mSelectedIndex = selectedIndex;
+            mItem = item;
+        });
     }
 
 }

@@ -48,7 +48,7 @@ public class GalleryApi<T extends GalleryApi> extends HasCoreControllerApi<T> im
                 .subscribe(new RxBusResultDisposable<BaseResultEvent>() {
                     @Override
                     protected void onEvent(BaseResultEvent baseResultEvent) throws Exception {
-                        controllerApi().e("baseResultEvent", baseResultEvent);
+                        controllerApi().ee("baseResultEvent", baseResultEvent);
                     }
                 })
                 .openGallery();

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bar_height">48dp</dimen>
+    <dimen name="pad_big">30dp</dimen>
+    <dimen name="pad">20dp</dimen>
+    <dimen name="pad_smal">10dp</dimen>
+    <dimen name="margin">20dp</dimen>
+    <dimen name="tv">18sp</dimen>
+    <dimen name="tv1">15sp</dimen>
+    <dimen name="tv2">12sp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
+</resources>

@@ -58,43 +58,43 @@ public class ShowApi<T extends ShowApi> extends ThisApi<T> implements IShowApi<T
     }
 
     @Override
-    public T i(Object obj) {
-        LogUtil.i(thisObj, getLog(obj));
+    public T ii(Object obj) {
+        LogUtil.ii(thisObj, getLog(obj));
         return getThis();
     }
 
     @Override
-    public T i(CharSequence title, Object obj) {
+    public T ii(CharSequence title, Object obj) {
         String text = LogUtil.getLog(obj);
         if (!TextUtils.isTrimEmpty(title)){
             if (!TextUtils.isTrimEmpty(text)){
-                return i(title + ": " + text);
+                return ii(title + ": " + text);
             }else {
-                return i(title);
+                return ii(title);
             }
         }else if (!TextUtils.isTrimEmpty(text)){
-            return i(text);
+            return ii(text);
         }
         return getThis();
     }
 
     @Override
-    public T e(Object obj) {
-        LogUtil.e(thisObj, getLog(obj));
+    public T ee(Object obj) {
+        LogUtil.ee(thisObj, getLog(obj));
         return getThis();
     }
 
     @Override
-    public T e(CharSequence title, Object obj) {
+    public T ee(CharSequence title, Object obj) {
         String text = LogUtil.getLog(obj);
         if (!TextUtils.isTrimEmpty(title)){
             if (!TextUtils.isTrimEmpty(text)){
-                return e(title + ": " + text);
+                return ee(title + ": " + text);
             }else {
-                return e(title);
+                return ee(title);
             }
         }else if (!TextUtils.isTrimEmpty(text)){
-            return e(text);
+            return ee(text);
         }
         return getThis();
     }

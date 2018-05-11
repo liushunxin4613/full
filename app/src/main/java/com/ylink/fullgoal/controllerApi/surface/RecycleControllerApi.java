@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
+import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IRecycleApi;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.IShowDataApi;
@@ -14,7 +15,9 @@ import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.ItemControllerApi;
+import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.LineBean;
+import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
 
 import java.util.List;
@@ -112,7 +115,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     @Override
     public void initView() {
         super.initView();
-        getRecyclerView().setLayoutManager(newLayoutManager());
+        getRecyclerView().setLayoutManager(getLayoutManager());
         getRecyclerView().setAdapter(getRecycleAdapter());
         getRecycleAdapter().setCallback(this);
     }
@@ -128,6 +131,10 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     protected int getCount() {
         return adapterDataApi().getCount();
+    }
+
+    protected IApiBean getItem(int position){
+        return adapterDataApi().getItem(position);
     }
 
     protected T add(IApiBean bean) {
@@ -172,6 +179,22 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     protected <B extends IApiBean> T replaceApiAll(List<B> data, boolean end, IRunApi<B> api) {
         clear().addLineAll(data, end, api);
+        return getThis();
+    }
+
+    //私有的
+
+    public T addVgBean(BaseApiBean... args){
+        if(!TextUtils.isEmpty(args)){
+            add(new VgBean(TextUtils.getListData(args)));
+        }
+        return getThis();
+    }
+
+    public T addGridBean(BaseApiBean... args){
+        if(!TextUtils.isEmpty(args)){
+            add(new GridBean(TextUtils.getListData(args)));
+        }
         return getThis();
     }
 

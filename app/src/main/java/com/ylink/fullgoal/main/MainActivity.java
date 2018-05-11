@@ -11,8 +11,8 @@ public class MainActivity<T extends MainActivity, C extends IControllerApi> exte
     @Override
     public IControllerApi newControllerApi() {
         return new MainControllerApi(this)
-//                .setRootViewClzApi(MainViewControllerApi.class);
-                .setRootViewClzApi(TestControllerApi.class);
+                .setRootViewClzApi(MainViewControllerApi.class);
+//                .setRootViewClzApi(TestControllerApi.class);
     }
 
 }

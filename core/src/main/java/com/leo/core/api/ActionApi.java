@@ -180,7 +180,7 @@ public class ActionApi<T extends ActionApi, A extends IApi> extends ThisApi<T> i
                     try {
                         Thread.sleep(getInterval());
                     } catch (InterruptedException e) {
-                        LogUtil.e(this, e);
+                        LogUtil.ee(this, e);
                     }
                 }
             }

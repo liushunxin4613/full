@@ -63,7 +63,7 @@ public class LogInterceptor implements Interceptor {
 
     private void print(String key, String value) {
         if (!TextUtils.isEmpty(key)) {
-            LogUtil.i(this, key + ": " + (TextUtils.isTrimEmpty(value) ? "null" : value));
+            LogUtil.ii(this, key + ": " + (TextUtils.isTrimEmpty(value) ? "null" : value));
         }
     }
 

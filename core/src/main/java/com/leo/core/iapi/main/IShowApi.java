@@ -9,13 +9,11 @@ public interface IShowApi<T extends IShowApi> extends IApi {
 
     /**
      * 解析Api
-     * @return
      */
     IDecodeApi decodeApi();
 
     /**
      * new解析Api
-     * @return
      */
     IDecodeApi newDecodeApi();
 
@@ -54,7 +52,7 @@ public interface IShowApi<T extends IShowApi> extends IApi {
      * @param obj 对象
      * @return 本身
      */
-    T i(Object obj);
+    T ii(Object obj);
 
     /**
      * i级日志
@@ -62,14 +60,14 @@ public interface IShowApi<T extends IShowApi> extends IApi {
      * @param obj 对象
      * @return 本身
      */
-    T i(CharSequence text, Object obj);
+    T ii(CharSequence text, Object obj);
 
     /**
      * e级日志
      * @param obj 对象
      * @return 本身
      */
-    T e(Object obj);
+    T ee(Object obj);
 
     /**
      * e级日志
@@ -77,6 +75,6 @@ public interface IShowApi<T extends IShowApi> extends IApi {
      * @param obj 对象
      * @return 本身
      */
-    T e(CharSequence text, Object obj);
+    T ee(CharSequence text, Object obj);
 
 }
