@@ -26,7 +26,6 @@ import com.leo.core.iapi.IDataApi;
 import com.leo.core.iapi.IDataTypeApi;
 import com.leo.core.iapi.IDecodeApi;
 import com.leo.core.iapi.IFileApi;
-import com.leo.core.iapi.IGalleryApi;
 import com.leo.core.iapi.ILoadImageApi;
 import com.leo.core.iapi.IMD5Api;
 import com.leo.core.iapi.IMergeApi;
@@ -74,12 +73,12 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public <R, M> Observable.Transformer<R, M> newTransformer() {
+    public <B, M> Observable.Transformer<B, M> newTransformer() {
         return new Transformer();
     }
 
     @Override
-    public <R> Subscriber<R> newSubscriber() {
+    public <B> Subscriber<B> newSubscriber() {
         return new RetrofitSubscriber();
     }
 

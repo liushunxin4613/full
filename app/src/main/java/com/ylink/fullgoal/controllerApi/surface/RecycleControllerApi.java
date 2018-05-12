@@ -184,6 +184,13 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     //私有的
 
+    public T addSmallVgBean(BaseApiBean... args){
+        if(!TextUtils.isEmpty(args)){
+            add(new VgBean(TextUtils.getListData(args), LineBean.SMALL));
+        }
+        return getThis();
+    }
+
     public T addVgBean(BaseApiBean... args){
         if(!TextUtils.isEmpty(args)){
             add(new VgBean(TextUtils.getListData(args)));

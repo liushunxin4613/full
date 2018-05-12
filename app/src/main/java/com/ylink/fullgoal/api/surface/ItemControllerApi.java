@@ -58,6 +58,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
             ItemControllerApi api = getViewControllerApi(getClass(), item.getApiType());
             vg.addView(api.getRootView());
             findView(api.getRootView());
+            ee("item.getClass()", item.getClass());
             IBindItemCallback itemApi = getItemControllerApi(item.getClass());
             if (itemApi != null) {
                 itemApi.onItem(api, item);
@@ -75,6 +76,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
             bean.setTextView(detailEt);
             api.setName(bean.getName())
                     .setImage(iconIv, bean.getIconResId())
+                    .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
                     .setOnClickListener(iconIv, bean.getOnClickListener())
                     .setTextHint(detailEt, bean.getHint())
                     .setText(detailEt, bean.getDetail());

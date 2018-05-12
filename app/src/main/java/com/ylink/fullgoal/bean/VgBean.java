@@ -17,20 +17,24 @@ public class VgBean extends BaseApiBean{
     private List<BaseApiBean> data;
 
     public VgBean(List<BaseApiBean> data) {
-        this.data = data;
+        setData(data, 0);
+    }
+
+    public VgBean(List<BaseApiBean> data, int type) {
+        setData(data, type);
     }
 
     public List<BaseApiBean> getData() {
         return data;
     }
 
-    public void setData(List<BaseApiBean> data) {
+    public void setData(List<BaseApiBean> data, int type) {
         int count = TextUtils.count(data);
         if(count > 0){
             this.data = new ArrayList<>();
             for (int i = 0; i < count - 1; i++) {
                 this.data.add(data.get(i));
-                this.data.add(new LineBean());
+                this.data.add(new LineBean(type));
             }
             this.data.add(data.get(count - 1));
         } else {

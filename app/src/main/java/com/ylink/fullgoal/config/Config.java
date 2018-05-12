@@ -15,6 +15,7 @@ public class Config {
 
     //固定键值
     public final static String TITLE = "title";
+    public final static String TYPE = "type";
     public final static String STATE = "state";
 
 }

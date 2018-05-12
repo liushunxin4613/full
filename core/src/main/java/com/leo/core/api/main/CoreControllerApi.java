@@ -59,7 +59,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import butterknife.ButterKnife;
@@ -648,6 +647,18 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 callback.onBindBean(bean, position);
             }
         }
+    }
+
+    @Override
+    public T executeBundle(IRunApi<Bundle> api) {
+        if(api != null){
+            if(isActivity()){
+                executeNon(getActivity().getIntent().getExtras(), api);
+            } else if(isFragment()){
+                executeNon(getFragment().getArguments(), api);
+            }
+        }
+        return getThis();
     }
 
     @Override

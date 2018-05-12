@@ -5,6 +5,10 @@ import com.ylink.fullgoal.R;
 
 public class TvHEtIconMoreBean extends ApiBean<TvHEtIconMoreBean> {
 
+    public TvHEtIconMoreBean(String name, String detail, String hint) {
+        super(name, detail, hint);
+    }
+
     public TvHEtIconMoreBean(Integer iconResId, String name, String detail, String hint, OnBVClickListener<TvHEtIconMoreBean> listener) {
         super(iconResId, name, detail, hint, listener);
     }

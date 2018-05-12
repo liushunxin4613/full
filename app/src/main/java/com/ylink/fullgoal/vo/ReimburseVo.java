@@ -4,27 +4,42 @@ import java.util.List;
 
 /**
  * 报销
- *  25个字段
- *  7个data字段、2个引入字段、16个普通字段
+ * 25个字段
+ * 7个data字段、2个引入字段、16个普通字段
  */
 public class ReimburseVo {
 
+    //修改状态
+    /**
+     * 经办人发起
+     */
+    public final static String STATE_INITIATE = "经办人发起";
+    /**
+     * 经办人确认
+     */
+    public final static String STATE_CONFIRM = "经办人确认";
+    /**
+     * 经办人修改
+     */
+    public final static String STATE_ALTER = "经办人修改";
+
+    //发票类型
     /**
      * 一般费用普票报销
      */
-    public final static String REIMBURSE_TYPE_GENERAL_COMMON = "101";
+    public final static String REIMBURSE_TYPE_GENERAL_COMMON = "一般费用普票报销";
     /**
      * 一般费用专票报销
      */
-    public final static String REIMBURSE_TYPE_GENERAL_DEDICATED = "102";
+    public final static String REIMBURSE_TYPE_GENERAL_DEDICATED = "一般费用专票报销";
     /**
      * 出差费用普票报销
      */
-    public final static String REIMBURSE_TYPE_EVECTION_COMMON = "103";
+    public final static String REIMBURSE_TYPE_EVECTION_COMMON = "出差费用普票报销";
     /**
      * 出差费用专票报销
      */
-    public final static String REIMBURSE_TYPE_EVECTION_DEDICATED = "104";
+    public final static String REIMBURSE_TYPE_EVECTION_DEDICATED = "出差费用专票报销";
 
     //隐式的
     //渠道
@@ -33,6 +48,8 @@ public class ReimburseVo {
     private String fillDate;
 
     //界面不显示的
+    //修改状态 发起、确认、修改
+    private transient String state;
     //报销状态 待处理、审核中、已完成、已取消四类
     private String reimbursementState;
     //报销单号
@@ -85,6 +102,14 @@ public class ReimburseVo {
     private AirDataVo airDataVo;
     //其他费用报销票据组
     private List<BillVo> otherBillData;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getChannel() {
         return channel;

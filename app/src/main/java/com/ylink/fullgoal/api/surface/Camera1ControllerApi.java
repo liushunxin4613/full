@@ -23,6 +23,7 @@ import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.util.Size;
@@ -410,7 +411,7 @@ public class Camera1ControllerApi<T extends Camera1ControllerApi, C> extends Sur
     };
 
     @Override
-    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int permsRequestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (permsRequestCode) {
             case RESULT_CODE_CAMERA:
                 boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;

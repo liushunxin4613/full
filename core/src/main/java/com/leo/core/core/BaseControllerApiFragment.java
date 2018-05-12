@@ -145,13 +145,13 @@ public class BaseControllerApiFragment<T extends BaseControllerApiFragment, C ex
             try {
                 Class clz = (Class) getArguments().getSerializable(CONTROLLER_API);
                 Class rootViewClz = (Class) getArguments().getSerializable(ROOT_VIEW_CLZ_API);
-                if (CoreControllerApi.class.isAssignableFrom(clz)) {
+                if (clz != null && CoreControllerApi.class.isAssignableFrom(clz)) {
                     controllerApi = (IControllerApi) ObjectUtil.getObject(clz, Object.class, this);
                 }
-                if (controllerApi != null && IControllerApi.class.isAssignableFrom(rootViewClz)) {
+                if (rootViewClz != null && controllerApi != null && IControllerApi.class.isAssignableFrom(rootViewClz)) {
                     controllerApi.setRootViewClzApi(rootViewClz);
                 }
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
     }
 

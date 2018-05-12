@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IBindBeanCallback;
+import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.core.IAttachApi;
 
 /**
@@ -452,6 +453,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     <B> void onBindViewHolder(B bean, int position);
 
     //自定义的
+
+    /**
+     * 执行
+     */
+    T executeBundle(IRunApi<Bundle> api);
 
     /**
      * 加入BindBeanCallback

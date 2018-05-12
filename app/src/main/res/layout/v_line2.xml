@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="1.6px"
-    android:layout_marginLeft="16dp"
-    android:layout_marginStart="16dp"
+    android:layout_marginLeft="@dimen/x120"
+    android:layout_marginStart="@dimen/x120"
     android:background="#e3e6e8"
     tools:ignore="RtlSymmetry" />
