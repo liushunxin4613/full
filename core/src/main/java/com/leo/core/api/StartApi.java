@@ -9,6 +9,7 @@ import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.IObjectApi;
 import com.leo.core.iapi.IStartApi;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartApi<T> {
@@ -26,8 +27,9 @@ public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartAp
         return activity;
     }
 
+    @SafeVarargs
     @Override
-    public Intent getIntent(Class<? extends Activity> clz, Class<? extends IControllerApi>... args) {
+    public final Intent getIntent(Class<? extends Activity> clz, Class<? extends IControllerApi>... args) {
         return getIntent(clz, null, args);
     }
 
@@ -37,8 +39,9 @@ public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartAp
         return startActivity(clz, null, args);
     }
 
+    @SafeVarargs
     @Override
-    public Intent getIntent(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
+    public final Intent getIntent(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
         if(getActivity() != null && clz != null){
             int count = TextUtils.count(args);
             Intent intent = new Intent(getActivity(), clz);

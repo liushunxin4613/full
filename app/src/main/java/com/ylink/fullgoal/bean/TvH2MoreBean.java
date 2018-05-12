@@ -5,8 +5,8 @@ import com.ylink.fullgoal.R;
 
 public class TvH2MoreBean extends ApiBean<TvH2MoreBean> {
 
-    public TvH2MoreBean(String name, String detail, OnBVClickListener<TvH2MoreBean> listener) {
-        super(name, detail, listener);
+    public TvH2MoreBean(String name, String detail, String hint, OnBVClickListener<TvH2MoreBean> listener) {
+        super(name, detail, hint, listener);
     }
 
     @Override

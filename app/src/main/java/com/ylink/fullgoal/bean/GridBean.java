@@ -15,17 +15,20 @@ public class GridBean extends BaseApiBean {
         return LAYOUT_RES_ID;
     }
 
-    private List<IApiBean> data;
+    private List<? extends IApiBean> data;
 
-    public GridBean(List<IApiBean> data) {
+    public GridBean() {
+    }
+
+    public GridBean(List<? extends IApiBean> data) {
         this.data = data;
     }
 
-    public void setData(List<IApiBean> data) {
+    public void setData(List<? extends IApiBean> data) {
         this.data = data;
     }
 
-    public List<IApiBean> getData() {
+    public List<? extends IApiBean> getData() {
         return data;
     }
 

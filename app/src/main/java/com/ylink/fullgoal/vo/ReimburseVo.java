@@ -1,0 +1,289 @@
+package com.ylink.fullgoal.vo;
+
+import java.util.List;
+
+/**
+ * 报销
+ *  25个字段
+ *  7个data字段、2个引入字段、16个普通字段
+ */
+public class ReimburseVo {
+
+    /**
+     * 一般费用普票报销
+     */
+    public final static String REIMBURSE_TYPE_GENERAL_COMMON = "101";
+    /**
+     * 一般费用专票报销
+     */
+    public final static String REIMBURSE_TYPE_GENERAL_DEDICATED = "102";
+    /**
+     * 出差费用普票报销
+     */
+    public final static String REIMBURSE_TYPE_EVECTION_COMMON = "103";
+    /**
+     * 出差费用专票报销
+     */
+    public final static String REIMBURSE_TYPE_EVECTION_DEDICATED = "104";
+
+    //隐式的
+    //渠道
+    private String channel = "android";
+    //发起日期
+    private String fillDate;
+
+    //界面不显示的
+    //报销状态 待处理、审核中、已完成、已取消四类
+    private String reimbursementState;
+    //报销单号
+    private String orderNo;
+    //报销类别 一般费用普票报销、一般费用专票报销、出差费用普票报销、出差费用专票报销四种
+    private String reimburseType;
+    //费用指标需不需要分摊
+    private String apportion;
+    //费用指标
+    private CastTargetVo castTarget;
+    //禁止规则组
+    private List<InhibitionRule> inhibitionRuleData;
+
+    //UI需用的
+    //报销批次号
+    private String serialNo;
+    //经办人
+    private String agent;
+    //部门
+    private String department;
+    //报销人
+    private String reimbursement;
+    //预算归属部门
+    private String budgetDepartment;
+    //项目
+    private String project;
+    //金额
+    private String totalAmountLower;
+    //事由
+    private String cause;
+    //票据组
+    private List<BillVo> billData;
+    //流程处理组
+    private List<Process> processData;
+
+    //一般费用报销单有
+    //合同付款申请单
+    private String contractBill;
+    //招待申请单
+    private String serveBill;
+
+    //出差费用报销单有
+    //出差申请单组
+    private List<BusinessVo> businessData;
+    //交通费报销票据组
+    private List<BillVo> trafficBillData;
+    //住宿费报销票据组
+    private List<BillVo> stayBillData;
+    //车船机票费报销
+    private AirDataVo airDataVo;
+    //其他费用报销票据组
+    private List<BillVo> otherBillData;
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getFillDate() {
+        return fillDate;
+    }
+
+    public void setFillDate(String fillDate) {
+        this.fillDate = fillDate;
+    }
+
+    public String getReimbursementState() {
+        return reimbursementState;
+    }
+
+    public void setReimbursementState(String reimbursementState) {
+        this.reimbursementState = reimbursementState;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public String getReimburseType() {
+        return reimburseType;
+    }
+
+    public void setReimburseType(String reimburseType) {
+        this.reimburseType = reimburseType;
+    }
+
+    public String getApportion() {
+        return apportion;
+    }
+
+    public void setApportion(String apportion) {
+        this.apportion = apportion;
+    }
+
+    public CastTargetVo getCastTarget() {
+        return castTarget;
+    }
+
+    public void setCastTarget(CastTargetVo castTarget) {
+        this.castTarget = castTarget;
+    }
+
+    public List<InhibitionRule> getInhibitionRuleData() {
+        return inhibitionRuleData;
+    }
+
+    public void setInhibitionRuleData(List<InhibitionRule> inhibitionRuleData) {
+        this.inhibitionRuleData = inhibitionRuleData;
+    }
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    public String getAgent() {
+        return agent;
+    }
+
+    public void setAgent(String agent) {
+        this.agent = agent;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getReimbursement() {
+        return reimbursement;
+    }
+
+    public void setReimbursement(String reimbursement) {
+        this.reimbursement = reimbursement;
+    }
+
+    public String getBudgetDepartment() {
+        return budgetDepartment;
+    }
+
+    public void setBudgetDepartment(String budgetDepartment) {
+        this.budgetDepartment = budgetDepartment;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getTotalAmountLower() {
+        return totalAmountLower;
+    }
+
+    public void setTotalAmountLower(String totalAmountLower) {
+        this.totalAmountLower = totalAmountLower;
+    }
+
+    public String getCause() {
+        return cause;
+    }
+
+    public void setCause(String cause) {
+        this.cause = cause;
+    }
+
+    public List<BillVo> getBillData() {
+        return billData;
+    }
+
+    public void setBillData(List<BillVo> billData) {
+        this.billData = billData;
+    }
+
+    public List<Process> getProcessData() {
+        return processData;
+    }
+
+    public void setProcessData(List<Process> processData) {
+        this.processData = processData;
+    }
+
+    public String getContractBill() {
+        return contractBill;
+    }
+
+    public void setContractBill(String contractBill) {
+        this.contractBill = contractBill;
+    }
+
+    public String getServeBill() {
+        return serveBill;
+    }
+
+    public void setServeBill(String serveBill) {
+        this.serveBill = serveBill;
+    }
+
+    public List<BusinessVo> getBusinessData() {
+        return businessData;
+    }
+
+    public void setBusinessData(List<BusinessVo> businessData) {
+        this.businessData = businessData;
+    }
+
+    public List<BillVo> getTrafficBillData() {
+        return trafficBillData;
+    }
+
+    public void setTrafficBillData(List<BillVo> trafficBillData) {
+        this.trafficBillData = trafficBillData;
+    }
+
+    public List<BillVo> getStayBillData() {
+        return stayBillData;
+    }
+
+    public void setStayBillData(List<BillVo> stayBillData) {
+        this.stayBillData = stayBillData;
+    }
+
+    public AirDataVo getAirDataVo() {
+        return airDataVo;
+    }
+
+    public void setAirDataVo(AirDataVo airDataVo) {
+        this.airDataVo = airDataVo;
+    }
+
+    public List<BillVo> getOtherBillData() {
+        return otherBillData;
+    }
+
+    public void setOtherBillData(List<BillVo> otherBillData) {
+        this.otherBillData = otherBillData;
+    }
+
+}

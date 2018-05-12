@@ -15,21 +15,39 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     //自定义
-    protected T startSurfaceActivity(Class<? extends IControllerApi>... args) {
+
+    @SafeVarargs
+    protected final T startSurfaceActivity(Class<? extends IControllerApi>... args) {
         startActivity(SurfaceActivity.class, args);
         return getThis();
     }
 
-    protected T startFinishSurfaceActivity(Class<? extends IControllerApi>... args) {
+    @SafeVarargs
+    protected final T startFinishSurfaceActivity(Class<? extends IControllerApi>... args) {
         startFinishActivity(SurfaceActivity.class, args);
         return getThis();
     }
 
-    protected BaseControllerApiFragment getFragment(Class<? extends IControllerApi>... args) {
+
+    @SafeVarargs
+    protected final T startSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
+        startActivity(SurfaceActivity.class, bundle, args);
+        return getThis();
+    }
+
+    @SafeVarargs
+    protected final T startFinishSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
+        startFinishActivity(SurfaceActivity.class, bundle, args);
+        return getThis();
+    }
+
+    @SafeVarargs
+    protected final BaseControllerApiFragment getFragment(Class<? extends IControllerApi>... args) {
         return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, args);
     }
 
-    protected BaseControllerApiFragment getFragment(Bundle bundle, Class<? extends IControllerApi>... args) {
+    @SafeVarargs
+    protected final BaseControllerApiFragment getFragment(Bundle bundle, Class<? extends IControllerApi>... args) {
         return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, bundle, args);
     }
 

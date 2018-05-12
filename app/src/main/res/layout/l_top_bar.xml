@@ -28,7 +28,6 @@
         android:textColor="@color/tv"
         android:textSize="@dimen/tv"
         tools:text="返回"
-        tools:visibility="visible"
         />
 
     <TextView

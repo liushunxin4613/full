@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.leo.core.iapi.IBindItemCallback;
 import com.leo.core.iapi.IRunApi;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
@@ -80,11 +81,12 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         });
         //双文字点击
         putBindItemCallback(TvH2MoreBean.class, (api, bean) -> api.setName(bean.getName())
-                .setDetail(bean.getDetail())
-                .setOnClickListener(bean.getOnClickListener()));
+                .setDetail(nb(bean.getDetail(), bean.getHint()))
+                .setTextColor(detailTv, getResTvColor(bean.getDetail()))
+                .setOnClickListener(getRootView(), bean.getOnClickListener()));
         //文字多行输入
         putBindItemCallback(TvHEt3Bean.class, (api, bean) -> api.setName(bean.getName())
-                .setDetail(bean.getDetail())
+                .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
         //图片处理
         putBindBeanCallback(GridPhotoBean.class, (bean, position) -> {
@@ -144,11 +146,12 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         return getThis();
     }
 
-    protected T setSettingView(View v) {
-        setOnClickListener(v, view -> {
+    private <B> B nb(B old, B nw) {
+        return TextUtils.count(old) > 0 ? old : nw;
+    }
 
-        });
-        return getThis();
+    private int getResTvColor(CharSequence text){
+        return !TextUtils.isEmpty(text) ? R.color.tv : R.color.tv1;
     }
 
 }

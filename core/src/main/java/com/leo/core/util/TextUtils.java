@@ -59,6 +59,8 @@ public class TextUtils {
     public static int count(Object obj){
         if(obj == null){
             return -1;
+        } else if(obj instanceof CharSequence){
+            return ((CharSequence) obj).length();
         } else if(obj.getClass().isArray()){
             return ((Object[])obj).length;
         } else if(obj instanceof Collection){

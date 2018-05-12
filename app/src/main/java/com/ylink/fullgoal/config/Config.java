@@ -13,4 +13,8 @@ public class Config {
     //记录参数
     public static int MAIN_FRAGMENT_INDEX = 0;//主页面默认Fragment
 
+    //固定键值
+    public final static String TITLE = "title";
+    public final static String STATE = "state";
+
 }
