@@ -5,14 +5,12 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <View
+    <include
+        layout="@layout/l_recycle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y48"
-        android:background="@color/bg"/>
-
-    <include layout="@layout/l_recycle"
-        android:layout_width="match_parent"
+        android:layout_marginLeft="6dp"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="@dimen/y20"/>
 
 </LinearLayout>

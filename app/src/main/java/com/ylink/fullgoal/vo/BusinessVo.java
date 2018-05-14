@@ -14,6 +14,13 @@ public class BusinessVo {
     //开始日期
     private String endDate;
 
+    public BusinessVo(String serialNo, String days, String startDate, String endDate) {
+        this.serialNo = serialNo;
+        this.days = days;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public String getSerialNo() {
         return serialNo;
     }

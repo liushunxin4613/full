@@ -37,7 +37,6 @@ public class RecycleBarControllerApi<T extends RecycleBarControllerApi, C> exten
     public T setTitle(CharSequence title) {
         setText(centerTv, title);
         setText(backTv, title);
-        ee("setTitle", title);
         return getThis();
     }
 

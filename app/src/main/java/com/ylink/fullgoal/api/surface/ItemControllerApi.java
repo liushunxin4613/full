@@ -10,28 +10,31 @@ import com.leo.core.iapi.IBindItemCallback;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.CCSQDBean;
+import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
+import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
+import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
+import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseItemControllerApi;
 
 public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemControllerApi<T, C> {
 
     private TextView nameTv;
     private TextView detailTv;
-    private TextView dateTv;
-    private TextView moneyTv;
-    private EditText nameEt;
+    private TextView startTv;
+    private TextView endTv;
+    private TextView typeTv;
+    private TextView placeTv;
     private EditText detailEt;
-    private ImageView dateIv;
-    private ImageView rightIv;
     private ImageView iconIv;
-    private ViewGroup vg;
 
     public ItemControllerApi(C controller) {
         super(controller);
@@ -46,24 +49,51 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
 
     private void findView(View view) {
         nameTv = findViewById(view, R.id.name_tv);
-        iconIv = findViewById(view, R.id.icon_iv);
         detailTv = findViewById(view, R.id.detail_tv);
+        startTv = findViewById(view, R.id.start_tv);
+        endTv = findViewById(view, R.id.end_tv);
+        typeTv = findViewById(view, R.id.type_tv);
+        placeTv = findViewById(view, R.id.place_tv);
         detailEt = findViewById(view, R.id.detail_et);
+        iconIv = findViewById(view, R.id.icon_iv);
     }
 
     //监听相关对象
     private void initCallback() {
+        //图片处理
+        putBindBeanCallback(GridPhotoBean.class, (bean, position) -> {
+            getRootView().setLayoutParams(new ViewGroup.LayoutParams(-1, bean.getUnit()));
+            setIcon(bean.getRes())
+                    .setOnClickListener(getRootView(), bean.getOnClickListener())
+                    .setOnLongClickListener(getRootView(), bean.getOnLongClickListener());
+        });
+        //dialog双文字按钮处理
+        putBindBeanCallback(TvV2DialogBean.class, (bean, position) -> {
+            bean.setDialog(getDialog());
+            setName(bean.getName())
+                    .setDetail(bean.getDetail())
+                    .setOnClickListener(nameTv, bean.getOnNameClickListener())
+                    .setOnClickListener(detailTv, bean.getOnDetailClickListener());
+        });
         //总的数据
-        putBindBeanCallback(VgBean.class, (bean, position) -> execute(bean.getData(), item -> addView(vg -> {
-            ItemControllerApi api = getViewControllerApi(getClass(), item.getApiType());
-            vg.addView(api.getRootView());
-            findView(api.getRootView());
-            ee("item.getClass()", item.getClass());
-            IBindItemCallback itemApi = getItemControllerApi(item.getClass());
-            if (itemApi != null) {
-                itemApi.onItem(api, item);
-            }
-        })));
+        putBindBeanCallback(VgBean.class, (bean, position) -> addView(vg -> {
+            vg.removeAllViews();
+            execute(bean.getData(), item -> {
+                if (item instanceof GridBean) {
+                    GridItemControllerApi api = getViewControllerApi(GridItemControllerApi.class, item.getApiType());
+                    vg.addView(api.getRootView());
+                    api.onBindViewHolder(item, position);
+                } else {
+                    ItemControllerApi api = getViewControllerApi(ItemControllerApi.class, item.getApiType());
+                    vg.addView(api.getRootView());
+                    findView(api.getRootView());
+                    IBindItemCallback itemApi = api.getItemControllerApi(item.getClass());
+                    if (itemApi != null) {
+                        itemApi.onItem(api, item);
+                    }
+                }
+            });
+        }));
         //双文字
         putBindItemCallback(TvH2Bean.class, (api, bean) -> api.setName(bean.getName())
                 .setDetail(bean.getDetail()));
@@ -90,18 +120,24 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindItemCallback(TvHEt3Bean.class, (api, bean) -> api.setName(bean.getName())
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
-        //图片处理
-        putBindBeanCallback(GridPhotoBean.class, (bean, position) -> {
-            getRootView().setLayoutParams(new ViewGroup.LayoutParams(-1, bean.getUnit()));
-            setIcon(bean.getRes())
-                    .setOnClickListener(getRootView(), bean.getOnClickListener())
-                    .setOnLongClickListener(getRootView(), bean.getOnLongClickListener());
-        });
-        //dialog双文字按钮处理
-        putBindBeanCallback(TvV2DialogBean.class, (bean, position) -> setName(bean.getName())
+        //文字
+        putBindItemCallback(TvBean.class, (api, bean) -> api.setName(bean.getName()));
+        //图片文字点击
+        putBindItemCallback(IconTvHBean.class, (api, bean) -> api.setIcon(bean.getIconResId())
+                .setName(bean.getName())
+                .setOnClickListener(bean.getOnClickListener()));
+        //出差申请单
+        putBindItemCallback(CCSQDBean.class, (api, bean) -> api.setName(bean.getName())
                 .setDetail(bean.getDetail())
-                .setOnClickListener(nameTv, bean.getOnNameClickListener())
-                .setOnClickListener(detailTv, bean.getOnDetailClickListener()));
+                .setText(startTv, bean.getStart())
+                .setText(endTv, bean.getEnd()));
+        //携程机票
+        putBindItemCallback(XCJPBean.class, (api, bean) -> api.setName(bean.getName())
+                .setDetail(bean.getDetail())
+                .setText(typeTv, bean.getType())
+                .setText(placeTv, bean.getPlace())
+                .setText(startTv, bean.getStart())
+                .setText(endTv, bean.getEnd()));
     }
 
     //私有的
@@ -116,21 +152,6 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         return getThis();
     }
 
-    protected T setMoney(double money) {
-        setText(moneyTv, formatString("%.2f", money));
-        return getThis();
-    }
-
-    protected T setDate(String date) {
-        setText(dateTv, date);
-        return getThis();
-    }
-
-    protected T setDateOnClickListener(View.OnClickListener listener) {
-        setOnClickListener(dateIv, listener);
-        return getThis();
-    }
-
     protected T setIcon(Object res) {
         setImage(iconIv, res);
         return getThis();
@@ -142,8 +163,9 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
     }
 
     private T addView(IRunApi<ViewGroup> api) {
-        if (api != null) {
-            api.execute((ViewGroup) getRootView());
+        ViewGroup vg = findViewById(R.id.vg);
+        if (api != null && vg != null) {
+            api.execute(vg);
         }
         return getThis();
     }
@@ -152,7 +174,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         return TextUtils.count(old) > 0 ? old : nw;
     }
 
-    private int getResTvColor(CharSequence text){
+    private int getResTvColor(CharSequence text) {
         return !TextUtils.isEmpty(text) ? R.color.tv : R.color.tv1;
     }
 

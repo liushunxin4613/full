@@ -12,6 +12,11 @@ public class AirDataVo {
     //车船机票费报销票据组
     private List<BillVo> airBillData;
 
+    public AirDataVo(List<AirVo> xcAirData, List<BillVo> airBillData) {
+        this.xcAirData = xcAirData;
+        this.airBillData = airBillData;
+    }
+
     public List<AirVo> getXcAirData() {
         return xcAirData;
     }

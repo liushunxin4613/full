@@ -20,6 +20,16 @@ public class AirVo {
     //到达地
     private String endPlace;
 
+    public AirVo(String user, String type, String money, String startTime, String endTime, String startPlace, String endPlace) {
+        this.user = user;
+        this.type = type;
+        this.money = money;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startPlace = startPlace;
+        this.endPlace = endPlace;
+    }
+
     public String getUser() {
         return user;
     }

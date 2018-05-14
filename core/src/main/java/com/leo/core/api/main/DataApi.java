@@ -3,6 +3,7 @@ package com.leo.core.api.main;
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.ICheckApi;
 import com.leo.core.iapi.main.IDataApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
 
 import java.util.ArrayList;
@@ -36,12 +37,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
 
     @Override
     public boolean check(D obj) {
-        if (obj == null){
-            return true;
-        } else if (api != null && api.check(obj)){
-            return true;
-        }
-        return false;
+        return obj == null || api != null && api.check(obj);
     }
 
     @Override
@@ -69,9 +65,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
         if (getData() == null) {
             return null;
         }
-        List<D> data = new ArrayList<>();
-        data.addAll(getData());
-        return data;
+        return new ArrayList<>(getData());
     }
 
     @Override

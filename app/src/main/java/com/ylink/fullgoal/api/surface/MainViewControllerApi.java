@@ -8,8 +8,8 @@ import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
+import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
 import static com.ylink.fullgoal.config.Config.STATE;
-import static com.ylink.fullgoal.config.Config.TYPE;
 
 /**
  * 主View视图
@@ -28,18 +28,23 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 new IconTvMoreBean(R.mipmap.test_icon2, "一般费用专票报销", (bean, view) -> generalDedicated(ReimburseVo.STATE_INITIATE)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用普票报销", (bean, view) -> evectionCommon(ReimburseVo.STATE_INITIATE)),
                         new IconTvMoreBean(R.mipmap.test_icon2, "出差费用专票报销", (bean, view) -> evectionDedicated(ReimburseVo.STATE_INITIATE)))
-                //测试
-                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "经办人确认", (bean, view) -> {
-                    generalCommon(ReimburseVo.STATE_CONFIRM);
-                }), new IconTvMoreBean(R.mipmap.test_icon2, "经办人修改", (bean, view) -> {
-                    generalCommon(ReimburseVo.STATE_ALTER);
-                }))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> {
                     show(bean.getName());
+                }))
+                //测试
+                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
+                    generalCommon(ReimburseVo.STATE_CONFIRM);
+                }), new IconTvMoreBean(R.mipmap.test_icon2, "一般费用经办人修改", (bean, view) -> {
+                    generalCommon(ReimburseVo.STATE_ALTER);
+                }))
+                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用经办人确认", (bean, view) -> {
+                    evectionCommon(ReimburseVo.STATE_CONFIRM);
+                }), new IconTvMoreBean(R.mipmap.test_icon2, "出差费用经办人修改", (bean, view) -> {
+                    evectionCommon(ReimburseVo.STATE_ALTER);
                 })).notifyDataSetChanged();
 
         //test
-        generalCommon(ReimburseVo.STATE_ALTER);
+        evectionDedicated(ReimburseVo.STATE_INITIATE);
 
     }
 
@@ -73,10 +78,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         startSurfaceActivity(EvectionControllerApi.class, ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED, state);
     }
 
-
     private void startSurfaceActivity(Class<? extends IControllerApi> clz, String type, String state) {
         Bundle bundle = new Bundle();
-        bundle.putString(TYPE, type);
+        bundle.putString(REIMBURSE_TYPE, type);
         bundle.putString(STATE, state);
         startSurfaceActivity(bundle, clz);
     }

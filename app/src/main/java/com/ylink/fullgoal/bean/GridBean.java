@@ -8,11 +8,11 @@ import java.util.List;
 
 public class GridBean extends BaseApiBean {
 
-    public final static int LAYOUT_RES_ID = R.layout.l_grid;
+    public final static int API_TYPE = R.layout.l_grid;
 
     @Override
     public Integer getApiType() {
-        return LAYOUT_RES_ID;
+        return API_TYPE;
     }
 
     private List<? extends IApiBean> data;

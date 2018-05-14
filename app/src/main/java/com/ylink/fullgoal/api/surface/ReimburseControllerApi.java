@@ -1,27 +1,28 @@
 package com.ylink.fullgoal.api.surface;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 
+import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
 import static com.ylink.fullgoal.config.Config.STATE;
-import static com.ylink.fullgoal.config.Config.TYPE;
 
 /**
  * 报销
@@ -40,6 +41,8 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     LinearLayout alterVg;
 
     private ReimburseVo vo;
+    private String state;
+    private String reimburseType;
 
     public ReimburseControllerApi(C controller) {
         super(controller);
@@ -57,43 +60,51 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         return getThis();
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public String getReimburseType() {
+        return reimburseType;
+    }
+
     @Override
     public Integer getRootViewResId() {
         return R.layout.l_reimburse;
     }
 
     @Override
-    public IControllerApi createControllerApi(ViewGroup container, int resId) {
-        switch (resId) {
-            case GridBean.LAYOUT_RES_ID:
-                return new GridItemControllerApi(null);
-        }
-        return super.createControllerApi(container, resId);
-    }
-
-    @Override
     public void initView() {
         super.initView();
         executeBundle(bundle -> {
-            String state = bundle.getString(STATE);
-            String type = bundle.getString(TYPE);
-            String title = TextUtils.isEmpty(state) ? type : state;
-            title = TextUtils.equals(title, ReimburseVo.STATE_INITIATE) ? type : title;
+            state = bundle.getString(STATE);
+            reimburseType = bundle.getString(REIMBURSE_TYPE);
+            String title = TextUtils.isEmpty(state) ? reimburseType : state;
+            title = TextUtils.equals(title, ReimburseVo.STATE_INITIATE) ? reimburseType : title;
             setTitle(title);
-            if (TextUtils.equals(state, ReimburseVo.STATE_ALTER)) {
-                setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
-                    //申请特批
-                    show("申请特批");
-                }).setOnClickListener(wbylIv, v -> {
-                    //我不要了
-                    show("我不要了");
-                }).setOnClickListener(xgtjIv, v -> {
-                    //修改提交
-                    show("修改提交");
-                }).setOnClickListener(qxbxIv, v -> {
-                    //取消报销
-                    show("取消报销");
-                });
+            switch (TextUtils.isEmpty(state) ? "" : state) {
+                default:
+                case ReimburseVo.STATE_INITIATE:
+                    setRightTv("提交", v -> show("提交"));
+                    break;
+                case ReimburseVo.STATE_CONFIRM:
+                    setRightTv("确认", v -> show("确认"));
+                    break;
+                case ReimburseVo.STATE_ALTER:
+                    setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
+                        //申请特批
+                        show("申请特批");
+                    }).setOnClickListener(wbylIv, v -> {
+                        //我不要了
+                        show("我不要了");
+                    }).setOnClickListener(xgtjIv, v -> {
+                        //修改提交
+                        show("修改提交");
+                    }).setOnClickListener(qxbxIv, v -> {
+                        //取消报销
+                        show("取消报销");
+                    });
+                    break;
             }
         });
     }
@@ -103,8 +114,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
      */
     protected void initReimburseVo(ReimburseVo vo) {
         executeNon(vo, obj -> {
-            clear();
-            onReimburseVo(obj);
+            clear().onReimburseVo(obj);
             //更新
             notifyDataSetChanged();
         });
@@ -114,6 +124,24 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
      * 报销数据回调
      */
     protected void onReimburseVo(ReimburseVo vo) {
+        //报销类型
+        vo.setState(state);
+        //报销状态
+        vo.setReimburseType(reimburseType);
+        //test
+        vo.setAgent("张三");
+        vo.setDepartment("计划财务部");
+    }
+
+    protected List<GridPhotoBean> getPhotoGridBeanData(List<BillVo> data) {
+        List<GridPhotoBean> gridData = new ArrayList<>();
+        execute(data, obj -> gridData.add(new GridPhotoBean(obj.getPhoto(),
+                this::onGridPhotoClick, this::onGridPhotoLongClick)));
+        gridData.add(new GridPhotoBean(R.mipmap.posting_add, (bean, view) -> {
+            //添加图片
+            show("添加票据");
+        }, null));
+        return gridData;
     }
 
     /**
@@ -122,7 +150,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
      * @param bean bean
      * @param view view
      */
-    protected void onGridPhotoClick(GridPhotoBean bean, View view) {
+    private void onGridPhotoClick(GridPhotoBean bean, View view) {
         show("图片");
     }
 
@@ -133,11 +161,13 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
      * @param view view
      * @return 是否同时响应点击
      */
-    protected boolean onGridPhotoLongClick(GridPhotoBean bean, View view) {
-        TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v) -> {
+    private boolean onGridPhotoLongClick(GridPhotoBean bean, View view) {
+        TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
             show(item.getName());
-        }, (item, v) -> {
+            dialog.dismiss();
+        }, (item, v, dialog) -> {
             show(item.getDetail());
+            dialog.dismiss();
         });
         ItemControllerApi api = getDialogControllerApi(ItemControllerApi.class, db.getApiType());
         api.dialogShow().onBindViewHolder(db, 0);
@@ -149,4 +179,5 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         }
         return false;
     }
+
 }

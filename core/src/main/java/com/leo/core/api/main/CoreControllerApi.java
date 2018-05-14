@@ -640,7 +640,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> void onBindViewHolder(B bean, int position) {
+    public synchronized <B> void onBindViewHolder(B bean, int position) {
         if (callbackMap != null && bean != null) {
             IBindBeanCallback callback = callbackMap.get(bean.getClass());
             if (callback != null) {

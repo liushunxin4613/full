@@ -316,4 +316,10 @@ public class TextUtils {
         }
     }
 
+    public static String getRandom(){
+        String time = String.valueOf(System.currentTimeMillis());
+        String random = String.valueOf(Math.random());
+        return time + random.substring(2, random.length());
+    }
+
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/start_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/tv"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RtlHardcoded"
+        tools:text="2018-03-04" />
+
+    <TextView
+        android:id="@+id/end_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/tv"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap,RtlHardcoded"
+        tools:text="至2018-03-06" />
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start_tv"
+        android:layout_marginTop="4dp"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/tv"
+        android:textSize="@dimen/tv1"
+        tools:ignore="RelativeOverlap,RtlHardcoded"
+        tools:text="FGMC-P2018-00021" />
+
+    <TextView
+        android:id="@+id/detail_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/start_tv"
+        android:layout_marginTop="4dp"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/tv"
+        android:textSize="@dimen/tv1"
+        tools:ignore="RelativeOverlap,RtlHardcoded"
+        tools:text="3天" />
+
+</RelativeLayout>

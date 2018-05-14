@@ -14,12 +14,14 @@ import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.api.surface.GridItemControllerApi;
 import com.ylink.fullgoal.api.surface.ItemControllerApi;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,7 +42,12 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     @Override
     public IControllerApi createControllerApi(ViewGroup container, int resId) {
-        return new ItemControllerApi(null);
+        switch (resId){
+            default:
+                return new ItemControllerApi(null);
+            case GridBean.API_TYPE:
+                return new GridItemControllerApi(null);
+        }
     }
 
     @Override
@@ -120,39 +127,39 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         getRecycleAdapter().setCallback(this);
     }
 
-    protected T clear() {
+    public T clear() {
         adapterDataApi().removeAll();
         return getThis();
     }
 
-    protected boolean check(IApiBean bean){
+    public boolean check(IApiBean bean){
         return adapterDataApi().check(bean);
     }
 
-    protected int getCount() {
+    public int getCount() {
         return adapterDataApi().getCount();
     }
 
-    protected IApiBean getItem(int position){
+    public IApiBean getItem(int position){
         return adapterDataApi().getItem(position);
     }
 
-    protected T add(IApiBean bean) {
+    public T add(IApiBean bean) {
         adapterDataApi().add(bean);
         return getThis();
     }
 
-    protected T addAll(List<IApiBean> data) {
+    public T addAll(List<IApiBean> data) {
         adapterDataApi().addAll(data);
         return getThis();
     }
 
-    protected T replaceAll(List<IApiBean> data) {
+    public T replaceAll(List<IApiBean> data) {
         clear().addAll(data);
         return getThis();
     }
 
-    protected <B extends IApiBean> T addLineAll(List<B> data, boolean end, IRunApi<B> api) {
+    public <B extends IApiBean> T addLineAll(List<B> data, boolean end, IRunApi<B> api) {
         if (!TextUtils.isEmpty(data)) {
             for (B bean : data) {
                 if(!check(bean)){
@@ -172,12 +179,12 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    protected <B extends IApiBean> T replaceLineAll(List<B> data, boolean end) {
+    public <B extends IApiBean> T replaceLineAll(List<B> data, boolean end) {
         replaceApiAll(data, end, null);
         return getThis();
     }
 
-    protected <B extends IApiBean> T replaceApiAll(List<B> data, boolean end, IRunApi<B> api) {
+    public <B extends IApiBean> T replaceApiAll(List<B> data, boolean end, IRunApi<B> api) {
         clear().addLineAll(data, end, api);
         return getThis();
     }
@@ -198,9 +205,11 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    public T addGridBean(BaseApiBean... args){
-        if(!TextUtils.isEmpty(args)){
-            add(new GridBean(TextUtils.getListData(args)));
+    public T addVgBean(IRunApi<List<BaseApiBean>> api){
+        if(api != null){
+            List<BaseApiBean> data = new ArrayList<>();
+            api.execute(data);
+            add(new VgBean(data));
         }
         return getThis();
     }

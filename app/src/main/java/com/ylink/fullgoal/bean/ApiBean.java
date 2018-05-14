@@ -18,6 +18,10 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
     private String detail;
     private String hint;
 
+    public ApiBean(String name) {
+        this(null, name, null, null, null);
+    }
+
     public ApiBean(String name, String detail) {
         this(null, name, detail, null, null);
     }
