@@ -22,6 +22,10 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
         this(null, name, null, null, null);
     }
 
+    public ApiBean(OnBVClickListener<T> listener) {
+        this(null, null, null, null, listener);
+    }
+
     public ApiBean(String name, String detail) {
         this(null, name, detail, null, null);
     }
@@ -40,6 +44,10 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
 
     public ApiBean(String name, String detail, String hint) {
         this(name, detail, hint, null);
+    }
+
+    public ApiBean(Integer iconResId, OnBVClickListener<T> listener) {
+        this(iconResId, null, null, null, listener);
     }
 
     public ApiBean(Integer iconResId, String name, String detail, String hint, OnBVClickListener<T> listener) {

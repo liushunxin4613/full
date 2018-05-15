@@ -48,6 +48,10 @@ public class BarControllerApi<T extends BarControllerApi, C> extends SurfaceCont
         return getThis();
     }
 
+    public TextView getRightTv() {
+        return rightTv;
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

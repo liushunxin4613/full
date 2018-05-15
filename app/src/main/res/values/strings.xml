@@ -2,4 +2,11 @@
     <string name="app_name">财务共享机器人</string>
     <string name="time_init">0s</string>
     <string name="complete">完成</string>
+    <string name="jneqj">金额区间</string>
+    <string name="zuidi">最低</string>
+    <string name="zuigao">最高</string>
+    <string name="shiyou">事由关键字</string>
+    <string name="qingshursygjz">请输入事由关键字</string>
+    <string name="confirm">确定</string>
+    <string name="reset">重置</string>
 </resources>

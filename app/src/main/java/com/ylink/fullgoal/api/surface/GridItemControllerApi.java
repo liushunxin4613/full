@@ -8,12 +8,10 @@ import com.leo.core.util.ResUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
-import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.other.GridSpacingItemDecoration;
 
-public class GridItemControllerApi<T extends GridItemControllerApi, C> extends RecycleControllerApi<T, C> {
+public class GridItemControllerApi<T extends GridItemControllerApi, C> extends SetRecycleControllerApi<T, C> {
 
-    private Integer layoutResId;
     private int space = 10;
     private int edgeSpace = space * 3;
     private int unit;
@@ -24,17 +22,6 @@ public class GridItemControllerApi<T extends GridItemControllerApi, C> extends R
 
     private int getGridCount() {
         return 3;
-    }
-
-    @Override
-    public T setRootViewResId(Integer resId) {
-        layoutResId = resId;
-        return super.setRootViewResId(resId);
-    }
-
-    @Override
-    public Integer getRootViewResId() {
-        return layoutResId;
     }
 
     @Override

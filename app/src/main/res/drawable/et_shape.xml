@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <stroke
+        android:width="@dimen/tv_shape_stroke_width"
+        android:color="@color/tv1" />
+
+    <corners android:radius="4dp" />
+
+    <padding
+        android:bottom="12dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="12dp" />
+
+    <!--<solid android:color="@color/cef"/>-->
+
+</shape>

@@ -9,4 +9,6 @@
     <dimen name="tv1">15sp</dimen>
     <dimen name="tv2">12sp</dimen>
     <dimen name="icon_padding">8dp</dimen>
+    <dimen name="radius">8dp</dimen>
+    <dimen name="tv_shape_stroke_width">3.0px</dimen>
 </resources>

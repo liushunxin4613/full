@@ -8,13 +8,18 @@ import android.widget.TextView;
 
 import com.leo.core.iapi.IBindItemCallback;
 import com.leo.core.iapi.IRunApi;
+import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.CCSQDBean;
+import com.ylink.fullgoal.bean.DateArrayBean;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
+import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
+import com.ylink.fullgoal.bean.SXBean;
+import com.ylink.fullgoal.bean.SelectedTvBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
@@ -34,7 +39,10 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
     private TextView endTv;
     private TextView typeTv;
     private TextView placeTv;
+    private EditText nameEt;
     private EditText detailEt;
+    private EditText minEt;
+    private EditText maxEt;
     private ImageView iconIv;
 
     public ItemControllerApi(C controller) {
@@ -55,7 +63,10 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         endTv = findViewById(view, R.id.end_tv);
         typeTv = findViewById(view, R.id.type_tv);
         placeTv = findViewById(view, R.id.place_tv);
+        nameEt = findViewById(view, R.id.name_et);
         detailEt = findViewById(view, R.id.detail_et);
+        minEt = findViewById(view, R.id.min_et);
+        maxEt = findViewById(view, R.id.max_et);
         iconIv = findViewById(view, R.id.icon_iv);
     }
 
@@ -76,7 +87,39 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                     .setOnClickListener(nameTv, bean.getOnNameClickListener())
                     .setOnClickListener(detailTv, bean.getOnDetailClickListener());
         });
-        //总的数据
+        //图片Bar
+        putBindBeanCallback(IconBean.class, (bean, position) -> setOnClickListener(iconIv,
+                bean.getOnClickListener()));
+        //文字文字组
+        putBindBeanCallback(DateArrayBean.class, (bean, position) -> {
+            setName(bean.getName());
+            addView(vg -> {
+                vg.removeAllViews();
+                GridItemControllerApi api = getViewControllerApi(GridItemControllerApi.class, R.layout.l_recycle);
+                vg.addView(api.getRootView());
+                api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
+                api.addAll(bean.getData()).notifyDataSetChanged();
+            });
+        });
+        //文字
+        putBindBeanCallback(SelectedTvBean.class, (bean, position) -> setName(bean.getName())
+                .setOnClickListener(v -> {
+                    ViewGroup vg = (ViewGroup) v.getParent();
+                    if (!TextUtils.equals(vg.getTag(), v)) {
+                        if (vg.getTag() instanceof View) {
+                            ((View) vg.getTag()).setSelected(false);
+                        }
+                        v.setSelected(true);
+                        vg.setTag(v);
+                    }
+                }));
+        //筛选
+        putBindBeanCallback(SXBean.class, (bean, position) -> {
+            bean.setMinTv(minEt);
+            bean.setMaxTv(maxEt);
+            bean.setTextTv(nameEt);
+        });
+        //VgBean ************* 总的数据 *************
         putBindBeanCallback(VgBean.class, (bean, position) -> addView(vg -> {
             vg.removeAllViews();
             execute(bean.getData(), item -> {
@@ -161,7 +204,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         return getThis();
     }
 
-    private T setOnClickListener(View.OnClickListener listener) {
+    protected T setOnClickListener(View.OnClickListener listener) {
         setOnClickListener(getRootView(), listener);
         return getThis();
     }

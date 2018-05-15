@@ -6,10 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y48"
-        android:background="@color/bg"/>
+    <include layout="@layout/l_line"/>
 
     <LinearLayout
         android:id="@+id/vg"
