@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/name_tv"
+        style="@style/Padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/indicator_selected"
+        tools:text="待处理" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y8"
+        android:background="@drawable/indicator_selected_line"
+        />
+
+</LinearLayout>

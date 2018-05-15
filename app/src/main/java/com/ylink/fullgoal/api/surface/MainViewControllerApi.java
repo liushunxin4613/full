@@ -29,7 +29,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用普票报销", (bean, view) -> evectionCommon(ReimburseVo.STATE_INITIATE)),
                         new IconTvMoreBean(R.mipmap.test_icon2, "出差费用专票报销", (bean, view) -> evectionDedicated(ReimburseVo.STATE_INITIATE)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> {
-                    show(bean.getName());
+//                    show(bean.getName());
+                    startSurfaceActivity(ReimburseDataControllerApi.class);
                 }))
                 //测试
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
@@ -44,7 +45,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 })).notifyDataSetChanged();
 
         //test
-        evectionDedicated(ReimburseVo.STATE_INITIATE);
+//        evectionDedicated(ReimburseVo.STATE_INITIATE);
+        startSurfaceActivity(ReimburseDataControllerApi.class);
 
     }
 

@@ -20,6 +20,13 @@ public abstract class BaseApiBean implements IApiBean {
         return apiId;
     }
 
+    public BaseApiBean() {
+    }
+
+    public BaseApiBean(IControllerApi api) {
+        this.api = api;
+    }
+
     public IControllerApi getApi() {
         return api;
     }

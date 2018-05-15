@@ -1,19 +1,12 @@
 package com.ylink.fullgoal.api.surface;
 
-import android.widget.Button;
-
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.view.ChooseDialog;
 
 import java.util.Arrays;
 
-import butterknife.Bind;
-
 public class TestControllerApi extends SurfaceControllerApi {
-
-    @Bind(R.id.bt)
-    Button bt;
 
     public TestControllerApi(Object controller) {
         super(controller);
@@ -34,7 +27,7 @@ public class TestControllerApi extends SurfaceControllerApi {
                     ee("selectedIndex", selectedIndex);
                     ee("item", item);
                 });
-        bt.setOnClickListener(v -> dialog.show());
+//        bt.setOnClickListener(v -> dialog.show());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.controllerApi.core;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
@@ -55,8 +56,12 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return clz == null ? null : (R) new BaseControllerApiView(getContext()).init(clz, layoutResId).controllerApi();
     }
 
+    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz, View rootView){
+        return clz == null ? null : (R) new BaseControllerApiView(getContext()).init(clz, rootView).controllerApi();
+    }
+
     protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz){
-        return getViewControllerApi(clz, null);
+        return getViewControllerApi(clz, (Integer) null);
     }
 
     protected <R extends IControllerApi> R getDialogControllerApi(Class<R> clz, Integer layoutResId){

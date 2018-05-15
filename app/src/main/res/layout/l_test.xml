@@ -2,13 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
-    <Button
-        android:id="@+id/bt"
+    <TextView
+        android:id="@+id/name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="submit"
+        android:text="战三"
+        android:textSize="@dimen/y48"
+        android:textColor="@color/tv"
         />
 
 </LinearLayout>

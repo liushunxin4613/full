@@ -60,7 +60,7 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
         return (T) this;
     }
 
-    protected <R> void execute(R obj, IRunApi<R> api){
+    protected <B> void execute(B obj, IRunApi<B> api){
         RunUtil.executeNon(obj, api);
     }
 

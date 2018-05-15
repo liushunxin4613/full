@@ -2,7 +2,6 @@ package com.leo.core.core;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.leo.core.api.ObjectApi;
 import com.leo.core.iapi.IBindContextApi;

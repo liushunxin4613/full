@@ -146,7 +146,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             if (context instanceof Activity) {
                 activity = (Activity) context;
             }
-        } else if(controller instanceof Dialog){
+        } else if (controller instanceof Dialog) {
             dialog = (Dialog) controller;
             context = dialog.getContext();
             if (context instanceof Activity) {
@@ -534,7 +534,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public T dialogShow() {
-        if(isDialog() && !getDialog().isShowing()){
+        if (isDialog() && !getDialog().isShowing()) {
             getDialog().show();
         }
         return getThis();
@@ -542,7 +542,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public T dismiss() {
-        if(isDialog()){
+        if (isDialog()) {
             getDialog().dismiss();
         }
         return getThis();
@@ -590,7 +590,13 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public T setRootViewResId(Integer resId) {
-        rootViewResId = resId;
+        this.rootViewResId = resId;
+        return getThis();
+    }
+
+    @Override
+    public T setRootView(View rootView) {
+        this.rootView = rootView;
         return getThis();
     }
 
@@ -650,11 +656,19 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    }
+
+    @Override
+    public void onLayout(boolean changed, int l, int t, int r, int b) {
+    }
+
+    @Override
     public T executeBundle(IRunApi<Bundle> api) {
-        if(api != null){
-            if(isActivity()){
+        if (api != null) {
+            if (isActivity()) {
                 executeNon(getActivity().getIntent().getExtras(), api);
-            } else if(isFragment()){
+            } else if (isFragment()) {
                 executeNon(getFragment().getArguments(), api);
             }
         }
@@ -689,8 +703,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 rootView = getObject(getRootViewClz()
                         , new Class[]{Context.class}
                         , new Object[]{getContext()});
-                if(rootView instanceof BaseControllerApiView && getRootViewClzApi() != null){
-                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), null);
+                if (rootView instanceof BaseControllerApiView && getRootViewClzApi() != null) {
+                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), (View) null);
                 }
             }
             if (getRootViewResId() != null) {
@@ -701,19 +715,19 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             }
             initView();
             initData();
-        } else if(isDialog()){
+        } else if (isDialog()) {
             if (getRootViewClz() != null) {
                 rootView = getObject(getRootViewClz()
                         , new Class[]{Context.class}
                         , new Object[]{getContext()});
-                if(rootView instanceof BaseControllerApiView && getRootViewClzApi() != null){
-                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), null);
+                if (rootView instanceof BaseControllerApiView && getRootViewClzApi() != null) {
+                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), (View) null);
                 }
             }
             if (getRootViewResId() != null) {
                 getDialog().setContentView(getRootViewResId());
                 Window window = getDialog().getWindow();
-                if(window != null){
+                if (window != null) {
                     rootView = window.getDecorView();
                 }
             } else if (getRootView() != null) {
@@ -1520,8 +1534,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         return (R[]) mergeApi().newArray(clz, length);
     }
 
+    @SafeVarargs
     @Override
-    public <R> R[] merge(Class<R> clz, boolean end, R[] args, R... args1) {
+    public final <R> R[] merge(Class<R> clz, boolean end, R[] args, R... args1) {
         return (R[]) mergeApi().merge(clz, end, args, args1);
     }
 

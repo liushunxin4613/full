@@ -173,9 +173,16 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     /**
      * 设置resId
      *
-     * @return resId
+     * @return 本身
      */
     T setRootViewResId(Integer resId);
+
+    /**
+     * 设置rootView
+     *
+     * @return 本身
+     */
+    T setRootView(View rootView);
 
     /**
      * 样式资源数组
@@ -451,6 +458,23 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @param <B>      B
      */
     <B> void onBindViewHolder(B bean, int position);
+
+    /**
+     * 测量view的大学
+     * @param widthMeasureSpec 横向长度
+     * @param heightMeasureSpec 纵向长度
+     */
+    void onMeasure(int widthMeasureSpec, int heightMeasureSpec);
+
+    /**
+     * 给view以及子view测量
+     * @param changed 表示view有了新的尺寸和位置
+     * @param l 相对于父view的左侧距离
+     * @param t 相对于父view的上侧距离
+     * @param r 相对于父view的右侧距离
+     * @param b 相对于父view的底侧距离
+     */
+    void onLayout(boolean changed, int l, int t, int r, int b);
 
     //自定义的
 

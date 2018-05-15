@@ -9,4 +9,10 @@
         <attr name="height_VIEW" format="dimension"/>
     </declare-styleable>
 
+    <!-- circle imageView -->
+    <declare-styleable name="BaseControllerApiView">
+        <attr name="api" format="string"/>
+        <attr name="layout" format="reference"/>
+    </declare-styleable>
+
 </resources>

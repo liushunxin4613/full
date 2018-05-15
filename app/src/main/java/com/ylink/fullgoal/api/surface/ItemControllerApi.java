@@ -20,6 +20,7 @@ import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
+import com.ylink.fullgoal.bean.TvHTv3Bean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.bean.XCJPBean;
@@ -138,6 +139,9 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setText(placeTv, bean.getPlace())
                 .setText(startTv, bean.getStart())
                 .setText(endTv, bean.getEnd()));
+        //文字多行文字
+        putBindItemCallback(TvHTv3Bean.class, (api, bean) -> api.setName(bean.getName())
+                .setDetail(bean.getDetail()));
     }
 
     //私有的
