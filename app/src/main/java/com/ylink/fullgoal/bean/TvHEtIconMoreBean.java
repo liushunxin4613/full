@@ -15,7 +15,7 @@ public class TvHEtIconMoreBean extends ApiBean<TvHEtIconMoreBean> {
 
     @Override
     public Integer getApiType() {
-        return R.layout.l_h_tv_et_more;
+        return getEnableLayoutResId(R.layout.l_h_tv_et_more);
     }
 
 }

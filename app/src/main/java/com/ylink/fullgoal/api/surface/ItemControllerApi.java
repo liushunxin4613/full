@@ -149,6 +149,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindItemCallback(TvHEtIconMoreBean.class, (api, bean) -> {
             bean.setTextView(detailEt);
             api.setName(bean.getName())
+                    .setDetail(bean.getDetail())
                     .setImage(iconIv, bean.getIconResId())
                     .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
                     .setOnClickListener(iconIv, bean.getOnClickListener())
@@ -162,6 +163,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setOnClickListener(getRootView(), bean.getOnClickListener()));
         //文字多行输入
         putBindItemCallback(TvHEt3Bean.class, (api, bean) -> api.setName(bean.getName())
+                .setDetail(bean.getDetail())
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
         //文字

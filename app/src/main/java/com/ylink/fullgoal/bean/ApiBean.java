@@ -1,11 +1,11 @@
 package com.ylink.fullgoal.bean;
 
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.OnBVClickListener;
+import com.ylink.fullgoal.R;
 
 public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
 
@@ -82,10 +82,6 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
         this.hint = hint;
     }
 
-    public View.OnClickListener getOnClickListener() {
-        return onClickListener;
-    }
-
     public void setOnBVClickListener(OnBVClickListener<T> listener) {
         this.onClickListener = listener == null ? null : v -> listener.onBVClick((T) this, v);
     }
@@ -105,4 +101,13 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
     public void setTextView(TextView textView) {
         this.textView = textView;
     }
+
+    protected Integer getEnableLayoutResId(Integer resId) {
+        return isEnable() ? resId : R.layout.l_h_tv2_more_s;
+    }
+
+    public View.OnClickListener getOnClickListener() {
+        return getEnable(onClickListener, null);
+    }
+
 }

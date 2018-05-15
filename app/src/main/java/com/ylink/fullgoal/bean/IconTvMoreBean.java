@@ -14,4 +14,9 @@ public class IconTvMoreBean extends ApiBean<IconTvMoreBean> {
         return R.layout.l_icon_tv_more;
     }
 
+    @Override
+    public boolean isEnable() {
+        return true;
+    }
+
 }

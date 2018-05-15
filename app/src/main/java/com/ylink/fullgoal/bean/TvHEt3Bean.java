@@ -10,7 +10,7 @@ public class TvHEt3Bean extends ApiBean<TvHEt3Bean> {
 
     @Override
     public Integer getApiType() {
-        return R.layout.l_tv_et3;
+        return getEnable(R.layout.l_tv_et3, R.layout.l_tv_tv3_s);
     }
 
 }

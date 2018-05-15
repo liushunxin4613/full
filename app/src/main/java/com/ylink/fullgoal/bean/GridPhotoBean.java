@@ -18,6 +18,7 @@ public class GridPhotoBean extends BaseApiBean {
     private Object res;
     private transient View.OnClickListener onClickListener;
     private transient View.OnLongClickListener onLongClickListener;
+    private transient boolean enable;
 
     public GridPhotoBean(Object res, OnBVClickListener<GridPhotoBean> clickListener
             , OnBVLongClickListener<GridPhotoBean> longClickListener) {
@@ -43,7 +44,7 @@ public class GridPhotoBean extends BaseApiBean {
     }
 
     public View.OnLongClickListener getOnLongClickListener() {
-        return onLongClickListener;
+        return getEnable(onLongClickListener, null);
     }
 
     public void setOnLongClickListener(OnBVLongClickListener<GridPhotoBean> listener) {
@@ -58,6 +59,15 @@ public class GridPhotoBean extends BaseApiBean {
 
     public void setUnit(int unit) {
         this.unit = unit;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public GridPhotoBean setEnable(boolean enable) {
+        this.enable = enable;
+        return this;
     }
 
 }

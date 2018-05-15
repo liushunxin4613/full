@@ -21,4 +21,11 @@ public class SetRecycleControllerApi<T extends SetRecycleControllerApi, C> exten
         return layoutResId;
     }
 
+    @Override
+    public void initView() {
+        super.initView();
+        getRecyclerView().setFocusable(false);
+        getRecyclerView().setFocusableInTouchMode(false);
+    }
+
 }

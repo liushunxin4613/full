@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:textColor="@color/tv"
-        android:textSize="@dimen/tv2"
+        android:textSize="@dimen/tv"
         tools:ignore="RtlHardcoded"
         tools:text="事由" />
 
@@ -20,14 +20,11 @@
         android:id="@+id/detail_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_tv"
-        android:layout_marginLeft="@dimen/pad_smal"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_toRightOf="@+id/name_tv"
         android:background="@null"
-        android:gravity="left"
         android:textColor="@color/tv"
-        android:textColorHint="@color/tv1"
         android:textSize="@dimen/tv"
-        tools:ignore="LabelFor,RtlHardcoded,TextFields"
-        tools:text="事由详情" />
+        tools:ignore="LabelFor,RtlHardcoded,TextFields" />
 
 </RelativeLayout>

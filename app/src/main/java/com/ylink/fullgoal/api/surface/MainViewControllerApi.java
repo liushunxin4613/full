@@ -28,25 +28,27 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 new IconTvMoreBean(R.mipmap.test_icon2, "一般费用专票报销", (bean, view) -> generalDedicated(ReimburseVo.STATE_INITIATE)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用普票报销", (bean, view) -> evectionCommon(ReimburseVo.STATE_INITIATE)),
                         new IconTvMoreBean(R.mipmap.test_icon2, "出差费用专票报销", (bean, view) -> evectionDedicated(ReimburseVo.STATE_INITIATE)))
-                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> {
-//                    show(bean.getName());
-                    startSurfaceActivity(ReimburseDataControllerApi.class);
-                }))
+                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> startSurfaceActivity(ReimburseDataControllerApi.class)))
                 //测试
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
                     generalCommon(ReimburseVo.STATE_CONFIRM);
                 }), new IconTvMoreBean(R.mipmap.test_icon2, "一般费用经办人修改", (bean, view) -> {
                     generalCommon(ReimburseVo.STATE_ALTER);
+                }), new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销详情", (bean, view) -> {
+                    generalCommon(ReimburseVo.STATE_DETAIL);
                 }))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用经办人确认", (bean, view) -> {
                     evectionCommon(ReimburseVo.STATE_CONFIRM);
                 }), new IconTvMoreBean(R.mipmap.test_icon2, "出差费用经办人修改", (bean, view) -> {
                     evectionCommon(ReimburseVo.STATE_ALTER);
+                }), new IconTvMoreBean(R.mipmap.test_icon1, "出差费用报销详情", (bean, view) -> {
+                    evectionCommon(ReimburseVo.STATE_DETAIL);
                 })).notifyDataSetChanged();
 
         //test
 //        evectionDedicated(ReimburseVo.STATE_INITIATE);
-        startSurfaceActivity(ReimburseDataControllerApi.class);
+//        startSurfaceActivity(ReimburseDataControllerApi.class);
+        evectionCommon(ReimburseVo.STATE_DETAIL);
 
     }
 

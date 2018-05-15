@@ -209,7 +209,9 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         if(api != null){
             List<BaseApiBean> data = new ArrayList<>();
             api.execute(data);
-            add(new VgBean(data));
+            if(!TextUtils.isEmpty(data)){
+                add(new VgBean(data));
+            }
         }
         return getThis();
     }

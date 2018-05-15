@@ -22,6 +22,10 @@ public class ReimburseVo {
      * 经办人修改
      */
     public final static String STATE_ALTER = "经办人修改";
+    /**
+     * 报销详情
+     */
+    public final static String STATE_DETAIL = "报销详情";
 
     //发票类型
     /**

@@ -55,31 +55,30 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
     protected void onReimburseVo(ReimburseVo vo) {
         super.onReimburseVo(vo);
         //VgBean 基本信息组
-        List<BaseApiBean> vgData = new ArrayList<>();
-        //经办人、部门
-        vgData.add(new TvH2Bean(vo.getAgent(), vo.getDepartment()));
-        vgData.add(new TvHEtIconMoreBean(R.mipmap.test_icon_user, "报销人", vo.getReimbursement(), "请输入报销人", (bean, view) -> {
-            show(bean.getName() + ", " + bean.getText());
-        }));
-        vgData.add(new TvH2MoreBean("预算归属部门", vo.getBudgetDepartment(), "请选择预算归属部门", (bean, view) -> {
-            show(bean.getName());
-        }));
-        vgData.add(new TvH2MoreBean("项目", vo.getProject(), "请选择项目", (bean, view) -> {
-            show(bean.getName());
-        }));
-        vgData.add(new TvH2MoreBean("合同付款申请单", vo.getContractBill(), "请选择合同付款申请单", (bean, view) -> {
-            show(bean.getName());
-        }));
-        vgData.add(new TvH2MoreBean("招待申请单", vo.getServeBill(), "请选择招待申请单", (bean, view) -> {
-            show(bean.getName());
-        }));
-        //经办人确认、经办人修改
-        if (!TextUtils.equals(vo.getState(), ReimburseVo.STATE_INITIATE)) {
-            vgData.add(new TvHEtIconMoreBean("金额", vo.getTotalAmountLower(), "请输入金额"));
-        }
-        vgData.add(new TvHEt3Bean("事由", vo.getCause(), "请输入事由"));
-        add(new VgBean(vgData));
-
+        addVgBean(data -> {
+            //经办人、部门
+            data.add(new TvH2Bean(vo.getAgent(), vo.getDepartment()));
+            data.add(new TvHEtIconMoreBean(R.mipmap.test_icon_user, "报销人", vo.getReimbursement(), "请输入报销人", (bean, view) -> {
+                show(bean.getName() + ", " + bean.getText());
+            }));
+            data.add(new TvH2MoreBean("预算归属部门", vo.getBudgetDepartment(), "请选择预算归属部门", (bean, view) -> {
+                show(bean.getName());
+            }));
+            data.add(new TvH2MoreBean("项目", vo.getProject(), "请选择项目", (bean, view) -> {
+                show(bean.getName());
+            }));
+            data.add(new TvH2MoreBean("合同付款申请单", vo.getContractBill(), "请选择合同付款申请单", (bean, view) -> {
+                show(bean.getName());
+            }));
+            data.add(new TvH2MoreBean("招待申请单", vo.getServeBill(), "请选择招待申请单", (bean, view) -> {
+                show(bean.getName());
+            }));
+            //经办人确认、经办人修改
+            if (!TextUtils.equals(vo.getState(), ReimburseVo.STATE_INITIATE)) {
+                data.add(new TvHEtIconMoreBean("金额", vo.getTotalAmountLower(), "请输入金额"));
+            }
+            data.add(new TvHEt3Bean("事由", vo.getCause(), "请输入事由"));
+        });
         //GridBean 添加票据
         addVgBean(new GridBean(getPhotoGridBeanData(vo.getBillData())));
 

@@ -6,11 +6,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.leo.core.bean.BaseApiBean;
+import com.leo.core.iapi.IRunApi;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
+import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.vo.BillVo;
@@ -83,7 +87,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
             title = TextUtils.equals(title, ReimburseVo.STATE_INITIATE) ? reimburseType : title;
             setTitle(title);
             switch (TextUtils.isEmpty(state) ? "" : state) {
-                default:
                 case ReimburseVo.STATE_INITIATE:
                     setRightTv("提交", v -> show("提交"));
                     break;
@@ -107,6 +110,10 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                     break;
             }
         });
+    }
+
+    protected boolean isEnable(){
+        return !TextUtils.equals(state, ReimburseVo.STATE_DETAIL);
     }
 
     /**
@@ -136,12 +143,29 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     protected List<GridPhotoBean> getPhotoGridBeanData(List<BillVo> data) {
         List<GridPhotoBean> gridData = new ArrayList<>();
         execute(data, obj -> gridData.add(new GridPhotoBean(obj.getPhoto(),
-                this::onGridPhotoClick, this::onGridPhotoLongClick)));
-        gridData.add(new GridPhotoBean(R.mipmap.posting_add, (bean, view) -> {
-            //添加图片
-            show("添加票据");
-        }, null));
+                this::onGridPhotoClick, this::onGridPhotoLongClick).setEnable(isEnable())));
+        if(isEnable()){
+            gridData.add(new GridPhotoBean(R.mipmap.posting_add, (bean, view) -> {
+                //添加图片
+                show("添加票据");
+            }, null));
+        }
         return gridData;
+    }
+
+    @Override
+    public T addVgBean(IRunApi<List<BaseApiBean>> api) {
+        return super.addVgBean(data -> {
+            api.execute(data);
+            execute(data, item -> item.setEnable(isEnable()));
+        });
+    }
+
+    public T addVgBean(String title, List<BillVo> data){
+        if(!TextUtils.isEmpty(title) && !(!isEnable() && TextUtils.isEmpty(data))){
+            addVgBean(new TvBean(title), new GridBean(getPhotoGridBeanData(data)));
+        }
+        return getThis();
     }
 
     /**
@@ -177,7 +201,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
             lp.width = DisneyUtil.getScreenDisplay().getX() - ResUtil.getDimenInt(R.dimen.x120);
             window.setAttributes(lp);
         }
-        return false;
+        return true;
     }
 
 }

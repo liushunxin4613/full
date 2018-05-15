@@ -11,7 +11,7 @@ public class TvH2MoreBean extends ApiBean<TvH2MoreBean> {
 
     @Override
     public Integer getApiType() {
-        return R.layout.l_h_tv2_more;
+        return getEnableLayoutResId(R.layout.l_h_tv2_more);
     }
 
 }

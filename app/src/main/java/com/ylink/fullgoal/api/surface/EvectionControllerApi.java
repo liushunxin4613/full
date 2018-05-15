@@ -17,6 +17,8 @@ import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.BusinessVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
+import java.util.List;
+
 /**
  * 出差费用报销
  */
@@ -87,36 +89,47 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             }
             data.add(new TvHEt3Bean("事由", vo.getCause(), "请输入事由"));
         });
+        //VgBean 出差申请单
         addVgBean(data -> {
-            data.add(new TvBean("出差申请单添加"));
+            if (!(!isEnable() && TextUtils.isEmpty(vo.getBusinessData()))) {
+                data.add(new TvBean("出差申请单添加"));
+            }
             execute(vo.getBusinessData(), item -> data.add(new CCSQDBean(item.getSerialNo(),
                     item.getDays(), item.getStartDate(), item.getEndDate())));
-            data.add(new IconTvHBean("添加出差申请单", (bean, view) -> {
-                show(bean.getName());
-            }));
+            if (isEnable()) {
+                data.add(new IconTvHBean("添加出差申请单", (bean, view) -> {
+                    show(bean.getName());
+                }));
+            }
         });
         //GridBean 交通费报销
-        addVgBean(new TvBean("交通费报销"), new GridBean(getPhotoGridBeanData(vo.getTrafficBillData())));
+        addVgBean("交通费报销", vo.getTrafficBillData());
         //GridBean 住宿费报销
-        addVgBean(new TvBean("住宿费报销"), new GridBean(getPhotoGridBeanData(vo.getStayBillData())));
+        addVgBean("住宿费报销", vo.getStayBillData());
         //GridBean 车船机票费报销
         addVgBean(data -> {
-            data.add(new TvBean("车船机票费报销"));
-            IconTvHBean iconTvHBean = new IconTvHBean("添加携程机票", (bean, view) -> {
-                show(bean.getName());
-            });
             AirDataVo airDataVo = vo.getAirDataVo();
-            if (airDataVo != null) {
-                execute(airDataVo.getXcAirData(), item -> data.add(new XCJPBean(item.getUser(),
-                        item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
-                        String.format("%s 到", item.getEndTime()), String.format("%s - %s",
-                        item.getStartPlace(), item.getEndPlace()))));
+            List<AirVo> airData = no(airDataVo, AirDataVo::getXcAirData);
+            List<BillVo> airBillData = no(airDataVo, AirDataVo::getAirBillData);
+            if (!(!isEnable() && TextUtils.isEmpty(airData) && TextUtils.isEmpty(airBillData))) {
+                data.add(new TvBean("车船机票费报销"));
             }
-            data.add(iconTvHBean);
-            data.add(new GridBean(getPhotoGridBeanData(airDataVo == null ? null : airDataVo.getAirBillData())));
+            execute(airData, item -> data.add(new XCJPBean(item.getUser(),
+                    item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
+                    String.format("%s 到", item.getEndTime()), String.format("%s - %s",
+                    item.getStartPlace(), item.getEndPlace()))));
+            if (isEnable()) {
+                IconTvHBean iconTvHBean = new IconTvHBean("添加携程机票", (bean, view) -> {
+                    show(bean.getName());
+                });
+                data.add(iconTvHBean);
+            }
+            if (!(!isEnable() && TextUtils.isEmpty(airBillData))) {
+                data.add(new GridBean(getPhotoGridBeanData(airBillData)));
+            }
         });
         //GridBean 其他报销
-        addVgBean(new TvBean("其他报销"), new GridBean(getPhotoGridBeanData(vo.getOtherBillData())));
+        addVgBean("其他报销", vo.getOtherBillData());
     }
 
 }
