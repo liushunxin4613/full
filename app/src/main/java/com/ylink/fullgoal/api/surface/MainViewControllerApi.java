@@ -5,7 +5,9 @@ import android.os.Bundle;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
+import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
 import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
@@ -30,6 +32,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                         new IconTvMoreBean(R.mipmap.test_icon2, "出差费用专票报销", (bean, view) -> evectionDedicated(ReimburseVo.STATE_INITIATE)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> startSurfaceActivity(ReimburseDataControllerApi.class)))
                 //测试
+                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "票据", (bean, view) -> {
+                    bill();
+                }))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
                     generalCommon(ReimburseVo.STATE_CONFIRM);
                 }), new IconTvMoreBean(R.mipmap.test_icon2, "一般费用经办人修改", (bean, view) -> {
@@ -48,11 +53,19 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         //test
 //        evectionDedicated(ReimburseVo.STATE_INITIATE);
 //        startSurfaceActivity(ReimburseDataControllerApi.class);
-        evectionCommon(ReimburseVo.STATE_DETAIL);
+//        evectionCommon(ReimburseVo.STATE_DETAIL);
+        bill();
 
     }
 
     //私有的
+
+    /**
+     * 票据
+     */
+    private void bill() {
+        startSurfaceActivity(getBundle(new BillVo(R.mipmap.test_photo, "1239.00")), BillControllerApi.class);
+    }
 
     /**
      * 一般费用普票报销

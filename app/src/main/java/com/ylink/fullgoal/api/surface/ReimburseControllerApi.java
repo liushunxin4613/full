@@ -16,6 +16,7 @@ import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
+import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
@@ -112,8 +113,20 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         });
     }
 
-    protected boolean isEnable(){
+    protected boolean isEnable() {
         return !TextUtils.equals(state, ReimburseVo.STATE_DETAIL);
+    }
+
+    protected <B> B getEnable(B a, B b) {
+        return isEnable() ? a : b;
+    }
+
+    protected <B> B getEnable(B a) {
+        return isEnable() ? a : null;
+    }
+
+    protected <B> B getHasEnable(B a) {
+        return !TextUtils.equals(state, ReimburseVo.STATE_INITIATE) ? a : null;
     }
 
     /**
@@ -142,10 +155,10 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
 
     protected List<GridPhotoBean> getPhotoGridBeanData(List<BillVo> data) {
         List<GridPhotoBean> gridData = new ArrayList<>();
-        execute(data, obj -> gridData.add(new GridPhotoBean(obj.getPhoto(),
+        execute(data, obj -> gridData.add(new GridPhotoBean(obj.getPhoto(), obj,
                 this::onGridPhotoClick, this::onGridPhotoLongClick).setEnable(isEnable())));
-        if(isEnable()){
-            gridData.add(new GridPhotoBean(R.mipmap.posting_add, (bean, view) -> {
+        if (isEnable()) {
+            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) -> {
                 //添加图片
                 show("添加票据");
             }, null));
@@ -161,8 +174,8 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         });
     }
 
-    public T addVgBean(String title, List<BillVo> data){
-        if(!TextUtils.isEmpty(title) && !(!isEnable() && TextUtils.isEmpty(data))){
+    public T addVgBean(String title, List<BillVo> data) {
+        if (!TextUtils.isEmpty(title) && !(!isEnable() && TextUtils.isEmpty(data))) {
             addVgBean(new TvBean(title), new GridBean(getPhotoGridBeanData(data)));
         }
         return getThis();
@@ -175,7 +188,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
      * @param view view
      */
     private void onGridPhotoClick(GridPhotoBean bean, View view) {
-        show("图片");
+        executeNon(bean, obj -> startSurfaceActivity(getBundle(bean.getObj()), BillControllerApi.class));
     }
 
     /**

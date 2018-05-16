@@ -42,10 +42,10 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             getVo().setBudgetDepartment("信息技术部");
             getVo().setProject("第一财经中国经济论坛");
             getVo().setCause("参加第一财经中国经济论坛, 到上海出差,报销差旅费用");
-            getVo().setTrafficBillData(TextUtils.getListData(new BillVo(R.mipmap.test_photo),
-                    new BillVo(R.mipmap.test_photo),
-                    new BillVo(R.mipmap.test_photo),
-                    new BillVo(R.mipmap.test_photo)));
+            getVo().setTrafficBillData(TextUtils.getListData(new BillVo(R.mipmap.test_photo, getHasEnable("294330.00")),
+                    new BillVo(R.mipmap.test_photo, getHasEnable("294230.00")),
+                    new BillVo(R.mipmap.test_photo, getHasEnable("122930.00")),
+                    new BillVo(R.mipmap.test_photo, getHasEnable("342930.00"))));
             getVo().setBusinessData(TextUtils.getListData(
                     new BusinessVo("FGMC-P2018-00021", "3天", "2018-03-04", "2018-03-06"),
                     new BusinessVo("FGMC-P2018-00105", "1天", "2018-03-09", "2018-03-10"),
@@ -55,11 +55,11 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
                     new AirVo("张三", "单程", "1023.00", "2018-03-12 18:23", "次日 01:20", "深圳", "北京"),
                     new AirVo("张三", "单程", "1390.00", "2018-05-04 08:00", "20:00", "上海", "深圳"),
                     new AirVo("张三", "单程", "900.00", "2018-04-26 10:55", "次日 02:30", "广州", "南京")),
-                    TextUtils.getListData(new BillVo(R.mipmap.test_photo),
-                            new BillVo(R.mipmap.test_photo),
-                            new BillVo(R.mipmap.test_photo),
-                            new BillVo(R.mipmap.test_photo),
-                            new BillVo(R.mipmap.test_photo))));
+                    TextUtils.getListData(new BillVo(R.mipmap.test_photo, getHasEnable("2930.00")),
+                            new BillVo(R.mipmap.test_photo, getHasEnable("232930.00")),
+                            new BillVo(R.mipmap.test_photo, getHasEnable("321.00")),
+                            new BillVo(R.mipmap.test_photo, getHasEnable("23.00")),
+                            new BillVo(R.mipmap.test_photo, getHasEnable("294230.00")))));
         }
         //经办人确认、经办人修改
         if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE)) {

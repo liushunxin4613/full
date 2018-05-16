@@ -10,11 +10,15 @@ public class BillVo {
     //金额
     private String money;
 
-    public BillVo(Object photo) {
+    public BillVo(Object photo, String money) {
         this.photo = photo;
+        this.money = money;
     }
 
     public Object getPhoto() {
+        if (photo instanceof Double) {
+            photo = ((Double) photo).intValue();
+        }
         return photo;
     }
 

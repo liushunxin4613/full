@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.surface;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
@@ -8,12 +7,8 @@ import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
-import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 一般费用报销
@@ -40,10 +35,10 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
             getVo().setContractBill("FGMC-CC2018-7715");
             getVo().setServeBill("FGMC-ZD2018-7715");
             getVo().setCause("参加第一财经中国经济论坛, 到上海出差,报销差旅费用");
-            getVo().setBillData(TextUtils.getListData(new BillVo(R.mipmap.test_photo),
-                    new BillVo(R.mipmap.test_photo),
-                    new BillVo(R.mipmap.test_photo),
-                    new BillVo(R.mipmap.test_photo)));
+            getVo().setBillData(TextUtils.getListData(new BillVo(R.mipmap.test_photo, getHasEnable("199.00")),
+                    new BillVo(R.mipmap.test_photo, getHasEnable("2009.00")),
+                    new BillVo(R.mipmap.test_photo, getHasEnable("1231.00")),
+                    new BillVo(R.mipmap.test_photo, getHasEnable("3229.00"))));
         }
         //经办人确认、经办人修改
         if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE)) {

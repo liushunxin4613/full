@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/l_top_bar" />
+
+    <include
+        android:id="@+id/vg"
+        layout="@layout/l_h_tv2_more_s"
+        android:visibility="gone" />
+
+    <uk.co.senab.photoview.PhotoView
+        android:id="@+id/photo_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cc0"
+        android:scaleType="fitCenter"
+        android:visibility="invisible"
+        tools:src="@mipmap/test_photo" />
+
+</LinearLayout>

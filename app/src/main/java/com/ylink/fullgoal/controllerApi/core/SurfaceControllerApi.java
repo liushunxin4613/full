@@ -7,6 +7,7 @@ import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.main.SurfaceActivity;
 
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
@@ -52,24 +53,40 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, bundle, args);
     }
 
-    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz, Integer layoutResId){
+    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz, Integer layoutResId) {
         return clz == null ? null : (R) new BaseControllerApiView(getContext()).init(clz, layoutResId).controllerApi();
     }
 
-    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz, View rootView){
+    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz, View rootView) {
         return clz == null ? null : (R) new BaseControllerApiView(getContext()).init(clz, rootView).controllerApi();
     }
 
-    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz){
+    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz) {
         return getViewControllerApi(clz, (Integer) null);
     }
 
-    protected <R extends IControllerApi> R getDialogControllerApi(Class<R> clz, Integer layoutResId){
+    protected <R extends IControllerApi> R getDialogControllerApi(Class<R> clz, Integer layoutResId) {
         return clz == null ? null : (R) new BaseControllerApiDialog<>(getContext()).init(clz, layoutResId).controllerApi();
     }
 
-    protected <R extends IControllerApi> R getDialogControllerApi(Class<R> clz){
+    protected <R extends IControllerApi> R getDialogControllerApi(Class<R> clz) {
         return getDialogControllerApi(clz, null);
+    }
+
+    protected <B> B getBundle(Bundle bundle, Class<B> clz) {
+        if (bundle != null && clz != null) {
+            return decode(bundle.getString(clz.getName()), clz);
+        }
+        return null;
+    }
+
+    protected Bundle getBundle(Object... args) {
+        if (!TextUtils.isEmpty(args)) {
+            Bundle bundle = new Bundle();
+            execute(args, obj -> bundle.putString(obj.getClass().getName(), encode(obj)));
+            return bundle;
+        }
+        return null;
     }
 
 }
