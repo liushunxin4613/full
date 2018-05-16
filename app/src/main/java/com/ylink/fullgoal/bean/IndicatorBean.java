@@ -13,7 +13,7 @@ public class IndicatorBean extends BaseApiBean{
 
     private String name;
 
-    public IndicatorBean(IControllerApi api, String name) {
+    public IndicatorBean(String name, IControllerApi api) {
         super(api);
         this.name = name;
     }

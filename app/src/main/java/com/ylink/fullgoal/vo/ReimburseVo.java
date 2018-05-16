@@ -10,6 +10,7 @@ import java.util.List;
 public class ReimburseVo {
 
     //修改状态
+
     /**
      * 经办人发起
      */
@@ -28,6 +29,7 @@ public class ReimburseVo {
     public final static String STATE_DETAIL = "报销详情";
 
     //发票类型
+
     /**
      * 一般费用普票报销
      */
@@ -46,12 +48,14 @@ public class ReimburseVo {
     public final static String REIMBURSE_TYPE_EVECTION_DEDICATED = "出差费用专票报销";
 
     //隐式的
+
     //渠道
     private String channel = "android";
     //发起日期
     private String fillDate;
 
     //界面不显示的
+
     //修改状态 发起、确认、修改
     private transient String state;
     //报销状态 待处理、审核中、已完成、已取消四类
@@ -65,9 +69,10 @@ public class ReimburseVo {
     //费用指标
     private CastTargetVo castTarget;
     //禁止规则组
-    private List<InhibitionRule> inhibitionRuleData;
+    private List<InhibitionRuleVo> inhibitionRuleData;
 
     //UI需用的
+
     //报销批次号
     private String serialNo;
     //经办人
@@ -87,15 +92,17 @@ public class ReimburseVo {
     //票据组
     private List<BillVo> billData;
     //流程处理组
-    private List<Process> processData;
+    private List<ProcessVo> processData;
 
     //一般费用报销单有
+
     //合同付款申请单
     private String contractBill;
     //招待申请单
     private String serveBill;
 
     //出差费用报销单有
+
     //出差申请单组
     private List<BusinessVo> businessData;
     //交通费报销票据组
@@ -171,11 +178,11 @@ public class ReimburseVo {
         this.castTarget = castTarget;
     }
 
-    public List<InhibitionRule> getInhibitionRuleData() {
+    public List<InhibitionRuleVo> getInhibitionRuleData() {
         return inhibitionRuleData;
     }
 
-    public void setInhibitionRuleData(List<InhibitionRule> inhibitionRuleData) {
+    public void setInhibitionRuleData(List<InhibitionRuleVo> inhibitionRuleData) {
         this.inhibitionRuleData = inhibitionRuleData;
     }
 
@@ -251,11 +258,11 @@ public class ReimburseVo {
         this.billData = billData;
     }
 
-    public List<Process> getProcessData() {
+    public List<ProcessVo> getProcessData() {
         return processData;
     }
 
-    public void setProcessData(List<Process> processData) {
+    public void setProcessData(List<ProcessVo> processData) {
         this.processData = processData;
     }
 

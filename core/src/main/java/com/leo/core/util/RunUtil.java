@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class RunUtil {
 
+    public static <A, B> B getExecute(A a, IReturnApi<A, B> api){
+        return (a == null || api == null) ? null : api.execute(a);
+    }
+
     public static <T> void executeNon(T obj, IRunApi<T> r) {
         if (obj != null && r != null) {
             r.execute(obj);

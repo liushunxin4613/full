@@ -18,6 +18,7 @@ import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
+import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.SXBean;
 import com.ylink.fullgoal.bean.SelectedTvBean;
 import com.ylink.fullgoal.bean.TvBean;
@@ -88,8 +89,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                     .setOnClickListener(detailTv, bean.getOnDetailClickListener());
         });
         //图片Bar
-        putBindBeanCallback(IconBean.class, (bean, position) -> setOnClickListener(iconIv,
-                bean.getOnClickListener()));
+        putBindBeanCallback(IconBean.class, (bean, position) -> setOnClickListener(iconIv, bean.getOnClickListener()));
         //文字文字组
         putBindBeanCallback(DateArrayBean.class, (bean, position) -> {
             setName(bean.getName());
@@ -119,6 +119,10 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
             bean.setMaxTv(maxEt);
             bean.setTextTv(nameEt);
         });
+        //禁止规则
+        putBindBeanCallback(InhibitionRuleBean.class, (bean, position) -> setIcon(bean.getIconResId())
+                .setName(bean.getName())
+                .setDetail(bean.getDetail()));
         //VgBean ************* 总的数据 *************
         putBindBeanCallback(VgBean.class, (bean, position) -> addView(vg -> {
             vg.removeAllViews();

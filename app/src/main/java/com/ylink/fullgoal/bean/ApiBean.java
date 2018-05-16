@@ -34,6 +34,10 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
         this(null, name, detail, null, listener);
     }
 
+    public ApiBean(Integer iconResId, String name, String detail) {
+        this(iconResId, name, detail, null, null);
+    }
+
     public ApiBean(Integer iconResId, String name, OnBVClickListener<T> listener) {
         this(iconResId, name, null, null, listener);
     }

@@ -11,7 +11,7 @@ public abstract class BaseApiBean implements IApiBean {
 
     private transient Object apiId = TextUtils.getRandom();
     private transient IControllerApi api;
-    private transient boolean enable;
+    private transient boolean enable = true;
 
     @Override
     public abstract Integer getApiType();

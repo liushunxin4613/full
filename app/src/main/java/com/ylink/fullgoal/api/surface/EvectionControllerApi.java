@@ -1,10 +1,12 @@
 package com.ylink.fullgoal.api.surface;
 
+import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
+import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
@@ -15,9 +17,13 @@ import com.ylink.fullgoal.vo.AirDataVo;
 import com.ylink.fullgoal.vo.AirVo;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.BusinessVo;
+import com.ylink.fullgoal.vo.InhibitionRuleVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
 import java.util.List;
+
+import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_RED;
+import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_YELLOW;
 
 /**
  * 出差费用报销
@@ -60,6 +66,19 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
                             new BillVo(R.mipmap.test_photo, getHasEnable("321.00")),
                             new BillVo(R.mipmap.test_photo, getHasEnable("23.00")),
                             new BillVo(R.mipmap.test_photo, getHasEnable("294230.00")))));
+            if (isAlterEnable()) {
+                String agent = getVo().getAgent();
+                getVo().setInhibitionRuleData(TextUtils.getListData(
+                        new InhibitionRuleVo("差旅费报销中不能有餐费报销", STATE_RED,
+                                String.format("%s的差旅费报销中含有餐费发票", agent)),
+                        new InhibitionRuleVo("招待费用超标", STATE_YELLOW,
+                                String.format("%s招待费用超出标准%s元,请申请特批", agent, "2000")),
+                        new InhibitionRuleVo("差旅费报销中不能有餐费报销", STATE_RED,
+                                String.format("%s的差旅费报销中含有餐费发票", agent)),
+                        new InhibitionRuleVo("招待费用超标", STATE_YELLOW,
+                                String.format("%s招待费用超出标准%s元,请申请特批", agent, "2000"))
+                ));
+            }
         }
         //经办人确认、经办人修改
         if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE)) {
@@ -89,6 +108,11 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             }
             data.add(new TvHEt3Bean("事由", vo.getCause(), "请输入事由"));
         });
+        //禁止规则
+        if (isAlterEnable() && !TextUtils.isEmpty(vo.getInhibitionRuleData())) {
+            execute(vo.getInhibitionRuleData(), obj -> add(new InhibitionRuleBean(obj.getState(),
+                    obj.getName(), obj.getDetail())));
+        }
         //VgBean 出差申请单
         addVgBean(data -> {
             if (!(!isEnable() && TextUtils.isEmpty(vo.getBusinessData()))) {

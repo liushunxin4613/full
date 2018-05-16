@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/l_line"/>
+
+    <LinearLayout
+        style="@style/Padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="@string/guizemc"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv"
+            tools:ignore="RtlHardcoded" />
+
+        <ImageView
+            android:id="@+id/icon_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_red"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_weight="2"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv1"
+            tools:ignore="RtlHardcoded"
+            tools:text="差旅费报销中不能有餐费报销" />
+
+    </LinearLayout>
+
+    <include layout="@layout/v_line"/>
+
+    <LinearLayout
+        style="@style/Padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="@string/jutixx"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv"
+            tools:ignore="RtlHardcoded" />
+
+        <TextView
+            android:id="@+id/detail_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv1"
+            tools:ignore="RtlHardcoded"
+            tools:text="张三招待费用超出标准2000元,请申请特批" />
+
+    </LinearLayout>
+
+</LinearLayout>

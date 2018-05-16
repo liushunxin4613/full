@@ -3,7 +3,10 @@ package com.ylink.fullgoal.vo;
 /**
  * 禁止规则
  */
-public class InhibitionRule {
+public class InhibitionRuleVo {
+
+    public static final String STATE_RED = "退回";
+    public static final String STATE_YELLOW = "需特批";
 
     //名称
     private String name;
@@ -11,6 +14,12 @@ public class InhibitionRule {
     private String state;
     //信息
     private String detail;
+
+    public InhibitionRuleVo(String name, String state, String detail) {
+        this.name = name;
+        this.state = state;
+        this.detail = detail;
+    }
 
     public String getName() {
         return name;

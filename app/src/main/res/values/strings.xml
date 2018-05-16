@@ -9,4 +9,6 @@
     <string name="qingshursygjz">请输入事由关键字</string>
     <string name="confirm">确定</string>
     <string name="reset">重置</string>
+    <string name="guizemc">规则名称</string>
+    <string name="jutixx">具体信息</string>
 </resources>

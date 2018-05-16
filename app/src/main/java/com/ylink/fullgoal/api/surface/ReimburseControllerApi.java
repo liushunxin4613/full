@@ -111,10 +111,21 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                     break;
             }
         });
+        //test
+        getVo().setAgent("张三");
+        getVo().setDepartment("计划财务部");
     }
 
     protected boolean isEnable() {
         return !TextUtils.equals(state, ReimburseVo.STATE_DETAIL);
+    }
+
+    protected boolean isAlterEnable() {
+        return TextUtils.equals(state, ReimburseVo.STATE_ALTER);
+    }
+
+    protected boolean isNoneInitiateEnable() {
+        return !TextUtils.equals(state, ReimburseVo.STATE_INITIATE);
     }
 
     protected <B> B getEnable(B a, B b) {
@@ -126,7 +137,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     }
 
     protected <B> B getHasEnable(B a) {
-        return !TextUtils.equals(state, ReimburseVo.STATE_INITIATE) ? a : null;
+        return isNoneInitiateEnable() ? a : null;
     }
 
     /**
@@ -148,9 +159,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         vo.setState(state);
         //报销状态
         vo.setReimburseType(reimburseType);
-        //test
-        vo.setAgent("张三");
-        vo.setDepartment("计划财务部");
     }
 
     protected List<GridPhotoBean> getPhotoGridBeanData(List<BillVo> data) {

@@ -1,13 +1,11 @@
 package com.leo.core.util;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -42,6 +40,7 @@ public class StatusBarUtil {
      * @param dark   是否把状态栏字体及图标颜色设置为深色
      * @return boolean 成功执行返回true
      */
+    @SuppressLint({"PrivateApi", "InlinedApi"})
     private static boolean MIUISetStatusBarLightMode(Window window, boolean dark) {
         boolean result = false;
         if (window != null) {
@@ -61,7 +60,7 @@ public class StatusBarUtil {
                     int flag = window.getDecorView().getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
                     window.getDecorView().setSystemUiVisibility(flag);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return result;

@@ -51,10 +51,11 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 })).notifyDataSetChanged();
 
         //test
+
 //        evectionDedicated(ReimburseVo.STATE_INITIATE);
-//        startSurfaceActivity(ReimburseDataControllerApi.class);
+        startSurfaceActivity(ReimburseDataControllerApi.class);
 //        evectionCommon(ReimburseVo.STATE_DETAIL);
-        bill();
+//        bill();
 
     }
 

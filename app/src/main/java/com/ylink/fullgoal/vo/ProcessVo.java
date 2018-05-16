@@ -3,7 +3,7 @@ package com.ylink.fullgoal.vo;
 /**
  * 流程
  */
-public class Process {
+public class ProcessVo {
 
     //处理时间
     private String time;
