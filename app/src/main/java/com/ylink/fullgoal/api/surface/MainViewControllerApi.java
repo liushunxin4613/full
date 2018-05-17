@@ -34,6 +34,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 //测试
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "票据", (bean, view) -> {
                     bill();
+                }), new IconTvMoreBean(R.mipmap.test_icon2, "搜索", (bean, view) -> {
+                    startSurfaceActivity(SearchControllerApi.class);
                 }))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
                     generalCommon(ReimburseVo.STATE_CONFIRM);
@@ -52,10 +54,12 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
 
         //test
 
+        evectionCommon(ReimburseVo.STATE_INITIATE);
 //        evectionDedicated(ReimburseVo.STATE_INITIATE);
-        startSurfaceActivity(ReimburseDataControllerApi.class);
+//        startSurfaceActivity(ReimburseDataControllerApi.class);
 //        evectionCommon(ReimburseVo.STATE_DETAIL);
 //        bill();
+//        startSurfaceActivity(SearchControllerApi.class);
 
     }
 

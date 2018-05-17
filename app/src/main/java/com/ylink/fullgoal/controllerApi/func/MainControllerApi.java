@@ -18,7 +18,6 @@ public class MainControllerApi<T extends SurfaceControllerApi, C> extends Surfac
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (System.currentTimeMillis() - currentBackPressedTime > interval) {
             currentBackPressedTime = System.currentTimeMillis();
             show("再按一次返回键退出程序");

@@ -1,6 +1,5 @@
 package com.leo.core.api.core;
 
-import com.leo.core.iapi.IRAction;
 import com.leo.core.iapi.IReturnApi;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.core.IThisApi;
@@ -36,11 +35,15 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getThis();
     }
 
-    protected <I, R> R getExecute(I in, R def, IRAction<I, R> action){
-        if(in != null && action != null){
-            return action.action(in);
+    protected <A, B> B getExecute(A in, B def, IReturnApi<A, B> api){
+        if(in != null && api != null){
+            return api.execute(in);
         }
         return def;
+    }
+
+    protected <A, B> B getExecute(A in, IReturnApi<A, B> api){
+        return getExecute(in, null, api);
     }
 
     protected <A, B> B no(A a, IReturnApi<A, B> api){

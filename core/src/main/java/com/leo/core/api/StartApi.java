@@ -5,26 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.IObjectApi;
+import com.leo.core.api.main.CoreControllerApi;
+import com.leo.core.api.main.HasCoreControllerApi;
+import com.leo.core.config.Config;
 import com.leo.core.iapi.IStartApi;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
-public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartApi<T> {
+public class StartApi<T extends StartApi> extends HasCoreControllerApi<T> implements IStartApi<T> {
 
-    private Activity activity;
-    private IObjectApi objectApi;
-
-    public StartApi(Activity activity, IObjectApi objectApi) {
-        this.activity = activity;
-        this.objectApi = objectApi;
-    }
-
-    @Override
-    public Activity getActivity() {
-        return activity;
+    public StartApi(CoreControllerApi controllerApi) {
+        super(controllerApi);
     }
 
     @SafeVarargs
@@ -42,9 +33,9 @@ public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartAp
     @SafeVarargs
     @Override
     public final Intent getIntent(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
-        if(getActivity() != null && clz != null){
+        if(controllerApi().getActivity() != null && clz != null){
             int count = TextUtils.count(args);
-            Intent intent = new Intent(getActivity(), clz);
+            Intent intent = new Intent(controllerApi().getActivity(), clz);
             if(bundle != null){
                 intent.putExtras(bundle);
             }
@@ -64,7 +55,7 @@ public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartAp
     public final T startActivity(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
         Intent intent = getIntent(clz, bundle, args);
         if(intent != null){
-            getActivity().startActivity(intent);
+            controllerApi().getActivity().startActivity(intent);
         }
         return getThis();
     }
@@ -78,9 +69,11 @@ public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartAp
     @SafeVarargs
     @Override
     public final T startFinishActivity(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
-        if(getActivity() != null && clz != null){
+        if(controllerApi().getActivity() != null && clz != null){
+            saveData(Config.LAST_FINISH_ACTIVITY, (String) getExecute(controllerApi().getActivity(),
+                    activity -> activity.getClass().getName()));
+            controllerApi().getActivity().finish();
             startActivity(clz, bundle, args);
-            getActivity().finish();
         }
         return getThis();
     }
@@ -113,7 +106,7 @@ public class StartApi<T extends StartApi> extends ThisApi<T> implements IStartAp
     @Override
     public Fragment getFragment(Class<? extends Fragment> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
         if(clz != null){
-            Fragment fragment = (Fragment) objectApi.getObject(clz);
+            Fragment fragment = (Fragment) controllerApi().getObject(clz);
             if(fragment != null){
                 fragment.setArguments(getBundle(bundle, args));
                 return fragment;

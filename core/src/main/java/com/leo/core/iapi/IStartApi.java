@@ -13,12 +13,6 @@ public interface IStartApi<T extends IStartApi> extends IApi{
     String CONTROLLER_API = "controllerApi";
     String ROOT_VIEW_CLZ_API = "rootViewClzApi";
 
-    /**
-     * activity
-     * @return activity
-     */
-    Activity getActivity();
-
     Intent getIntent(Class<? extends Activity> clz, Class<? extends IControllerApi>... args);
 
     /**

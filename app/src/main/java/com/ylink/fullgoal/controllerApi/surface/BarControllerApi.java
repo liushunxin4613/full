@@ -63,4 +63,5 @@ public class BarControllerApi<T extends BarControllerApi, C> extends SurfaceCont
         super.initView();
         setOnClickListener(backIv, view -> onBackPressed());
     }
+
 }

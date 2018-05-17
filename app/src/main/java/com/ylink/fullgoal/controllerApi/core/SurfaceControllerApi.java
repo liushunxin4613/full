@@ -1,13 +1,20 @@
 package com.ylink.fullgoal.controllerApi.core;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.TextureView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.api.surface.SearchControllerApi;
+import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.main.SurfaceActivity;
 
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
@@ -87,6 +94,26 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             return bundle;
         }
         return null;
+    }
+
+    protected void startSearch(String search) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Config.SEARCH, search);
+        startSurfaceActivity(bundle, SearchControllerApi.class);
+    }
+
+    protected int getResTvColor(CharSequence text) {
+        return !TextUtils.isEmpty(text) ? R.color.tv : R.color.tv1;
+    }
+
+    @SuppressLint("ResourceAsColor")
+    protected T setTextView(TextView tv, String name, String hint){
+        if(TextUtils.isEmpty(name)){
+            setText(tv, hint).setTextColor(tv, R.color.tv1);
+        } else {
+            setText(tv, name).setTextColor(tv, R.color.tv);
+        }
+        return getThis();
     }
 
 }

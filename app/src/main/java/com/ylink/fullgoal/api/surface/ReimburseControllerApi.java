@@ -10,12 +10,15 @@ import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
+import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.TvBean;
+import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
+import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.vo.BillVo;
@@ -45,9 +48,10 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     @Bind(R.id.alter_vg)
     LinearLayout alterVg;
 
-    private ReimburseVo vo;
     private String state;
+    private ReimburseVo vo;
     private String reimburseType;
+    private TvHEt3Bean causeBean;
 
     public ReimburseControllerApi(C controller) {
         super(controller);
@@ -73,9 +77,24 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         return reimburseType;
     }
 
+    public TvHEt3Bean getCauseBean() {
+        return causeBean;
+    }
+
+    public TvHEt3Bean setCauseBean(TvHEt3Bean causeBean) {
+        this.causeBean = causeBean;
+        return causeBean;
+    }
+
     @Override
     public Integer getRootViewResId() {
         return R.layout.l_reimburse;
+    }
+
+    @Override
+    protected void startSearch(String search) {
+        executeNon(getCauseBean(), obj -> executeNon(obj.getTextView(), SoftInputUtil::hidSoftInput));
+        super.startSearch(search);
     }
 
     @Override
@@ -175,18 +194,18 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     }
 
     @Override
-    public T addVgBean(IRunApi<List<BaseApiBean>> api) {
+    public VgBean addVgBean(IRunApi<List<BaseApiBean>> api) {
         return super.addVgBean(data -> {
             api.execute(data);
             execute(data, item -> item.setEnable(isEnable()));
         });
     }
 
-    public T addVgBean(String title, List<BillVo> data) {
+    protected VgBean addVgBean(String title, List<BillVo> data) {
         if (!TextUtils.isEmpty(title) && !(!isEnable() && TextUtils.isEmpty(data))) {
-            addVgBean(new TvBean(title), new GridBean(getPhotoGridBeanData(data)));
+            return addVgBean(new TvBean(title), new GridBean(getPhotoGridBeanData(data)));
         }
-        return getThis();
+        return null;
     }
 
     /**

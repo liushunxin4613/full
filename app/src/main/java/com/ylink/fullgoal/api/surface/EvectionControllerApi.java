@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.surface;
 
-import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.CCSQDBean;
@@ -19,6 +18,7 @@ import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.BusinessVo;
 import com.ylink.fullgoal.vo.InhibitionRuleVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
 
@@ -30,8 +30,30 @@ import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_YELLOW;
  */
 public class EvectionControllerApi<T extends EvectionControllerApi, C> extends ReimburseControllerApi<T, C> {
 
+    private TvHEtIconMoreBean rbBean;
+    private TvH2MoreBean bdBean;
+    private TvH2MoreBean ptBean;
+
     public EvectionControllerApi(C controller) {
         super(controller);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        executeNon(getFinish(SearchVo.class), (SearchVo<String> obj) -> executeNon(obj.getSearch(), search -> {
+            switch (search) {
+                case SearchVo.REIMBURSEMENT://报销人
+                    setText(rbBean.getTextView(), obj.getObj());
+                    break;
+                case SearchVo.BUDGET_DEPARTMENT://预算归属部门
+                    setTextView(bdBean.getTextView(), obj.getObj(), bdBean.getHint());
+                    break;
+                case SearchVo.PROJECT://项目
+                    setTextView(ptBean.getTextView(), obj.getObj(), ptBean.getHint());
+                    break;
+            }
+        }));
     }
 
     @Override
@@ -93,20 +115,17 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean(vo.getAgent(), vo.getDepartment()));
-            data.add(new TvHEtIconMoreBean(R.mipmap.test_icon_user, "报销人", vo.getReimbursement(), "请输入报销人", (bean, view) -> {
-                show(bean.getName() + ", " + bean.getText());
-            }));
-            data.add(new TvH2MoreBean("预算归属部门", vo.getBudgetDepartment(), "请选择预算归属部门", (bean, view) -> {
-                show(bean.getName());
-            }));
-            data.add(new TvH2MoreBean("项目", vo.getProject(), "请选择项目", (bean, view) -> {
-                show(bean.getName());
-            }));
+            data.add(rbBean = new TvHEtIconMoreBean(R.mipmap.test_icon_user, "报销人", vo.getReimbursement(),
+                    "请输入报销人", (bean, view) -> startSearch(SearchVo.REIMBURSEMENT)));
+            data.add(bdBean = new TvH2MoreBean("预算归属部门", vo.getBudgetDepartment(), "请选择预算归属部门",
+                    (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
+            data.add(ptBean = new TvH2MoreBean("项目", vo.getProject(), "请选择项目",
+                    (bean, view) -> startSearch(SearchVo.PROJECT)));
             //经办人确认、经办人修改
             if (!TextUtils.equals(vo.getState(), ReimburseVo.STATE_INITIATE)) {
                 data.add(new TvHEtIconMoreBean("金额", vo.getTotalAmountLower(), "请输入金额"));
             }
-            data.add(new TvHEt3Bean("事由", vo.getCause(), "请输入事由"));
+            data.add(setCauseBean(new TvHEt3Bean("事由", vo.getCause(), "请输入事由")));
         });
         //禁止规则
         if (isAlterEnable() && !TextUtils.isEmpty(vo.getInhibitionRuleData())) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Padding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/Padding"
     android:background="@color/white">
 
     <TextView
@@ -21,13 +21,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin"
-        android:background="@null"
         android:layout_toRightOf="@+id/name_tv"
+        android:background="@null"
+        android:gravity="left"
         android:minLines="3"
         android:textColor="@color/tv"
         android:textColorHint="@color/tv1"
         android:textSize="@dimen/tv"
-        android:gravity="left"
         tools:hint="请输入事由"
         tools:ignore="LabelFor,RtlHardcoded,TextFields" />
 

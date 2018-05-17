@@ -10,5 +10,9 @@ public class Config {
     public final static String IMAGE_URL = "imageUrl";
     public final static String IMAGE_URL_START = "http://mall.sharecentury.cn:9000/static/uploaded/files/";
     public final static String IMAGE_PATH = "/Gallery/Pictures";
+    public final static String LAST_START_ACTIVITY = "lastStartActivity";
+    public final static String LAST_FINISH_ACTIVITY = "lastFinishActivity";
+    public final static String LAST_START_CONTROLLER_API = "lastStartControllerApi";
+    public final static String LAST_FINISH_CONTROLLER_API = "lastFinishControllerApi";
 
 }

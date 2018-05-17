@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.OnBVClickListener;
+import com.leo.core.util.RunUtil;
 import com.ylink.fullgoal.R;
 
 public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
@@ -99,7 +100,11 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
     }
 
     public String getText() {
-        return textView == null ? null : textView.getText().toString();
+        return RunUtil.getExecute(getTextView(), obj -> obj.getText().toString());
+    }
+
+    public TextView getTextView() {
+        return textView;
     }
 
     public void setTextView(TextView textView) {

@@ -2,6 +2,7 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
@@ -42,7 +43,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     @Override
     public IControllerApi createControllerApi(ViewGroup container, int resId) {
-        switch (resId){
+        switch (resId) {
             default:
                 return new ItemControllerApi(null);
             case GridBean.API_TYPE:
@@ -120,6 +121,18 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        executeNon(getRecyclerView(), view -> {
+            if (view.getChildCount() > 0) {
+                View v = view.getChildAt(0);
+                v.setFocusableInTouchMode(true);
+                v.requestFocus();
+            }
+        });
+    }
+
+    @Override
     public void initView() {
         super.initView();
         getRecyclerView().setLayoutManager(getLayoutManager());
@@ -132,7 +145,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    public boolean check(IApiBean bean){
+    public boolean check(IApiBean bean) {
         return adapterDataApi().check(bean);
     }
 
@@ -140,7 +153,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return adapterDataApi().getCount();
     }
 
-    public IApiBean getItem(int position){
+    public IApiBean getItem(int position) {
         return adapterDataApi().getItem(position);
     }
 
@@ -162,15 +175,15 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     public <B extends IApiBean> T addLineAll(List<B> data, boolean end, IRunApi<B> api) {
         if (!TextUtils.isEmpty(data)) {
             for (B bean : data) {
-                if(!check(bean)){
-                    if(!end && getCount() > 0){
+                if (!check(bean)) {
+                    if (!end && getCount() > 0) {
                         add(new LineBean());
                     }
-                    if(api != null){
+                    if (api != null) {
                         api.execute(bean);
                     }
                     add(bean);
-                    if(end){
+                    if (end) {
                         add(new LineBean());
                     }
                 }
@@ -191,29 +204,33 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     //私有的
 
-    public T addSmallVgBean(BaseApiBean... args){
-        if(!TextUtils.isEmpty(args)){
+    public T addSmallVgBean(BaseApiBean... args) {
+        if (!TextUtils.isEmpty(args)) {
             add(new VgBean(TextUtils.getListData(args), LineBean.SMALL));
         }
         return getThis();
     }
 
-    public T addVgBean(BaseApiBean... args){
-        if(!TextUtils.isEmpty(args)){
-            add(new VgBean(TextUtils.getListData(args)));
+    protected VgBean addVgBean(BaseApiBean... args) {
+        if (!TextUtils.isEmpty(args)) {
+            VgBean vb = new VgBean(TextUtils.getListData(args));
+            add(vb);
+            return vb;
         }
-        return getThis();
+        return null;
     }
 
-    public T addVgBean(IRunApi<List<BaseApiBean>> api){
-        if(api != null){
+    public VgBean addVgBean(IRunApi<List<BaseApiBean>> api) {
+        if (api != null) {
             List<BaseApiBean> data = new ArrayList<>();
             api.execute(data);
-            if(!TextUtils.isEmpty(data)){
-                add(new VgBean(data));
+            if (!TextUtils.isEmpty(data)) {
+                VgBean vb = new VgBean(data);
+                add(vb);
+                return vb;
             }
         }
-        return getThis();
+        return null;
     }
 
 }

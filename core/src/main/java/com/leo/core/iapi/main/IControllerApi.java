@@ -38,9 +38,8 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * 初始化controller
      *
      * @param controller controller
-     * @return 本身
      */
-    T initController(C controller);
+    void initController(C controller);
 
     /**
      * 获取Controller
@@ -205,6 +204,12 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @return true是, false否
      */
     boolean isView();
+
+    /**
+     * view controllerApi
+     * @return IControllerApi
+     */
+    IControllerApi getViewControllerApi();
 
     /**
      * 返回根视图
@@ -475,6 +480,39 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @param b 相对于父view的底侧距离
      */
     void onLayout(boolean changed, int l, int t, int r, int b);
+
+    /**
+     * finish
+     */
+    void onFinish();
+
+    /**
+     * onStartActivity
+     * @param intent intent
+     */
+    void onStartActivity(Intent intent);
+
+    /**
+     * 关闭activity
+     * @param obj obj
+     * @return 本身
+     */
+    T finishActivity(Object obj);
+
+    /**
+     * 获取信息
+     * @param clz args
+     * @param <B> <B>
+     * @return 对象
+     */
+    <B> B getFinish(Class<B> clz);
+
+    /**
+     * 获取信息
+     * @param <B> <B>
+     * @return 对象
+     */
+    <B> B getFinish();
 
     //自定义的
 

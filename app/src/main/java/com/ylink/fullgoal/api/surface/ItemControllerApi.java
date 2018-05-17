@@ -6,11 +6,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IBindItemCallback;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.ApiBean;
 import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.DateArrayBean;
 import com.ylink.fullgoal.bean.GridBean;
@@ -24,6 +26,7 @@ import com.ylink.fullgoal.bean.SelectedTvBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
+import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
@@ -73,6 +76,10 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
 
     //监听相关对象
     private void initCallback() {
+        //双文字
+        putBindBeanCallback(TvH2SBean.class, (bean, position) -> setName(bean.getName())
+                .setDetail(bean.getDetail())
+                .setOnClickListener(bean.getOnClickListener()));
         //图片处理
         putBindBeanCallback(GridPhotoBean.class, (bean, position) -> {
             getRootView().setLayoutParams(new ViewGroup.LayoutParams(-1, bean.getUnit()));
@@ -150,23 +157,23 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setName(bean.getName())
                 .setOnClickListener(bean.getOnClickListener()));
         //图标文字输入图标监听
-        putBindItemCallback(TvHEtIconMoreBean.class, (api, bean) -> {
-            bean.setTextView(detailEt);
-            api.setName(bean.getName())
-                    .setDetail(bean.getDetail())
-                    .setImage(iconIv, bean.getIconResId())
-                    .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
-                    .setOnClickListener(iconIv, bean.getOnClickListener())
-                    .setTextHint(detailEt, bean.getHint())
-                    .setText(detailEt, bean.getDetail());
-        });
+        putBindItemCallback(TvHEtIconMoreBean.class, (api, bean) -> api.setName(bean.getName())
+                .setTvBean(detailEt, bean)
+                .setDetail(bean.getDetail())
+                .setImage(iconIv, bean.getIconResId())
+                .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
+                .setOnClickListener(iconIv, bean.getOnClickListener())
+                .setTextHint(detailEt, bean.getHint())
+                .setText(detailEt, bean.getDetail()));
         //双文字点击
         putBindItemCallback(TvH2MoreBean.class, (api, bean) -> api.setName(bean.getName())
+                .setTvBean(detailTv, bean)
                 .setDetail(nb(bean.getDetail(), bean.getHint()))
                 .setTextColor(detailTv, getResTvColor(bean.getDetail()))
                 .setOnClickListener(getRootView(), bean.getOnClickListener()));
         //文字多行输入
         putBindItemCallback(TvHEt3Bean.class, (api, bean) -> api.setName(bean.getName())
+                .setTvBean(detailEt, bean)
                 .setDetail(bean.getDetail())
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
@@ -223,12 +230,13 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         return getThis();
     }
 
-    private <B> B nb(B old, B nw) {
-        return TextUtils.count(old) > 0 ? old : nw;
+    protected T setTvBean(TextView tv, ApiBean bean) {
+        executeNon(bean, obj -> obj.setTextView(tv));
+        return getThis();
     }
 
-    private int getResTvColor(CharSequence text) {
-        return !TextUtils.isEmpty(text) ? R.color.tv : R.color.tv1;
+    private <B> B nb(B old, B nw) {
+        return TextUtils.count(old) > 0 ? old : nw;
     }
 
 }

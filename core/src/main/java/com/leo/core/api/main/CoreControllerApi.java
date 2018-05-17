@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leo.core.api.core.AttachApi;
+import com.leo.core.config.Config;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IActionApi;
@@ -54,6 +55,7 @@ import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.StatusBarUtil;
+import com.leo.core.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,6 +109,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
     private Map<Class, IBindBeanCallback> callbackMap;
+    private String finish;
 
     private List<OnAddListener> addListeners;
 
@@ -116,7 +119,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T initController(C controller) {
+    public void initController(C controller) {
         this.controller = controller;
         mainHandler = new Handler(Looper.getMainLooper());
         if (controller instanceof Activity) {
@@ -153,7 +156,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 activity = (Activity) context;
             }
         }
-        return getThis();
     }
 
     @Override
@@ -615,6 +617,15 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public IControllerApi getViewControllerApi() {
+        if (getRootView() instanceof BaseControllerApiView) {
+            IControllerApi api = ((BaseControllerApiView) getRootView()).controllerApi();
+            return TextUtils.equals(api, this) ? null : api;
+        }
+        return null;
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
@@ -664,6 +675,40 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public void onFinish() {
+        executeViewControllerApi(IControllerApi::onFinish);
+    }
+
+    @Override
+    public void onStartActivity(Intent intent) {
+        executeViewControllerApi(obj -> obj.onStartActivity(intent));
+    }
+
+    @Override
+    public T finishActivity(Object obj) {
+        getActivity().finish();
+        executeNon(obj, o -> saveData(getClass().getName(), obj));
+        return getThis();
+    }
+
+    @Override
+    public <B> B getFinish(Class<B> clz) {
+        if(clz != null){
+            if(clz.isAssignableFrom(String.class)){
+                return (B) finish;
+            } else {
+                return decode(finish, clz);
+            }
+        }
+        return (B) finish;
+    }
+
+    @Override
+    public String getFinish() {
+        return finish;
+    }
+
+    @Override
     public T executeBundle(IRunApi<Bundle> api) {
         if (api != null) {
             if (isActivity()) {
@@ -693,6 +738,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             this.context = fragment.getContext();
             application = activity == null ? null : activity.getApplication();
         }
+        executeViewControllerApi(obj -> obj.onAttach(context));
     }
 
     @Override
@@ -780,38 +826,48 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        executeViewControllerApi(obj -> obj.onActivityCreated(savedInstanceState));
     }
 
     @Override
     public void onStart() {
+        executeViewControllerApi(IControllerApi::onStart);
     }
 
     @Override
     public void onResume() {
+        executeViewControllerApi(IControllerApi::onResume);
+        finish = getString(getString(Config.LAST_FINISH_CONTROLLER_API));
     }
 
     @Override
     public void onRestart() {
+        executeViewControllerApi(IControllerApi::onRestart);
     }
 
     @Override
     public void onPause() {
+        executeViewControllerApi(IControllerApi::onPause);
     }
 
     @Override
     public void onStop() {
+        executeViewControllerApi(IControllerApi::onStop);
     }
 
     @Override
     public void onDestroyView() {
+        executeViewControllerApi(IControllerApi::onDestroyView);
     }
 
     @Override
     public void onDestroy() {
+        executeViewControllerApi(IControllerApi::onDestroy);
     }
 
     @Override
     public void onDetach() {
+        executeViewControllerApi(IControllerApi::onDetach);
     }
 
     @Override
@@ -824,10 +880,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        executeViewControllerApi(obj -> obj.onActivityResult(requestCode, resultCode, data));
     }
 
     @Override
     public void onNewIntent(Intent intent) {
+        executeViewControllerApi(obj -> obj.onNewIntent(intent));
     }
 
     @Override
@@ -847,26 +905,32 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onBackPressed() {
+        executeViewControllerApi(IControllerApi::onBackPressed);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        executeViewControllerApi(obj -> obj.onConfigurationChanged(newConfig));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        executeViewControllerApi(obj -> obj.onRequestPermissionsResult(requestCode, permissions, grantResults));
     }
 
     @Override
     public void onTerminate() {
+        executeViewControllerApi(IControllerApi::onTerminate);
     }
 
     @Override
     public void onTrimMemory(int level) {
+        executeViewControllerApi(obj -> obj.onTrimMemory(level));
     }
 
     @Override
     public void onLowMemory() {
+        executeViewControllerApi(IControllerApi::onLowMemory);
     }
 
     @Override
@@ -1003,14 +1067,13 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         return getThis();
     }
 
-    public T addOnAddListener(OnAddListener listener) {
+    public void addOnAddListener(OnAddListener listener) {
         if (listener != null) {
             if (addListeners == null) {
                 addListeners = new ArrayList<>();
             }
             addListeners.add(listener);
         }
-        return getThis();
     }
 
     @Override
@@ -1136,7 +1199,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <V> T saveData(@NonNull String key, @NonNull List<V> value) {
+    public <V> T saveData(@NonNull String key, List<V> value) {
         dataApi().saveData(key, value);
         return getThis();
     }
@@ -1153,32 +1216,32 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <C> C getBean(Class<C> clz) {
-        return (C) dataApi().getBean(clz);
+    public <B> B getBean(Class<B> clz) {
+        return (B) dataApi().getBean(clz);
     }
 
     @Override
-    public <C> C getBean(@NonNull String key, @NonNull Class<C> cls) {
-        return (C) dataApi().getBean(key, cls);
+    public <B> B getBean(@NonNull String key, @NonNull Class<B> cls) {
+        return (B) dataApi().getBean(key, cls);
     }
 
     @Override
-    public <C> List<C> getBeanData(Class<C> clz) {
+    public <B> List<B> getBeanData(Class<B> clz) {
         return dataApi().getBeanData(clz);
     }
 
     @Override
-    public <C> List<C> getBeanData(String key, Class<C> clz) {
+    public <B> List<B> getBeanData(String key, Class<B> clz) {
         return dataApi().getBeanData(key, clz);
     }
 
     @Override
-    public <C> List<C> getBeanData(@NonNull String key, @NonNull Class<? extends List> lCls, @NonNull Class<C> cls) {
+    public <B> List<B> getBeanData(@NonNull String key, @NonNull Class<? extends List> lCls, @NonNull Class<B> cls) {
         return dataApi().getBeanData(key, lCls, cls);
     }
 
     @Override
-    public <C> List<C> getBeanData(Class<? extends List> lClz, Class<C> clz) {
+    public <B> List<B> getBeanData(Class<? extends List> lClz, Class<B> clz) {
         return dataApi().getBeanData(lClz, clz);
     }
 
@@ -1549,6 +1612,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public String getAssetsString(String file) {
         return fileApi().getAssetsString(file);
+    }
+
+    private void executeViewControllerApi(IRunApi<IControllerApi> api){
+        executeNon(getViewControllerApi(), api);
     }
 
 }

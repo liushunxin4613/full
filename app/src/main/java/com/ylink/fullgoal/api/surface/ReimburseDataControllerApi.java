@@ -145,7 +145,8 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
 
     private void addVgBean(RecycleControllerApi controllerApi, IRunApi<List<BaseApiBean>> api) {
         if (controllerApi != null && api != null) {
-            controllerApi.addVgBean(api).notifyDataSetChanged();
+            controllerApi.addVgBean(api);
+            controllerApi.notifyDataSetChanged();
         }
     }
 

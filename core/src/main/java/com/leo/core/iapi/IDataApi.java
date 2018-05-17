@@ -81,50 +81,50 @@ public interface IDataApi<T extends IDataApi> extends IApi {
 
     /**
      * 按key获取单个数据
-     * @param <C> 类泛型型
+     * @param <B> 类泛型型
      * @return 类数据
      */
-    <C> C getBean(Class<C> clz);
+    <B> B getBean(Class<B> clz);
 
     /**
      * 按key获取单个数据
      * @param key 键
-     * @param <C> 类泛型型
+     * @param <B> 类泛型型
      * @return 类数据
      */
-    <C> C getBean(String key, Class<C> clz);
+    <B> B getBean(String key, Class<B> clz);
 
     /**
      * 按key和类名获取多个数据
-     * @param <C> 数据类泛型
+     * @param <B> 数据类泛型
      * @return 类集合数据
      */
-    <C> List<C> getBeanData(Class<C> clz);
-
-    /**
-     * 按key和类名获取多个数据
-     * @param key 键
-     * @param <C> 数据类泛型
-     * @return 类集合数据
-     */
-    <C> List<C> getBeanData(String key, Class<C> clz);
+    <B> List<B> getBeanData(Class<B> clz);
 
     /**
      * 按key和类名获取多个数据
      * @param key 键
-     * @param <C> 数据类泛型
+     * @param <B> 数据类泛型
      * @return 类集合数据
      */
-    <C> List<C> getBeanData(String key, Class<? extends List> lClz, Class<C> clz);
+    <B> List<B> getBeanData(String key, Class<B> clz);
+
+    /**
+     * 按key和类名获取多个数据
+     * @param key 键
+     * @param <B> 数据类泛型
+     * @return 类集合数据
+     */
+    <B> List<B> getBeanData(String key, Class<? extends List> lClz, Class<B> clz);
 
     /**
      * 按key和类名获取多个数据
      * @param lCls List子类类名
      * @param cls 数据类名
-     * @param <C> 数据类泛型
+     * @param <B> 数据类泛型
      * @return 类集合数据
      */
-    <C> List<C> getBeanData(Class<? extends List> lCls, Class<C> cls);
+    <B> List<B> getBeanData(Class<? extends List> lCls, Class<B> cls);
 
     /**
      * 根据key获取data

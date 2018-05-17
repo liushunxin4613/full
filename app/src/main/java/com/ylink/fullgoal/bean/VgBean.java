@@ -1,7 +1,6 @@
 package com.ylink.fullgoal.bean;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 

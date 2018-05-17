@@ -24,9 +24,9 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
 
     @Override
     public IControllerApi<C, T> controllerApi() {
-        if(controllerApi == null){
+        if (controllerApi == null) {
             controllerApi = newControllerApi();
-            if(controllerApi == null){
+            if (controllerApi == null) {
                 throw new NullPointerException("newControllerApi 不能为空");
             }
         }
@@ -34,7 +34,7 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
     }
 
     @Override
-    public IControllerApi<C, T> newControllerApi(){
+    public IControllerApi<C, T> newControllerApi() {
         return null;
     }
 
@@ -117,22 +117,36 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
         execute(controllerApi(), IControllerApi::onBackPressed);
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        execute(controllerApi(), obj -> obj.onStartActivity(intent));
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        execute(controllerApi(), IControllerApi::onFinish);
+    }
+
     //自定义
 
-    protected void onIntent(Intent intent){
+    protected void onIntent(Intent intent) {
         try {
             Class clz = (Class) intent.getSerializableExtra(CONTROLLER_API);
             Class rootViewClz = (Class) intent.getSerializableExtra(ROOT_VIEW_CLZ_API);
-            if(CoreControllerApi.class.isAssignableFrom(clz)){
+            if (CoreControllerApi.class.isAssignableFrom(clz)) {
                 controllerApi = (IControllerApi) ObjectUtil.getObject(clz, Object.class, this);
+                ((CoreControllerApi)controllerApi()).remove(clz);
             }
             if (controllerApi != null && IControllerApi.class.isAssignableFrom(rootViewClz)) {
                 controllerApi.setRootViewClzApi(rootViewClz);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
-    protected <R> void execute(R obj, IRunApi<R> api){
+    protected <R> void execute(R obj, IRunApi<R> api) {
         RunUtil.executeNon(obj, api);
     }
 

@@ -17,5 +17,6 @@ public class Config {
     public final static String TITLE = "title";
     public final static String REIMBURSE_TYPE = "reimburseType";
     public final static String STATE = "state";
+    public final static String SEARCH = "search";
 
 }
