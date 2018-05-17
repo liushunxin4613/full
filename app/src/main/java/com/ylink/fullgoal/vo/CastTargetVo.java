@@ -22,6 +22,15 @@ public class CastTargetVo {
     //费用分摊组
     private List<CastApportionVo> castApportionData;
 
+    public CastTargetVo(String castTarget, String money, String apportionState, String taxMoney, String hasCastMoney, String yetApportionPercent) {
+        this.castTarget = castTarget;
+        this.money = money;
+        this.apportionState = apportionState;
+        this.taxMoney = taxMoney;
+        this.hasCastMoney = hasCastMoney;
+        this.yetApportionPercent = yetApportionPercent;
+    }
+
     public String getCastTarget() {
         return castTarget;
     }

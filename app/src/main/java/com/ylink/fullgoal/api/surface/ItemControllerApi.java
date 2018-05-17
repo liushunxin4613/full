@@ -6,7 +6,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IBindItemCallback;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.util.ResUtil;
@@ -28,6 +27,7 @@ import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
+import com.ylink.fullgoal.bean.TvHEtBean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
@@ -198,6 +198,15 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //文字多行文字
         putBindItemCallback(TvHTv3Bean.class, (api, bean) -> api.setName(bean.getName())
                 .setDetail(bean.getDetail()));
+        //文字输入
+        putBindItemCallback(TvHEtBean.class, (api, bean) -> api.setName(bean.getName())
+                .setTvBean(detailEt, bean)
+                .setText(detailEt, bean.getDetail())
+                .setTextHint(detailEt, bean.getHint()));
+        //双文字
+        putBindItemCallback(TvH2SBean.class, (api, bean) -> api.setName(bean.getName())
+                .setDetail(bean.getDetail())
+                .setOnClickListener(bean.getOnClickListener()));
     }
 
     //私有的
@@ -230,7 +239,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         return getThis();
     }
 
-    protected T setTvBean(TextView tv, ApiBean bean) {
+    private T setTvBean(TextView tv, ApiBean bean) {
         executeNon(bean, obj -> obj.setTextView(tv));
         return getThis();
     }

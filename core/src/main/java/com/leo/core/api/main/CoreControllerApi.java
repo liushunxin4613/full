@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -701,6 +702,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             }
         }
         return (B) finish;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return false;
     }
 
     @Override

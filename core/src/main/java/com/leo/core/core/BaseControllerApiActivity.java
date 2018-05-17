@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.iapi.IRunApi;
@@ -127,6 +128,13 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
     public void finish() {
         super.finish();
         execute(controllerApi(), IControllerApi::onFinish);
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        execute(controllerApi(), obj -> obj.onTouchEvent(event));
+        return super.onTouchEvent(event);
     }
 
     //自定义
@@ -137,7 +145,7 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
             Class rootViewClz = (Class) intent.getSerializableExtra(ROOT_VIEW_CLZ_API);
             if (CoreControllerApi.class.isAssignableFrom(clz)) {
                 controllerApi = (IControllerApi) ObjectUtil.getObject(clz, Object.class, this);
-                ((CoreControllerApi)controllerApi()).remove(clz);
+                ((CoreControllerApi) controllerApi()).remove(clz);
             }
             if (controllerApi != null && IControllerApi.class.isAssignableFrom(rootViewClz)) {
                 controllerApi.setRootViewClzApi(rootViewClz);

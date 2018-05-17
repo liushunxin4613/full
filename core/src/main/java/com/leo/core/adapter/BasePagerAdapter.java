@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
+import com.leo.core.iapi.IAction;
+import com.leo.core.util.TextUtils;
 
 public class BasePagerAdapter<T extends View> extends PagerAdapter {
 
@@ -16,6 +18,19 @@ public class BasePagerAdapter<T extends View> extends PagerAdapter {
 
     public DataApi<DataApi, T> getApi() {
         return api;
+    }
+
+    public BasePagerAdapter add(T view){
+        if(view != null){
+            getApi().add(view);
+        }
+        return this;
+    }
+
+    public void execute(IAction action, Object... args){
+        if(action != null && !TextUtils.isEmits(args)){
+            action.action();
+        }
     }
 
     @Override

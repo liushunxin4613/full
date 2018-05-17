@@ -16,7 +16,7 @@
         android:background="@color/ccC"/>
 
     <LinearLayout
-        style="@style/Padding"
+        style="@style/padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/reset_tv"
-            style="@style/Padding"
+            style="@style/padding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -46,7 +46,7 @@
 
         <TextView
             android:id="@+id/confirm_tv"
-            style="@style/Padding"
+            style="@style/padding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"

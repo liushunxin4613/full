@@ -2,7 +2,6 @@ package com.ylink.fullgoal.controllerApi.core;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,7 +9,6 @@ import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.SearchControllerApi;
@@ -60,23 +58,23 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, bundle, args);
     }
 
-    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz, Integer layoutResId) {
-        return clz == null ? null : (R) new BaseControllerApiView(getContext()).init(clz, layoutResId).controllerApi();
+    protected <B extends IControllerApi> B getViewControllerApi(Class<B> clz, Integer layoutResId) {
+        return clz == null ? null : (B) new BaseControllerApiView(getContext()).init(clz, layoutResId).controllerApi();
     }
 
-    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz, View rootView) {
-        return clz == null ? null : (R) new BaseControllerApiView(getContext()).init(clz, rootView).controllerApi();
+    protected <B extends IControllerApi> B getViewControllerApi(Class<B> clz, View rootView) {
+        return clz == null ? null : (B) new BaseControllerApiView(getContext()).init(clz, rootView).controllerApi();
     }
 
-    protected <R extends IControllerApi> R getViewControllerApi(Class<R> clz) {
+    protected <B extends IControllerApi> B getViewControllerApi(Class<B> clz) {
         return getViewControllerApi(clz, (Integer) null);
     }
 
-    protected <R extends IControllerApi> R getDialogControllerApi(Class<R> clz, Integer layoutResId) {
-        return clz == null ? null : (R) new BaseControllerApiDialog<>(getContext()).init(clz, layoutResId).controllerApi();
+    protected <B extends IControllerApi> B getDialogControllerApi(Class<B> clz, Integer layoutResId) {
+        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(clz, layoutResId).controllerApi();
     }
 
-    protected <R extends IControllerApi> R getDialogControllerApi(Class<R> clz) {
+    protected <B extends IControllerApi> B getDialogControllerApi(Class<B> clz) {
         return getDialogControllerApi(clz, null);
     }
 

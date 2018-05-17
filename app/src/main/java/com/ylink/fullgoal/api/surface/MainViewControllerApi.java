@@ -32,7 +32,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                         new IconTvMoreBean(R.mipmap.test_icon2, "出差费用专票报销", (bean, view) -> evectionDedicated(ReimburseVo.STATE_INITIATE)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> startSurfaceActivity(ReimburseDataControllerApi.class)))
                 //测试
-                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "票据", (bean, view) -> {
+                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用指标", (bean, view) -> startSurfaceActivity(CostIndexControllerApi.class)), new IconTvMoreBean(R.mipmap.test_icon2, "票据", (bean, view) -> {
                     bill();
                 }), new IconTvMoreBean(R.mipmap.test_icon2, "搜索", (bean, view) -> {
                     startSurfaceActivity(SearchControllerApi.class);
@@ -54,12 +54,12 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
 
         //test
 
-        evectionCommon(ReimburseVo.STATE_INITIATE);
+//        evectionCommon(ReimburseVo.STATE_INITIATE);
 //        evectionDedicated(ReimburseVo.STATE_INITIATE);
 //        startSurfaceActivity(ReimburseDataControllerApi.class);
 //        evectionCommon(ReimburseVo.STATE_DETAIL);
 //        bill();
-//        startSurfaceActivity(SearchControllerApi.class);
+        startSurfaceActivity(CostIndexControllerApi.class);
 
     }
 

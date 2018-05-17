@@ -9,7 +9,7 @@
     <include layout="@layout/l_line"/>
 
     <LinearLayout
-        style="@style/Padding"
+        style="@style/padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -48,7 +48,7 @@
     <include layout="@layout/v_line"/>
 
     <LinearLayout
-        style="@style/Padding"
+        style="@style/padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

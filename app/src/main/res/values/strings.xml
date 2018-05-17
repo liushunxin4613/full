@@ -12,4 +12,9 @@
     <string name="guizemc">规则名称</string>
     <string name="jutixx">具体信息</string>
     <string name="search">搜索</string>
+    <string name="shuie">税额</string>
+    <string name="jinehs">金额(含税)</string>
+    <string name="yifentbl">已分摊比例</string>
+    <string name="money">金额</string>
+    <string name="qinshurje">请输入分摊金额</string>
 </resources>

@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -513,6 +514,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @return 对象
      */
     <B> B getFinish();
+
+    /**
+     * 手势监听
+     */
+    boolean onTouchEvent(MotionEvent event);
 
     //自定义的
 

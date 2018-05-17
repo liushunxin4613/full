@@ -1,5 +1,6 @@
 package com.leo.core.util;
 
+import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IReturnApi;
 import com.leo.core.iapi.IRunApi;
 
@@ -8,8 +9,20 @@ import java.util.Map;
 
 public class RunUtil {
 
-    public static <A, B> B getExecute(A a, IReturnApi<A, B> api){
-        return (a == null || api == null) ? null : api.execute(a);
+    public static <A, B> B getExecute(A a, B b, IReturnApi<A, B> api) {
+        return (a == null || api == null) ? b : api.execute(a);
+    }
+
+    public static <A, B> B getExecute(A a, IReturnApi<A, B> api) {
+        return getExecute(a, null, api);
+    }
+
+    public static boolean execute(boolean is, IAction action) {
+        if(is && action != null){
+            action.action();
+            return true;
+        }
+        return false;
     }
 
     public static <T> void executeNon(T obj, IRunApi<T> r) {

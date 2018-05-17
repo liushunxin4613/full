@@ -15,7 +15,7 @@
         android:textSize="@dimen/tv"
         tools:ignore="RtlHardcoded"
         tools:text="合同付款申请单"
-        style="@style/Padding"
+        style="@style/padding"
         />
 
     <LinearLayout
