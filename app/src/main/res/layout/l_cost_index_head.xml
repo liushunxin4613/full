@@ -12,13 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="7">
+        android:weightSum="3">
 
         <TextView
             android:id="@+id/name_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
@@ -29,7 +29,8 @@
             android:id="@+id/detail_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
+            android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
@@ -40,7 +41,7 @@
             android:id="@+id/type_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:gravity="right"
             android:maxLines="1"
             android:textColor="@color/EE4433"
@@ -56,13 +57,14 @@
         style="@style/padding_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal"
-        android:weightSum="7">
+        android:weightSum="3">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:maxLines="1"
             android:text="@string/shuie"
             android:textColor="@color/tv1"
@@ -72,7 +74,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
+            android:gravity="center"
             android:maxLines="1"
             android:text="@string/jinehs"
             android:textColor="@color/tv1"
@@ -82,7 +85,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:gravity="right"
             android:maxLines="1"
             android:text="@string/yifentbl"
@@ -97,13 +100,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="7">
+        android:weightSum="3">
 
         <TextView
             android:id="@+id/tax_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
@@ -114,7 +117,8 @@
             android:id="@+id/none_tax_money_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
+            android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
@@ -125,7 +129,7 @@
             android:id="@+id/yet_complete_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:gravity="right"
             android:maxLines="1"
             android:textColor="@color/tv"

@@ -27,6 +27,11 @@ public class SearchVo<D> {
      */
     public final static String SERVE_BILL = "招待申请单";
 
+    /**
+     * 费用指标
+     */
+    public final static String COST_INDEX = "费用指标";
+
     private String search;
     private D obj;
 

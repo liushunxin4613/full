@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/name_tv"
+    style="@style/padding"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tv1_selector"
+    android:textColor="@color/tv1_selected"
+    android:textSize="@dimen/tv1"
+    tools:text="上海华信证券有限公司" />

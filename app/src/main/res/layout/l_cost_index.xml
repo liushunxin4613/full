@@ -15,7 +15,8 @@
         android:layout_margin="@dimen/pad_smal"
         android:background="@color/white"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,10 +31,16 @@
 
     <include layout="@layout/l_cost_index_head" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.0px"
+        android:background="@color/ccC" />
+
     <com.ylink.fullgoal.view.MViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:overScrollMode="never"
         android:scrollbars="none" />
 

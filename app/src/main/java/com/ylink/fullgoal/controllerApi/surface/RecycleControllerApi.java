@@ -15,7 +15,7 @@ import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.api.surface.GridItemControllerApi;
+import com.ylink.fullgoal.api.surface.GridRecycleControllerApi;
 import com.ylink.fullgoal.api.surface.ItemControllerApi;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.LineBean;
@@ -47,7 +47,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
             default:
                 return new ItemControllerApi(null);
             case GridBean.API_TYPE:
-                return new GridItemControllerApi(null);
+                return new GridRecycleControllerApi(null);
         }
     }
 
@@ -120,16 +120,22 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getRecyclerView();
     }
 
+    protected boolean isRecycleOnResumeFocus() {
+        return true;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        executeNon(getRecyclerView(), view -> {
-            if (view.getChildCount() > 0) {
-                View v = view.getChildAt(0);
-                v.setFocusableInTouchMode(true);
-                v.requestFocus();
-            }
-        });
+        if (isRecycleOnResumeFocus()) {
+            executeNon(getRecyclerView(), view -> {
+                if (view.getChildCount() > 0) {
+                    View v = view.getChildAt(0);
+                    v.setFocusableInTouchMode(true);
+                    v.requestFocus();
+                }
+            });
+        }
     }
 
     @Override

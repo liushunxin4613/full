@@ -21,6 +21,7 @@ import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.SXBean;
+import com.ylink.fullgoal.bean.SearchWaterfall;
 import com.ylink.fullgoal.bean.SelectedTvBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
@@ -30,6 +31,7 @@ import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtBean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
+import com.ylink.fullgoal.bean.TvSBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.bean.XCJPBean;
@@ -102,7 +104,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
             setName(bean.getName());
             addView(vg -> {
                 vg.removeAllViews();
-                GridItemControllerApi api = getViewControllerApi(GridItemControllerApi.class, R.layout.l_recycle);
+                GridRecycleControllerApi api = getViewControllerApi(GridRecycleControllerApi.class, R.layout.l_recycle);
                 vg.addView(api.getRootView());
                 api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
                 api.addAll(bean.getData()).notifyDataSetChanged();
@@ -130,12 +132,38 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindBeanCallback(InhibitionRuleBean.class, (bean, position) -> setIcon(bean.getIconResId())
                 .setName(bean.getName())
                 .setDetail(bean.getDetail()));
+        //搜索瀑布流
+        putBindBeanCallback(SearchWaterfall.class, (bean, position) -> addView(vg -> {
+            bean.setCloseIv(iconIv);
+            setTvBean(nameEt, bean).setName(bean.getName());
+            StaggeredGridRecycleControllerApi api = getViewControllerApi(
+                    StaggeredGridRecycleControllerApi.class, R.layout.l_recycle);
+            api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
+            bean.setApi(api);
+            vg.removeAllViews();
+            vg.addView(api.getRootView());
+            execute(bean.getBeanData(), obj -> obj.setTextApi(this::setDetail));
+            api.addAll(bean.getBeanData()).notifyDataSetChanged();
+        }));
+        //tvs子项
+        putBindBeanCallback(TvSBean.class, (bean, position) -> setName(bean.getName())
+                .setOnClickListener(v -> {
+                    executeNon(bean.getTextApi(), api -> api.execute(bean.getName()));
+                    ViewGroup vg = (ViewGroup) v.getParent();
+                    if (!TextUtils.equals(vg.getTag(), v)) {
+                        if (vg.getTag() instanceof View) {
+                            ((View) vg.getTag()).setSelected(false);
+                        }
+                        v.setSelected(true);
+                        vg.setTag(v);
+                    }
+                }));
         //VgBean ************* 总的数据 *************
         putBindBeanCallback(VgBean.class, (bean, position) -> addView(vg -> {
             vg.removeAllViews();
             execute(bean.getData(), item -> {
                 if (item instanceof GridBean) {
-                    GridItemControllerApi api = getViewControllerApi(GridItemControllerApi.class, item.getApiType());
+                    GridRecycleControllerApi api = getViewControllerApi(GridRecycleControllerApi.class, item.getApiType());
                     vg.addView(api.getRootView());
                     api.onBindViewHolder(item, position);
                 } else {

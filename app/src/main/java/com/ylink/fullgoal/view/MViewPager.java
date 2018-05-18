@@ -7,9 +7,12 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.leo.core.iapi.IRunApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
+import com.leo.core.util.SoftInputUtil;
 
 public class MViewPager extends ViewPager {
 
@@ -67,6 +70,25 @@ public class MViewPager extends ViewPager {
                     onToDown();
                 }
                 return false;
+            }
+        });
+        addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                SoftInputUtil.hidSoftInput(getRootView());
+                View v = getChildAt(position);
+                if (v != null) {
+                    v.setFocusableInTouchMode(true);
+                    v.requestFocus();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
             }
         });
     }

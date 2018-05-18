@@ -1,26 +1,35 @@
 package com.ylink.fullgoal.api.surface;
 
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IRunApi;
-import com.leo.core.util.ResUtil;
+import com.leo.core.util.SoftInputUtil;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.SearchWaterfall;
 import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.TvHEtBean;
+import com.ylink.fullgoal.bean.TvSBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.view.MViewPager;
 import com.ylink.fullgoal.vo.CastTargetVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 
 /**
  * 费用指标
@@ -44,10 +53,12 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
     @Bind(R.id.yet_complete_tv)
     TextView yetCompleteTv;
 
-    private int miniWidth = 120;
+    private int maxHeight;
+    private int minHeight;
+    private boolean isOpen;
     private int miniSpeed = 0;
+    private int miniWidth = 120;
     private CastTargetVo targetVo;
-    private GestureDetector detector;
     private BasePagerAdapter adapter;
 
     public CostIndexControllerApi(C controller) {
@@ -60,10 +71,30 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
     }
 
     @Override
+    protected void startSearch(String search) {
+        super.startSearch(search);
+        SoftInputUtil.hidSoftInput(getRootView());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        executeNon(getFinish(SearchVo.class), (SearchVo<String> obj) -> executeNon(obj.getSearch(), search -> {
+            switch (search) {
+                case SearchVo.COST_INDEX://费用指标
+                    setText(nameTv, obj.getObj());
+                    break;
+            }
+        }));
+    }
+
+    @Override
     public void initView() {
         super.initView();
-        setTitle("费用指标").setRightTv("确认", v -> show("确认"));
-        initGestureDetector();
+        setTitle("费用指标")
+                .setRightTv("确认", v -> show("确认"))
+                .setOnClickListener(nameTv, v -> startSearch(SearchVo.COST_INDEX))
+                .setOnClickListener(searchVg, v -> startSearch(SearchVo.COST_INDEX));
         initViewPager();
     }
 
@@ -87,13 +118,30 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
                 .setText(yetCompleteTv, targetVo.getYetApportionPercent());
     }
 
+    private View getCurrentItemView() {
+        return viewPager.getChildAt(viewPager.getCurrentItem());
+    }
+
     private void initViewPager() {
         adapter = new BasePagerAdapter();
         viewPager.setAdapter(adapter);
-        viewPager.setVerticalBeyondApi(is -> execute(!is, () -> {
-            adapter.add(getRecycleControllerApi().getRootView()).notifyDataSetChanged();
-            ee("count", adapter.getCount());
-        }));
+        viewPager.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            int height = viewPager.getHeight();
+            if (maxHeight < height) {
+                maxHeight = height;
+            }
+            if (minHeight > height || minHeight == 0) {
+                minHeight = height;
+            }
+            TextView tv = findViewById(getCurrentItemView(), R.id.delete_tv);
+            isOpen = height >= minHeight && height < maxHeight;
+            if (isOpen) {
+                setVisibility(tv, isOpen ? View.GONE : View.VISIBLE);
+            } else {
+                executeNon(tv, obj -> obj.post(() -> setVisibility(obj, isOpen ? View.GONE : View.VISIBLE)));
+            }
+        });
+        viewPager.setVerticalBeyondApi(is -> execute(!is, () -> adapter.add(getRecycleControllerApi().getRootView()).notifyDataSetChanged()));
         adapter.add(getRecycleControllerApi().getRootView()).notifyDataSetChanged();
     }
 
@@ -105,62 +153,97 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
     }
 
     private RecycleControllerApi getRecycleControllerApi() {
-        RecycleControllerApi api = getViewControllerApi(RecycleControllerApi.class);
-        int[] args = new int[]{R.color.green, R.color.blue_light, R.color.yellow_lemon};
-        api.getRecyclerView().setBackgroundColor(ResUtil.getColor(args[new Random().nextInt(args.length)]));
+        SetRecycleControllerApi api = getViewControllerApi(SetRecycleControllerApi.class, R.layout.l_cost_index_bottom);
+        setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {
+            ee("删除本项分摊");
+        });
+        api.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                execute(isOpen, () -> {
+                    switch (newState) {
+                        case SCROLL_STATE_DRAGGING://手指滑动
+                            SoftInputUtil.hidSoftInput(recyclerView);
+                            break;
+                        case SCROLL_STATE_IDLE://结束滑动
+                            break;
+                        case SCROLL_STATE_SETTLING://惯性滑动
+                            break;
+                    }
+                });
+            }
+        });
         addVgBean(api, data -> {
             data.add(new TvHEtBean("金额", "13100.00", "请输入金额"));
             data.add(new TvH2SBean("分摊比例", "65.50%"));
         });
+        api.add(new SearchWaterfall("渠道维度", getTestData("富国直销", "确权销售商", "上海华信有限公司", "华安证券公司"),
+                (ai, text) -> initApiText("渠道维度", ai, text)));
+        api.add(new SearchWaterfall("产品维度", getTestData("富国稳健增强债券", "富国国有企业债", "富国收益宝", "太平洋人寿低等级信用债资产管理计划"),
+                (ai, text) -> initApiText("产品维度", ai, text)));
+        api.add(new SearchWaterfall("员工", getTestData("毕天宇", "曹晋", "陈士坤", "丛林", "何牧", "李辉"),
+                (ai, text) -> initApiText("员工", ai, text)));
+        api.add(new SearchWaterfall("营销活动", getTestData("日常维护", "年金、专户市场开拓", "公司品牌宣传", "2016-富国研究优选IPO"),
+                (ai, text) -> initApiText("营销活动", ai, text)));
         return api;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return getExecute(detector, false, obj -> obj.onTouchEvent(event));
+    private void initApiText(String type, RecycleControllerApi api, String text) {
+        ee(type, text);
+        List<String> data = new ArrayList<>();
+        switch (type) {
+            case "渠道维度":
+                data = TextUtils.getListData("富国直销", "确权销售商", "上海华信有限公司", "华安证券公司");
+                break;
+            case "产品维度":
+                data = TextUtils.getListData("富国稳健增强债券", "富国国有企业债", "富国收益宝", "太平洋人寿低等级信用债资产管理计划");
+                break;
+            case "员工":
+                data = TextUtils.getListData("毕天宇", "曹晋", "陈士坤", "丛林", "何牧", "李辉");
+                break;
+            case "营销活动":
+                data = TextUtils.getListData("日常维护", "年金、专户市场开拓", "公司品牌宣传", "2016-富国研究优选IPO");
+                break;
+        }
+        api.replaceAll(getTestBeanData(getTestData(data, new Random().nextInt(10) + 3))).notifyDataSetChanged();
     }
 
-    private void initGestureDetector() {
-        detector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return false;
+    private List<TvSBean> getTestBeanData(List<String> data) {
+        if (!TextUtils.isEmpty(data)) {
+            List<TvSBean> beanData = new ArrayList<>();
+            for (String item : data) {
+                beanData.add(new TvSBean(item));
             }
+            return beanData;
+        }
+        return null;
+    }
 
-            @Override
-            public void onShowPress(MotionEvent e) {
+    private List<String> getTestData(List<String> d, int count) {
+        if (!TextUtils.isEmpty(d) && count > 0) {
+            List<String> data = new ArrayList<>();
+            count += 3;
+            Random random = new Random();
+            for (int i = 0; i < count; i++) {
+                data.add(d.get(random.nextInt(d.size())));
             }
+            return data;
+        }
+        return null;
+    }
 
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return false;
+    private List<String> getTestData(String... args) {
+        if (!TextUtils.isEmpty(args)) {
+            List<String> data = new ArrayList<>();
+            int count = 30;
+            Random random = new Random();
+            for (int i = 0; i < count; i++) {
+                data.add(args[random.nextInt(args.length)]);
             }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                float offsetX = e2.getX() - e1.getX();
-                float offsetY = e2.getY() - e1.getY();
-                if (offsetX > miniWidth && Math.abs(velocityX) > miniSpeed) {
-                    ee("onFling", "向右滑动");
-                } else if (-offsetX > miniWidth && Math.abs(velocityX) > miniSpeed) {
-                    ee("onFling", "向左滑动");
-                } else if (offsetY > miniWidth && Math.abs(velocityX) > miniSpeed) {
-                    ee("onFling", "向下滑动");
-                } else if (-offsetY > miniWidth && Math.abs(velocityX) > miniSpeed) {
-                    ee("onFling", "向上滑动");
-                }
-                return false;
-            }
-        });
+            return data;
+        }
+        return null;
     }
 
 }

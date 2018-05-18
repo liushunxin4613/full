@@ -23,13 +23,6 @@ public class SoftInputUtil {
     }
 
     /**
-     * 输入法是否显示着
-     */
-    public static boolean getSoftInput(Context context) {
-        return RunUtil.getExecute(getInputMethodManager(context), InputMethodManager::isActive);
-    }
-
-    /**
      * 打开输入法
      */
     public static boolean showSoftInput(View v) {

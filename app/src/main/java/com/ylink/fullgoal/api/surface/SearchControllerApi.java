@@ -28,8 +28,8 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
     ImageView backIv;
     @Bind(R.id.name_et)
     EditText nameEt;
-    @Bind(R.id.close_iv)
-    ImageView closeIv;
+    @Bind(R.id.icon_iv)
+    ImageView iconIv;
 
     private String search;
 
@@ -59,7 +59,7 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
         super.initView();
         getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         setOnClickListener(backIv, view -> onBackPressed());
-        setOnClickListener(closeIv, v -> setText(nameEt, null));
+        setOnClickListener(iconIv, v -> setText(nameEt, null));
         nameEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {
@@ -67,7 +67,7 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
 
             @Override
             public void onTextChanged(CharSequence text, int start, int before, int count) {
-                setIcon(closeIv, count > 0).search(text.toString());
+                setIcon(iconIv, count > 0).search(text.toString());
             }
 
             @Override
@@ -75,7 +75,7 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
             }
         });
         nameEt.setOnEditorActionListener((v, actionId, event) -> {
-            switch (actionId){
+            switch (actionId) {
                 default:
                     return false;
                 case EditorInfo.IME_ACTION_SEARCH://搜索
@@ -107,6 +107,9 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
                     break;
                 case SearchVo.SERVE_BILL://招待申请单
                     args = new String[]{"杨浦招待", "陆家嘴招待", "浦东招待", "松江招待"};
+                    break;
+                case SearchVo.COST_INDEX://招待申请单
+                    args = new String[]{"营销会议费", "招待费"};
                     break;
             }
             initSearchData(getTestData(args, new Random().nextInt(10) + 3));

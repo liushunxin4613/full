@@ -17,4 +17,5 @@
     <string name="yifentbl">已分摊比例</string>
     <string name="money">金额</string>
     <string name="qinshurje">请输入分摊金额</string>
+    <string name="shanchubxfyft">删除本项费用分摊</string>
 </resources>

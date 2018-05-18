@@ -10,13 +10,13 @@ import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.other.GridSpacingItemDecoration;
 
-public class GridItemControllerApi<T extends GridItemControllerApi, C> extends SetRecycleControllerApi<T, C> {
+public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> extends SetRecycleControllerApi<T, C> {
 
     private int space = 10;
     private int edgeSpace = space * 3;
     private int unit;
 
-    public GridItemControllerApi(C controller) {
+    public GridRecycleControllerApi(C controller) {
         super(controller);
     }
 
@@ -32,6 +32,8 @@ public class GridItemControllerApi<T extends GridItemControllerApi, C> extends S
     @Override
     public void initView() {
         super.initView();
+        getRecyclerView().setFocusable(false);
+        getRecyclerView().setFocusableInTouchMode(false);
         initDis();
         initCallback();
     }
