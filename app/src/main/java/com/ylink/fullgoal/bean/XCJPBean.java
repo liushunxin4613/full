@@ -1,12 +1,17 @@
 package com.ylink.fullgoal.bean;
 
+import android.view.View;
+
 import com.leo.core.bean.BaseApiBean;
+import com.leo.core.iapi.OnBVClickListener;
 import com.ylink.fullgoal.R;
 
 /**
  * 携程机票
  */
 public class XCJPBean extends BaseApiBean {
+
+    private transient View.OnClickListener onClickListener;
 
     @Override
     public Integer getApiType() {
@@ -21,12 +26,26 @@ public class XCJPBean extends BaseApiBean {
     private String place;
 
     public XCJPBean(String name, String detail, String type, String start, String end, String place) {
+        this(name, detail, type, start, end, place, null);
+    }
+
+    public XCJPBean(String name, String detail, String type, String start, String end, String place,
+                    OnBVClickListener<XCJPBean> listener) {
         this.name = name;
         this.detail = detail;
         this.type = type;
         this.start = start;
         this.end = end;
         this.place = place;
+        this.setOnBVClickListener(listener);
+    }
+
+    public void setOnBVClickListener(OnBVClickListener<XCJPBean> listener) {
+        this.onClickListener = listener == null ? null : v -> listener.onBVClick(this, v);
+    }
+
+    public View.OnClickListener getOnClickListener() {
+        return onClickListener;
     }
 
     public String getName() {

@@ -58,6 +58,7 @@ import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.StatusBarUtil;
 import com.leo.core.util.TextUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -693,12 +694,19 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> B getFinish(Class<B> clz) {
-        if(clz != null){
-            if(clz.isAssignableFrom(String.class)){
-                return (B) finish;
-            } else {
-                return decode(finish, clz);
+    public <B> B getFinish(Type... args) {
+        if (!TextUtils.isEmpty(finish) && !TextUtils.isEmpty(args)) {
+            for (Type type : args) {
+                if (type != null) {
+                    if (TextUtils.equals(type, String.class)) {
+                        return (B) finish;
+                    } else {
+                        Object obj = decode(finish, type);
+                        if (obj != null && TextUtils.equals(finish, encode(obj))) {
+                            return (B) obj;
+                        }
+                    }
+                }
             }
         }
         return (B) finish;
@@ -707,11 +715,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return false;
-    }
-
-    @Override
-    public String getFinish() {
-        return finish;
     }
 
     @Override
@@ -843,7 +846,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public void onResume() {
         executeViewControllerApi(IControllerApi::onResume);
-        finish = getString(getString(Config.LAST_FINISH_CONTROLLER_API));
+        String key = getString(Config.LAST_FINISH_CONTROLLER_API);
+        if(!TextUtils.isEmpty(key)){
+            finish = getString(key);
+            remove(key);
+        }
     }
 
     @Override
@@ -1620,7 +1627,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         return fileApi().getAssetsString(file);
     }
 
-    private void executeViewControllerApi(IRunApi<IControllerApi> api){
+    private void executeViewControllerApi(IRunApi<IControllerApi> api) {
         executeNon(getViewControllerApi(), api);
     }
 

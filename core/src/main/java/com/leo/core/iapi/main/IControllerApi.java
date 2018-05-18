@@ -27,6 +27,8 @@ import com.leo.core.iapi.IBindBeanCallback;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.core.IAttachApi;
 
+import java.lang.reflect.Type;
+
 /**
  * 控制器
  *
@@ -502,18 +504,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 获取信息
-     * @param clz args
+     * @param args args
      * @param <B> <B>
      * @return 对象
      */
-    <B> B getFinish(Class<B> clz);
-
-    /**
-     * 获取信息
-     * @param <B> <B>
-     * @return 对象
-     */
-    <B> B getFinish();
+    <B> B getFinish(Type... args);
 
     /**
      * 手势监听

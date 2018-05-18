@@ -78,6 +78,9 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
 
     //监听相关对象
     private void initCallback() {
+        //文字
+        putBindBeanCallback(TvBean.class, (bean, position) -> setName(bean.getName())
+                .setOnClickListener(bean.getOnClickListener()));
         //双文字
         putBindBeanCallback(TvH2SBean.class, (bean, position) -> setName(bean.getName())
                 .setDetail(bean.getDetail())
@@ -158,10 +161,24 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                         vg.setTag(v);
                     }
                 }));
+        //出差申请单
+        putBindBeanCallback(CCSQDBean.class, (bean, position) -> setName(bean.getName())
+                .setDetail(bean.getDetail())
+                .setText(startTv, bean.getStart())
+                .setText(endTv, bean.getEnd())
+                .setOnClickListener(getRootView(), bean.getOnClickListener()));
+        //携程机票
+        putBindBeanCallback(XCJPBean.class, (bean, position) -> setName(bean.getName())
+                .setDetail(bean.getDetail())
+                .setText(typeTv, bean.getType())
+                .setText(placeTv, bean.getPlace())
+                .setText(startTv, bean.getStart())
+                .setText(endTv, bean.getEnd())
+                .setOnClickListener(getRootView(), bean.getOnClickListener()));
         //VgBean ************* 总的数据 *************
         putBindBeanCallback(VgBean.class, (bean, position) -> addView(vg -> {
             vg.removeAllViews();
-            execute(bean.getData(), item -> {
+            execute(bean.getLineData(), item -> {
                 if (item instanceof GridBean) {
                     GridRecycleControllerApi api = getViewControllerApi(GridRecycleControllerApi.class, item.getApiType());
                     vg.addView(api.getRootView());
@@ -206,7 +223,8 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
         //文字
-        putBindItemCallback(TvBean.class, (api, bean) -> api.setName(bean.getName()));
+        putBindItemCallback(TvBean.class, (api, bean) -> api.setName(bean.getName())
+                .setOnClickListener(bean.getOnClickListener()));
         //图片文字点击
         putBindItemCallback(IconTvHBean.class, (api, bean) -> api.setIcon(bean.getIconResId())
                 .setName(bean.getName())

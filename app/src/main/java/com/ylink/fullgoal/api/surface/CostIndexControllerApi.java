@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.surface;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -158,27 +157,10 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
                 R.layout.l_cost_index_bottom);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {
             adapter.remove(api.getRootView());
-            if(adapter.getCount() == 0){
+            if (adapter.getCount() == 0) {
                 adapter.add(getRecycleControllerApi().getRootView());
             }
             adapter.notifyDataSetChanged();
-        });
-        api.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                execute(isOpen, () -> {
-                    switch (newState) {
-                        case SCROLL_STATE_DRAGGING://手指滑动
-                            SoftInputUtil.hidSoftInput(recyclerView);
-                            break;
-                        case SCROLL_STATE_IDLE://结束滑动
-                            break;
-                        case SCROLL_STATE_SETTLING://惯性滑动
-                            break;
-                    }
-                });
-            }
         });
         addVgBean(api, data -> {
             data.add(new TvHEtBean("金额", "13100.00", "请输入金额"));

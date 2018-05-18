@@ -32,6 +32,16 @@ public class SearchVo<D> {
      */
     public final static String COST_INDEX = "费用指标";
 
+    /**
+     * 出差申请单
+     */
+    public final static String BUSINESS = "出差申请单";
+
+    /**
+     * 携程机票
+     */
+    public final static String XC_AIR = "携程机票";
+
     private String search;
     private D obj;
 
@@ -55,5 +65,5 @@ public class SearchVo<D> {
     public void setObj(D obj) {
         this.obj = obj;
     }
-    
+
 }

@@ -24,26 +24,29 @@ public class GsonDecodeApi implements IGsonDecodeApi<GsonDecodeApi, Object, Obje
 
     @Override
     public <R> R decode(Object in, Object param) {
-        if (in instanceof String) {
-            if (param instanceof Class) {
-                return (R) decode((String) in, (Class) param);
-            } else if (param instanceof Type) {
-                return (R) decode((String) in, (Type) param);
+        try {
+            if (in instanceof String) {
+                if (param instanceof Class) {
+                    return (R) decode((String) in, (Class) param);
+                } else if (param instanceof Type) {
+                    return (R) decode((String) in, (Type) param);
+                }
+            } else if (in instanceof JsonElement) {
+                if (param instanceof Class) {
+                    return (R) decode((JsonElement) in, (Class) param);
+                } else if (param instanceof Type) {
+                    return (R) decode((JsonElement) in, (Type) param);
+                }
+            } else if (in instanceof JsonReader && param instanceof Type) {
+                return (R) decode((JsonReader) in, (Type) param);
+            } else if (in instanceof Reader) {
+                if (param instanceof Class) {
+                    return (R) decode((Reader) in, (Class) param);
+                } else if (param instanceof Type) {
+                    return (R) decode((Reader) in, (Type) param);
+                }
             }
-        } else if (in instanceof JsonElement) {
-            if (param instanceof Class) {
-                return (R) decode((JsonElement) in, (Class) param);
-            } else if (param instanceof Type) {
-                return (R) decode((JsonElement) in, (Type) param);
-            }
-        } else if (in instanceof JsonReader && param instanceof Type) {
-            return (R) decode((JsonReader) in, (Type) param);
-        } else if (in instanceof Reader) {
-            if (param instanceof Class) {
-                return (R) decode((Reader) in, (Class) param);
-            } else if (param instanceof Type) {
-                return (R) decode((Reader) in, (Type) param);
-            }
+        } catch (Exception ignored) {
         }
         return null;
     }

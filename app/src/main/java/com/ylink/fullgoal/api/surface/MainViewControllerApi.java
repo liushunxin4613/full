@@ -54,12 +54,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
 
         //test
 
-//        evectionCommon(ReimburseVo.STATE_INITIATE);
-//        evectionDedicated(ReimburseVo.STATE_INITIATE);
-//        startSurfaceActivity(ReimburseDataControllerApi.class);
-//        evectionCommon(ReimburseVo.STATE_DETAIL);
-//        bill();
-        startSurfaceActivity(CostIndexControllerApi.class);
+        evectionCommon(ReimburseVo.STATE_INITIATE);
 
     }
 

@@ -13,6 +13,7 @@ import com.leo.core.iapi.IShowDataApi;
 import com.leo.core.iapi.main.CreateControllerApiCallback;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.GridRecycleControllerApi;
@@ -26,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 
 public class RecycleControllerApi<T extends RecycleControllerApi, C> extends ContentControllerApi<T, C>
         implements IRecycleApi<T, RecycleControllerApiAdapter>, IShowDataApi, CreateControllerApiCallback {
@@ -127,14 +132,12 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     @Override
     public void onResume() {
         super.onResume();
-        if (isRecycleOnResumeFocus()) {
-            executeNon(getRecyclerView(), view -> {
-                if (view.getChildCount() > 0) {
-                    View v = view.getChildAt(0);
-                    v.setFocusableInTouchMode(true);
-                    v.requestFocus();
-                }
-            });
+        if (getRootView() instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup) getRootView();
+            if (vg.getChildCount() > 0) {
+                vg.getChildAt(0).setFocusableInTouchMode(true);
+                vg.getChildAt(0).requestFocus();
+            }
         }
     }
 
@@ -143,6 +146,21 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         super.initView();
         getRecyclerView().setLayoutManager(getLayoutManager());
         getRecyclerView().setAdapter(getRecycleAdapter());
+        getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case SCROLL_STATE_DRAGGING://手指滑动
+                        SoftInputUtil.hidSoftInput(recyclerView);
+                        break;
+                    case SCROLL_STATE_IDLE://结束滑动
+                        break;
+                    case SCROLL_STATE_SETTLING://惯性滑动
+                        break;
+                }
+            }
+        });
         getRecycleAdapter().setCallback(this);
     }
 

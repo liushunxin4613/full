@@ -23,6 +23,10 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
         this(null, name, null, null, null);
     }
 
+    public ApiBean(String name, OnBVClickListener<T> listener) {
+        this(null, name, null, null, listener);
+    }
+
     public ApiBean(OnBVClickListener<T> listener) {
         this(null, null, null, null, listener);
     }
