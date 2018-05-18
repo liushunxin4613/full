@@ -20,15 +20,22 @@ public class BasePagerAdapter<T extends View> extends PagerAdapter {
         return api;
     }
 
-    public BasePagerAdapter add(T view){
-        if(view != null){
+    public BasePagerAdapter add(T view) {
+        if (view != null) {
             getApi().add(view);
         }
         return this;
     }
 
-    public void execute(IAction action, Object... args){
-        if(action != null && !TextUtils.isEmits(args)){
+    public BasePagerAdapter remove(T view) {
+        if (view != null) {
+            getApi().remove(view);
+        }
+        return this;
+    }
+
+    public void execute(IAction action, Object... args) {
+        if (action != null && !TextUtils.isEmits(args)) {
             action.action();
         }
     }
@@ -52,7 +59,12 @@ public class BasePagerAdapter<T extends View> extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView(getApi().getItem(position));
+        container.removeView((View) object);
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
 }

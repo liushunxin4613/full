@@ -141,7 +141,8 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
                 executeNon(tv, obj -> obj.post(() -> setVisibility(obj, isOpen ? View.GONE : View.VISIBLE)));
             }
         });
-        viewPager.setVerticalBeyondApi(is -> execute(!is, () -> adapter.add(getRecycleControllerApi().getRootView()).notifyDataSetChanged()));
+        viewPager.setVerticalBeyondApi(is -> execute(!is, () -> adapter.add(
+                getRecycleControllerApi().getRootView()).notifyDataSetChanged()));
         adapter.add(getRecycleControllerApi().getRootView()).notifyDataSetChanged();
     }
 
@@ -153,9 +154,14 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
     }
 
     private RecycleControllerApi getRecycleControllerApi() {
-        SetRecycleControllerApi api = getViewControllerApi(SetRecycleControllerApi.class, R.layout.l_cost_index_bottom);
+        SetRecycleControllerApi api = getViewControllerApi(SetRecycleControllerApi.class,
+                R.layout.l_cost_index_bottom);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {
-            ee("删除本项分摊");
+            adapter.remove(api.getRootView());
+            if(adapter.getCount() == 0){
+                adapter.add(getRecycleControllerApi().getRootView());
+            }
+            adapter.notifyDataSetChanged();
         });
         api.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
