@@ -17,7 +17,7 @@ public class RefreshRecycleControllerApi<T extends RefreshRecycleControllerApi, 
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_refresh_recycle;
     }
 

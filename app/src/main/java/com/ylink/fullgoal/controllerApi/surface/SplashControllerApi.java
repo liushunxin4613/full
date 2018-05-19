@@ -27,7 +27,7 @@ public class SplashControllerApi<T extends SplashControllerApi, C> extends Surfa
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.c_splash;
     }
 

@@ -49,7 +49,7 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_reimburse_data;
     }
 
@@ -88,7 +88,7 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
 
     @SuppressLint("RtlHardcoded")
     private void initDrawerLayout() {
-        SetRecycleControllerApi api = getViewControllerApi(SetRecycleControllerApi.class, R.layout.l_sx);
+        RecycleControllerApi api = getViewControllerApi(RecycleControllerApi.class, R.layout.l_sx);
         api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         setOnClickListener(api.findViewById(R.id.reset_tv), v -> {
             show("重置");

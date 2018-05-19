@@ -25,7 +25,7 @@ public class BarControllerApi<T extends BarControllerApi, C> extends SurfaceCont
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_top_bar;
     }
 

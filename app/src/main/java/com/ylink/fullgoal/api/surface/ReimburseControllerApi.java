@@ -87,7 +87,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_reimburse;
     }
 

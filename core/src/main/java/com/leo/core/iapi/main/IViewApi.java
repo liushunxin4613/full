@@ -3,10 +3,13 @@ package com.leo.core.iapi.main;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leo.core.iapi.IAction;
+import com.leo.core.iapi.IVgRunApi;
 import com.leo.core.iapi.core.IApi;
 
 public interface IViewApi<T extends IViewApi> extends IApi {
@@ -90,6 +93,14 @@ public interface IViewApi<T extends IViewApi> extends IApi {
     T setOnClickListener(View view, View.OnClickListener listener);
 
     /**
+     * 设置view的点击事件
+     *
+     * @param listener 点击监听
+     * @return 媒介
+     */
+    T setOnClickListener(View.OnClickListener listener);
+
+    /**
      * 设置view的长按点击事件
      *
      * @param view     View
@@ -99,8 +110,17 @@ public interface IViewApi<T extends IViewApi> extends IApi {
     T setOnLongClickListener(View view, View.OnLongClickListener listener);
 
     /**
+     * 设置view的长按点击事件
+     *
+     * @param listener 长按点击监听
+     * @return 媒介
+     */
+    T setOnLongClickListener(View.OnLongClickListener listener);
+
+    /**
      * 设置EditText hint
-     * @param et EditText
+     *
+     * @param et   EditText
      * @param hint hint
      * @return 本身
      */
@@ -108,7 +128,8 @@ public interface IViewApi<T extends IViewApi> extends IApi {
 
     /**
      * 设置背景图片
-     * @param view view
+     *
+     * @param view  view
      * @param resId 资源id
      * @return 本身
      */
@@ -116,7 +137,8 @@ public interface IViewApi<T extends IViewApi> extends IApi {
 
     /**
      * 设置背景颜色
-     * @param view view
+     *
+     * @param view  view
      * @param color 颜色id
      * @return 本身
      */
@@ -124,10 +146,26 @@ public interface IViewApi<T extends IViewApi> extends IApi {
 
     /**
      * 设置TextView颜色
-     * @param tv tv
+     *
+     * @param tv    tv
      * @param color 颜色
      * @return 本身
      */
     T setTextColor(TextView tv, @ColorInt int color);
+
+    /**
+     * 当ViewGroup时
+     * @param vg vg
+     * @param vgApi vgApi
+     * @return 本身
+     */
+    T setViewGroupApi(ViewGroup vg, IVgRunApi vgApi);
+
+    /**
+     * 设置viewBean
+     * @param action action
+     * @return 本身
+     */
+    T setAction(IAction action);
 
 }

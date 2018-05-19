@@ -38,7 +38,7 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_indicator;
     }
 

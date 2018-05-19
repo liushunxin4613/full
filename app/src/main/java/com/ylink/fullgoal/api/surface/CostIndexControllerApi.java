@@ -26,10 +26,6 @@ import java.util.Random;
 
 import butterknife.Bind;
 
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
-
 /**
  * 费用指标
  */
@@ -65,7 +61,7 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_cost_index;
     }
 
@@ -153,7 +149,7 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
     }
 
     private RecycleControllerApi getRecycleControllerApi() {
-        SetRecycleControllerApi api = getViewControllerApi(SetRecycleControllerApi.class,
+        RecycleControllerApi api = getViewControllerApi(RecycleControllerApi.class,
                 R.layout.l_cost_index_bottom);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {
             adapter.remove(api.getRootView());

@@ -6,19 +6,16 @@ import com.leo.core.core.BaseControllerApi;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.IUserApi;
 import com.leo.core.net.RetrofitSubscriber;
-import com.leo.core.other.ParamType;
 import com.ylink.fullgoal.api.func.UserApi;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.config.Api;
-
-import java.lang.reflect.Type;
 
 import butterknife.ButterKnife;
 import rx.Subscriber;
 
 import static com.ylink.fullgoal.config.Config.ROOT_URL;
 
-public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi<T,C> {
+public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi<T, C> {
 
     private String rootUrl = ROOT_URL;
 
@@ -28,11 +25,7 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
 
     @Override
     public boolean isLogin() {
-        boolean isLogin = super.isLogin();
-        if(!isLogin){
-//            startActivity(LoginActivity.class);
-        }
-        return isLogin;
+        return super.isLogin();
     }
 
     @Override
@@ -69,11 +62,6 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     public void initView() {
         if (getRootView() != null)
             ButterKnife.bind(this, getRootView());
-    }
-
-    //自定义
-    protected ParamType get(Type rawType, Type... typeArguments){
-        return ParamType.get(rawType, typeArguments);
     }
 
 }

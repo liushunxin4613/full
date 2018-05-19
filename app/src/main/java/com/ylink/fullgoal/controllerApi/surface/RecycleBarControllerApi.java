@@ -25,7 +25,7 @@ public class RecycleBarControllerApi<T extends RecycleBarControllerApi, C> exten
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_bar_recycle;
     }
 

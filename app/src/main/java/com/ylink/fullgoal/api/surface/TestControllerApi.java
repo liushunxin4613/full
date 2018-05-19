@@ -13,7 +13,7 @@ public class TestControllerApi extends SurfaceControllerApi {
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_test;
     }
 

@@ -43,7 +43,7 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_search;
     }
 

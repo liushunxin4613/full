@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.surface;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.CCSQDBean;
@@ -52,47 +51,36 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
     @Override
     public void onResume() {
         super.onResume();
-        SearchVo vo = getFinish(new TypeToken<SearchVo<String>>() {
-        }.getType(), new TypeToken<SearchVo<BusinessVo>>() {
-        }.getType(), new TypeToken<SearchVo<AirVo>>() {
-        }.getType());
+        SearchVo vo = getFinish(gets(SearchVo.class, String.class, BusinessVo.class, AirVo.class));
         executeNon(vo, obj -> executeNon(obj.getSearch(), search -> {
             switch (search) {
                 case SearchVo.REIMBURSEMENT://报销人
-                    setText(rbBean.getTextView(), (CharSequence) obj.getObj());
+                    rbBean.setDetail((String) obj.getObj());
                     break;
                 case SearchVo.BUDGET_DEPARTMENT://预算归属部门
-                    setTextView(bdBean.getTextView(), (String) obj.getObj(), bdBean.getHint());
+                    bdBean.setDetail((String) obj.getObj());
                     break;
                 case SearchVo.PROJECT://项目
-                    setTextView(ptBean.getTextView(), (String) obj.getObj(), ptBean.getHint());
+                    ptBean.setDetail((String) obj.getObj());
                     break;
                 case SearchVo.BUSINESS://出差申请单
                     executeNon(ccVgBean, bean -> {
                         int index = bean.indexOf(ccBean);
                         if (index >= 0) {
-                            BusinessVo item = (BusinessVo) obj.getObj();
-                            bean.add(index, new CCSQDBean(item.getSerialNo(),
-                                    item.getDays(), item.getStartDate(), item.getEndDate()));
-                            notifyDataSetChanged();
+                            bean.add(index, getCCSQDBean((BusinessVo) obj.getObj()));
                         }
                     });
                     break;
                 case SearchVo.XC_AIR://携程机票
-                    ee("携程机票", obj.getObj());
                     executeNon(xcVgBean, bean -> {
                         int index = bean.indexOf(xcBean);
                         if (index >= 0) {
-                            AirVo item = (AirVo) obj.getObj();
-                            bean.add(index, new XCJPBean(item.getUser(),
-                                    item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
-                                    String.format("%s 到", item.getEndTime()), String.format("%s - %s",
-                                    item.getStartPlace(), item.getEndPlace())));
-                            notifyDataSetChanged();
+                            bean.add(index, getXCJPBean((AirVo) obj.getObj()));
                         }
                     });
                     break;
             }
+            notifyDataSetChanged();
         }));
     }
 
@@ -105,12 +93,15 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
 
     private void testReimburseVo() {
         //test
-        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE) || TextUtils.orEquals(getReimburseType(), ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED, ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED)) {
+        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE) ||
+                TextUtils.orEquals(getReimburseType(), ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED,
+                        ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED)) {
             getVo().setReimbursement("李四");
             getVo().setBudgetDepartment("信息技术部");
             getVo().setProject("第一财经中国经济论坛");
             getVo().setCause("参加第一财经中国经济论坛, 到上海出差,报销差旅费用");
-            getVo().setTrafficBillData(TextUtils.getListData(new BillVo(R.mipmap.test_photo, getHasEnable("294330.00")),
+            getVo().setTrafficBillData(TextUtils.getListData(new BillVo(R.mipmap.test_photo,
+                            getHasEnable("294330.00")),
                     new BillVo(R.mipmap.test_photo, getHasEnable("294230.00")),
                     new BillVo(R.mipmap.test_photo, getHasEnable("122930.00")),
                     new BillVo(R.mipmap.test_photo, getHasEnable("342930.00"))));
@@ -148,6 +139,22 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
         }
     }
 
+    private CCSQDBean getCCSQDBean(BusinessVo vo) {
+        return getExecute(vo, item -> new CCSQDBean(item.getSerialNo(), item.getDays(),
+                item.getStartDate(), item.getEndDate(), (bean, view) -> {
+            show("getCCSQDBean");
+        }));
+    }
+
+    private XCJPBean getXCJPBean(AirVo vo) {
+        return getExecute(vo, item -> new XCJPBean(item.getUser(),
+                item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
+                String.format("%s 到", item.getEndTime()), String.format("%s - %s",
+                item.getStartPlace(), item.getEndPlace()), (bean, view) -> {
+            show("getXCJPBean");
+        }));
+    }
+
     @Override
     protected void onReimburseVo(ReimburseVo vo) {
         super.onReimburseVo(vo);
@@ -177,8 +184,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             if (!(!isEnable() && TextUtils.isEmpty(vo.getBusinessData()))) {
                 data.add(new TvBean("出差申请单添加"));
             }
-            execute(vo.getBusinessData(), item -> data.add(new CCSQDBean(item.getSerialNo(),
-                    item.getDays(), item.getStartDate(), item.getEndDate())));
+            execute(vo.getBusinessData(), item -> data.add(getCCSQDBean(item)));
             if (isEnable()) {
                 data.add(ccBean = new IconTvHBean("添加出差申请单", (bean, view) -> startSearch(SearchVo.BUSINESS)));
             }
@@ -195,10 +201,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             if (!(!isEnable() && TextUtils.isEmpty(airData) && TextUtils.isEmpty(airBillData))) {
                 data.add(new TvBean("车船机票费报销"));
             }
-            execute(airData, item -> data.add(new XCJPBean(item.getUser(),
-                    item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
-                    String.format("%s 到", item.getEndTime()), String.format("%s - %s",
-                    item.getStartPlace(), item.getEndPlace()))));
+            execute(airData, item -> data.add(getXCJPBean(item)));
             if (isEnable()) {
                 data.add(xcBean = new IconTvHBean("添加携程机票", (bean, view) -> startSearch(SearchVo.XC_AIR)));
             }

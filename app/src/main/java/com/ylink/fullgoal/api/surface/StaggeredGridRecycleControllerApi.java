@@ -4,9 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.LinearLayout;
 
+import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.other.GridSpacing1ItemDecoration;
 
-public class StaggeredGridRecycleControllerApi<T extends StaggeredGridRecycleControllerApi, C> extends SetRecycleControllerApi<T, C> {
+public class StaggeredGridRecycleControllerApi<T extends StaggeredGridRecycleControllerApi, C> extends RecycleControllerApi<T, C> {
 
     private int space = 8;
 

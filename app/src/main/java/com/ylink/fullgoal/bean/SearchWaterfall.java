@@ -8,8 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leo.core.iapi.IBindItemCallback;
-import com.leo.core.util.LogUtil;
+import com.leo.core.iapi.IBindBeanApi;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -23,9 +22,9 @@ public class SearchWaterfall extends ApiBean<SearchWaterfall> {
     private List<String> data;
     private List<TvSBean> beanData;
     private transient ImageView closeIv;
-    private transient IBindItemCallback<RecycleControllerApi, String> textApi;
+    private transient IBindBeanApi<RecycleControllerApi, String> textApi;
 
-    public SearchWaterfall(String name, List<String> data, IBindItemCallback<RecycleControllerApi, String> textApi) {
+    public SearchWaterfall(String name, List<String> data, IBindBeanApi<RecycleControllerApi, String> textApi) {
         super(name);
         setData(data);
         setTextApi(textApi);
@@ -60,7 +59,7 @@ public class SearchWaterfall extends ApiBean<SearchWaterfall> {
         return closeIv;
     }
 
-    public void setCloseIv(ImageView closeIv) {
+    public SearchWaterfall setCloseIv(ImageView closeIv) {
         this.closeIv = closeIv;
         if (closeIv != null) {
             closeIv.setOnClickListener(v -> {
@@ -69,14 +68,16 @@ public class SearchWaterfall extends ApiBean<SearchWaterfall> {
                 }
             });
         }
+        return this;
     }
 
-    public IBindItemCallback<RecycleControllerApi, String> getTextApi() {
+    public IBindBeanApi<RecycleControllerApi, String> getTextApi() {
         return textApi;
     }
 
-    public void setTextApi(IBindItemCallback<RecycleControllerApi, String> textApi) {
+    public SearchWaterfall setTextApi(IBindBeanApi<RecycleControllerApi, String> textApi) {
         this.textApi = textApi;
+        return this;
     }
 
     @Override

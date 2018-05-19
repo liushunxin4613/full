@@ -27,7 +27,7 @@ public class BillControllerApi<T extends BillControllerApi, C> extends BarContro
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_photo;
     }
 

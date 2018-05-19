@@ -6,12 +6,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leo.core.iapi.IBindItemCallback;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.bean.BaseApiBean;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.ApiBean;
 import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.DateArrayBean;
 import com.ylink.fullgoal.bean.GridBean;
@@ -50,6 +48,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
     private EditText minEt;
     private EditText maxEt;
     private ImageView iconIv;
+    private ViewGroup vg;
 
     public ItemControllerApi(C controller) {
         super(controller);
@@ -58,63 +57,67 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
     @Override
     public void initView() {
         super.initView();
-        findView(getRootView());
         initCallback();
     }
 
-    private void findView(View view) {
-        nameTv = findViewById(view, R.id.name_tv);
-        detailTv = findViewById(view, R.id.detail_tv);
-        startTv = findViewById(view, R.id.start_tv);
-        endTv = findViewById(view, R.id.end_tv);
-        typeTv = findViewById(view, R.id.type_tv);
-        placeTv = findViewById(view, R.id.place_tv);
-        nameEt = findViewById(view, R.id.name_et);
-        detailEt = findViewById(view, R.id.detail_et);
-        minEt = findViewById(view, R.id.min_et);
-        maxEt = findViewById(view, R.id.max_et);
-        iconIv = findViewById(view, R.id.icon_iv);
+    @Override
+    public void onFindViewByIds() {
+        super.onFindViewByIds();
+        vg = findViewById(R.id.vg);
+        nameTv = findViewById(R.id.name_tv);
+        detailTv = findViewById(R.id.detail_tv);
+        startTv = findViewById(R.id.start_tv);
+        endTv = findViewById(R.id.end_tv);
+        typeTv = findViewById(R.id.type_tv);
+        placeTv = findViewById(R.id.place_tv);
+        nameEt = findViewById(R.id.name_et);
+        detailEt = findViewById(R.id.detail_et);
+        minEt = findViewById(R.id.min_et);
+        maxEt = findViewById(R.id.max_et);
+        iconIv = findViewById(R.id.icon_iv);
     }
 
     //监听相关对象
     private void initCallback() {
         //文字
-        putBindBeanCallback(TvBean.class, (bean, position) -> setName(bean.getName())
+        putBindBeanApi(TvBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
                 .setOnClickListener(bean.getOnClickListener()));
         //双文字
-        putBindBeanCallback(TvH2SBean.class, (bean, position) -> setName(bean.getName())
-                .setDetail(bean.getDetail())
+        putBindBeanApi(TvH2SBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
                 .setOnClickListener(bean.getOnClickListener()));
         //图片处理
-        putBindBeanCallback(GridPhotoBean.class, (bean, position) -> {
-            getRootView().setLayoutParams(new ViewGroup.LayoutParams(-1, bean.getUnit()));
-            setIcon(bean.getRes())
-                    .setOnClickListener(getRootView(), bean.getOnClickListener())
-                    .setOnLongClickListener(getRootView(), bean.getOnLongClickListener());
-        });
+        putBindBeanApi(GridPhotoBean.class, (api, bean)
+                -> api.setImage(iconIv, bean.getRes())
+                .setAction(() -> api.getRootView().setLayoutParams(
+                        new ViewGroup.LayoutParams(-1, bean.getUnit())))
+                .setOnClickListener(bean.getOnClickListener())
+                .setOnLongClickListener(bean.getOnLongClickListener()));
         //dialog双文字按钮处理
-        putBindBeanCallback(TvV2DialogBean.class, (bean, position) -> {
-            bean.setDialog(getDialog());
-            setName(bean.getName())
-                    .setDetail(bean.getDetail())
-                    .setOnClickListener(nameTv, bean.getOnNameClickListener())
-                    .setOnClickListener(detailTv, bean.getOnDetailClickListener());
-        });
+        putBindBeanApi(TvV2DialogBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setAction(() -> bean.setDialog(getDialog()))
+                .setText(detailTv, bean.getDetail())
+                .setOnClickListener(nameTv, bean.getOnNameClickListener())
+                .setOnClickListener(detailTv, bean.getOnDetailClickListener()));
         //图片Bar
-        putBindBeanCallback(IconBean.class, (bean, position) -> setOnClickListener(iconIv, bean.getOnClickListener()));
+        putBindBeanApi(IconBean.class, (api, bean)
+                -> api.setOnClickListener(iconIv, bean.getOnClickListener()));
         //文字文字组
-        putBindBeanCallback(DateArrayBean.class, (bean, position) -> {
-            setName(bean.getName());
-            addView(vg -> {
-                vg.removeAllViews();
-                GridRecycleControllerApi api = getViewControllerApi(GridRecycleControllerApi.class, R.layout.l_recycle);
-                vg.addView(api.getRootView());
-                api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
-                api.addAll(bean.getData()).notifyDataSetChanged();
-            });
-        });
+        putBindBeanApi(DateArrayBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setViewGroupApi(vg, vg -> {
+                    vg.removeAllViews();
+                    GridRecycleControllerApi gridApi = getViewControllerApi(GridRecycleControllerApi.class);
+                    vg.addView(gridApi.getRootView());
+                    gridApi.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
+                    gridApi.addAll(bean.getData()).notifyDataSetChanged();
+                }));
         //文字
-        putBindBeanCallback(SelectedTvBean.class, (bean, position) -> setName(bean.getName())
+        putBindBeanApi(SelectedTvBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
                 .setOnClickListener(v -> {
                     ViewGroup vg = (ViewGroup) v.getParent();
                     if (!TextUtils.equals(vg.getTag(), v)) {
@@ -126,32 +129,34 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                     }
                 }));
         //筛选
-        putBindBeanCallback(SXBean.class, (bean, position) -> {
+        putBindBeanApi(SXBean.class, (api, bean) -> {
             bean.setMinTv(minEt);
             bean.setMaxTv(maxEt);
             bean.setTextTv(nameEt);
         });
         //禁止规则
-        putBindBeanCallback(InhibitionRuleBean.class, (bean, position) -> setIcon(bean.getIconResId())
-                .setName(bean.getName())
-                .setDetail(bean.getDetail()));
+        putBindBeanApi(InhibitionRuleBean.class, (api, bean)
+                -> api.setImage(iconIv, bean.getIconResId())
+                .setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail()));
         //搜索瀑布流
-        putBindBeanCallback(SearchWaterfall.class, (bean, position) -> addView(vg -> {
-            bean.setCloseIv(iconIv);
-            setTvBean(nameEt, bean).setName(bean.getName());
-            StaggeredGridRecycleControllerApi api = getViewControllerApi(
-                    StaggeredGridRecycleControllerApi.class, R.layout.l_recycle);
-            api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
-            bean.setApi(api);
+        putBindBeanApi(SearchWaterfall.class, (api, bean)
+                -> api.setViewGroupApi(vg, vg -> {
+            bean.setCloseIv(iconIv).setTextView(nameEt);
+            api.setText(nameTv, bean.getName());
+            StaggeredGridRecycleControllerApi staApi = getViewControllerApi(StaggeredGridRecycleControllerApi.class);
+            staApi.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
+            bean.setApi(staApi);
             vg.removeAllViews();
-            vg.addView(api.getRootView());
-            execute(bean.getBeanData(), obj -> obj.setTextApi(this::setDetail));
-            api.addAll(bean.getBeanData()).notifyDataSetChanged();
+            vg.addView(staApi.getRootView());
+            execute(bean.getBeanData(), obj -> obj.setTextApi(text -> setText(detailTv, text)));
+            staApi.addAll(bean.getBeanData()).notifyDataSetChanged();
         }));
         //tvs子项
-        putBindBeanCallback(TvSBean.class, (bean, position) -> setName(bean.getName())
+        putBindBeanApi(TvSBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
                 .setOnClickListener(v -> {
-                    executeNon(bean.getTextApi(), api -> api.execute(bean.getName()));
+                    executeNon(bean.getTextApi(), textApi -> textApi.execute(bean.getName()));
                     ViewGroup vg = (ViewGroup) v.getParent();
                     if (!TextUtils.equals(vg.getTag(), v)) {
                         if (vg.getTag() instanceof View) {
@@ -162,136 +167,89 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                     }
                 }));
         //出差申请单
-        putBindBeanCallback(CCSQDBean.class, (bean, position) -> setName(bean.getName())
-                .setDetail(bean.getDetail())
+        putBindBeanApi(CCSQDBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
                 .setText(startTv, bean.getStart())
                 .setText(endTv, bean.getEnd())
-                .setOnClickListener(getRootView(), bean.getOnClickListener()));
+                .setOnClickListener(bean.getOnClickListener()));
         //携程机票
-        putBindBeanCallback(XCJPBean.class, (bean, position) -> setName(bean.getName())
-                .setDetail(bean.getDetail())
+        putBindBeanApi(XCJPBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
                 .setText(typeTv, bean.getType())
                 .setText(placeTv, bean.getPlace())
                 .setText(startTv, bean.getStart())
                 .setText(endTv, bean.getEnd())
-                .setOnClickListener(getRootView(), bean.getOnClickListener()));
-        //VgBean ************* 总的数据 *************
-        putBindBeanCallback(VgBean.class, (bean, position) -> addView(vg -> {
+                .setOnClickListener(bean.getOnClickListener()));
+        //上下集合数据
+        putBindBeanApi(VgBean.class, (api, bean)
+                -> api.setViewGroupApi(vg, vg -> {
             vg.removeAllViews();
-            execute(bean.getLineData(), item -> {
+            for (int i = 0; i < bean.getLineData().size(); i++) {
+                BaseApiBean item = bean.getLineData().get(i);
                 if (item instanceof GridBean) {
-                    GridRecycleControllerApi api = getViewControllerApi(GridRecycleControllerApi.class, item.getApiType());
-                    vg.addView(api.getRootView());
-                    api.onBindViewHolder(item, position);
+                    GridRecycleControllerApi gridApi = getViewControllerApi(GridRecycleControllerApi.class,
+                            item.getApiType());
+                    gridApi.onBindViewHolder(item, i);
+                    vg.addView(gridApi.getRootView());
                 } else {
-                    ItemControllerApi api = getViewControllerApi(ItemControllerApi.class, item.getApiType());
-                    vg.addView(api.getRootView());
-                    findView(api.getRootView());
-                    IBindItemCallback itemApi = api.getItemControllerApi(item.getClass());
-                    if (itemApi != null) {
-                        itemApi.onItem(api, item);
-                    }
+                    ItemControllerApi itemApi = getViewControllerApi(ItemControllerApi.class,
+                            item.getApiType());
+                    itemApi.onBindViewHolder(item, i);
+                    vg.addView(itemApi.getRootView());
                 }
-            });
+            }
         }));
         //双文字
-        putBindItemCallback(TvH2Bean.class, (api, bean) -> api.setName(bean.getName())
-                .setDetail(bean.getDetail()));
+        putBindBeanApi(TvH2Bean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail()));
         //图标文字点击
-        putBindItemCallback(IconTvMoreBean.class, (api, bean) -> api.setIcon(bean.getIconResId())
-                .setName(bean.getName())
+        putBindBeanApi(IconTvMoreBean.class, (api, bean)
+                -> api.setImage(iconIv, bean.getIconResId())
+                .setText(nameTv, bean.getName())
                 .setOnClickListener(bean.getOnClickListener()));
         //图标文字输入图标监听
-        putBindItemCallback(TvHEtIconMoreBean.class, (api, bean) -> api.setName(bean.getName())
-                .setTvBean(detailEt, bean)
-                .setDetail(bean.getDetail())
+        putBindBeanApi(TvHEtIconMoreBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
+                .setAction(() -> bean.setTextView(detailEt))
                 .setImage(iconIv, bean.getIconResId())
                 .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
                 .setOnClickListener(iconIv, bean.getOnClickListener())
                 .setTextHint(detailEt, bean.getHint())
                 .setText(detailEt, bean.getDetail()));
         //双文字点击
-        putBindItemCallback(TvH2MoreBean.class, (api, bean) -> api.setName(bean.getName())
-                .setTvBean(detailTv, bean)
-                .setDetail(nb(bean.getDetail(), bean.getHint()))
+        putBindBeanApi(TvH2MoreBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
+                .setAction(() -> bean.setTextView(detailTv))
+                .setText(detailTv, TextUtils.isEmpty(bean.getDetail()) ? bean.getHint() : bean.getDetail())
                 .setTextColor(detailTv, getResTvColor(bean.getDetail()))
-                .setOnClickListener(getRootView(), bean.getOnClickListener()));
+                .setOnClickListener(bean.getOnClickListener()));
         //文字多行输入
-        putBindItemCallback(TvHEt3Bean.class, (api, bean) -> api.setName(bean.getName())
-                .setTvBean(detailEt, bean)
-                .setDetail(bean.getDetail())
+        putBindBeanApi(TvHEt3Bean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
+                .setAction(() -> bean.setTextView(detailEt))
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
-        //文字
-        putBindItemCallback(TvBean.class, (api, bean) -> api.setName(bean.getName())
-                .setOnClickListener(bean.getOnClickListener()));
         //图片文字点击
-        putBindItemCallback(IconTvHBean.class, (api, bean) -> api.setIcon(bean.getIconResId())
-                .setName(bean.getName())
+        putBindBeanApi(IconTvHBean.class, (api, bean)
+                -> api.setImage(iconIv, bean.getIconResId())
+                .setText(nameTv, bean.getName())
                 .setOnClickListener(bean.getOnClickListener()));
-        //出差申请单
-        putBindItemCallback(CCSQDBean.class, (api, bean) -> api.setName(bean.getName())
-                .setDetail(bean.getDetail())
-                .setText(startTv, bean.getStart())
-                .setText(endTv, bean.getEnd()));
-        //携程机票
-        putBindItemCallback(XCJPBean.class, (api, bean) -> api.setName(bean.getName())
-                .setDetail(bean.getDetail())
-                .setText(typeTv, bean.getType())
-                .setText(placeTv, bean.getPlace())
-                .setText(startTv, bean.getStart())
-                .setText(endTv, bean.getEnd()));
         //文字多行文字
-        putBindItemCallback(TvHTv3Bean.class, (api, bean) -> api.setName(bean.getName())
-                .setDetail(bean.getDetail()));
+        putBindBeanApi(TvHTv3Bean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail()));
         //文字输入
-        putBindItemCallback(TvHEtBean.class, (api, bean) -> api.setName(bean.getName())
-                .setTvBean(detailEt, bean)
+        putBindBeanApi(TvHEtBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setAction(() -> bean.setTextView(detailEt))
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
-        //双文字
-        putBindItemCallback(TvH2SBean.class, (api, bean) -> api.setName(bean.getName())
-                .setDetail(bean.getDetail())
-                .setOnClickListener(bean.getOnClickListener()));
-    }
-
-    //私有的
-
-    protected T setName(CharSequence name) {
-        setText(nameTv, name);
-        return getThis();
-    }
-
-    protected T setDetail(String detail) {
-        setText(detailTv, detail);
-        return getThis();
-    }
-
-    protected T setIcon(Object res) {
-        setImage(iconIv, res);
-        return getThis();
-    }
-
-    protected T setOnClickListener(View.OnClickListener listener) {
-        setOnClickListener(getRootView(), listener);
-        return getThis();
-    }
-
-    private T addView(IRunApi<ViewGroup> api) {
-        ViewGroup vg = findViewById(R.id.vg);
-        if (api != null && vg != null) {
-            api.execute(vg);
-        }
-        return getThis();
-    }
-
-    private T setTvBean(TextView tv, ApiBean bean) {
-        executeNon(bean, obj -> obj.setTextView(tv));
-        return getThis();
-    }
-
-    private <B> B nb(B old, B nw) {
-        return TextUtils.count(old) > 0 ? old : nw;
     }
 
 }

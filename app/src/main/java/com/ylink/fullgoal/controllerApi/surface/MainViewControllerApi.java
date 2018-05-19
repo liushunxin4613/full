@@ -32,7 +32,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends S
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.c_main;
     }
 

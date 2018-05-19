@@ -1,17 +1,20 @@
 package com.leo.core.core;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
+import com.leo.core.iapi.IAction;
+import com.leo.core.iapi.IVgRunApi;
 import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 
-public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implements IViewApi<T>{
+public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implements IViewApi<T> {
 
     public ViewApi(CoreControllerApi controllerApi) {
         super(controllerApi);
@@ -42,8 +45,8 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public T setText(View view, CharSequence text) {
-        if(checkView(view)){
-            if(view instanceof TextView){
+        if (checkView(view)) {
+            if (view instanceof TextView) {
                 ((TextView) view).setText(text);
             }
         }
@@ -90,10 +93,22 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public T setOnClickListener(View.OnClickListener listener) {
+        setOnClickListener(controllerApi().getRootView(), listener);
+        return getThis();
+    }
+
+    @Override
     public T setOnLongClickListener(View view, View.OnLongClickListener listener) {
         if (checkView(view)) {
             view.setOnLongClickListener(listener);
         }
+        return getThis();
+    }
+
+    @Override
+    public T setOnLongClickListener(View.OnLongClickListener listener) {
+        setOnLongClickListener(controllerApi().getRootView(), listener);
         return getThis();
     }
 
@@ -123,8 +138,24 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public T setTextColor(TextView tv, int color) {
-        if (checkView(tv)){
+        if (checkView(tv)) {
             tv.setTextColor(ResUtil.getColor(color));
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setViewGroupApi(ViewGroup vg, IVgRunApi vgApi) {
+        if (checkView(vg) && vgApi != null) {
+            vgApi.execute(vg);
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setAction(IAction action) {
+        if(action != null){
+            action.action();
         }
         return getThis();
     }

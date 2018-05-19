@@ -15,7 +15,7 @@ public class RefreshRecycleBarControllerApi<T extends RefreshRecycleBarControlle
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.l_bar_refresh_recycle;
     }
 

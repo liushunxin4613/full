@@ -88,7 +88,7 @@ public class Camera1ControllerApi<T extends Camera1ControllerApi, C> extends Sur
     }
 
     @Override
-    public Integer getRootViewResId() {
+    public Integer getDefRootViewResId() {
         return R.layout.c_camera;
     }
 

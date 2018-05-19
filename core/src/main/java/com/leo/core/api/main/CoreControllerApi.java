@@ -31,7 +31,7 @@ import com.leo.core.config.Config;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IActionApi;
-import com.leo.core.iapi.IBindBeanCallback;
+import com.leo.core.iapi.IBindBeanApi;
 import com.leo.core.iapi.ICallbackApi;
 import com.leo.core.iapi.IConfigApi;
 import com.leo.core.iapi.IDataApi;
@@ -48,6 +48,7 @@ import com.leo.core.iapi.IStartApi;
 import com.leo.core.iapi.ISubjoinApi;
 import com.leo.core.iapi.ITAction;
 import com.leo.core.iapi.IUserApi;
+import com.leo.core.iapi.IVgRunApi;
 import com.leo.core.iapi.OnAddListener;
 import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.main.Adapter;
@@ -110,7 +111,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private Observable.Transformer transformer;
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
-    private Map<Class, IBindBeanCallback> callbackMap;
+    private Map<Class, IBindBeanApi> apiMap;
     private String finish;
 
     private List<OnAddListener> addListeners;
@@ -118,6 +119,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public CoreControllerApi(C controller) {
         super(controller);
         initController(controller);
+        apiMap = new HashMap<>();
     }
 
     @Override
@@ -588,8 +590,17 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @LayoutRes
     @Override
+    public Integer getDefRootViewResId() {
+        return null;
+    }
+
+    @LayoutRes
+    @Override
     public Integer getRootViewResId() {
-        return rootViewResId;
+        if (rootViewResId != null) {
+            return rootViewResId;
+        }
+        return getDefRootViewResId();
     }
 
     @Override
@@ -659,13 +670,15 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public void onFindViewByIds() {
+    }
+
+    @Override
     public synchronized <B> void onBindViewHolder(B bean, int position) {
-        if (callbackMap != null && bean != null) {
-            IBindBeanCallback callback = callbackMap.get(bean.getClass());
-            if (callback != null) {
-                callback.onBindBean(bean, position);
-            }
-        }
+        executeNon(bean, obj -> executeNon(apiMap.get(bean.getClass()), api -> {
+            onFindViewByIds();
+            api.onItem(getThis(), bean);
+        }));
     }
 
     @Override
@@ -730,13 +743,16 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> T putBindBeanCallback(Class<B> clz, IBindBeanCallback<B> callback) {
+    public <B> T putBindBeanApi(Class<B> clz, IBindBeanApi<T, B> api) {
         if (clz != null) {
-            if (callbackMap == null) {
-                callbackMap = new HashMap<>();
-            }
-            callbackMap.put(clz, callback);
+            apiMap.put(clz, api);
         }
+        return getThis();
+    }
+
+    @Override
+    public T clearBindBeanApi() {
+        apiMap.clear();
         return getThis();
     }
 
@@ -827,6 +843,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public void initView() {
         if (getRootView() != null)
             ButterKnife.bind(this, getRootView());
+        onFindViewByIds();
     }
 
     @Override
@@ -847,7 +864,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public void onResume() {
         executeViewControllerApi(IControllerApi::onResume);
         String key = getString(Config.LAST_FINISH_CONTROLLER_API);
-        if(!TextUtils.isEmpty(key)){
+        if (!TextUtils.isEmpty(key)) {
             finish = getString(key);
             remove(key);
         }
@@ -1006,8 +1023,20 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public T setOnClickListener(View.OnClickListener listener) {
+        viewApi().setOnClickListener(listener);
+        return getThis();
+    }
+
+    @Override
     public T setOnLongClickListener(View view, View.OnLongClickListener listener) {
         viewApi().setOnLongClickListener(view, listener);
+        return getThis();
+    }
+
+    @Override
+    public T setOnLongClickListener(View.OnLongClickListener listener) {
+        viewApi().setOnLongClickListener(listener);
         return getThis();
     }
 
@@ -1032,6 +1061,18 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T setTextColor(TextView tv, int color) {
         viewApi().setTextColor(tv, color);
+        return getThis();
+    }
+
+    @Override
+    public T setViewGroupApi(ViewGroup vg, IVgRunApi vgApi) {
+        viewApi().setViewGroupApi(vg, vgApi);
+        return getThis();
+    }
+
+    @Override
+    public T setAction(IAction action) {
+        viewApi().setAction(action);
         return getThis();
     }
 

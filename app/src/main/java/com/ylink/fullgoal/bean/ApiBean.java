@@ -1,11 +1,14 @@
 package com.ylink.fullgoal.bean;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.OnBVClickListener;
 import com.leo.core.util.RunUtil;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 
 public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
@@ -113,6 +116,25 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
 
     public void setTextView(TextView textView) {
         this.textView = textView;
+        if (this.textView != null) {
+            this.textView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence text, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable text) {
+                    String str = RunUtil.getExecute(text, CharSequence::toString);
+                    if (!TextUtils.equals(str, getHint())) {
+                        setDetail(str);
+                    }
+                }
+            });
+        }
     }
 
     protected Integer getEnableLayoutResId(Integer resId) {

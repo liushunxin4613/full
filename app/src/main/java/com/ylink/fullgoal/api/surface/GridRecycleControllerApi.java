@@ -8,9 +8,10 @@ import com.leo.core.util.ResUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
+import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.other.GridSpacingItemDecoration;
 
-public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> extends SetRecycleControllerApi<T, C> {
+public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> extends RecycleControllerApi<T, C> {
 
     private int space = 10;
     private int edgeSpace = space * 3;
@@ -34,18 +35,18 @@ public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> ext
         super.initView();
         getRecyclerView().setFocusable(false);
         getRecyclerView().setFocusableInTouchMode(false);
-        initDis();
+        initDes();
         initCallback();
     }
 
     //监听相关对象
     private void initCallback() {
         //grid
-        putBindBeanCallback(GridBean.class, (bean, position) -> {
+        putBindBeanApi(GridBean.class, (api, bean) -> {
             getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
             clear();
             execute(bean.getData(), obj -> {
-                if(obj instanceof GridPhotoBean){
+                if (obj instanceof GridPhotoBean) {
                     ((GridPhotoBean) obj).setUnit(unit);
                 }
                 add(obj);
@@ -54,7 +55,7 @@ public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> ext
         });
     }
 
-    private void initDis(){
+    private void initDes() {
         int totalWidth = DisneyUtil.getScreenDisplay().getX();
         unit = (totalWidth - space * (getGridCount() - 1) - edgeSpace * 2) / getGridCount();
         getRecyclerView().addItemDecoration(new GridSpacingItemDecoration(space, edgeSpace));

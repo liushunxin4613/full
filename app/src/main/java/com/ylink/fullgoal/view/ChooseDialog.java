@@ -53,7 +53,7 @@ public class ChooseDialog extends Dialog {
         return this;
     }
 
-    public ChooseDialog setSeletion(int position){
+    public ChooseDialog setSelection(int position){
         if(position < TextUtils.count(data)){
             wheelView.setSeletion(position);
         }

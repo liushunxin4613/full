@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IBindBeanCallback;
+import com.leo.core.iapi.IBindBeanApi;
 import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.core.IAttachApi;
 
@@ -116,12 +116,14 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 显示dialog
+     *
      * @return 本身
      */
     T dialogShow();
 
     /**
      * 显示dialog
+     *
      * @return 本身
      */
     T dismiss();
@@ -173,6 +175,14 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     Integer getRootViewResId();
 
     /**
+     * 返回根视图节点ID
+     *
+     * @return 根视图节点ID
+     */
+    @LayoutRes
+    Integer getDefRootViewResId();
+
+    /**
      * 设置resId
      *
      * @return 本身
@@ -210,6 +220,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * view controllerApi
+     *
      * @return IControllerApi
      */
     IControllerApi getViewControllerApi();
@@ -459,6 +470,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void attachBaseContext(Context base);
 
     /**
+     * findViewById 查看view
+     */
+    void onFindViewByIds();
+
+    /**
      * 执行单个holder
      *
      * @param bean     bean
@@ -469,18 +485,20 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 测量view的大学
-     * @param widthMeasureSpec 横向长度
+     *
+     * @param widthMeasureSpec  横向长度
      * @param heightMeasureSpec 纵向长度
      */
     void onMeasure(int widthMeasureSpec, int heightMeasureSpec);
 
     /**
      * 给view以及子view测量
+     *
      * @param changed 表示view有了新的尺寸和位置
-     * @param l 相对于父view的左侧距离
-     * @param t 相对于父view的上侧距离
-     * @param r 相对于父view的右侧距离
-     * @param b 相对于父view的底侧距离
+     * @param l       相对于父view的左侧距离
+     * @param t       相对于父view的上侧距离
+     * @param r       相对于父view的右侧距离
+     * @param b       相对于父view的底侧距离
      */
     void onLayout(boolean changed, int l, int t, int r, int b);
 
@@ -491,12 +509,14 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * onStartActivity
+     *
      * @param intent intent
      */
     void onStartActivity(Intent intent);
 
     /**
      * 关闭activity
+     *
      * @param obj obj
      * @return 本身
      */
@@ -504,8 +524,9 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 获取信息
+     *
      * @param args args
-     * @param <B> <B>
+     * @param <B>  <B>
      * @return 对象
      */
     <B> B getFinish(Type... args);
@@ -523,13 +544,18 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     T executeBundle(IRunApi<Bundle> api);
 
     /**
-     * 加入BindBeanCallback
+     * 加入BindBeanApi
      *
-     * @param callback callback
-     * @param <B>      B
+     * @param api api
+     * @param <B> B
      * @return 本身
      */
-    <B> T putBindBeanCallback(Class<B> clz, IBindBeanCallback<B> callback);
+    <B> T putBindBeanApi(Class<B> clz, IBindBeanApi<T, B> api);
+
+    /**
+     * 清理BindBeanApi
+     */
+    T clearBindBeanApi();
 
     /**
      * 设置状态栏颜色深浅
