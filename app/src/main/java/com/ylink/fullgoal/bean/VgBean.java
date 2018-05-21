@@ -61,6 +61,12 @@ public class VgBean extends BaseApiBean {
         }
     }
 
+    public void remove(BaseApiBean bean) {
+        if (bean != null && data != null) {
+            data.remove(bean);
+        }
+    }
+
     public int indexOf(BaseApiBean bean) {
         if (bean != null && !TextUtils.isEmpty(getData())) {
             return getData().indexOf(bean);

@@ -1,5 +1,20 @@
 package com.ylink.fullgoal.api.surface;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,11 +39,18 @@ import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import me.pqpo.smartcropperlib.SmartCropper;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
+import static android.app.Activity.RESULT_OK;
 import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
 import static com.ylink.fullgoal.config.Config.STATE;
 
@@ -36,6 +58,8 @@ import static com.ylink.fullgoal.config.Config.STATE;
  * 报销
  */
 public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends RecycleBarControllerApi<T, C> {
+
+    private final static int PHOTO_REQUEST_CAMERA = 0x101;
 
     @Bind(R.id.sqtp_iv)
     ImageView sqtpIv;
@@ -48,13 +72,18 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     @Bind(R.id.alter_vg)
     LinearLayout alterVg;
 
+    private File rootFile;
     private String state;
+    private File photoFile;
     private ReimburseVo vo;
     private String reimburseType;
     private TvHEt3Bean causeBean;
+    private GridPhotoBean addBean;
+    private List<GridPhotoBean> photoData;
 
     public ReimburseControllerApi(C controller) {
         super(controller);
+        rootFile = getContext().getExternalFilesDir("photo");
     }
 
     protected ReimburseVo getVo() {
@@ -182,15 +211,112 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
 
     protected List<GridPhotoBean> getPhotoGridBeanData(List<BillVo> data) {
         List<GridPhotoBean> gridData = new ArrayList<>();
-        execute(data, obj -> gridData.add(new GridPhotoBean(obj.getPhoto(), obj,
-                this::onGridPhotoClick, this::onGridPhotoLongClick).setEnable(isEnable())));
+        execute(data, obj -> gridData.add(newGridPhotoBean(gridData, obj).setEnable(isEnable())));
         if (isEnable()) {
-            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) -> {
-                //添加图片
-                show("添加票据");
-            }, null));
+            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) -> onAddGridPhoto(gridData, bean), null));
         }
         return gridData;
+    }
+
+    protected void onAddGridPhoto(List<GridPhotoBean> data, GridPhotoBean addBean) {
+        this.photoData = data;
+        this.addBean = addBean;
+        openCamera();
+    }
+
+    private void addPhoto(BillVo vo) {
+        if (vo != null && photoData != null && addBean != null) {
+            int index = photoData.indexOf(addBean);
+            if (index >= 0) {
+                photoData.add(index, newGridPhotoBean(photoData, vo).setEnable(isEnable()));
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private void openCamera() {
+        // 激活相机
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // 判断存储卡是否可以用，可用进行存储
+        if (hasSdcard()) {
+            Uri photoUri;
+            photoFile = new File(rootFile, System.currentTimeMillis() + ".jpg");
+            if (android.os.Build.VERSION.SDK_INT < 24) {
+                // 从文件中创建uri
+                photoUri = Uri.fromFile(photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            } else {
+                //兼容android7.0 使用共享文件的形式
+                ContentValues contentValues = new ContentValues(1);
+                contentValues.put(MediaStore.Images.Media.DATA, photoFile.getAbsolutePath());
+                //检查是否有存储权限，以免崩溃
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    //申请WRITE_EXTERNAL_STORAGE权限
+                    show("请开启存储权限");
+                    return;
+                }
+                photoUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            }
+        }
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CAMERA
+        getActivity().startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PHOTO_REQUEST_CAMERA:
+                if (resultCode == RESULT_OK) {
+                    executeNon(photoFile, file -> Luban.with(getContext())
+                            .load(file)
+                            .setTargetDir(rootFile.getPath())
+                            .ignoreBy(80)
+                            .setCompressListener(new OnCompressListener() {
+                                @Override
+                                public void onStart() {
+                                }
+
+                                @Override
+                                public void onSuccess(File lubanFile) {
+                                    file.delete();
+                                    addPhoto(new BillVo(lubanFile.getPath(), null));
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    e.printStackTrace();
+                                }
+                            }).launch());
+                }
+                break;
+
+        }
+    }
+
+    private Point[] getFullImgCropPoints(Drawable drawable) {
+        if (drawable != null) {
+            Point[] points = new Point[4];
+            int width = drawable.getIntrinsicWidth();
+            int height = drawable.getIntrinsicHeight();
+            points[0] = new Point(0, 0);
+            points[1] = new Point(width, 0);
+            points[2] = new Point(width, height);
+            points[3] = new Point(0, height);
+            return points;
+        }
+        return null;
+    }
+
+    /**
+     * 判断sdcard是否被挂载
+     */
+    private static boolean hasSdcard() {
+        return Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED);
     }
 
     @Override
@@ -201,11 +327,19 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         });
     }
 
-    protected VgBean addVgBean(String title, List<BillVo> data) {
-        if (!TextUtils.isEmpty(title) && !(!isEnable() && TextUtils.isEmpty(data))) {
-            return addVgBean(new TvBean(title), new GridBean(getPhotoGridBeanData(data)));
+    protected void addVgBean(String title, GridBean bean) {
+        if (!TextUtils.isEmpty(title) && bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
+            addVgBean(new TvBean(title), bean);
         }
-        return null;
+    }
+
+    protected GridBean newGridBean(List<BillVo> data) {
+        return new GridBean(getPhotoGridBeanData(data));
+    }
+
+    protected GridPhotoBean newGridPhotoBean(List<GridPhotoBean> gridData, BillVo vo) {
+        return getExecute(vo, obj -> new GridPhotoBean(obj.getPhoto(), obj, this::onGridPhotoClick,
+                (bean, view) -> onGridPhotoLongClick(gridData, bean, view)));
     }
 
     /**
@@ -225,13 +359,16 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
      * @param view view
      * @return 是否同时响应点击
      */
-    private boolean onGridPhotoLongClick(GridPhotoBean bean, View view) {
+    private boolean onGridPhotoLongClick(List<GridPhotoBean> gridData, GridPhotoBean bean, View view) {
         TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
+            dialog.dismiss();
             show(item.getName());
-            dialog.dismiss();
         }, (item, v, dialog) -> {
-            show(item.getDetail());
             dialog.dismiss();
+            executeNon(gridData, data -> {
+                data.remove(bean);
+                notifyDataSetChanged();
+            });
         });
         ItemControllerApi api = getDialogControllerApi(ItemControllerApi.class, db.getApiType());
         api.dialogShow().onBindViewHolder(db, 0);

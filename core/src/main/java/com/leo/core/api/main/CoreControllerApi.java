@@ -1071,8 +1071,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T setAction(IAction action) {
-        viewApi().setAction(action);
+    public T action(IAction action) {
+        viewApi().action(action);
         return getThis();
     }
 

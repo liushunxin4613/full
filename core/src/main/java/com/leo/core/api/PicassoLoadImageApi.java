@@ -67,20 +67,21 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
 
     @Override
     public T load(Object path, ImageView iv, ICallbackApi api) {
-        if(iv != null){
+        if (iv != null) {
             RequestCreator rc = getRc(path);
             init(rc);
             if (rc != null) {
                 rc.into(iv, new Callback() {
                     @Override
                     public void onSuccess() {
-                        if(api != null){
+                        if (api != null) {
                             api.onCall(CALLBACK_SUCCESS, path);
                         }
                     }
+
                     @Override
                     public void onError() {
-                        if(api != null){
+                        if (api != null) {
                             api.onCall(CALLBACK_SUCCESS, path);
                         }
                     }
@@ -92,9 +93,9 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
 
     //私有的
 
-    private void switchParam(String key, Object value){
-        if(!TextUtils.isEmpty(key) && value != null){
-            switch (key){
+    private void switchParam(String key, Object value) {
+        if (!TextUtils.isEmpty(key) && value != null) {
+            switch (key) {
                 default:
                 case "":
                     break;
@@ -116,7 +117,9 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
     private RequestCreator getRc(Object path) {
         if (path instanceof String) {
             String str = (String) path;
-            if (!TextUtils.isHttpUrl(str)) {
+            if (str.startsWith("/")) {
+                return getDrive().load(new File(str));
+            } else if (!TextUtils.isHttpUrl(str)) {
                 str = null;
             }
             return getDrive().load(str);

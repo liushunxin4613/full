@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.api.surface;
 
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
+
+import com.leo.core.bean.BaseApiBean;
+import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.CCSQDBean;
-import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvBean;
@@ -13,6 +20,7 @@ import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.bean.XCJPBean;
+import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.vo.AirDataVo;
 import com.ylink.fullgoal.vo.AirVo;
 import com.ylink.fullgoal.vo.BillVo;
@@ -22,6 +30,9 @@ import com.ylink.fullgoal.vo.ReimburseVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
+
+import me.pqpo.smartcropperlib.SmartCropper;
+import me.pqpo.smartcropperlib.view.CropImageView;
 
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_RED;
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_YELLOW;
@@ -139,22 +150,6 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
         }
     }
 
-    private CCSQDBean getCCSQDBean(BusinessVo vo) {
-        return getExecute(vo, item -> new CCSQDBean(item.getSerialNo(), item.getDays(),
-                item.getStartDate(), item.getEndDate(), (bean, view) -> {
-            show("getCCSQDBean");
-        }));
-    }
-
-    private XCJPBean getXCJPBean(AirVo vo) {
-        return getExecute(vo, item -> new XCJPBean(item.getUser(),
-                item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
-                String.format("%s 到", item.getEndTime()), String.format("%s - %s",
-                item.getStartPlace(), item.getEndPlace()), (bean, view) -> {
-            show("getXCJPBean");
-        }));
-    }
-
     @Override
     protected void onReimburseVo(ReimburseVo vo) {
         super.onReimburseVo(vo);
@@ -190,9 +185,9 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             }
         });
         //GridBean 交通费报销
-        addVgBean("交通费报销", vo.getTrafficBillData());
+        addVgBean("交通费报销", newGridBean(vo.getTrafficBillData()));
         //GridBean 住宿费报销
-        addVgBean("住宿费报销", vo.getStayBillData());
+        addVgBean("住宿费报销", newGridBean(vo.getStayBillData()));
         //GridBean 车船机票费报销
         xcVgBean = addVgBean(data -> {
             AirDataVo airDataVo = vo.getAirDataVo();
@@ -206,11 +201,47 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
                 data.add(xcBean = new IconTvHBean("添加携程机票", (bean, view) -> startSearch(SearchVo.XC_AIR)));
             }
             if (!(!isEnable() && TextUtils.isEmpty(airBillData))) {
-                data.add(new GridBean(getPhotoGridBeanData(airBillData)));
+                data.add(newGridBean(airBillData));
             }
         });
         //GridBean 其他报销
-        addVgBean("其他报销", vo.getOtherBillData());
+        addVgBean("其他报销", newGridBean(vo.getOtherBillData()));
+    }
+
+    private CCSQDBean getCCSQDBean(BusinessVo vo) {
+        return getExecute(vo, item -> new CCSQDBean(item.getSerialNo(), item.getDays(), item.getStartDate(),
+                item.getEndDate(), (bean, view) -> initVgApiBean(ccVgBean, bean, "出差申请单")));
+    }
+
+    private XCJPBean getXCJPBean(AirVo vo) {
+        return getExecute(vo, item -> new XCJPBean(item.getUser(), item.getMoney(), item.getType(),
+                String.format("%s 开", item.getStartTime()), String.format("%s 到", item.getEndTime()),
+                String.format("%s - %s", item.getStartPlace(), item.getEndPlace()),
+                (bean, view) -> initVgApiBean(xcVgBean, bean, "携程机票")));
+    }
+
+    private void initVgApiBean(VgBean vgBean, BaseApiBean bean, String title) {
+        if (vgBean != null && bean != null && !TextUtils.isEmpty(title)) {
+            RecycleControllerApi api = getDialogControllerApi(RecycleControllerApi.class, R.layout.l_dialog);
+            api.action(() -> api.add(new TvBean("删除", (b, v) -> {
+                api.dismiss();
+                executeNon(vgBean, vb -> {
+                    vb.remove(bean);
+                    notifyDataSetChanged();
+                });
+            })).notifyDataSetChanged()).dialogShow()
+                    .setText(api.findViewById(R.id.title_tv), title)
+                    .setOnClickListener(api.findViewById(R.id.cancel_tv), v -> api.dismiss())
+                    .action(() -> {
+                        Window window = api.getDialog().getWindow();
+                        if (window != null) {
+                            window.setGravity(Gravity.BOTTOM);
+                            WindowManager.LayoutParams lp = window.getAttributes();
+                            lp.width = DisneyUtil.getScreenDisplay().getX();
+                            window.setAttributes(lp);
+                        }
+                    });
+        }
     }
 
 }

@@ -153,7 +153,7 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
-    public T setAction(IAction action) {
+    public T action(IAction action) {
         if(action != null){
             action.action();
         }

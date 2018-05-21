@@ -1,7 +1,6 @@
 package com.ylink.fullgoal.bean;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.main.IApiBean;
 import com.ylink.fullgoal.R;
 
 import java.util.List;
@@ -15,20 +14,20 @@ public class GridBean extends BaseApiBean {
         return API_TYPE;
     }
 
-    private List<? extends IApiBean> data;
+    private List<? extends BaseApiBean> data;
 
     public GridBean() {
     }
 
-    public GridBean(List<? extends IApiBean> data) {
+    public GridBean(List<? extends BaseApiBean> data) {
         this.data = data;
     }
 
-    public void setData(List<? extends IApiBean> data) {
+    public void setData(List<? extends BaseApiBean> data) {
         this.data = data;
     }
 
-    public List<? extends IApiBean> getData() {
+    public List<? extends BaseApiBean> getData() {
         return data;
     }
 

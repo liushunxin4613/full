@@ -166,6 +166,6 @@ public interface IViewApi<T extends IViewApi> extends IApi {
      * @param action action
      * @return 本身
      */
-    T setAction(IAction action);
+    T action(IAction action);
 
 }

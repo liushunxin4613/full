@@ -234,13 +234,10 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    protected VgBean addVgBean(BaseApiBean... args) {
+    protected void addVgBean(BaseApiBean... args) {
         if (!TextUtils.isEmpty(args)) {
-            VgBean vb = new VgBean(TextUtils.getListData(args));
-            add(vb);
-            return vb;
+            add(new VgBean(TextUtils.getListData(args)));
         }
-        return null;
     }
 
     public VgBean addVgBean(IRunApi<List<BaseApiBean>> api) {

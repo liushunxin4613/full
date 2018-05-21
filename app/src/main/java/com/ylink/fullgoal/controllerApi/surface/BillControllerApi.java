@@ -35,7 +35,8 @@ public class BillControllerApi<T extends BillControllerApi, C> extends BarContro
     public void initView() {
         super.initView();
         setTitle("票据");
-        executeBundle(bundle -> executeNon(getBundle(bundle, BillVo.class), vo -> setVisibility(TextUtils.isEmpty(vo.getMoney()) ? View.GONE : View.VISIBLE, vg)
+        executeBundle(bundle -> executeNon(getBundle(bundle, BillVo.class), vo
+                -> setVisibility(TextUtils.isEmpty(vo.getMoney()) ? View.GONE : View.VISIBLE, vg)
                 .setVisibility(TextUtils.isEmpty(vo.getPhoto()) ? View.INVISIBLE : View.VISIBLE, photoIv)
                 .setText(nameTv, "金额")
                 .setText(detailTv, vo.getMoney())
