@@ -1,7 +1,5 @@
 package com.ylink.fullgoal.api.surface;
 
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,6 +14,7 @@ import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
+import com.ylink.fullgoal.bean.TvH4Bean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.VgBean;
@@ -26,14 +25,13 @@ import com.ylink.fullgoal.vo.AirVo;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.BusinessVo;
 import com.ylink.fullgoal.vo.InhibitionRuleVo;
+import com.ylink.fullgoal.vo.ProcessVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
 
-import me.pqpo.smartcropperlib.SmartCropper;
-import me.pqpo.smartcropperlib.view.CropImageView;
-
+import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_RED;
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_YELLOW;
 
@@ -98,7 +96,9 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
     @Override
     public void initView() {
         super.initView();
-        testReimburseVo();
+        if (DEBUG){
+            testReimburseVo();
+        }
         initReimburseVo(getVo());
     }
 
@@ -147,6 +147,13 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
         //经办人确认、经办人修改
         if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE)) {
             getVo().setTotalAmountLower("20000.00");
+        }
+        if (!isEnable()) {
+            getVo().setProcessData(TextUtils.getListData(
+                    new ProcessVo("2018-02-05 18:18:55", "张三", "发票认证", "同意"),
+                    new ProcessVo("2018-02-07 11:23:12", "李四", "发票验证", "验真"),
+                    new ProcessVo("2018-02-11 16:54:34", "王五", "财务审核", "同意")
+            ));
         }
     }
 
@@ -206,6 +213,14 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
         });
         //GridBean 其他报销
         addVgBean("其他报销", newGridBean(vo.getOtherBillData()));
+        //添加流程
+        if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
+            addVgBean(data -> {
+                data.add(new TvH4Bean());
+                execute(vo.getProcessData(), item -> data.add(new TvH4Bean(item.getUser(),
+                        item.getNode(), item.getApprovalOpinion(), item.getTime())));
+            });
+        }
     }
 
     private CCSQDBean getCCSQDBean(BusinessVo vo) {

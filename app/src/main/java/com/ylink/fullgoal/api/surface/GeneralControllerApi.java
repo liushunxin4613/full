@@ -6,13 +6,16 @@ import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
+import com.ylink.fullgoal.bean.TvH4Bean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.InhibitionRuleVo;
+import com.ylink.fullgoal.vo.ProcessVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
+import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_RED;
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_YELLOW;
 
@@ -58,7 +61,9 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
     @Override
     public void initView() {
         super.initView();
-        testReimburseVo();
+        if (DEBUG){
+            testReimburseVo();
+        }
         initReimburseVo(getVo());
     }
 
@@ -95,6 +100,13 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
         if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE)) {
             getVo().setTotalAmountLower("20000.00");
         }
+        if (!isEnable()) {
+            getVo().setProcessData(TextUtils.getListData(
+                    new ProcessVo("2018-02-05 18:18:55", "张三", "发票认证", "同意"),
+                    new ProcessVo("2018-02-07 11:23:12", "李四", "发票验证", "验真"),
+                    new ProcessVo("2018-02-11 16:54:34", "王五", "财务审核", "同意")
+            ));
+        }
     }
 
     @Override
@@ -126,7 +138,15 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
                     obj.getName(), obj.getDetail())));
         }
         //GridBean 添加票据
-        addVgBean(new GridBean(getPhotoGridBeanData(vo.getBillData())));
+        addVgBean(null, newGridBean(vo.getBillData()));
+        //添加流程
+        if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
+            addVgBean(data -> {
+                data.add(new TvH4Bean());
+                execute(vo.getProcessData(), item -> data.add(new TvH4Bean(item.getUser(),
+                        item.getNode(), item.getApprovalOpinion(), item.getTime())));
+            });
+        }
     }
 
 }

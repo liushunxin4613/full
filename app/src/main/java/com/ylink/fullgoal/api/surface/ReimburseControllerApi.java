@@ -328,8 +328,12 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     }
 
     protected void addVgBean(String title, GridBean bean) {
-        if (!TextUtils.isEmpty(title) && bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
-            addVgBean(new TvBean(title), bean);
+        if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
+            if(!TextUtils.isEmpty(title)){
+                addVgBean(new TvBean(title), bean);
+            } else {
+                addVgBean(bean);
+            }
         }
     }
 

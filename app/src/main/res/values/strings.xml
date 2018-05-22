@@ -19,4 +19,8 @@
     <string name="qinshurje">请输入分摊金额</string>
     <string name="shanchubxfyft">删除本项费用分摊</string>
     <string name="cancel">取消</string>
+    <string name="chulisj">处理时间</string>
+    <string name="caozuor">操作人</string>
+    <string name="jiedian">节点</string>
+    <string name="shenpiyj">审批意见</string>
 </resources>

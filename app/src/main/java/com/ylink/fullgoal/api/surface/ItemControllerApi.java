@@ -25,6 +25,7 @@ import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvH2SBean;
+import com.ylink.fullgoal.bean.TvH4Bean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtBean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
@@ -43,6 +44,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
     private TextView endTv;
     private TextView typeTv;
     private TextView placeTv;
+    private TextView timeTv;
     private EditText nameEt;
     private EditText detailEt;
     private EditText minEt;
@@ -70,6 +72,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         endTv = findViewById(R.id.end_tv);
         typeTv = findViewById(R.id.type_tv);
         placeTv = findViewById(R.id.place_tv);
+        timeTv = findViewById(R.id.time_tv);
         nameEt = findViewById(R.id.name_et);
         detailEt = findViewById(R.id.detail_et);
         minEt = findViewById(R.id.min_et);
@@ -250,6 +253,11 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .action(() -> bean.setTextView(detailEt))
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
+        //审批意见
+        putBindBeanApi(TvH4Bean.class, (api, bean) -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
+                .setText(typeTv, bean.getType())
+                .setText(timeTv, bean.getTime()));
     }
 
 }

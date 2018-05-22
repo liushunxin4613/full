@@ -14,6 +14,13 @@ public class ProcessVo {
     //审批意见
     private String approvalOpinion;
 
+    public ProcessVo(String time, String user, String node, String approvalOpinion) {
+        this.time = time;
+        this.user = user;
+        this.node = node;
+        this.approvalOpinion = approvalOpinion;
+    }
+
     public String getTime() {
         return time;
     }
