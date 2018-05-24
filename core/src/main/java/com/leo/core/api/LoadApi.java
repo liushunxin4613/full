@@ -2,12 +2,9 @@ package com.leo.core.api;
 
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.bean.Completed;
-import com.leo.core.bean.HttpError;
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IContentApi;
 import com.leo.core.iapi.ILoadApi;
-import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.OnAddListener;
 import com.leo.core.util.TextUtils;
 
@@ -45,8 +42,8 @@ public class LoadApi<T extends LoadApi> extends ThisApi<T> implements ILoadApi<T
             }
         });
         executeNon(contentApi(), IContentApi::init);
-        add(HttpError.class, e -> onLoad(isRefresh(), State.ERROR, e.getMsg()));
-        add(Completed.class, c -> onCompleted());
+//        add(HttpError.class, e -> onLoad(isRefresh(), State.ERROR, e.getMsg()));
+//        add(Completed.class, c -> onCompleted());
         return getThis();
     }
 
@@ -131,17 +128,6 @@ public class LoadApi<T extends LoadApi> extends ThisApi<T> implements ILoadApi<T
         } else {
             onLoad(isRefresh(), State.SUCCESS, null);
         }
-    }
-
-    //自有的
-    public <R> T add(Class<R> clz, IRunApi<R> api) {
-        controllerApi().add(clz, api);
-        return getThis();
-    }
-
-    public <R> T listAdd(Class<R> clz, IRunApi<List<R>> api) {
-        controllerApi().listAdd(clz, api);
-        return getThis();
     }
 
 }

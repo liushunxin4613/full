@@ -62,14 +62,20 @@ public class ReimburseVo {
     private String reimbursementState;
     //报销单号
     private String orderNo;
-    //报销类别 一般费用普票报销、一般费用专票报销、出差费用普票报销、出差费用专票报销四种
+    //报销类型(自用)
     private String reimburseType;
+    //报销类别 1.一般费用报销;2.出差费用报销;
+    private String billType;
+    //是否专票 1.专票;2.普票;
+    private String isTickets;
     //费用指标需不需要分摊
     private String apportion;
     //费用指标
     private CastTargetVo castTarget;
     //禁止规则组
     private List<InhibitionRuleVo> inhibitionRuleData;
+    //提交标志
+    private String sbumitFlag;
 
     //UI需用的
 
@@ -97,7 +103,9 @@ public class ReimburseVo {
     //一般费用报销单有
 
     //合同付款申请单
-    private String contractBill;
+    private String paymentRequest;
+    //投研报告
+    private String reportName;
     //招待申请单
     private String serveBill;
 
@@ -152,14 +160,6 @@ public class ReimburseVo {
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
-    }
-
-    public String getReimburseType() {
-        return reimburseType;
-    }
-
-    public void setReimburseType(String reimburseType) {
-        this.reimburseType = reimburseType;
     }
 
     public String getApportion() {
@@ -266,12 +266,44 @@ public class ReimburseVo {
         this.processData = processData;
     }
 
-    public String getContractBill() {
-        return contractBill;
+    public String getBillType() {
+        return billType;
     }
 
-    public void setContractBill(String contractBill) {
-        this.contractBill = contractBill;
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    public String getIsTickets() {
+        return isTickets;
+    }
+
+    public void setIsTickets(String isTickets) {
+        this.isTickets = isTickets;
+    }
+
+    public String getSbumitFlag() {
+        return sbumitFlag;
+    }
+
+    public void setSbumitFlag(String sbumitFlag) {
+        this.sbumitFlag = sbumitFlag;
+    }
+
+    public String getPaymentRequest() {
+        return paymentRequest;
+    }
+
+    public void setPaymentRequest(String paymentRequest) {
+        this.paymentRequest = paymentRequest;
+    }
+
+    public String getReportName() {
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
     }
 
     public String getServeBill() {
@@ -320,6 +352,14 @@ public class ReimburseVo {
 
     public void setOtherBillData(List<BillVo> otherBillData) {
         this.otherBillData = otherBillData;
+    }
+
+    public String getReimburseType() {
+        return reimburseType;
+    }
+
+    public void setReimburseType(String reimburseType) {
+        this.reimburseType = reimburseType;
     }
 
 }

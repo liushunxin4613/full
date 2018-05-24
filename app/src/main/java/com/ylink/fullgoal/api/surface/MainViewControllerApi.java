@@ -2,6 +2,8 @@ package com.ylink.fullgoal.api.surface;
 
 import android.os.Bundle;
 
+import com.google.gson.reflect.TypeToken;
+import com.leo.core.bean.BaseBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
@@ -9,6 +11,9 @@ import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
+import com.ylink.fullgoal.vo.UrlVo;
+
+import java.io.File;
 
 import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
@@ -35,7 +40,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 .notifyDataSetChanged();
         if (DEBUG) {
             //测试
-            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用指标", (bean, view) -> startSurfaceActivity(CostIndexControllerApi.class)), new IconTvMoreBean(R.mipmap.test_icon2, "票据", (bean, view) -> {
+            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "测试", (bean, view) -> {
+                test();
+            })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用指标", (bean, view) -> startSurfaceActivity(CostIndexControllerApi.class)), new IconTvMoreBean(R.mipmap.test_icon2, "票据", (bean, view) -> {
                 bill();
             })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
                 generalCommon(ReimburseVo.STATE_CONFIRM);
@@ -51,8 +58,21 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 evectionCommon(ReimburseVo.STATE_DETAIL);
             })).notifyDataSetChanged();
             //test
-            generalCommon(ReimburseVo.STATE_DETAIL);
+//            test();
         }
+    }
+
+    private void test() {
+        //上传图片
+        File file = new File(getContext().getExternalFilesDir("photo"), "1526965942797907.jpg");
+        setRootType(new TypeToken<BaseBean<UrlVo>>() {
+        }).add(new TypeToken<BaseBean<UrlVo>>() {
+        }, obj -> {
+            ee("BaseBean<UrlVo>", obj);
+        }).add(UrlVo.class, obj -> {
+            ee("UrlVo", obj);
+        });
+//        api().uploadImage(file);
     }
 
     //私有的

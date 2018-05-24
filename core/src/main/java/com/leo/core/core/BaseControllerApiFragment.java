@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ObjectUtil;
@@ -155,7 +155,7 @@ public class BaseControllerApiFragment<T extends BaseControllerApiFragment, C ex
         }
     }
 
-    protected <R> void execute(R obj, IRunApi<R> api){
+    protected <R> void execute(R obj, IObjAction<R> api){
         RunUtil.executeNon(obj, api);
     }
 

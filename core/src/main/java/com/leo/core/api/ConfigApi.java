@@ -61,7 +61,7 @@ public class ConfigApi<T extends ConfigApi> extends ThisApi<T> implements IConfi
     public <R> T executeConfig(String key, R compare, IAction action) {
         if(!TextUtils.isEmits(key, compare, action)){
             if(hasConfig(key) && TextUtils.equals(getConfig(key), compare)){
-                action.action();
+                action.execute();
             }
         }
         return getThis();

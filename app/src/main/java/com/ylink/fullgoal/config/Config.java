@@ -4,8 +4,11 @@ public class Config {
 
     //固定参数
     public final static boolean DEBUG = false;//debug模式是否开启
-    public final static boolean HOME = false;//本地模式是否开启
-    public final static String ROOT_URL = "http://mall.sharecentury.cn:9000/";//根api地址
+    public final static boolean WIFI = true;//本地模式是否开启
+    public final static String ROOT_IP = WIFI ? "http://192.168.43.79/" : "http://192.168.42.198/";
+    public final static String ROOT_URL = ROOT_IP + "app/fullApp/";//根api地址
+    public final static String UPLOAD_URL = ROOT_IP + "app/fullApp/upload";//根api地址
+    public final static String UPLOAD_IMAGE_URL = UPLOAD_URL;//根api地址
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间
     public final static int TIME_SPLASH = 1;//引导页时间

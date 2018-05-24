@@ -7,6 +7,6 @@ import com.leo.core.iapi.core.IApi;
  *
  * @param <T>
  */
-public interface IRunApi<T> extends IApi {
+public interface IObjAction<T> extends IApi {
     void execute(T obj);
 }

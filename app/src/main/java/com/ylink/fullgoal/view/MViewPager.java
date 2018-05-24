@@ -9,7 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.SoftInputUtil;
@@ -19,9 +19,9 @@ public class MViewPager extends ViewPager {
     private int miniSpeed = 0;
     private int miniWidth = 120;
     private GestureDetector detector;
-    private IRunApi<Boolean> verticalApi;
-    private IRunApi<Boolean> verticalBeyondApi;
-    private IRunApi<Boolean> horizontalApi;
+    private IObjAction<Boolean> verticalApi;
+    private IObjAction<Boolean> verticalBeyondApi;
+    private IObjAction<Boolean> horizontalApi;
 
     public MViewPager(Context context) {
         super(context);
@@ -93,15 +93,15 @@ public class MViewPager extends ViewPager {
         });
     }
 
-    public void setVerticalApi(IRunApi<Boolean> api) {
+    public void setVerticalApi(IObjAction<Boolean> api) {
         this.verticalApi = api;
     }
 
-    public void setVerticalBeyondApi(IRunApi<Boolean> api) {
+    public void setVerticalBeyondApi(IObjAction<Boolean> api) {
         this.verticalBeyondApi = api;
     }
 
-    public void setHorizontalApi(IRunApi<Boolean> api) {
+    public void setHorizontalApi(IObjAction<Boolean> api) {
         this.horizontalApi = api;
     }
 

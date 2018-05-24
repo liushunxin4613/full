@@ -81,7 +81,7 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
 
     @Override
     public <B> Subscriber<B> newSubscriber() {
-        return new RetrofitSubscriber();
+        return new RetrofitSubscriber(parseApi());
     }
 
     @Override
@@ -125,7 +125,7 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public ISubjoinApi newApi() {
+    public ISubjoinApi newSubjoinApi() {
         return new SubjoinApi(getThis());
     }
 

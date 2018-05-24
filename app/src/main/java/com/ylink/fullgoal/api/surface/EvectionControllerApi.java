@@ -238,7 +238,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
     private void initVgApiBean(VgBean vgBean, BaseApiBean bean, String title) {
         if (vgBean != null && bean != null && !TextUtils.isEmpty(title)) {
             RecycleControllerApi api = getDialogControllerApi(RecycleControllerApi.class, R.layout.l_dialog);
-            api.action(() -> api.add(new TvBean("删除", (b, v) -> {
+            api.execute(() -> api.add(new TvBean("删除", (b, v) -> {
                 api.dismiss();
                 executeNon(vgBean, vb -> {
                     vb.remove(bean);
@@ -247,7 +247,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             })).notifyDataSetChanged()).dialogShow()
                     .setText(api.findViewById(R.id.title_tv), title)
                     .setOnClickListener(api.findViewById(R.id.cancel_tv), v -> api.dismiss())
-                    .action(() -> {
+                    .execute(() -> {
                         Window window = api.getDialog().getWindow();
                         if (window != null) {
                             window.setGravity(Gravity.BOTTOM);

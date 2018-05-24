@@ -14,7 +14,7 @@
         android:id="@+id/name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="2.5"
         android:maxLines="1"
         android:textColor="@color/tv"
         android:textSize="@dimen/tv"
@@ -32,7 +32,7 @@
         android:maxLines="1"
         android:textColor="@color/tv"
         android:textColorHint="@color/tv1"
-        android:textSize="@dimen/tv"
+        android:textSize="@dimen/tv1"
         tools:hint="请输入合同付款申请单"
         tools:ignore="LabelFor,RtlHardcoded" />
 

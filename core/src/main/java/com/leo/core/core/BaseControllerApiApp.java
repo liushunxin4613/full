@@ -3,7 +3,7 @@ package com.leo.core.core;
 import android.app.Application;
 import android.content.Context;
 
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ObjectUtil;
@@ -59,7 +59,7 @@ public class BaseControllerApiApp<T extends BaseControllerApiApp, C extends ICon
         execute(controllerApi(), IControllerApi::onLowMemory);
     }
 
-    protected <R> void execute(R obj, IRunApi<R> api){
+    protected <R> void execute(R obj, IObjAction<R> api){
         RunUtil.executeNon(obj, api);
     }
 

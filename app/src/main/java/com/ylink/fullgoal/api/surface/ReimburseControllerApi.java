@@ -5,24 +5,22 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.bean.BaseBean;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
@@ -38,15 +36,13 @@ import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
+import com.ylink.fullgoal.vo.UrlVo;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import me.pqpo.smartcropperlib.SmartCropper;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
@@ -162,6 +158,17 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         //test
         getVo().setAgent("张三");
         getVo().setDepartment("计划财务部");
+    }
+
+    @Override
+    public void initData() {
+        super.initData();
+        setRootType(new TypeToken<BaseBean<UrlVo>>() {
+        });
+        add(UrlVo.class, vo -> {
+            ee("vo", vo);
+            addPhoto(new BillVo(vo.getImage(), null));
+        });
     }
 
     protected boolean isEnable() {
@@ -283,7 +290,9 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                                 @Override
                                 public void onSuccess(File lubanFile) {
                                     file.delete();
-                                    addPhoto(new BillVo(lubanFile.getPath(), null));
+                                    ee("lubanFile.getPath()", lubanFile.getPath());
+//                                    addPhoto(new BillVo(lubanFile.getPath(), null));
+                                    api().uploadBase64Image(lubanFile);
                                 }
 
                                 @Override
@@ -320,7 +329,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     }
 
     @Override
-    public VgBean addVgBean(IRunApi<List<BaseApiBean>> api) {
+    public VgBean addVgBean(IObjAction<List<BaseApiBean>> api) {
         return super.addVgBean(data -> {
             api.execute(data);
             execute(data, item -> item.setEnable(isEnable()));
@@ -329,7 +338,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
 
     protected void addVgBean(String title, GridBean bean) {
         if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
-            if(!TextUtils.isEmpty(title)){
+            if (!TextUtils.isEmpty(title)) {
                 addVgBean(new TvBean(title), bean);
             } else {
                 addVgBean(bean);

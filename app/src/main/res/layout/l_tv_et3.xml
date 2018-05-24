@@ -27,7 +27,7 @@
         android:minLines="3"
         android:textColor="@color/tv"
         android:textColorHint="@color/tv1"
-        android:textSize="@dimen/tv"
+        android:textSize="@dimen/tv1"
         tools:hint="请输入事由"
         tools:ignore="LabelFor,RtlHardcoded,TextFields" />
 

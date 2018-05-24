@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import com.leo.core.api.main.DataApi;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IRecycleApi;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.IShowDataApi;
 import com.leo.core.iapi.main.CreateControllerApiCallback;
 import com.leo.core.iapi.main.IApiBean;
@@ -195,7 +195,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    public <B extends IApiBean> T addLineAll(List<B> data, boolean end, IRunApi<B> api) {
+    public <B extends IApiBean> T addLineAll(List<B> data, boolean end, IObjAction<B> api) {
         if (!TextUtils.isEmpty(data)) {
             for (B bean : data) {
                 if (!check(bean)) {
@@ -220,7 +220,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    public <B extends IApiBean> T replaceApiAll(List<B> data, boolean end, IRunApi<B> api) {
+    public <B extends IApiBean> T replaceApiAll(List<B> data, boolean end, IObjAction<B> api) {
         clear().addLineAll(data, end, api);
         return getThis();
     }
@@ -240,7 +240,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         }
     }
 
-    public VgBean addVgBean(IRunApi<List<BaseApiBean>> api) {
+    public VgBean addVgBean(IObjAction<List<BaseApiBean>> api) {
         if (api != null) {
             List<BaseApiBean> data = new ArrayList<>();
             api.execute(data);

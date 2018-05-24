@@ -1,18 +1,11 @@
 package com.leo.core.api.main;
 
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.IClassAddApi;
-import com.leo.core.iapi.IRunApi;
 import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.net.RetrofitFactory;
-import com.leo.core.other.ParamType;
 import com.leo.core.util.TextUtils;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -21,57 +14,14 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
 
     private RetrofitFactory factory;
     private HashMap<String, Object> map;
-    private Map<String, List<IRunApi>> apiMap;
     private Observable.Transformer transformer;
     private Observable.Transformer newTransformer;
-    private Subscriber subscriber;
     private Subscriber newSubscriber;
 
     public HttpApi(Observable.Transformer newTransformer) {
+        this.map = new HashMap<>();
         this.newTransformer = newTransformer;
-        factory = RetrofitFactory.getInstance();
-        map = new HashMap<>();
-        apiMap = new HashMap<>();
-    }
-
-    protected ParamType get(Type rawType, Type... typeArguments){
-        return ParamType.get(rawType, typeArguments);
-    }
-
-    @Override
-    public <R> T add(Class<R> clz, IRunApi<R> api) {
-        if(clz != null && api != null){
-            String name = clz.toString();
-            List<IRunApi> data = apiMap.get(name);
-            if(data == null){
-                apiMap.put(name, new ArrayList<>());
-            }
-            apiMap.get(name).add(api);
-        }
-        return getThis();
-    }
-
-    @Override
-    public <R> T listAdd(Class<R> clz, IRunApi<List<R>> api) {
-        if(clz != null && api != null){
-            String name = get(List.class, clz).toString();
-            List<IRunApi> data = apiMap.get(name);
-            if(data == null){
-                apiMap.put(name, new ArrayList<>());
-            }
-            apiMap.get(name).add(api);
-        }
-        return getThis();
-    }
-
-    @Override
-    public T replaceClzAddApiAll(Map<String, List<IRunApi>> map) {
-        if(!TextUtils.isEmpty(map)){
-            apiMap = map;
-        } else {
-            apiMap.clear();
-        }
-        return getThis();
+        this.factory = RetrofitFactory.getInstance();
     }
 
     @Override
@@ -116,12 +66,9 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
 
     @Override
     public <R> Subscriber<R> subscriber() {
-        subscriber = newSubscriber();
+        Subscriber subscriber = newSubscriber();
         if(subscriber == null){
             throw new NullPointerException("newTransformer 不能为空");
-        } else if(subscriber instanceof IClassAddApi){
-            IClassAddApi addApi = (IClassAddApi) subscriber;
-            addApi.replaceClzAddApiAll(apiMap);
         }
         return subscriber;
     }

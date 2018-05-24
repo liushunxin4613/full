@@ -2,7 +2,7 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import android.view.ViewGroup;
 
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
@@ -12,7 +12,7 @@ public class BaseItemControllerApi<T extends BaseItemControllerApi, C> extends S
         super(controller);
     }
 
-    private T addView(IRunApi<ViewGroup> api) {
+    private T addView(IObjAction<ViewGroup> api) {
         if (api != null) {
             api.execute((ViewGroup) getRootView());
         }

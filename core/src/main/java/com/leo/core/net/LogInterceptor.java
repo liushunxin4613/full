@@ -2,12 +2,15 @@ package com.leo.core.net;
 
 import android.annotation.SuppressLint;
 
+import com.leo.core.bean.HttpError;
 import com.leo.core.factory.DataFactory;
 import com.leo.core.iapi.IDataApi;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import okhttp3.Interceptor;
@@ -51,7 +54,7 @@ public class LogInterceptor implements Interceptor {
         print("time", String.format("%.1fms", (System.nanoTime() - t1) / 1e6d));
         print("head", response.headers().toString());
         print("params", req.readUtf8());
-        print("message", res.readUtf8());
+        print("json", decode(res.readUtf8()));
         req.close();
         res.close();
         return response;
@@ -63,8 +66,23 @@ public class LogInterceptor implements Interceptor {
 
     private void print(String key, String value) {
         if (!TextUtils.isEmpty(key)) {
-            LogUtil.ii(this, key + ": " + (TextUtils.isTrimEmpty(value) ? "null" : value));
+            if (TextUtils.isTrimEmpty(value)) {
+                value = null;
+            } else if (value.length() > 10000) {
+                value = "长度超过了10000,被隐藏掉了!!!";
+            }
+            LogUtil.ii(this, key + ": " + value);
         }
+    }
+
+    private String decode(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            try {
+                return URLDecoder.decode(text, "utf-8");
+            } catch (UnsupportedEncodingException ignored) {
+            }
+        }
+        return text;
     }
 
 }

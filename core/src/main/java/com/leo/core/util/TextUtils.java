@@ -2,7 +2,7 @@ package com.leo.core.util;
 
 import android.util.SparseArray;
 
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -201,7 +201,7 @@ public class TextUtils {
     /**
      * 统一化操作
      */
-    public static <C> void more(Class<C> clz, IRunApi<C> api, Object... args) {
+    public static <C> void more(Class<C> clz, IObjAction<C> api, Object... args) {
         if (clz != null && api != null && !isEmpty(args)) {
             for (Object item : args) {
                 if (clz.isInstance(item)) {

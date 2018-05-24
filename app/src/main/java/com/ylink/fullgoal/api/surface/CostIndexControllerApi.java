@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -141,7 +141,7 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
         adapter.add(getRecycleControllerApi().getRootView()).notifyDataSetChanged();
     }
 
-    private void addVgBean(RecycleControllerApi controllerApi, IRunApi<List<BaseApiBean>> api) {
+    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseApiBean>> api) {
         if (controllerApi != null && api != null) {
             controllerApi.addVgBean(api);
             controllerApi.notifyDataSetChanged();

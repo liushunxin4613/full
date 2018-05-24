@@ -1,11 +1,9 @@
 package com.leo.core.iapi.main;
 
-import com.leo.core.iapi.IClassAddApi;
-
 import rx.Observable;
 import rx.Subscriber;
 
-public interface IHttpApi<T extends IHttpApi> extends IClassAddApi<T> {
+public interface IHttpApi<T extends IHttpApi> {
 
     /**
      * 创建api

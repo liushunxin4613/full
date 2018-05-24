@@ -157,7 +157,7 @@ public class ActionApi<T extends ActionApi, A extends IApi> extends ThisApi<T> i
     @Override
     public T action(A action) {
         if (action instanceof IAction) {
-            ((IAction) action).action();
+            ((IAction) action).execute();
         }
         return getThis();
     }

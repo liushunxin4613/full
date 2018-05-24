@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.leo.core.R;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ObjectUtil;
@@ -60,7 +60,7 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
         return (T) this;
     }
 
-    protected <B> void execute(B obj, IRunApi<B> api){
+    protected <B> void execute(B obj, IObjAction<B> api){
         RunUtil.executeNon(obj, api);
     }
 

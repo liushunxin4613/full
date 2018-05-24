@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IBindBeanApi;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.core.IAttachApi;
 
 import java.lang.reflect.Type;
@@ -541,7 +541,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     /**
      * 执行
      */
-    T executeBundle(IRunApi<Bundle> api);
+    T executeBundle(IObjAction<Bundle> api);
 
     /**
      * 加入BindBeanApi

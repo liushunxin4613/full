@@ -3,18 +3,19 @@ package com.leo.core.other;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class ParamType implements ParameterizedType{
+public class ParamType<A> implements ParameterizedType {
 
-    private Type raw;
+    private Type rawType;
+    private Type ownerType;
     private Type[] arguments;
 
-    public static ParamType get(Type raw, Type... arguments){
-        return new ParamType(raw, arguments);
+    public ParamType(Class<A> clz, Type... arguments) {
+        this.rawType = clz;
+        this.arguments = arguments;
     }
 
-    public ParamType(Type raw, Type... arguments) {
-        this.raw = raw;
-        this.arguments = arguments;
+    public static <A> ParamType get(Class<A> clz, Type... arguments) {
+        return new ParamType(clz, arguments);
     }
 
     @Override
@@ -24,18 +25,18 @@ public class ParamType implements ParameterizedType{
 
     @Override
     public Type getRawType() {
-        return raw;
+        return rawType;
     }
 
     @Override
     public Type getOwnerType() {
-        return null;
+        return ownerType;
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(30 * (arguments.length + 1));
-        stringBuilder.append(typeToString(raw));
+        stringBuilder.append(typeToString(rawType));
         if (arguments.length == 0) {
             return stringBuilder.toString();
         }

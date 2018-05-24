@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.core.AttachApi;
 import com.leo.core.config.Config;
 import com.leo.core.core.BaseControllerApiView;
@@ -43,7 +44,8 @@ import com.leo.core.iapi.ILoadImageApi;
 import com.leo.core.iapi.IMD5Api;
 import com.leo.core.iapi.IMergeApi;
 import com.leo.core.iapi.IObjectApi;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.IParseApi;
 import com.leo.core.iapi.IStartApi;
 import com.leo.core.iapi.ISubjoinApi;
 import com.leo.core.iapi.ITAction;
@@ -70,11 +72,12 @@ import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
 
+@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 @SuppressLint("MissingSuperCall")
 public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi<T, C> implements
         IControllerApi<T, C>, IViewApi<T>, IShowApi<T>, IHttpApi<T>, IMD5Api, IDataApi<T>, IObjectApi<T>,
         IActionApi<T, IApi>, IStartApi<T>, IUserApi<T>, ILoadImageApi<T>, IConfigApi<T>, IDataTypeApi<T>,
-        IMergeApi<T>, IGalleryApi<T>, IFileApi {
+        IMergeApi<T>, IGalleryApi<T>, IFileApi, IParseApi<T> {
 
     private C controller;
     private Handler mainHandler;
@@ -104,6 +107,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private ISubjoinApi subjoinApi;
     private IGalleryApi galleryApi;
     private IFileApi fileApi;
+    private Object api;
+    private IParseApi parseApi;
 
     //other
     private Integer rootViewResId;
@@ -387,9 +392,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public ISubjoinApi api() {
+    public ISubjoinApi subjoinApi() {
         if (subjoinApi == null) {
-            subjoinApi = newApi();
+            subjoinApi = newSubjoinApi();
             if (subjoinApi == null) {
                 throw new NullPointerException("newApi 不能为空");
             }
@@ -398,7 +403,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public ISubjoinApi newApi() {
+    public ISubjoinApi newSubjoinApi() {
         return null;
     }
 
@@ -431,6 +436,38 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public IFileApi newFileApi() {
+        return null;
+    }
+
+    @Override
+    public <B> B api() {
+        if (api == null) {
+            api = newApi();
+            if (api == null) {
+                throw new NullPointerException("newApi 不能为空");
+            }
+        }
+        return (B) api;
+    }
+
+    @Override
+    public <B> B newApi() {
+        return null;
+    }
+
+    @Override
+    public IParseApi parseApi() {
+        if (parseApi == null) {
+            parseApi = newParseApi();
+            if (parseApi == null) {
+                throw new NullPointerException("newParseApi 不能为空");
+            }
+        }
+        return parseApi;
+    }
+
+    @Override
+    public IParseApi newParseApi() {
         return null;
     }
 
@@ -567,7 +604,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T runOnUiThread(IAction action) {
         if (action != null) {
-            mainHandler.post(action::action);
+            mainHandler.post(action::execute);
         }
         return getThis();
     }
@@ -575,7 +612,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T runOnUiThread(IAction action, long delayMillis) {
         if (action != null && delayMillis >= 0) {
-            mainHandler.postDelayed(action::action, delayMillis);
+            mainHandler.postDelayed(action::execute, delayMillis);
         }
         return getThis();
     }
@@ -583,7 +620,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T runOnOtherThread(IAction action) {
         if (action != null) {
-            new Thread(action::action).start();
+            new Thread(action::execute).start();
         }
         return getThis();
     }
@@ -731,7 +768,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T executeBundle(IRunApi<Bundle> api) {
+    public T executeBundle(IObjAction<Bundle> api) {
         if (api != null) {
             if (isActivity()) {
                 executeNon(getActivity().getIntent().getExtras(), api);
@@ -1071,8 +1108,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T action(IAction action) {
-        viewApi().action(action);
+    public T execute(IAction action) {
+        viewApi().execute(action);
         return getThis();
     }
 
@@ -1082,8 +1119,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R> R decode(Object in, Object param) {
-        return (R) showApi().decode(in, param);
+    public <B> B decode(Object in, Object param) {
+        return (B) showApi().decode(in, param);
     }
 
     @Override
@@ -1131,44 +1168,22 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R> T add(Class<R> clz, IRunApi<R> api) {
-        IRunApi<R> ap = obj -> execute(addListeners, listener -> listener.onAdd(obj));
-        httpApi().add(clz, ap);
-        httpApi().add(clz, api);
-        return getThis();
+    public <B> B create(String url, Class<B> clz) {
+        return (B) httpApi().create(url, clz);
     }
 
     @Override
-    public <R> T listAdd(Class<R> clz, IRunApi<List<R>> api) {
-        IRunApi<List<R>> ap = data -> execute(addListeners, listener -> listener.onListAdd(data));
-        httpApi().listAdd(clz, ap);
-        httpApi().listAdd(clz, api);
-        return getThis();
+    public <B> B getApi(String url) {
+        return (B) httpApi().getApi(url);
     }
 
     @Override
-    public T replaceClzAddApiAll(Map<String, List<IRunApi>> map) {
-        httpApi().replaceClzAddApiAll(map);
-        return getThis();
+    public <B> B getApi() {
+        return (B) httpApi().getApi();
     }
 
     @Override
-    public <R> R create(String url, Class<R> clz) {
-        return (R) httpApi().create(url, clz);
-    }
-
-    @Override
-    public <R> R getApi(String url) {
-        return (R) httpApi().getApi(url);
-    }
-
-    @Override
-    public <R> R getApi() {
-        return (R) httpApi().getApi();
-    }
-
-    @Override
-    public <R, M> Observable.Transformer<R, M> transformer() {
+    public <B, M> Observable.Transformer<B, M> transformer() {
         if (transformer == null) {
             transformer = newTransformer();
             if (transformer == null) {
@@ -1179,12 +1194,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R, M> Observable.Transformer<R, M> newTransformer() {
+    public <B, M> Observable.Transformer<B, M> newTransformer() {
         return null;
     }
 
     @Override
-    public <R> Subscriber<R> subscriber() {
+    public <B> Subscriber<B> subscriber() {
         if (subscriber == null) {
             subscriber = newSubscriber();
             if (subscriber == null) {
@@ -1195,18 +1210,18 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R> Subscriber<R> newSubscriber() {
+    public <B> Subscriber<B> newSubscriber() {
         return null;
     }
 
     @Override
-    public <R> T setNewSubscriber(Subscriber<R> newSubscriber) {
+    public <B> T setNewSubscriber(Subscriber<B> newSubscriber) {
         httpApi().setNewSubscriber(newSubscriber);
         return getThis();
     }
 
     @Override
-    public <R> T observable(Observable<R> observable) {
+    public <B> T observable(Observable<B> observable) {
         httpApi().setNewSubscriber(newSubscriber());
         httpApi().observable(observable);
         return getThis();
@@ -1336,24 +1351,24 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R> T addConfig(String key, R value) {
+    public <B> T addConfig(String key, B value) {
         configApi().addConfig(key, value);
         return getThis();
     }
 
     @Override
-    public <R> R getConfig(String key) {
-        return (R) configApi().getConfig(key);
+    public <B> B getConfig(String key) {
+        return (B) configApi().getConfig(key);
     }
 
     @Override
-    public <R> T executeConfig(String key, ITAction<R> action) {
+    public <B> T executeConfig(String key, ITAction<B> action) {
         configApi().executeConfig(key, action);
         return getThis();
     }
 
     @Override
-    public <R> T executeConfig(String key, R compare, IAction action) {
+    public <B> T executeConfig(String key, B compare, IAction action) {
         configApi().executeConfig(key, compare, action);
         return getThis();
     }
@@ -1572,14 +1587,14 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R> T initUser(R user) {
+    public <B> T initUser(B user) {
         userApi().initUser(user);
         return getThis();
     }
 
     @Override
-    public <R> R getUser() {
-        return (R) userApi().getUser();
+    public <B> B getUser() {
+        return (B) userApi().getUser();
     }
 
     @Override
@@ -1603,8 +1618,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R> R getDrive() {
-        return (R) loadImageApi().getDrive();
+    public <B> B getDrive() {
+        return (B) loadImageApi().getDrive();
     }
 
     @Override
@@ -1647,14 +1662,14 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <R> R[] newArray(Class clz, int length) {
-        return (R[]) mergeApi().newArray(clz, length);
+    public <B> B[] newArray(Class clz, int length) {
+        return (B[]) mergeApi().newArray(clz, length);
     }
 
     @SafeVarargs
     @Override
-    public final <R> R[] merge(Class<R> clz, boolean end, R[] args, R... args1) {
-        return (R[]) mergeApi().merge(clz, end, args, args1);
+    public final <B> B[] merge(Class<B> clz, boolean end, B[] args, B... args1) {
+        return (B[]) mergeApi().merge(clz, end, args, args1);
     }
 
     @Override
@@ -1668,8 +1683,67 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         return fileApi().getAssetsString(file);
     }
 
-    private void executeViewControllerApi(IRunApi<IControllerApi> api) {
+    private void executeViewControllerApi(IObjAction<IControllerApi> api) {
         executeNon(getViewControllerApi(), api);
     }
 
+    @Override
+    public <A> T setRootType(Class<A> clz) {
+        parseApi().setRootType(clz);
+        return getThis();
+    }
+
+    @Override
+    public <A> T setRootType(TypeToken<A> token) {
+        parseApi().setRootType(token);
+        return getThis();
+    }
+
+    @Override
+    public <A> T put(String key, TypeToken<A> token) {
+        parseApi().put(key, token);
+        return getThis();
+    }
+
+    @Override
+    public <A> T put(String key, Class<A> clz) {
+        parseApi().put(key, clz);
+        return getThis();
+    }
+
+    @Override
+    public T clearPutParseMap() {
+        parseApi().clearPutParseMap();
+        return getThis();
+    }
+
+    @Override
+    public <A> T add(TypeToken<A> token, IObjAction<A> action) {
+        parseApi().add(token, action);
+        return getThis();
+    }
+
+    @Override
+    public <A> T add(Class<A> clz, IObjAction<A> action) {
+        parseApi().add(clz, action);
+        return getThis();
+    }
+
+    @Override
+    public T clearAddParseMap() {
+        parseApi().clearAddParseMap();
+        return getThis();
+    }
+
+    @Override
+    public T clearParse() {
+        parseApi().clearParse();
+        return getThis();
+    }
+
+    @Override
+    public <B> T execute(B bean) {
+        parseApi().execute(bean);
+        return getThis();
+    }
 }

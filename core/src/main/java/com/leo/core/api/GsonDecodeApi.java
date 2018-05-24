@@ -47,6 +47,7 @@ public class GsonDecodeApi implements IGsonDecodeApi<GsonDecodeApi, Object, Obje
                 }
             }
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
         return null;
     }
@@ -78,11 +79,7 @@ public class GsonDecodeApi implements IGsonDecodeApi<GsonDecodeApi, Object, Obje
 
     @Override
     public <R> R decode(String in, Class<R> clz) {
-        try {
-            return gson.fromJson(in, clz);
-        } catch (Exception e) {
-            return null;
-        }
+        return gson.fromJson(in, clz);
     }
 
     @Override

@@ -75,7 +75,7 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
             getVo().setReimbursement("李四");
             getVo().setBudgetDepartment("信息技术部");
             getVo().setProject("第一财经中国经济论坛");
-            getVo().setContractBill("FGMC-CC2018-7715");
+            getVo().setReportName("FGMC-CC2018-7715");
             getVo().setServeBill("FGMC-ZD2018-7715");
             getVo().setCause("参加第一财经中国经济论坛, 到上海出差,报销差旅费用");
             getVo().setBillData(TextUtils.getListData(new BillVo(R.mipmap.test_photo, getHasEnable("199.00")),
@@ -122,7 +122,7 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
                     (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
             data.add(ptBean = new TvH2MoreBean("项目", vo.getProject(), "请选择项目",
                     (bean, view) -> startSearch(SearchVo.PROJECT)));
-            data.add(cbBean = new TvH2MoreBean("合同付款申请单", vo.getContractBill(), "请选择合同付款申请单",
+            data.add(cbBean = new TvH2MoreBean("合同付款申请单", vo.getReportName(), "请选择合同付款申请单",
                     (bean, view) -> startSearch(SearchVo.CONTRACT_BILL)));
             data.add(sbBean = new TvH2MoreBean("招待申请单", vo.getServeBill(), "请选择招待申请单",
                     (bean, view) -> startSearch(SearchVo.SERVE_BILL)));

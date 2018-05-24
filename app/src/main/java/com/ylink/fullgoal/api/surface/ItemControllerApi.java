@@ -94,14 +94,14 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //图片处理
         putBindBeanApi(GridPhotoBean.class, (api, bean)
                 -> api.setImage(iconIv, bean.getRes())
-                .action(() -> api.getRootView().setLayoutParams(
+                .execute(() -> api.getRootView().setLayoutParams(
                         new ViewGroup.LayoutParams(-1, bean.getUnit())))
                 .setOnClickListener(bean.getOnClickListener())
                 .setOnLongClickListener(bean.getOnLongClickListener()));
         //dialog双文字按钮处理
         putBindBeanApi(TvV2DialogBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
-                .action(() -> bean.setDialog(getDialog()))
+                .execute(() -> bean.setDialog(getDialog()))
                 .setText(detailTv, bean.getDetail())
                 .setOnClickListener(nameTv, bean.getOnNameClickListener())
                 .setOnClickListener(detailTv, bean.getOnDetailClickListener()));
@@ -217,7 +217,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindBeanApi(TvHEtIconMoreBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
-                .action(() -> bean.setTextView(detailEt))
+                .execute(() -> bean.setTextView(detailEt))
                 .setImage(iconIv, bean.getIconResId())
                 .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
                 .setOnClickListener(iconIv, bean.getOnClickListener())
@@ -227,7 +227,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindBeanApi(TvH2MoreBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
-                .action(() -> bean.setTextView(detailTv))
+                .execute(() -> bean.setTextView(detailTv))
                 .setText(detailTv, TextUtils.isEmpty(bean.getDetail()) ? bean.getHint() : bean.getDetail())
                 .setTextColor(detailTv, getResTvColor(bean.getDetail()))
                 .setOnClickListener(bean.getOnClickListener()));
@@ -235,7 +235,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindBeanApi(TvHEt3Bean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
-                .action(() -> bean.setTextView(detailEt))
+                .execute(() -> bean.setTextView(detailEt))
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
         //图片文字点击
@@ -250,7 +250,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //文字输入
         putBindBeanApi(TvHEtBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
-                .action(() -> bean.setTextView(detailEt))
+                .execute(() -> bean.setTextView(detailEt))
                 .setText(detailEt, bean.getDetail())
                 .setTextHint(detailEt, bean.getHint()));
         //审批意见

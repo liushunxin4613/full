@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.leo.core.R;
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ObjectUtil;
@@ -136,7 +136,7 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
         execute(controllerApi(), api -> api.onLayout(changed, left, top, right, bottom));
     }
 
-    protected <B> void execute(B obj, IRunApi<B> api) {
+    protected <B> void execute(B obj, IObjAction<B> api) {
         RunUtil.executeNon(obj, api);
     }
 

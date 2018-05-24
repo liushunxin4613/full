@@ -36,7 +36,7 @@ public class BasePagerAdapter<T extends View> extends PagerAdapter {
 
     public void execute(IAction action, Object... args) {
         if (action != null && !TextUtils.isEmits(args)) {
-            action.action();
+            action.execute();
         }
     }
 

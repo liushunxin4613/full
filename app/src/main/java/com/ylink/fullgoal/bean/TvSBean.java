@@ -1,6 +1,6 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.iapi.IRunApi;
+import com.leo.core.iapi.IObjAction;
 import com.ylink.fullgoal.R;
 
 public class TvSBean extends ApiBean<TvSBean> {
@@ -14,13 +14,13 @@ public class TvSBean extends ApiBean<TvSBean> {
         return R.layout.l_tv_s;
     }
 
-    private transient IRunApi<String> textApi;
+    private transient IObjAction<String> textApi;
 
-    public IRunApi<String> getTextApi() {
+    public IObjAction<String> getTextApi() {
         return textApi;
     }
 
-    public void setTextApi(IRunApi<String> textApi) {
+    public void setTextApi(IObjAction<String> textApi) {
         this.textApi = textApi;
     }
 

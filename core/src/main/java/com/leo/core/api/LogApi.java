@@ -67,16 +67,16 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
 
     @Override
     public String getLog(Object... obj) {
-        String log = DEFAULT;
+        StringBuilder log = new StringBuilder(DEFAULT);
         if (obj != null) {
             for (int j = 0; j < obj.length; j++) {
                 if (j != 0) {
-                    log += INTERVAL;
+                    log.append(INTERVAL);
                 }
-                log += getLog(obj[j]);
+                log.append(getLog(obj[j]));
             }
         }
-        return log;
+        return log.toString();
     }
 
     @Override

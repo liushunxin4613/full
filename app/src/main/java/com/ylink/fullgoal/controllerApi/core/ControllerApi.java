@@ -5,13 +5,13 @@ import android.view.View;
 import com.leo.core.core.BaseControllerApi;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.IUserApi;
-import com.leo.core.net.RetrofitSubscriber;
+import com.ylink.fullgoal.api.config.ParseApi;
+import com.ylink.fullgoal.api.config.UrlApi;
 import com.ylink.fullgoal.api.func.UserApi;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.config.Api;
 
 import butterknife.ButterKnife;
-import rx.Subscriber;
 
 import static com.ylink.fullgoal.config.Config.ROOT_URL;
 
@@ -54,8 +54,18 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     }
 
     @Override
-    public <R> Subscriber<R> newSubscriber() {
-        return new RetrofitSubscriber();
+    public UrlApi api() {
+        return super.api();
+    }
+
+    @Override
+    public UrlApi newApi() {
+        return new UrlApi(getThis());
+    }
+
+    @Override
+    public ParseApi newParseApi() {
+        return new ParseApi();
     }
 
     @Override

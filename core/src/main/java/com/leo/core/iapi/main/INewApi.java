@@ -5,271 +5,303 @@ public interface INewApi {
     /**
      * 数据api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R viewApi();
+    <B> B viewApi();
 
     /**
      * new数据api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newViewApi();
+    <B> B newViewApi();
 
     /**
      * 数据api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R dataApi();
+    <B> B dataApi();
 
     /**
      * new数据api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newDataApi();
+    <B> B newDataApi();
 
     /**
      * 显示api
      *
      * @return api
      */
-    <R> R showApi();
+    <B> B showApi();
 
     /**
      * new显示api
      *
      * @return api
      */
-    <R> R newShowApi();
+    <B> B newShowApi();
 
     /**
      * http api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R httpApi();
+    <B> B httpApi();
 
     /**
      * new http api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newHttpApi();
+    <B> B newHttpApi();
 
     /**
      * 解析 api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R decodeApi();
+    <B> B decodeApi();
 
     /**
      * new 解析 api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newDecodeApi();
+    <B> B newDecodeApi();
 
     /**
      * md5 api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R md5Api();
+    <B> B md5Api();
 
     /**
      * new md5 api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newMd5Api();
+    <B> B newMd5Api();
 
     /**
      * object api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R objectApi();
+    <B> B objectApi();
 
     /**
      * new object api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newObjectApi();
+    <B> B newObjectApi();
 
     /**
      * action api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R actionApi();
+    <B> B actionApi();
 
     /**
      * new action api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newActionApi();
+    <B> B newActionApi();
 
     /**
      * start api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R startApi();
+    <B> B startApi();
 
     /**
      * new start api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newStartApi();
+    <B> B newStartApi();
 
     /**
      * user api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R userApi();
+    <B> B userApi();
 
     /**
      * new user api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newUserApi();
+    <B> B newUserApi();
 
     /**
      * load image api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R loadImageApi();
+    <B> B loadImageApi();
 
     /**
      * new load image api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newLoadImageApi();
+    <B> B newLoadImageApi();
 
     /**
      * config api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R configApi();
+    <B> B configApi();
 
     /**
      * new config api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newConfigApi();
+    <B> B newConfigApi();
 
     /**
      * data type api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R dataTypeApi();
+    <B> B dataTypeApi();
 
     /**
      * new data type api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newDataTypeApi();
+    <B> B newDataTypeApi();
 
     /**
      * merge api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R mergeApi();
+    <B> B mergeApi();
 
     /**
      * new merge api
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newMergeApi();
+    <B> B newMergeApi();
 
     /**
-     * api
+     * subjoinApi
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R api();
+    <B> B subjoinApi();
 
     /**
-     * new api
+     * new subjoinApi
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newApi();
+    <B> B newSubjoinApi();
 
     /**
      * galleryApi
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R galleryApi();
+    <B> B galleryApi();
 
     /**
      * new galleryApi
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newGalleryApi();
+    <B> B newGalleryApi();
 
     /**
      * fileApi
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R fileApi();
+    <B> B fileApi();
 
     /**
      * new fileApi
      *
-     * @param <R> 泛型
+     * @param <B> 泛型
      * @return api
      */
-    <R> R newFileApi();
+    <B> B newFileApi();
+
+    /**
+     * api
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B api();
+
+    /**
+     * new fileApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newApi();
+
+    /**
+     * parseApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B parseApi();
+
+    /**
+     * new parseApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newParseApi();
 
 }
