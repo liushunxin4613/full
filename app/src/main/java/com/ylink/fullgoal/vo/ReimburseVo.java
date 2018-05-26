@@ -47,6 +47,24 @@ public class ReimburseVo {
      */
     public final static String REIMBURSE_TYPE_EVECTION_DEDICATED = "出差费用专票报销";
 
+    //报销类型
+    /**
+     * 一般费用报销
+     */
+    public final static String BILL_TYPE_Y = "1";
+    /**
+     * 出差费用报销
+     */
+    public final static String BILL_TYPE_C = "2";
+    /**
+     * 专票
+     */
+    public final static String IS_TICKET_ZY = "1";
+    /**
+     * 普票
+     */
+    public final static String IS_TICKET_ZN = "2";
+
     //隐式的
 
     //渠道
@@ -76,6 +94,8 @@ public class ReimburseVo {
     private List<InhibitionRuleVo> inhibitionRuleData;
     //提交标志
     private String sbumitFlag;
+    //提交图片
+    private List<ImageVo> imageList;
 
     //UI需用的
 
@@ -360,6 +380,14 @@ public class ReimburseVo {
 
     public void setReimburseType(String reimburseType) {
         this.reimburseType = reimburseType;
+    }
+
+    public List<ImageVo> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<ImageVo> imageList) {
+        this.imageList = imageList;
     }
 
 }

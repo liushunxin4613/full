@@ -7,6 +7,7 @@ import com.leo.core.iapi.IObjAction;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RunUtil {
 
@@ -33,6 +34,18 @@ public class RunUtil {
     }
 
     public static <T> boolean execute(List<T> data, IObjAction<T> action) {
+        if (action == null || data == null) {
+            return false;
+        }
+        for (T obj : data) {
+            if (obj != null) {
+                action.execute(obj);
+            }
+        }
+        return true;
+    }
+
+    public static <T> boolean execute(Set<T> data, IObjAction<T> action) {
         if (action == null || data == null) {
             return false;
         }

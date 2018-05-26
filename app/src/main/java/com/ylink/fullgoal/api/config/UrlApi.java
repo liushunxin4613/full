@@ -3,13 +3,12 @@ package com.ylink.fullgoal.api.config;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.util.Base64Util;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.Api;
 import com.ylink.fullgoal.config.Config;
-import com.ylink.fullgoal.vo.UrlVo;
 
 import java.io.File;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -118,6 +117,15 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> {
         String base64 = Base64Util.getFileToBase64(file);
         if(!TextUtils.isEmpty(base64)){
             uploadBase64Image(base64);
+        }
+    }
+
+    /**
+     * 提交post数据
+     */
+    public void post(String path, Map<String, String> map){
+        if(!TextUtils.isEmpty(path) && !TextUtils.isEmpty(map)){
+            observable(getApi().post(path, map));
         }
     }
 

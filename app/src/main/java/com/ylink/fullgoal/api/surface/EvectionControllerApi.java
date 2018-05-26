@@ -96,7 +96,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
     @Override
     public void initView() {
         super.initView();
-        if (DEBUG){
+        if (DEBUG) {
             testReimburseVo();
         }
         initReimburseVo(getVo());
@@ -165,7 +165,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             //经办人、部门
             data.add(new TvH2Bean(vo.getAgent(), vo.getDepartment()));
             data.add(rbBean = new TvHEtIconMoreBean(R.mipmap.test_icon_user, "报销人", vo.getReimbursement(),
-                    "请输入报销人", (bean, view) -> startSearch(SearchVo.REIMBURSEMENT)));
+                    "请输入报销人", (bean, view) -> startSearch(SearchVo.REIMBURSEMENT), vo::setReimbursement));
             data.add(bdBean = new TvH2MoreBean("预算归属部门", vo.getBudgetDepartment(), "请选择预算归属部门",
                     (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
             data.add(ptBean = new TvH2MoreBean("项目", vo.getProject(), "请选择项目",
@@ -174,7 +174,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             if (!TextUtils.equals(vo.getState(), ReimburseVo.STATE_INITIATE)) {
                 data.add(new TvHEtIconMoreBean("金额", vo.getTotalAmountLower(), "请输入金额"));
             }
-            data.add(setCauseBean(new TvHEt3Bean("事由", vo.getCause(), "请输入事由")));
+            data.add(setCauseBean(new TvHEt3Bean("事由", vo.getCause(), "请输入事由", vo::setCause)));
         });
         //禁止规则
         if (isAlterEnable() && !TextUtils.isEmpty(vo.getInhibitionRuleData())) {

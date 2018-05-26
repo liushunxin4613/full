@@ -34,14 +34,15 @@ public interface Api {
     /**
      * GET
      */
-    @GET("{url}")
-    Observable<ResponseBody> get(@Path("url") String url, @QueryMap Map<String, String> map);
+    @GET("{path}")
+    Observable<ResponseBody> get(@Path("path") String path, @QueryMap Map<String, String> map);
 
     /**
      * POST
      */
-    @POST("{url}")
-    Observable<ResponseBody> post(@Path("url") String url, @FieldMap Map<String, String> map);
+    @FormUrlEncoded
+    @POST("{path}")
+    Observable<ResponseBody> post(@Path("path") String path, @FieldMap Map<String, String> map);
 
     //自有
 

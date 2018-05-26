@@ -11,6 +11,8 @@ import com.leo.core.net.Exceptions;
 import com.leo.core.util.GsonDecodeUtil;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
+import com.leo.core.util.ToastUtil;
+import com.ylink.fullgoal.ht.BaseHt;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,24 +30,53 @@ import okhttp3.ResponseBody;
 
 public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseApi<T> {
 
-    private Type rootType;
+    private List<Type> data;
     private Map<String, Type> typeMap;
     private Map<Type, List<IObjAction>> apiMap;
 
     public ParseApi() {
+        this.data = new ArrayList<>();
         this.typeMap = new HashMap<>();
         this.apiMap = new HashMap<>();
     }
 
     @Override
-    public <A> T setRootType(Class<A> clz) {
-        this.rootType = getExecute(TypeToken.get(clz), TypeToken::getType);
+    public <A> T addRootType(Class<A>... args) {
+        execute(args, obj -> executeNon(getExecute(TypeToken.get(obj), TypeToken::getType),
+                item -> data.add(item)));
         return getThis();
     }
 
     @Override
-    public <A> T setRootType(TypeToken<A> token) {
-        this.rootType = getExecute(token, TypeToken::getType);
+    public <A> T addRootType(TypeToken<A>... args) {
+        execute(args, obj -> executeNon(getExecute(obj, TypeToken::getType), item -> data.add(item)));
+        return getThis();
+    }
+
+    @Override
+    public <A> T addRootType(int index, Class<A>... args) {
+        if (index >= 0 && index < data.size() && !TextUtils.isEmpty(args)) {
+            List<Type> typeData = new ArrayList<>();
+            execute(args, obj -> executeNon(getExecute(TypeToken.get(obj), TypeToken::getType),
+                    typeData::add));
+            data.addAll(index, typeData);
+        }
+        return getThis();
+    }
+
+    @Override
+    public <A> T addRootType(int index, TypeToken<A>... args) {
+        if (index >= 0 && index < data.size() && !TextUtils.isEmpty(args)) {
+            List<Type> typeData = new ArrayList<>();
+            execute(args, obj -> executeNon(getExecute(obj, TypeToken::getType), typeData::add));
+            data.addAll(index, typeData);
+        }
+        return getThis();
+    }
+
+    @Override
+    public T clearRootData() {
+        data.clear();
         return getThis();
     }
 
@@ -95,7 +126,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     @Override
     public T clearParse() {
-        rootType = null;
+        clearRootData();
         clearPutParseMap();
         clearAddParseMap();
         return getThis();
@@ -116,13 +147,24 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private <A> void onItem(A item, Type type) {
-        executeNon(item, obj -> execute(apiMap.get(type), action -> action.execute(obj)));
+        executeNon(item, obj -> execute(apiMap.get(type), action -> {
+            if(obj instanceof BaseHt){
+                if(!((BaseHt) obj).isSuccess() && !TextUtils.isEmpty(((BaseHt) obj).getMessage())){
+                    ToastUtil.show(((BaseHt) obj).getMessage());
+                } else {
+                    action.execute(obj);
+                }
+            } else {
+                action.execute(obj);
+            }
+        }));
     }
 
     private void onString(String text) {
-        if (rootType != null) {
-            onData(GsonDecodeUtil.decode(text, rootType), rootType);
-        } else if (!TextUtils.isEmpty(typeMap)) {
+        if (!TextUtils.isEmpty(data)) {
+            execute(data, type -> onData(GsonDecodeUtil.decode(text, type), type));
+        }
+        if (!TextUtils.isEmpty(typeMap)) {
             toJson(text);
         }
     }
@@ -144,7 +186,9 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                     try {
                         field.setAccessible(true);
                         Object item = field.get(obj);
-                        onData(item, item.getClass());
+                        if (item != null) {
+                            onData(item, item.getClass());
+                        }
                     } catch (IllegalAccessException e) {
                         onExceptions(new Exceptions("解析异常", 101, e));
                     }

@@ -7,6 +7,8 @@ import com.leo.core.iapi.IObjAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -189,6 +191,14 @@ public class TextUtils {
             Collections.addAll(data, args);
         }
         return data;
+    }
+
+    public static <D> Set<D> getSetData(D... args) {
+        Set<D> set = new LinkedHashSet<>();
+        if (!TextUtils.isEmpty(args)) {
+            Collections.addAll(set, args);
+        }
+        return set;
     }
 
     /**

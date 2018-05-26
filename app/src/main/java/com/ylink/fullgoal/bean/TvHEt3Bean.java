@@ -1,11 +1,23 @@
 package com.ylink.fullgoal.bean;
 
+import com.leo.core.iapi.IObjAction;
 import com.ylink.fullgoal.R;
 
 public class TvHEt3Bean extends ApiBean<TvHEt3Bean> {
 
-    public TvHEt3Bean(String name, String detail, String hint) {
+    private IObjAction<String> action;
+
+    public TvHEt3Bean(String name, String detail, String hint, IObjAction<String> action) {
         super(name, detail, hint, null);
+        this.action = action;
+    }
+
+    @Override
+    public void setDetail(String detail) {
+        super.setDetail(detail);
+        if (action != null) {
+            action.execute(getDetail());
+        }
     }
 
     @Override

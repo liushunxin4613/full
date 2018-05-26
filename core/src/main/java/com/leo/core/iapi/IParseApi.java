@@ -4,9 +4,15 @@ import com.google.gson.reflect.TypeToken;
 
 public interface IParseApi<T extends IParseApi> {
 
-    <A> T setRootType(Class<A> clz);
+    <A> T addRootType(Class<A>... args);
 
-    <A> T setRootType(TypeToken<A> token);
+    <A> T addRootType(TypeToken<A>... args);
+
+    <A> T addRootType(int index, Class<A>... args);
+
+    <A> T addRootType(int index, TypeToken<A>... args);
+
+    T clearRootData();
 
     <A> T put(String key, TypeToken<A> token);
 

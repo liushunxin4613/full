@@ -1688,14 +1688,32 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <A> T setRootType(Class<A> clz) {
-        parseApi().setRootType(clz);
+    public <A> T addRootType(Class<A>... args) {
+        parseApi().addRootType(args);
         return getThis();
     }
 
     @Override
-    public <A> T setRootType(TypeToken<A> token) {
-        parseApi().setRootType(token);
+    public <A> T addRootType(TypeToken<A>... args) {
+        parseApi().addRootType(args);
+        return getThis();
+    }
+
+    @Override
+    public <A> T addRootType(int index, Class<A>... args) {
+        parseApi().addRootType(index, args);
+        return getThis();
+    }
+
+    @Override
+    public <A> T addRootType(int index, TypeToken<A>... args) {
+        parseApi().addRootType(index, args);
+        return getThis();
+    }
+
+    @Override
+    public T clearRootData() {
+        parseApi().clearRootData();
         return getThis();
     }
 

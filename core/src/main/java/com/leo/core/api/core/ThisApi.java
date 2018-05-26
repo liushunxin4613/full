@@ -12,6 +12,7 @@ import com.leo.core.util.TextUtils;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ThisApi<T extends ThisApi> implements IThisApi<T> {
 
@@ -33,7 +34,12 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         RunUtil.execute(data, action);
         return getThis();
     }
-    
+
+    protected <B> T execute(Set<B> data, IObjAction<B> action) {
+        RunUtil.execute(data, action);
+        return getThis();
+    }
+
     protected <K, V> T execute(Map<K, V> map, IMapAction<K, V> action) {
         RunUtil.execute(map, action);
         return getThis();

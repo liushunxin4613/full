@@ -60,19 +60,10 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
             //test
 //            test();
         }
+        generalCommon(ReimburseVo.STATE_INITIATE);
     }
 
     private void test() {
-        //上传图片
-        File file = new File(getContext().getExternalFilesDir("photo"), "1526965942797907.jpg");
-        setRootType(new TypeToken<BaseBean<UrlVo>>() {
-        }).add(new TypeToken<BaseBean<UrlVo>>() {
-        }, obj -> {
-            ee("BaseBean<UrlVo>", obj);
-        }).add(UrlVo.class, obj -> {
-            ee("UrlVo", obj);
-        });
-//        api().uploadImage(file);
     }
 
     //私有的

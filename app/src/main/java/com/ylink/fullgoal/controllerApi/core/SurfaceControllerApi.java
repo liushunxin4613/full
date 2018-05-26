@@ -15,6 +15,16 @@ import com.ylink.fullgoal.api.surface.SearchControllerApi;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.main.SurfaceActivity;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static com.leo.core.util.TextUtils.count;
+import static com.ylink.fullgoal.config.Config.FIELDS;
+
+@SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
 
     public SurfaceControllerApi(C controller) {
@@ -105,13 +115,75 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     @SuppressLint("ResourceAsColor")
-    protected T setTextView(TextView tv, String name, String hint){
-        if(TextUtils.isEmpty(name)){
+    protected T setTextView(TextView tv, String name, String hint) {
+        if (TextUtils.isEmpty(name)) {
             setText(tv, hint).setTextColor(tv, R.color.tv1);
         } else {
             setText(tv, name).setTextColor(tv, R.color.tv);
         }
         return getThis();
+    }
+
+    protected Map<String, String> getCheck(Object obj, Set<String> must, Set<String> other) {
+        Set<String> set = new LinkedHashSet<>();
+        execute(must, item -> {
+            String key = getKey(item);
+            if (!TextUtils.isEmpty(key)) {
+                set.add(key);
+            }
+        });
+        execute(other, item -> {
+            String key = getKey(item);
+            if (!TextUtils.isEmpty(key)) {
+                set.add(key);
+            }
+        });
+        if (!TextUtils.isEmpty(set) && obj != null) {
+            Map<String, String> mp = new HashMap<>();
+            Class clz = obj.getClass();
+            for (String key : set) {
+                String json = null;
+                try {
+                    Field field = clz.getDeclaredField(key);
+                    field.setAccessible(true);
+                    json = getLog(field.get(obj));
+                } catch (Exception ignored) {
+                } finally {
+                    if (!TextUtils.isEmpty(json)) {
+                        mp.put(key, json);
+                    } else if (!TextUtils.isEmpty(must) && must.contains(getValue(key))) {
+                        String value = getValue(key);
+                        value = TextUtils.isEmpty(value) ? key : value;
+                        show(String.format("%s不能为空", value));
+                        return null;
+                    }
+                }
+            }
+            return mp;
+        }
+        return null;
+    }
+
+    protected String getKey(String value) {
+        if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(FIELDS)) {
+            for (String[] args : FIELDS) {
+                if (count(args) == 2 && TextUtils.equals(args[1], value)) {
+                    return args[0];
+                }
+            }
+        }
+        return null;
+    }
+
+    protected String getValue(String key) {
+        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(FIELDS)) {
+            for (String[] args : FIELDS) {
+                if (count(args) == 2 && TextUtils.equals(args[0], key)) {
+                    return args[1];
+                }
+            }
+        }
+        return null;
     }
 
 }

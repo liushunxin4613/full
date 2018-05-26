@@ -17,9 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.bean.BaseBean;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
@@ -34,9 +32,10 @@ import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.ht.ImageHt;
 import com.ylink.fullgoal.vo.BillVo;
+import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
-import com.ylink.fullgoal.vo.UrlVo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -128,12 +127,32 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
             reimburseType = bundle.getString(REIMBURSE_TYPE);
+            if (!TextUtils.isEmpty(reimburseType)) {
+                switch (reimburseType) {
+                    case ReimburseVo.REIMBURSE_TYPE_GENERAL_COMMON:
+                        getVo().setBillType(ReimburseVo.BILL_TYPE_Y);
+                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZN);
+                        break;
+                    case ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED:
+                        getVo().setBillType(ReimburseVo.BILL_TYPE_Y);
+                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZY);
+                        break;
+                    case ReimburseVo.REIMBURSE_TYPE_EVECTION_COMMON:
+                        getVo().setBillType(ReimburseVo.BILL_TYPE_C);
+                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZN);
+                        break;
+                    case ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED:
+                        getVo().setBillType(ReimburseVo.BILL_TYPE_C);
+                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZY);
+                        break;
+                }
+            }
             String title = TextUtils.isEmpty(state) ? reimburseType : state;
             title = TextUtils.equals(title, ReimburseVo.STATE_INITIATE) ? reimburseType : title;
             setTitle(title);
             switch (TextUtils.isEmpty(state) ? "" : state) {
                 case ReimburseVo.STATE_INITIATE:
-                    setRightTv("提交", v -> show("提交"));
+                    setRightTv("提交", v -> submit());
                     break;
                 case ReimburseVo.STATE_CONFIRM:
                     setRightTv("确认", v -> show("确认"));
@@ -163,12 +182,18 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     @Override
     public void initData() {
         super.initData();
-        setRootType(new TypeToken<BaseBean<UrlVo>>() {
+        addRootType(ImageHt.class);
+        add(ImageHt.class, vo -> {
+            if (TextUtils.isHttpUrl(vo.getUrl())) {
+                if (getVo().getImageList() == null) {
+                    getVo().setImageList(new ArrayList<>());
+                }
+                getVo().getImageList().add(new ImageVo(vo.getId(), vo.getUrl()));
+            }
         });
-        add(UrlVo.class, vo -> {
-            ee("vo", vo);
-            addPhoto(new BillVo(vo.getImage(), null));
-        });
+    }
+
+    protected void submit() {
     }
 
     protected boolean isEnable() {
@@ -291,7 +316,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                                 public void onSuccess(File lubanFile) {
                                     file.delete();
                                     ee("lubanFile.getPath()", lubanFile.getPath());
-//                                    addPhoto(new BillVo(lubanFile.getPath(), null));
+                                    addPhoto(new BillVo(lubanFile.getPath(), null));
                                     api().uploadBase64Image(lubanFile);
                                 }
 
