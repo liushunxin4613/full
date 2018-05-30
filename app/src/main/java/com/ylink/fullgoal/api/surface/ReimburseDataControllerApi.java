@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.View;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.core.BaseControllerApiView;
@@ -23,12 +24,18 @@ import com.ylink.fullgoal.bean.SXBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.ht.ListHt;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
+
+import static com.leo.core.util.TextUtils.getListData;
+import static com.leo.core.util.TextUtils.getSetData;
 
 public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C> extends BarControllerApi<T, C> {
 
@@ -40,12 +47,14 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
     DrawerLayout drawerLayout;
 
     private IndicatorControllerApi api;
+    private Map<String, RecycleControllerApi> map;
 
     @SuppressLint("RtlHardcoded")
     private int gravity = Gravity.RIGHT;
 
     public ReimburseDataControllerApi(C controller) {
         super(controller);
+        map = new HashMap<>();
     }
 
     @Override
@@ -64,22 +73,94 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
     @Override
     public void initData() {
         super.initData();
-        initReimburseVoData(getRecycleControllerApi("待处理"), getTestReimburseVoData(6));
-        initReimburseVoData(getRecycleControllerApi("审核中"), getTestReimburseVoData(5));
-        initReimburseVoData(getRecycleControllerApi("已完成"), getTestReimburseVoData(5));
-        initReimburseVoData(getRecycleControllerApi("已取消"), getTestReimburseVoData(5));
+        addRootType(new TypeToken<ListHt<ReimburseVo>>() {
+        });
+        add(new TypeToken<ListHt<ReimburseVo>>() {
+        }, (what, msg, ht) -> execute(!TextUtils.isEmpty(msg), ()
+                -> initReimburseVoData(getReiRecycleControllerApi(msg), ht.getList())));
+        getReiRecycleControllerApi("待处理");
+        getReiRecycleControllerApi("审核中");
+        getReiRecycleControllerApi("已完成");
+        getReiRecycleControllerApi("已取消");
+    }
+
+    private boolean checkTitle(String type) {
+        return !TextUtils.isEmpty(type) && TextUtils.getSetData("待处理", "审核中", "已完成", "已取消")
+                .contains(type);
+    }
+
+    private RecycleControllerApi getReiRecycleControllerApi(String type) {
+        if (checkTitle(type)) {
+            RecycleControllerApi api = map.get(type);
+            if (api == null) {
+                api = getRecycleControllerApi(type);
+                map.put(type, api);
+                ReimburseVo vo = new ReimburseVo();
+                vo.setAgent("张三");
+                vo.setApprovalStatus(getApprovalStatus(type));
+                Map<String, String> map = getCheck(vo, getSetData("经办人", "审批状态"), null);
+                if (!TextUtils.isEmpty(map)) {
+                    api().post("QuerytReimbursement", map, type);
+                }
+            }
+            return api;
+        }
+        return null;
+    }
+
+    private String getApprovalStatus(String type) {
+        if (!TextUtils.isEmpty(type)) {
+            switch (type) {
+                default:
+                    return "0";
+                case "待处理":
+                    return "1";
+                case "审核中":
+                    return "2";
+                case "已完成":
+                    return "3";
+                case "已取消":
+                    return "4";
+            }
+        }
+        return null;
     }
 
     private void initReimburseVoData(RecycleControllerApi api, List<ReimburseVo> reimburseData) {
-        execute(reimburseData, obj -> addVgBean(api, data -> {
-            data.add(new CCSQDBean(obj.getSerialNo(), obj.getOrderNo(), "报销批次号", "报销单号"));
-            data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(), "时间", "金额"));
-            data.add(new TvHTv3Bean("事由", obj.getCause()));
-        }));
+        if (api != null) {
+            if (!TextUtils.isEmpty(reimburseData)) {
+                api.showContentView();
+                execute(reimburseData, obj -> addVgBean(api, data -> {
+                    /*data.add(new CCSQDBean(obj.getSerialNo(), obj.getOrderNo(), "报销批次号", "报销单号"));
+                    data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(), "时间", "金额"));*/
+                    if (TextUtils.equals(obj.getBillType(), "1")) {
+                        if (TextUtils.equals(obj.getIsTickets(), "1")) {
+                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED);
+                        } else if (TextUtils.equals(obj.getIsTickets(), "2")) {
+                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_GENERAL_COMMON);
+                        }
+                    } else if (TextUtils.equals(obj.getBillType(), "2")) {
+                        if (TextUtils.equals(obj.getIsTickets(), "1")) {
+                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED);
+                        } else if (TextUtils.equals(obj.getIsTickets(), "2")) {
+                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_EVECTION_COMMON);
+                        }
+                    }
+                    data.add(new CCSQDBean(obj.getSerialNo(), obj.getReimbursementState(), "报销批次号", "报销类型"));
+                    data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(), "时间", "金额"));
+                    data.add(new TvHTv3Bean("事由", obj.getCause()));
+                }));
+            } else {
+                api.showNullView(true);
+            }
+        }
     }
 
     private RecycleControllerApi getRecycleControllerApi(String name) {
-        RecycleControllerApi controllerApi = getViewControllerApi(RecycleControllerApi.class);
+        RecycleControllerApi controllerApi = getViewControllerApi(RecycleControllerApi.class,
+                R.layout.l_content_recycle);
+        controllerApi.setText(controllerApi.findViewById(R.id.null_tv), "您还没有相关的报销");
+        controllerApi.setNullView(controllerApi.findViewById(R.id.null_vg));
         api.add(new IndicatorBean(name, controllerApi)).notifyDataSetChanged();
         return controllerApi;
     }
@@ -118,7 +199,7 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
         });
         SXBean sx = new SXBean();
         api.add(new IconBean((bean, view) -> drawerLayout.closeDrawer(gravity)))
-                .add(new DateArrayBean("查询时间", TextUtils.getListData(
+                .add(new DateArrayBean("查询时间", getListData(
                         "当天", "七天", "一个月", "三个月", "六个月", "一年")))
                 .add(sx)
                 .notifyDataSetChanged();

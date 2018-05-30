@@ -4,6 +4,7 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.TextUtils;
@@ -20,6 +21,11 @@ import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.ht.BudgetDepartmentHt;
+import com.ylink.fullgoal.ht.PaymentRequestHt;
+import com.ylink.fullgoal.ht.ProjectHt;
+import com.ylink.fullgoal.ht.ReimbursementHt;
+import com.ylink.fullgoal.ht.ServeBillHt;
 import com.ylink.fullgoal.vo.AirDataVo;
 import com.ylink.fullgoal.vo.AirVo;
 import com.ylink.fullgoal.vo.BillVo;
@@ -30,7 +36,9 @@ import com.ylink.fullgoal.vo.ReimburseVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
+import java.util.Map;
 
+import static com.leo.core.util.TextUtils.getSetData;
 import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_RED;
 import static com.ylink.fullgoal.vo.InhibitionRuleVo.STATE_YELLOW;
@@ -60,7 +68,28 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
     @Override
     public void onResume() {
         super.onResume();
-        SearchVo vo = getFinish(gets(SearchVo.class, String.class, BusinessVo.class, AirVo.class));
+        execute(getFinish(), new TypeToken<SearchVo<ReimbursementHt>>() {
+        }, vo -> {
+
+        });
+        execute(getFinish(), new TypeToken<SearchVo<BudgetDepartmentHt>>() {
+        }, vo -> {
+
+        });
+        execute(getFinish(), new TypeToken<SearchVo<ProjectHt>>() {
+        }, vo -> {
+
+        });
+        execute(getFinish(), new TypeToken<SearchVo<PaymentRequestHt>>() {
+        }, vo -> {
+
+        });
+        execute(getFinish(), new TypeToken<SearchVo<ServeBillHt>>() {
+        }, vo -> {
+
+        });
+
+        /*SearchVo vo = getFinish(gets(SearchVo.class, String.class, BusinessVo.class, AirVo.class));
         executeNon(vo, obj -> executeNon(obj.getSearch(), search -> {
             switch (search) {
                 case SearchVo.REIMBURSEMENT://报销人
@@ -90,7 +119,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
                     break;
             }
             notifyDataSetChanged();
-        }));
+        }));*/
     }
 
     @Override
@@ -102,11 +131,23 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
         initReimburseVo(getVo());
     }
 
+    @Override
+    protected void submit() {
+        super.submit();
+        Map<String, String> checkMap = getCheck(getVo(), getSetData("报销类型", "是否专票",
+                "经办人", "报销人", "预算归属部门", "事由"), getSetData("项目",
+                "出差申请单", "交通费", "住宿费", "车船机票费"));
+        if (!TextUtils.isEmpty(checkMap)) {
+            api().post("FkSbumitCompensation", checkMap);
+        }
+    }
+
     private void testReimburseVo() {
         //test
-        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE) ||
-                TextUtils.orEquals(getReimburseType(), ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED,
-                        ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED)) {
+//        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE) ||
+//                TextUtils.orEquals(getReimburseType(), ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED,
+//                        ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED)) {
+        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE)) {
             getVo().setReimbursement("李四");
             getVo().setBudgetDepartment("信息技术部");
             getVo().setProject("第一财经中国经济论坛");
@@ -211,8 +252,6 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
                 data.add(newGridBean(airBillData));
             }
         });
-        //GridBean 其他报销
-        addVgBean("其他报销", newGridBean(vo.getOtherBillData()));
         //添加流程
         if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
             addVgBean(data -> {

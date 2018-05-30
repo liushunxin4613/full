@@ -14,5 +14,7 @@ public class Config {
     public final static String LAST_FINISH_ACTIVITY = "lastFinishActivity";
     public final static String LAST_START_CONTROLLER_API = "lastStartControllerApi";
     public final static String LAST_FINISH_CONTROLLER_API = "lastFinishControllerApi";
+    public final static String EMPTY = " ";
+    public final static String RX = "\\\\/";
 
 }

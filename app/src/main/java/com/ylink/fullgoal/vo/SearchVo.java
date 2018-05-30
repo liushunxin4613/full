@@ -42,6 +42,20 @@ public class SearchVo<D> {
      */
     public final static String XC_AIR = "携程机票";
 
+    /**
+     * 搜索参数
+     */
+    public final static String[][] SEARCHS = {
+            {REIMBURSEMENT, "reimbursementCompensation"},
+            {BUDGET_DEPARTMENT, "BudgetDepartmentCompensation"},
+            {PROJECT, "ProjectCompensation"},
+            {CONTRACT_BILL, "PaymentRequestCompensation"},
+            {SERVE_BILL, "ServeBillCompensation"},
+            {COST_INDEX, ""},
+            {BUSINESS, ""},
+            {XC_AIR, ""},
+    };
+
     private String search;
     private D obj;
 

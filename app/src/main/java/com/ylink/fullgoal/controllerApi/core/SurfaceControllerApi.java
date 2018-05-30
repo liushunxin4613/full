@@ -9,6 +9,7 @@ import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.DateUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.SearchControllerApi;
@@ -159,6 +160,9 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                     }
                 }
             }
+            //公共部分
+            mp.put("fillDate", DateUtil.getNowTimeString());
+            mp.put("channel", "android");
             return mp;
         }
         return null;

@@ -7,11 +7,12 @@ import com.leo.core.iapi.IObjAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.leo.core.config.Config.EMPTY;
 
 public class TextUtils {
 
@@ -330,6 +331,14 @@ public class TextUtils {
         String time = String.valueOf(System.currentTimeMillis());
         String random = String.valueOf(Math.random());
         return time + random.substring(2, random.length());
+    }
+
+    public static int getEmptyLength(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            text.replaceAll(EMPTY, "");
+            return text.length();
+        }
+        return 0;
     }
 
 }

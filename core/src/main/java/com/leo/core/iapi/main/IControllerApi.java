@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IBindBeanApi;
 import com.leo.core.iapi.IObjAction;
@@ -440,7 +441,8 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     /**
      * 权限请求处理
      */
-    void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults);
+    void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                    @NonNull int[] grantResults);
 
     /**
      * 终止时调用,但异常除外
@@ -564,5 +566,27 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @return 本身
      */
     T statusBar(boolean dark);
+
+    /**
+     * 执行数据
+     *
+     * @param obj    obj
+     * @param clz    clz
+     * @param action action
+     * @param <B>    <B>
+     * @return 本身
+     */
+    <B> T execute(Object obj, Class<B> clz, IObjAction<B> action);
+
+    /**
+     * 执行数据
+     *
+     * @param obj    obj
+     * @param token  token
+     * @param action action
+     * @param <B>    <B>
+     * @return 本身
+     */
+    <B> T execute(Object obj, TypeToken<B> token, IObjAction<B> action);
 
 }

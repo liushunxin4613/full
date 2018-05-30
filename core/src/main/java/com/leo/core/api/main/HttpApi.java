@@ -1,6 +1,8 @@
 package com.leo.core.api.main;
 
+import com.leo.core.api.MsgSubscriber;
 import com.leo.core.api.core.ThisApi;
+import com.leo.core.iapi.IParseApi;
 import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.net.RetrofitFactory;
 import com.leo.core.util.TextUtils;
@@ -12,11 +14,12 @@ import rx.Subscriber;
 
 public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T> {
 
+    private IParseApi api;
     private RetrofitFactory factory;
+    private MsgSubscriber newSubscriber;
     private HashMap<String, Object> map;
     private Observable.Transformer transformer;
     private Observable.Transformer newTransformer;
-    private Subscriber newSubscriber;
 
     public HttpApi(Observable.Transformer newTransformer) {
         this.map = new HashMap<>();
@@ -25,7 +28,7 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
     }
 
     @Override
-    public <R> R create(String url, Class<R> clz) {
+    public <B> B create(String url, Class<B> clz) {
         if (!TextUtils.isEmpty(url) && clz != null) {
             String key = url + "/" + clz.getName();
             Object service = map.get(key);
@@ -33,26 +36,26 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
                 service = factory.getRetrofit(url).create(clz);
                 map.put(key, service);
             }
-            return (R) service;
+            return (B) service;
         }
         return null;
     }
 
     @Override
-    public <R> R getApi(String url) {
+    public <B> B getApi(String url) {
         throw new NullPointerException("getApi 不能为空");
     }
 
     @Override
-    public <R> R getApi() {
+    public <B> B getApi() {
         throw new NullPointerException("getApi 不能为空");
     }
 
     @Override
-    public <R, M> Observable.Transformer<R, M> transformer() {
-        if (transformer == null){
+    public <B, M> Observable.Transformer<B, M> transformer() {
+        if (transformer == null) {
             transformer = newTransformer();
-            if(transformer == null){
+            if (transformer == null) {
                 throw new NullPointerException("newTransformer 不能为空");
             }
         }
@@ -60,34 +63,42 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
     }
 
     @Override
-    public <R, M> Observable.Transformer<R, M> newTransformer() {
+    public <B, M> Observable.Transformer<B, M> newTransformer() {
         return newTransformer;
     }
 
     @Override
-    public <R> Subscriber<R> subscriber() {
-        Subscriber subscriber = newSubscriber();
-        if(subscriber == null){
+    public <B> MsgSubscriber<T, B> subscriber() {
+        MsgSubscriber<T, B> subscriber = newSubscriber();
+        if (subscriber == null) {
             throw new NullPointerException("newTransformer 不能为空");
         }
         return subscriber;
     }
 
     @Override
-    public <R> Subscriber<R> newSubscriber() {
+    public <B> MsgSubscriber<T, B> newSubscriber() {
         return newSubscriber;
     }
 
     @Override
-    public <R> T setNewSubscriber(Subscriber<R> newSubscriber) {
+    public <B> T setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
         this.newSubscriber = newSubscriber;
         return getThis();
     }
 
     @Override
-    public <R> T observable(Observable<R> observable) {
-        if(observable != null){
-            observable.compose(transformer()).subscribe(subscriber());
+    public <B> T observable(Observable<B> observable) {
+        observable(observable, -1, null);
+        return getThis();
+    }
+
+    @Override
+    public <B> T observable(Observable<B> observable, int what, String tag) {
+        if (observable != null) {
+            MsgSubscriber<T, B> subscriber = subscriber();
+            subscriber.init(what, tag);
+            observable.compose(transformer()).subscribe((Subscriber) subscriber);
         }
         return getThis();
     }

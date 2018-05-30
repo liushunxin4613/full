@@ -5,7 +5,11 @@ import android.view.View;
 import com.leo.core.iapi.IContentApi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
-public class ContentControllerApi<T extends ContentControllerApi, C> extends SurfaceControllerApi<T, C> implements IContentApi<T> {
+public class ContentControllerApi<T extends ContentControllerApi, C> extends SurfaceControllerApi<T, C>
+        implements IContentApi<T> {
+
+    private View nullView;
+    private View errorView;
 
     public ContentControllerApi(C controller) {
         super(controller);
@@ -17,6 +21,16 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
         return getThis();
     }
 
+    public T setNullView(View nullView) {
+        this.nullView = nullView;
+        return getThis();
+    }
+
+    public T setErrorView(View errorView) {
+        this.errorView = errorView;
+        return getThis();
+    }
+
     @Override
     public <R extends View> R getContentView() {
         return null;
@@ -24,12 +38,12 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
 
     @Override
     public View getNullView() {
-        return null;
+        return nullView;
     }
 
     @Override
     public View getErrorView() {
-        return null;
+        return errorView;
     }
 
     @Override

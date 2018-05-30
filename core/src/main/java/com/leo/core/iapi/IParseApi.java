@@ -2,15 +2,13 @@ package com.leo.core.iapi;
 
 import com.google.gson.reflect.TypeToken;
 
-public interface IParseApi<T extends IParseApi> {
+public interface IParseApi<T extends IParseApi> extends IMsgApi<T> {
 
-    <A> T addRootType(Class<A>... args);
+    T copy();
 
-    <A> T addRootType(TypeToken<A>... args);
+    T addRootType(Class... args);
 
-    <A> T addRootType(int index, Class<A>... args);
-
-    <A> T addRootType(int index, TypeToken<A>... args);
+    T addRootType(TypeToken... args);
 
     T clearRootData();
 
@@ -20,9 +18,9 @@ public interface IParseApi<T extends IParseApi> {
 
     T clearPutParseMap();
 
-    <A> T add(TypeToken<A> token, IObjAction<A> action);
+    <A> T add(TypeToken<A> token, IMsgAction<A> action);
 
-    <A> T add(Class<A> clz, IObjAction<A> action);
+    <A> T add(Class<A> clz, IMsgAction<A> action);
 
     T clearAddParseMap();
 

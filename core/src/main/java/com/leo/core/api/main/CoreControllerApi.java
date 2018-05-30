@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.api.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
 import com.leo.core.config.Config;
 import com.leo.core.core.BaseControllerApiView;
@@ -43,6 +44,7 @@ import com.leo.core.iapi.IGalleryApi;
 import com.leo.core.iapi.ILoadImageApi;
 import com.leo.core.iapi.IMD5Api;
 import com.leo.core.iapi.IMergeApi;
+import com.leo.core.iapi.IMsgAction;
 import com.leo.core.iapi.IObjectApi;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.IParseApi;
@@ -58,6 +60,7 @@ import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.iapi.main.IViewApi;
+import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.StatusBarUtil;
 import com.leo.core.util.TextUtils;
 
@@ -70,7 +73,9 @@ import java.util.Set;
 
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.Subscriber;
+
+import static com.leo.core.config.Config.RX;
+import static com.leo.core.util.TextUtils.getEmptyLength;
 
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 @SuppressLint("MissingSuperCall")
@@ -112,7 +117,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     //other
     private Integer rootViewResId;
-    private Subscriber subscriber;
+    private MsgSubscriber subscriber;
     private Observable.Transformer transformer;
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
@@ -456,11 +461,17 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public T switchNPApi() {
+        parseApi = null;
+        return getThis();
+    }
+
+    @Override
     public IParseApi parseApi() {
         if (parseApi == null) {
             parseApi = newParseApi();
             if (parseApi == null) {
-                throw new NullPointerException("newParseApi 不能为空");
+                throw new NullPointerException("newApi 不能为空");
             }
         }
         return parseApi;
@@ -746,13 +757,14 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public <B> B getFinish(Type... args) {
         if (!TextUtils.isEmpty(finish) && !TextUtils.isEmpty(args)) {
+            int emptyCount = getEmptyLength(finish);
             for (Type type : args) {
                 if (type != null) {
                     if (TextUtils.equals(type, String.class)) {
                         return (B) finish;
                     } else {
                         Object obj = decode(finish, type);
-                        if (obj != null && TextUtils.equals(finish, encode(obj))) {
+                        if (obj != null && emptyCount == getEmptyLength(encode(obj))) {
                             return (B) obj;
                         }
                     }
@@ -1007,6 +1019,38 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public <B> T execute(Object obj, Class<B> clz, IObjAction<B> action) {
+        if (obj != null && clz != null && action != null) {
+            if (obj instanceof String) {
+                final String txt = ((String) obj).replaceAll(RX, "/");
+                B item = decode(txt, clz);
+                if (getEmptyLength(txt) == getEmptyLength(encode(item))) {
+                    action.execute(item);
+                }
+            } else {
+                action.execute(decode(obj, clz));
+            }
+        }
+        return getThis();
+    }
+
+    @Override
+    public <B> T execute(Object obj, TypeToken<B> token, IObjAction<B> action) {
+        if (obj != null && token != null && token.getType() != null && action != null) {
+            if (obj instanceof String) {
+                final String txt = ((String) obj).replaceAll(RX, "/");
+                B item = decode(txt, token.getType());
+                if (getEmptyLength(txt) == getEmptyLength(encode(item))) {
+                    action.execute(item);
+                }
+            } else {
+                action.execute(decode(obj, token.getType()));
+            }
+        }
+        return getThis();
+    }
+
+    @Override
     public boolean checkView(View view) {
         return viewApi().checkView(view);
     }
@@ -1199,7 +1243,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> Subscriber<B> subscriber() {
+    public <B> MsgSubscriber<T, B> subscriber() {
         if (subscriber == null) {
             subscriber = newSubscriber();
             if (subscriber == null) {
@@ -1210,12 +1254,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> Subscriber<B> newSubscriber() {
+    public <B> MsgSubscriber<T, B> newSubscriber() {
         return null;
     }
 
     @Override
-    public <B> T setNewSubscriber(Subscriber<B> newSubscriber) {
+    public <B> T setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
         httpApi().setNewSubscriber(newSubscriber);
         return getThis();
     }
@@ -1224,6 +1268,13 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public <B> T observable(Observable<B> observable) {
         httpApi().setNewSubscriber(newSubscriber());
         httpApi().observable(observable);
+        return getThis();
+    }
+
+    @Override
+    public <B> T observable(Observable<B> observable, int what, String tag) {
+        httpApi().setNewSubscriber(newSubscriber());
+        httpApi().observable(observable, what, tag);
         return getThis();
     }
 
@@ -1688,26 +1739,21 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <A> T addRootType(Class<A>... args) {
+    public T copy() {
+        C c = getController();
+        Class clz = c == null ? Object.class : c.getClass();
+        return (T) ObjectUtil.getObject(getClass(), new Class[]{clz}, new Object[]{c});
+    }
+
+    @Override
+    public T addRootType(Class... args) {
         parseApi().addRootType(args);
         return getThis();
     }
 
     @Override
-    public <A> T addRootType(TypeToken<A>... args) {
+    public T addRootType(TypeToken... args) {
         parseApi().addRootType(args);
-        return getThis();
-    }
-
-    @Override
-    public <A> T addRootType(int index, Class<A>... args) {
-        parseApi().addRootType(index, args);
-        return getThis();
-    }
-
-    @Override
-    public <A> T addRootType(int index, TypeToken<A>... args) {
-        parseApi().addRootType(index, args);
         return getThis();
     }
 
@@ -1736,20 +1782,20 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <A> T add(TypeToken<A> token, IObjAction<A> action) {
+    public <A> T add(TypeToken<A> token, IMsgAction<A> action) {
         parseApi().add(token, action);
         return getThis();
     }
 
     @Override
-    public <A> T add(Class<A> clz, IObjAction<A> action) {
+    public <A> T add(Class<A> clz, IMsgAction<A> action) {
         parseApi().add(clz, action);
         return getThis();
     }
 
     @Override
     public T clearAddParseMap() {
-        parseApi().clearAddParseMap();
+        parseApi().clearPutParseMap();
         return getThis();
     }
 
@@ -1762,6 +1808,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public <B> T execute(B bean) {
         parseApi().execute(bean);
+        return getThis();
+    }
+
+    @Override
+    public T init(int what, String tag) {
+        parseApi().init(what, tag);
         return getThis();
     }
 }

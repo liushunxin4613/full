@@ -13,6 +13,7 @@ import com.leo.core.api.GalleryApi;
 import com.leo.core.api.GsonDecodeApi;
 import com.leo.core.api.MD5Api;
 import com.leo.core.api.MergeApi;
+import com.leo.core.api.MsgSubscriber;
 import com.leo.core.api.ObjectApi;
 import com.leo.core.api.PicassoLoadImageApi;
 import com.leo.core.api.StartApi;
@@ -32,6 +33,7 @@ import com.leo.core.iapi.ILoadImageApi;
 import com.leo.core.iapi.IMD5Api;
 import com.leo.core.iapi.IMergeApi;
 import com.leo.core.iapi.IObjectApi;
+import com.leo.core.iapi.IParseApi;
 import com.leo.core.iapi.IStartApi;
 import com.leo.core.iapi.ISubjoinApi;
 import com.leo.core.iapi.main.IHttpApi;
@@ -80,8 +82,8 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public <B> Subscriber<B> newSubscriber() {
-        return new RetrofitSubscriber(parseApi());
+    public <B> MsgSubscriber<T, B> newSubscriber() {
+        return new RetrofitSubscriber(parseApi().copy());
     }
 
     @Override

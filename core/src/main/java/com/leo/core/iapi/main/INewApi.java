@@ -304,4 +304,6 @@ public interface INewApi {
      */
     <B> B newParseApi();
 
+    <B> B switchNPApi();
+
 }

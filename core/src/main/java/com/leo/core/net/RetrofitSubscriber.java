@@ -1,5 +1,6 @@
 package com.leo.core.net;
 
+import com.leo.core.api.MsgSubscriber;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.HttpError;
 import com.leo.core.iapi.IParseApi;
@@ -8,15 +9,22 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
 
 @SuppressWarnings("rawtypes")
-public class RetrofitSubscriber<T extends RetrofitSubscriber, B> extends Subscriber<B> {
+public class RetrofitSubscriber<T extends RetrofitSubscriber, B> extends MsgSubscriber<T, B> {
 
     private IParseApi api;
 
     public RetrofitSubscriber(IParseApi api) {
         this.api = api;
+    }
+
+    @Override
+    public T init(int what, String tag) {
+        if(api != null){
+            api.init(what, tag);
+        }
+        return (T) this;
     }
 
     @Override

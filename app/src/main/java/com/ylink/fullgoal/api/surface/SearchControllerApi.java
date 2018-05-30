@@ -6,26 +6,37 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.BaseApiBean;
+import com.leo.core.iapi.IObjAction;
+import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.bean.TvBean;
-import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.ht.BudgetDepartmentHt;
+import com.ylink.fullgoal.ht.ListHt;
+import com.ylink.fullgoal.ht.PaymentRequestHt;
+import com.ylink.fullgoal.ht.ProjectHt;
+import com.ylink.fullgoal.ht.ReimbursementHt;
+import com.ylink.fullgoal.ht.ServeBillHt;
 import com.ylink.fullgoal.vo.AirVo;
 import com.ylink.fullgoal.vo.BusinessVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.Bind;
+
+import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
 
 public class SearchControllerApi<T extends SearchControllerApi, C> extends RecycleControllerApi<T, C> {
 
@@ -65,6 +76,8 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
         getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         setOnClickListener(backIv, view -> onBackPressed());
         setOnClickListener(iconIv, v -> setText(nameEt, null));
+        executeBundle(bundle -> executeNon(bundle.getString(Config.SEARCH), search
+                -> this.search = search));
         nameEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {
@@ -89,6 +102,33 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
                     return true;
             }
         });
+        addRootType(new TypeToken<ListHt<ReimbursementHt>>() {
+        }, new TypeToken<ListHt<BudgetDepartmentHt>>() {
+        }, new TypeToken<ListHt<ProjectHt>>() {
+        }, new TypeToken<ListHt<PaymentRequestHt>>() {
+        }, new TypeToken<ListHt<ServeBillHt>>() {
+        });
+        add(new TypeToken<List<ReimbursementHt>>() {
+        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new TvBean(item.getUserName(), (bean, view)
+                -> finishActivity(new SearchVo<>(search, item)))))));
+        add(new TypeToken<List<BudgetDepartmentHt>>() {
+        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new TvBean(item.getDepartmentName(), (bean, view)
+                -> finishActivity(new SearchVo<>(search, item)))))));
+        add(new TypeToken<List<ProjectHt>>() {
+        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new TvBean(item.getProjectName(), (bean, view)
+                -> finishActivity(new SearchVo<>(search, item)))))));
+        add(new TypeToken<List<PaymentRequestHt>>() {
+        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new TvBean(item.getName(), (bean, view)
+                -> finishActivity(new SearchVo<>(search, item)))))));
+        add(new TypeToken<List<ServeBillHt>>() {
+        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new TvBean(item.getCause(), (bean, view)
+                -> finishActivity(new SearchVo<>(search, item)))))));
+        search(null);
     }
 
     @Override
@@ -96,50 +136,33 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
         super.initData();
         executeBundle(bundle -> executeNon(bundle.getString(Config.SEARCH), search -> {
             this.search = search;
-            String[] args = null;
-            List<BaseApiBean> dat = new ArrayList<>();
             switch (search) {
-                case SearchVo.REIMBURSEMENT://报销人
-                    args = new String[]{"张三", "李四", "王五", "陈六"};
-                    break;
-                case SearchVo.BUDGET_DEPARTMENT://预算归属部门
-                    args = new String[]{"计划财务部", "信息技术部", "人事部", "行政部"};
-                    break;
-                case SearchVo.PROJECT://项目
-                    args = new String[]{"富钱包", "富国工作平台", "富国基金", "经济论坛"};
-                    break;
-                case SearchVo.CONTRACT_BILL://合同付款申请单
-                    args = new String[]{"一季度付款合同", "二季度付款合同", "三季度付款合同", "四季度付款合同"};
-                    break;
-                case SearchVo.SERVE_BILL://招待申请单
-                    args = new String[]{"杨浦招待", "陆家嘴招待", "浦东招待", "松江招待"};
-                    break;
                 case SearchVo.COST_INDEX://费用指标
-                    args = new String[]{"营销会议费", "招待费"};
+//                    args = new String[]{"营销会议费", "招待费"};
                     break;
                 case SearchVo.BUSINESS://出差申请单
-                    List<BusinessVo> businessData = getTestData(getTestBusinessData(), new Random().nextInt(10) + 3);
-                    dat.clear();
-                    execute(businessData, item -> dat.add(new CCSQDBean(item.getSerialNo(),
-                            item.getDays(), item.getStartDate(), item.getEndDate(),
-                            (bean, view) -> finishActivity(new SearchVo<>(search, item)))));
+//                    List<BusinessVo> businessData = getTestData(getTestBusinessData(), new Random().nextInt(10) + 3);
+//                    dat.clear();
+//                    execute(businessData, item -> dat.add(new CCSQDBean(item.getSerialNo(),
+//                            item.getDays(), item.getStartDate(), item.getEndDate(),
+//                            (bean, view) -> finishActivity(new SearchVo<>(search, item)))));
                     break;
                 case SearchVo.XC_AIR://携程机票
-                    List<AirVo> airData = getTestData(getTestAirData(), new Random().nextInt(10) + 3);
-                    dat.clear();
-                    execute(airData, item -> dat.add(new XCJPBean(item.getUser(),
-                            item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
-                            String.format("%s 到", item.getEndTime()), String.format("%s - %s",
-                            item.getStartPlace(), item.getEndPlace()),
-                            (bean, view) -> finishActivity(new SearchVo<>(search, item)))));
+//                    List<AirVo> airData = getTestData(getTestAirData(), new Random().nextInt(10) + 3);
+//                    dat.clear();
+//                    execute(airData, item -> dat.add(new XCJPBean(item.getUser(),
+//                            item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
+//                            String.format("%s 到", item.getEndTime()), String.format("%s - %s",
+//                            item.getStartPlace(), item.getEndPlace()),
+//                            (bean, view) -> finishActivity(new SearchVo<>(search, item)))));
                     break;
             }
-            if (!TextUtils.isEmpty(args)) {
-                List<String> data = getTestData(args, new Random().nextInt(10) + 3);
-                dat.clear();
-                execute(data, obj -> dat.add(new TvBean(obj, (bean, view) -> finishActivity(new SearchVo<>(search, obj)))));
-            }
-            initSearchData(dat);
+//            if (!TextUtils.isEmpty(args)) {
+//                List<String> data = getTestData(args, new Random().nextInt(10) + 3);
+//                dat.clear();
+//                execute(data, obj -> dat.add(new TvBean(obj, (bean, view) -> finishActivity(new SearchVo<>(search, obj)))));
+//            }
+//            initSearchData(dat);
         }));
     }
 
@@ -149,16 +172,24 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
      * @param keyword 关键字
      */
     protected void search(String keyword) {
-        initData();
+        if (!TextUtils.isEmpty(search)) {
+            Map<String, String> map = new HashMap<>();
+            map.put("keyword", keyword);
+            api().post(getSearchValue(search), map);
+        }
     }
 
-    private void initSearchData(List<BaseApiBean> data) {
+    private void initSearchDataAction(IObjAction<List<BaseApiBean>> action) {
+        List<BaseApiBean> data = new ArrayList<>();
+        if (action != null) {
+            action.execute(data);
+        }
         clear();
         execute(getLineData(data), this::add);
         notifyDataSetChanged();
     }
 
-    public List<BaseApiBean> getLineData(List<BaseApiBean> data) {
+    private List<BaseApiBean> getLineData(List<BaseApiBean> data) {
         if (!TextUtils.isEmpty(data)) {
             List<BaseApiBean> dat = new ArrayList<>();
             int count = TextUtils.count(data);
@@ -206,6 +237,20 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
                 new BusinessVo("FGMC-P2018-00021", "3天", "2018-03-04", "2018-03-06"),
                 new BusinessVo("FGMC-P2018-00105", "1天", "2018-03-09", "2018-03-10"),
                 new BusinessVo("FGMC-P2018-00237", "5天", "2018-03-21", "2018-03-25"));
+    }
+
+    private String getSearchValue(String key) {
+        if (!TextUtils.isEmpty(SEARCHS) && !TextUtils.isEmpty(key)) {
+            for (String[] args : SEARCHS) {
+                if (!TextUtils.isEmpty(args)) {
+                    if (TextUtils.count(args) == 2 &&
+                            TextUtils.equals(args[0], key)) {
+                        return args[1];
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

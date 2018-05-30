@@ -4,8 +4,9 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.bean.Completed;
+import com.leo.core.bean.DataEmpty;
 import com.leo.core.bean.HttpError;
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.IMsgAction;
 import com.leo.core.iapi.IParseApi;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.GsonDecodeUtil;
@@ -28,11 +29,16 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 
+import static com.leo.core.config.Config.RX;
+import static com.leo.core.util.TextUtils.getEmptyLength;
+
 public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseApi<T> {
 
+    private int what;
+    private String msg;
     private List<Type> data;
     private Map<String, Type> typeMap;
-    private Map<Type, List<IObjAction>> apiMap;
+    private Map<Type, List<IMsgAction>> apiMap;
 
     public ParseApi() {
         this.data = new ArrayList<>();
@@ -41,36 +47,32 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     @Override
-    public <A> T addRootType(Class<A>... args) {
+    public T init(int what, String msg) {
+        this.what = what;
+        this.msg = msg;
+        return getThis();
+    }
+
+    @Override
+    public T copy() {
+        ParseApi<T> api = new ParseApi<>();
+        api.data = data;
+        api.typeMap = typeMap;
+        api.apiMap = apiMap;
+        return (T) api;
+    }
+
+    @Override
+    public T addRootType(Class... args) {
         execute(args, obj -> executeNon(getExecute(TypeToken.get(obj), TypeToken::getType),
                 item -> data.add(item)));
         return getThis();
     }
 
     @Override
-    public <A> T addRootType(TypeToken<A>... args) {
-        execute(args, obj -> executeNon(getExecute(obj, TypeToken::getType), item -> data.add(item)));
-        return getThis();
-    }
-
-    @Override
-    public <A> T addRootType(int index, Class<A>... args) {
-        if (index >= 0 && index < data.size() && !TextUtils.isEmpty(args)) {
-            List<Type> typeData = new ArrayList<>();
-            execute(args, obj -> executeNon(getExecute(TypeToken.get(obj), TypeToken::getType),
-                    typeData::add));
-            data.addAll(index, typeData);
-        }
-        return getThis();
-    }
-
-    @Override
-    public <A> T addRootType(int index, TypeToken<A>... args) {
-        if (index >= 0 && index < data.size() && !TextUtils.isEmpty(args)) {
-            List<Type> typeData = new ArrayList<>();
-            execute(args, obj -> executeNon(getExecute(obj, TypeToken::getType), typeData::add));
-            data.addAll(index, typeData);
-        }
+    public T addRootType(TypeToken... args) {
+        execute(args, obj -> executeNon(getExecute(obj, TypeToken::getType),
+                item -> data.add(item)));
         return getThis();
     }
 
@@ -101,9 +103,9 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     @Override
-    public <A> T add(TypeToken<A> token, IObjAction<A> action) {
+    public <A> T add(TypeToken<A> token, IMsgAction<A> action) {
         if (token != null && action != null) {
-            List<IObjAction> data = apiMap.get(token.getType());
+            List<IMsgAction> data = apiMap.get(token.getType());
             if (data == null) {
                 apiMap.put(token.getType(), new ArrayList<>());
             }
@@ -113,7 +115,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     @Override
-    public <A> T add(Class<A> clz, IObjAction<A> action) {
+    public <A> T add(Class<A> clz, IMsgAction<A> action) {
         add(TypeToken.get(clz), action);
         return getThis();
     }
@@ -148,24 +150,33 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private <A> void onItem(A item, Type type) {
         executeNon(item, obj -> execute(apiMap.get(type), action -> {
-            if(obj instanceof BaseHt){
-                if(!((BaseHt) obj).isSuccess() && !TextUtils.isEmpty(((BaseHt) obj).getMessage())){
+            if (obj instanceof BaseHt) {
+                if (!((BaseHt) obj).isSuccess() && !TextUtils.isEmpty(((BaseHt) obj)
+                        .getMessage())) {
                     ToastUtil.show(((BaseHt) obj).getMessage());
                 } else {
-                    action.execute(obj);
+                    action.execute(what, msg, obj);
                 }
             } else {
-                action.execute(obj);
+                action.execute(what, msg, obj);
             }
         }));
     }
 
     private void onString(String text) {
+        final String txt = text.replaceAll(RX, "/");
         if (!TextUtils.isEmpty(data)) {
-            execute(data, type -> onData(GsonDecodeUtil.decode(text, type), type));
+            int emptyCount = getEmptyLength(txt);
+            execute(data, type -> {
+                Object obj = GsonDecodeUtil.decode(txt, type);
+                String encode = GsonDecodeUtil.encode(obj);
+                if (emptyCount == getEmptyLength(encode)) {
+                    onData(obj, type);
+                }
+            });
         }
         if (!TextUtils.isEmpty(typeMap)) {
-            toJson(text);
+            toJson(txt);
         }
     }
 
@@ -177,12 +188,15 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                 if (!TextUtils.isEmpty(obj)) {
                     Class itemClz = getDataItemType((List) obj);
                     if (itemClz != null) {
-                        onItem(obj, get(List.class, itemClz));
+                        onItem(obj, TypeToken.getParameterized(List.class, itemClz).getType());
+                    } else {
+                        onItem(new DataEmpty(), DataEmpty.class);
                     }
                 }
             } else if (check(clz)) {
-                execute(clz.getDeclaredFields(), field -> execute(!Modifier.isStatic(field.getModifiers())
-                        && check(field.getType()) && !TextUtils.equals(field.getName(), "val$contentType"), () -> {
+                execute(clz.getDeclaredFields(), field -> execute(!Modifier.isStatic(
+                        field.getModifiers()) && check(field.getType()) &&
+                        !TextUtils.equals(field.getName(), "val$contentType"), () -> {
                     try {
                         field.setAccessible(true);
                         Object item = field.get(obj);
@@ -233,9 +247,8 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private boolean check(Class clz) {
-        return clz != null && !clz.isPrimitive() && !clz.isPrimitive() &&
-                !Modifier.isAbstract(clz.getModifiers()) && !String.class.isAssignableFrom(clz)
-                && !LinkedTreeMap.class.isAssignableFrom(clz);
+        return clz != null && !clz.isPrimitive() && !String.class.isAssignableFrom(clz) &&
+                !LinkedTreeMap.class.isAssignableFrom(clz);
     }
 
     private void onCompleted(Completed completed) {

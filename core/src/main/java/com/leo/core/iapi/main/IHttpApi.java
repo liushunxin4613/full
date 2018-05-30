@@ -1,7 +1,8 @@
 package com.leo.core.iapi.main;
 
+import com.leo.core.api.MsgSubscriber;
+
 import rx.Observable;
-import rx.Subscriber;
 
 public interface IHttpApi<T extends IHttpApi> {
 
@@ -9,70 +10,77 @@ public interface IHttpApi<T extends IHttpApi> {
      * 创建api
      * @param url root url
      * @param clz clz
-     * @param <R> <R>
-     * @return
+     * @param <B> <B>
      */
-    <R> R create(String url, Class<R> clz);
+    <B> B create(String url, Class<B> clz);
 
     /**
      * 获取驱动器
      * @param url url
-     * @param <R> R
+     * @param <B> B
      * @return R
      */
-    <R> R getApi(String url);
+    <B> B getApi(String url);
 
     /**
      * 获取驱动器
-     * @param <R> R
+     * @param <B> B
      * @return R
      */
-    <R> R getApi();
+    <B> B getApi();
 
     /**
      * Observable.Transformer
-     * @param <R> R
+     * @param <B> B
      * @param <M> M
      * @return Observable.Transformer
      */
-    <R, M> Observable.Transformer<R, M> transformer();
+    <B, M> Observable.Transformer<B, M> transformer();
 
     /**
      * new Observable.Transformer
-     * @param <R> R
+     * @param <B> B
      * @param <M> M
      * @return Observable.Transformer
      */
-    <R, M> Observable.Transformer<R, M> newTransformer();
+    <B, M> Observable.Transformer<B, M> newTransformer();
 
     /**
      * Subscriber
-     * @param <R> R
+     * @param <B> B
      * @return Subscriber
      */
-    <R> Subscriber<R> subscriber();
+    <B> MsgSubscriber<T, B> subscriber();
 
     /**
      * new Subscriber
-     * @param <R> R
+     * @param <B> B
      * @return Subscriber
      */
-    <R> Subscriber<R> newSubscriber();
+    <B> MsgSubscriber<T, B> newSubscriber();
 
     /**
      * 设置setSubscriber
      * @param newSubscriber newSubscriber
-     * @param <R> <R>
+     * @param <B> <B>
      * @return 本身
      */
-    <R> T setNewSubscriber(Subscriber<R> newSubscriber);
+    <B> T setNewSubscriber(MsgSubscriber<T, B> newSubscriber);
 
     /**
      * 观察
      * @param observable observable
-     * @param <R> R
+     * @param <B> B
      * @return 本身
      */
-    <R> T observable(Observable<R> observable);
+    <B> T observable(Observable<B> observable);
+
+    /**
+     * 观察
+     * @param observable observable
+     * @param <B> B
+     * @return 本身
+     */
+    <B> T observable(Observable<B> observable, int what, String tag);
 
 }

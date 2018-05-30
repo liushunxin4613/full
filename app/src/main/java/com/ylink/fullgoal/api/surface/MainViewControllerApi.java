@@ -42,9 +42,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
             //测试
             addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "测试", (bean, view) -> {
                 test();
-            })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用指标", (bean, view) -> startSurfaceActivity(CostIndexControllerApi.class)), new IconTvMoreBean(R.mipmap.test_icon2, "票据", (bean, view) -> {
-                bill();
-            })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
+            })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用指标", (bean, view) -> startSurfaceActivity(CostIndexControllerApi.class))).
+                    addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
                 generalCommon(ReimburseVo.STATE_CONFIRM);
             }), new IconTvMoreBean(R.mipmap.test_icon2, "一般费用经办人修改", (bean, view) -> {
                 generalCommon(ReimburseVo.STATE_ALTER);

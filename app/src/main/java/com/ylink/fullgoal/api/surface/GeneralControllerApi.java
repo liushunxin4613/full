@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.surface;
 
-import com.leo.core.util.DateUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
@@ -9,7 +8,6 @@ import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvH4Bean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
-import com.ylink.fullgoal.ht.BaseHt;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.InhibitionRuleVo;
 import com.ylink.fullgoal.vo.ProcessVo;
@@ -34,31 +32,6 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        executeNon(getFinish(SearchVo.class), (SearchVo<String> obj) -> executeNon(obj.getSearch(), search -> {
-            switch (search) {
-                case SearchVo.REIMBURSEMENT://报销人
-                    getVo().setReimbursement(obj.getObj());
-                    break;
-                case SearchVo.BUDGET_DEPARTMENT://预算归属部门
-                    getVo().setBudgetDepartment(obj.getObj());
-                    break;
-                case SearchVo.PROJECT://项目
-                    getVo().setProject(obj.getObj());
-                    break;
-                case SearchVo.CONTRACT_BILL://合同付款申请单
-                    getVo().setPaymentRequest(obj.getObj());
-                    break;
-                case SearchVo.SERVE_BILL://招待申请单
-                    getVo().setServeBill(obj.getObj());
-                    break;
-            }
-            initReimburseVo(getVo());
-        }));
-    }
-
-    @Override
     public void initView() {
         super.initView();
         if (DEBUG) {
@@ -70,25 +43,20 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
     @Override
     protected void submit() {
         super.submit();
-        getVo().setFillDate(DateUtil.getNowTimeString());
-        Map<String, String> checkMap = getCheck(getVo(), getSetData("报销类型", "是否专票", "发起日期",
+        Map<String, String> checkMap = getCheck(getVo().init(), getSetData("报销类型", "是否专票",
                 "经办人", "报销人", "预算归属部门", "事由", "影像集合"), getSetData("报销流水号",
                 "金额", "项目", "合同申请单", "招待申请单", "投研报告", "提交标志"));
         if (!TextUtils.isEmpty(checkMap)) {
-            addRootType(0, BaseHt.class);
-            add(BaseHt.class, obj -> {
-                show("报销成功");
-                getActivity().finish();
-            });
             api().post("FkSbumitCompensation", checkMap);
         }
     }
 
     private void testReimburseVo() {
         //test
-        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE) ||
-                TextUtils.orEquals(getReimburseType(), ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED,
-                        ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED)) {
+        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE)) {
+//        if (!TextUtils.equals(getState(), ReimburseVo.STATE_INITIATE) ||
+//                TextUtils.orEquals(getReimburseType(), ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED,
+//                        ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED)) {
             getVo().setReimbursement("李四");
             getVo().setBudgetDepartment("信息技术部");
             getVo().setProject("第一财经中国经济论坛");

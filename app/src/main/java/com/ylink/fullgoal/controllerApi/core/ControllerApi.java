@@ -4,6 +4,8 @@ import android.view.View;
 
 import com.leo.core.core.BaseControllerApi;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.IParseApi;
 import com.leo.core.iapi.IUserApi;
 import com.ylink.fullgoal.api.config.ParseApi;
 import com.ylink.fullgoal.api.config.UrlApi;
@@ -58,13 +60,20 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
         return super.api();
     }
 
+    public T api(IObjAction<UrlApi> action){
+        if(action != null){
+            action.execute(api());
+        }
+        return getThis();
+    }
+
     @Override
     public UrlApi newApi() {
         return new UrlApi(getThis());
     }
 
     @Override
-    public ParseApi newParseApi() {
+    public IParseApi newParseApi() {
         return new ParseApi();
     }
 

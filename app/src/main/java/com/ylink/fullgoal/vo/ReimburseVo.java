@@ -1,5 +1,8 @@
 package com.ylink.fullgoal.vo;
 
+import com.leo.core.util.TextUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,9 +71,11 @@ public class ReimburseVo {
     //隐式的
 
     //渠道
-    private String channel = "android";
+    private String channel;
     //发起日期
     private String fillDate;
+    //费控审批批次号
+    private String fkApprovalNum;
 
     //界面不显示的
 
@@ -78,6 +83,8 @@ public class ReimburseVo {
     private transient String state;
     //报销状态 待处理、审核中、已完成、已取消四类
     private String reimbursementState;
+    //审批状态
+    private String approvalStatus;
     //报销单号
     private String orderNo;
     //报销类型(自用)
@@ -139,8 +146,20 @@ public class ReimburseVo {
     private List<BillVo> stayBillData;
     //车船机票费报销
     private AirDataVo airDataVo;
-    //其他费用报销票据组
-    private List<BillVo> otherBillData;
+
+    public ReimburseVo init() {
+        if (!TextUtils.isEmpty(billData)) {
+            imageList = new ArrayList<>();
+            for (BillVo vo : billData) {
+                if (vo != null) {
+                    imageList.add(new ImageVo(vo.getId(), vo.getUrl()));
+                }
+            }
+        } else {
+            imageList = null;
+        }
+        return this;
+    }
 
     public String getState() {
         return state;
@@ -366,14 +385,6 @@ public class ReimburseVo {
         this.airDataVo = airDataVo;
     }
 
-    public List<BillVo> getOtherBillData() {
-        return otherBillData;
-    }
-
-    public void setOtherBillData(List<BillVo> otherBillData) {
-        this.otherBillData = otherBillData;
-    }
-
     public String getReimburseType() {
         return reimburseType;
     }
@@ -388,6 +399,22 @@ public class ReimburseVo {
 
     public void setImageList(List<ImageVo> imageList) {
         this.imageList = imageList;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public String getFkApprovalNum() {
+        return fkApprovalNum;
+    }
+
+    public void setFkApprovalNum(String fkApprovalNum) {
+        this.fkApprovalNum = fkApprovalNum;
     }
 
 }

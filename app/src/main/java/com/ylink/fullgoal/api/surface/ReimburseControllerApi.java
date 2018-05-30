@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.util.DisneyUtil;
@@ -32,10 +33,17 @@ import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.ht.BaseHt;
+import com.ylink.fullgoal.ht.BudgetDepartmentHt;
 import com.ylink.fullgoal.ht.ImageHt;
+import com.ylink.fullgoal.ht.PaymentRequestHt;
+import com.ylink.fullgoal.ht.ProjectHt;
+import com.ylink.fullgoal.ht.ReimbursementHt;
+import com.ylink.fullgoal.ht.ServeBillHt;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,8 +81,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     private ReimburseVo vo;
     private String reimburseType;
     private TvHEt3Bean causeBean;
-    private GridPhotoBean addBean;
-    private List<GridPhotoBean> photoData;
 
     public ReimburseControllerApi(C controller) {
         super(controller);
@@ -182,15 +188,48 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     @Override
     public void initData() {
         super.initData();
-        addRootType(ImageHt.class);
-        add(ImageHt.class, vo -> {
-            if (TextUtils.isHttpUrl(vo.getUrl())) {
-                if (getVo().getImageList() == null) {
-                    getVo().setImageList(new ArrayList<>());
-                }
-                getVo().getImageList().add(new ImageVo(vo.getId(), vo.getUrl()));
+        addRootType(BaseHt.class, ImageHt.class);
+        add(ImageHt.class, (what, msg, bean) -> {
+            if (TextUtils.isHttpUrl(bean.getUrl()) && !TextUtils.isEmpty(msg)) {
+                execute(getVo().getBillData(), bill -> {
+                   if(TextUtils.equals(msg, bill.getPhoto())){
+                       bill.setId(bean.getId());
+                       bill.setUrl(bean.getUrl());
+                   }
+                });
+                show("图片上传成功");
             }
         });
+        add(BaseHt.class, (what, msg, bean) -> {
+            show("报销成功");
+            getActivity().finish();
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //报销人
+        execute(getFinish(), new TypeToken<SearchVo<ReimbursementHt>>() {
+        }, vo -> getVo().setReimbursement(getExecute(vo.getObj(),
+                ReimbursementHt::getUserName)));
+        //预算归属部门
+        execute(getFinish(), new TypeToken<SearchVo<BudgetDepartmentHt>>() {
+        }, vo -> getVo().setBudgetDepartment(getExecute(vo.getObj(),
+                BudgetDepartmentHt::getDepartmentName)));
+        //项目
+        execute(getFinish(), new TypeToken<SearchVo<ProjectHt>>() {
+        }, vo -> getVo().setProject(getExecute(vo.getObj(),
+                ProjectHt::getProjectName)));
+        //合同付款申请单
+        execute(getFinish(), new TypeToken<SearchVo<PaymentRequestHt>>() {
+        }, vo -> getVo().setPaymentRequest(getExecute(vo.getObj(),
+                PaymentRequestHt::getName)));
+        //招待申请单
+        execute(getFinish(), new TypeToken<SearchVo<ServeBillHt>>() {
+        }, vo -> getVo().setServeBill(getExecute(vo.getObj(),
+                ServeBillHt::getCode)));
+        initReimburseVo(getVo());
     }
 
     protected void submit() {
@@ -243,26 +282,20 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
 
     protected List<GridPhotoBean> getPhotoGridBeanData(List<BillVo> data) {
         List<GridPhotoBean> gridData = new ArrayList<>();
-        execute(data, obj -> gridData.add(newGridPhotoBean(gridData, obj).setEnable(isEnable())));
+        execute(data, obj -> gridData.add(newGridPhotoBean(data, obj).setEnable(isEnable())));
         if (isEnable()) {
-            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) -> onAddGridPhoto(gridData, bean), null));
+            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) -> openCamera(), null));
         }
         return gridData;
     }
 
-    protected void onAddGridPhoto(List<GridPhotoBean> data, GridPhotoBean addBean) {
-        this.photoData = data;
-        this.addBean = addBean;
-        openCamera();
-    }
-
-    private void addPhoto(BillVo vo) {
-        if (vo != null && photoData != null && addBean != null) {
-            int index = photoData.indexOf(addBean);
-            if (index >= 0) {
-                photoData.add(index, newGridPhotoBean(photoData, vo).setEnable(isEnable()));
-                notifyDataSetChanged();
+    private void addPhoto(String path) {
+        if(!TextUtils.isEmpty(path)){
+            if(getVo().getBillData() == null){
+                getVo().setBillData(new ArrayList<>());
             }
+            getVo().getBillData().add(new BillVo(path, null));
+            initReimburseVo(getVo());
         }
     }
 
@@ -316,8 +349,8 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                                 public void onSuccess(File lubanFile) {
                                     file.delete();
                                     ee("lubanFile.getPath()", lubanFile.getPath());
-                                    addPhoto(new BillVo(lubanFile.getPath(), null));
-                                    api().uploadBase64Image(lubanFile);
+                                    addPhoto(lubanFile.getPath());
+                                    api().uploadBase64Image(lubanFile, lubanFile.getPath());
                                 }
 
                                 @Override
@@ -375,9 +408,9 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         return new GridBean(getPhotoGridBeanData(data));
     }
 
-    protected GridPhotoBean newGridPhotoBean(List<GridPhotoBean> gridData, BillVo vo) {
+    protected GridPhotoBean newGridPhotoBean(List<BillVo> data, BillVo vo) {
         return getExecute(vo, obj -> new GridPhotoBean(obj.getPhoto(), obj, this::onGridPhotoClick,
-                (bean, view) -> onGridPhotoLongClick(gridData, bean, view)));
+                (bean, view) -> onGridPhotoLongClick(data, bean, view)));
     }
 
     /**
@@ -397,16 +430,14 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
      * @param view view
      * @return 是否同时响应点击
      */
-    private boolean onGridPhotoLongClick(List<GridPhotoBean> gridData, GridPhotoBean bean, View view) {
+    private boolean onGridPhotoLongClick(List<BillVo> data, GridPhotoBean bean, View view) {
         TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
             dialog.dismiss();
             show(item.getName());
         }, (item, v, dialog) -> {
             dialog.dismiss();
-            executeNon(gridData, data -> {
-                data.remove(bean);
-                notifyDataSetChanged();
-            });
+            data.remove(bean.getObj());
+            initReimburseVo(getVo());
         });
         ItemControllerApi api = getDialogControllerApi(ItemControllerApi.class, db.getApiType());
         api.dialogShow().onBindViewHolder(db, 0);

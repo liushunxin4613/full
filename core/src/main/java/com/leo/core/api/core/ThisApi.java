@@ -70,7 +70,7 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return (a == null || api == null) ? null : api.execute(a);
     }
 
-    protected  <A> ParamType<A> get(Class<A> clz, Type... args) {
+    protected <A> ParamType<A> get(Class<A> clz, Type... args) {
         return new ParamType<>(clz, args);
     }
 
