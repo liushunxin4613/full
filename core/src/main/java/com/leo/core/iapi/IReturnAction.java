@@ -8,7 +8,7 @@ import com.leo.core.iapi.core.IApi;
  * @param <A>对象
  * @param <B>   返回泛型
  */
-public interface IReturnApi<A, B> extends IApi {
+public interface IReturnAction<A, B> extends IApi {
 
     /**
      * 获得返回

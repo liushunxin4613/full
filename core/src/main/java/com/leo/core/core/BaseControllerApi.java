@@ -23,27 +23,10 @@ import com.leo.core.api.main.HttpApi;
 import com.leo.core.api.main.ShowApi;
 import com.leo.core.config.Config;
 import com.leo.core.factory.ActionApiFactory;
-import com.leo.core.iapi.IActionApi;
-import com.leo.core.iapi.IConfigApi;
-import com.leo.core.iapi.IDataApi;
-import com.leo.core.iapi.IDataTypeApi;
-import com.leo.core.iapi.IDecodeApi;
-import com.leo.core.iapi.IFileApi;
-import com.leo.core.iapi.ILoadImageApi;
-import com.leo.core.iapi.IMD5Api;
-import com.leo.core.iapi.IMergeApi;
-import com.leo.core.iapi.IObjectApi;
-import com.leo.core.iapi.IParseApi;
-import com.leo.core.iapi.IStartApi;
-import com.leo.core.iapi.ISubjoinApi;
-import com.leo.core.iapi.main.IHttpApi;
-import com.leo.core.iapi.main.IShowApi;
-import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.net.RetrofitSubscriber;
 import com.leo.core.other.Transformer;
 
 import rx.Observable;
-import rx.Subscriber;
 
 public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreControllerApi<T, C> {
 
@@ -52,82 +35,142 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public IViewApi newViewApi() {
+    public ViewApi viewApi() {
+        return (ViewApi) super.viewApi();
+    }
+
+    @Override
+    public ViewApi newViewApi() {
         return new ViewApi(getThis());
     }
 
     @Override
-    public IDataApi newDataApi() {
+    public DataApi dataApi() {
+        return (DataApi) super.dataApi();
+    }
+
+    @Override
+    public DataApi newDataApi() {
         return new DataApi().bind(getContext()).switchDefault();
     }
 
     @Override
-    public IShowApi newShowApi() {
+    public ShowApi showApi() {
+        return (ShowApi) super.showApi();
+    }
+
+    @Override
+    public ShowApi newShowApi() {
         return new ShowApi(this, newDecodeApi());
     }
 
     @Override
-    public IHttpApi newHttpApi() {
+    public HttpApi httpApi() {
+        return (HttpApi) super.httpApi();
+    }
+
+    @Override
+    public HttpApi newHttpApi() {
         return new HttpApi(newTransformer());
     }
 
     @Override
-    public IDecodeApi newDecodeApi() {
+    public GsonDecodeApi decodeApi() {
+        return (GsonDecodeApi) super.decodeApi();
+    }
+
+    @Override
+    public GsonDecodeApi newDecodeApi() {
         return new GsonDecodeApi();
     }
 
     @Override
-    public <B, M> Observable.Transformer<B, M> newTransformer() {
-        return new Transformer();
+    public MD5Api md5Api() {
+        return (MD5Api) super.md5Api();
     }
 
     @Override
-    public <B> MsgSubscriber<T, B> newSubscriber() {
-        return new RetrofitSubscriber(parseApi().copy());
-    }
-
-    @Override
-    public IMD5Api newMd5Api() {
+    public MD5Api newMd5Api() {
         return new MD5Api();
     }
 
     @Override
-    public IObjectApi newObjectApi() {
+    public ObjectApi objectApi() {
+        return (ObjectApi) super.objectApi();
+    }
+
+    @Override
+    public ObjectApi newObjectApi() {
         return new ObjectApi();
     }
 
     @Override
-    public IActionApi newActionApi() {
+    public ActionApiFactory actionApi() {
+        return (ActionApiFactory) super.actionApi();
+    }
+
+    @Override
+    public ActionApiFactory newActionApi() {
         return ActionApiFactory.getInstance();
     }
 
     @Override
-    public IStartApi newStartApi() {
+    public StartApi startApi() {
+        return (StartApi) super.startApi();
+    }
+
+    @Override
+    public StartApi newStartApi() {
         return new StartApi(getThis());
     }
 
     @Override
-    public ILoadImageApi newLoadImageApi() {
+    public PicassoLoadImageApi loadImageApi() {
+        return (PicassoLoadImageApi) super.loadImageApi();
+    }
+
+    @Override
+    public PicassoLoadImageApi newLoadImageApi() {
         return new PicassoLoadImageApi(getContext(), R.mipmap.default_icon, R.mipmap.error_icon);
     }
 
     @Override
-    public IConfigApi newConfigApi() {
+    public ConfigApi configApi() {
+        return (ConfigApi) super.configApi();
+    }
+
+    @Override
+    public ConfigApi newConfigApi() {
         return new ConfigApi();
     }
 
     @Override
-    public IDataTypeApi newDataTypeApi() {
+    public DataTypeApi dataTypeApi() {
+        return (DataTypeApi) super.dataTypeApi();
+    }
+
+    @Override
+    public DataTypeApi newDataTypeApi() {
         return new DataTypeApi();
     }
 
     @Override
-    public IMergeApi newMergeApi() {
+    public MergeApi mergeApi() {
+        return (MergeApi) super.mergeApi();
+    }
+
+    @Override
+    public MergeApi newMergeApi() {
         return new MergeApi();
     }
 
     @Override
-    public ISubjoinApi newSubjoinApi() {
+    public SubjoinApi subjoinApi() {
+        return (SubjoinApi) super.subjoinApi();
+    }
+
+    @Override
+    public SubjoinApi newSubjoinApi() {
         return new SubjoinApi(getThis());
     }
 
@@ -142,8 +185,23 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public IFileApi newFileApi() {
+    public FileApi fileApi() {
+        return (FileApi) super.fileApi();
+    }
+
+    @Override
+    public FileApi newFileApi() {
         return new FileApi(getThis());
+    }
+
+    @Override
+    public <B, M> Observable.Transformer<B, M> newTransformer() {
+        return new Transformer();
+    }
+
+    @Override
+    public <B> MsgSubscriber<T, B> newSubscriber() {
+        return new RetrofitSubscriber(parseApi().copy());
     }
 
     @Override

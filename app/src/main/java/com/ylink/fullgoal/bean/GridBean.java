@@ -16,9 +16,6 @@ public class GridBean extends BaseApiBean {
 
     private List<? extends BaseApiBean> data;
 
-    public GridBean() {
-    }
-
     public GridBean(List<? extends BaseApiBean> data) {
         this.data = data;
     }

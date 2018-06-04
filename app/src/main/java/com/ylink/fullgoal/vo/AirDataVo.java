@@ -1,5 +1,8 @@
 package com.ylink.fullgoal.vo;
 
+import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.hb.CtripHb;
+
 import java.util.List;
 
 /**
@@ -8,21 +11,25 @@ import java.util.List;
 public class AirDataVo {
 
     //携程机票组
-    private List<AirVo> xcAirData;
+    private List<CtripHb> ctripData;
     //车船机票费报销票据组
     private List<BillVo> airBillData;
 
-    public AirDataVo(List<AirVo> xcAirData, List<BillVo> airBillData) {
-        this.xcAirData = xcAirData;
+    public AirDataVo(List<CtripHb> ctripData, List<BillVo> airBillData) {
+        this.ctripData = ctripData;
         this.airBillData = airBillData;
     }
 
-    public List<AirVo> getXcAirData() {
-        return xcAirData;
+    public boolean isEmpty() {
+        return TextUtils.isEmits(getCtripData(), getAirBillData());
     }
 
-    public void setXcAirData(List<AirVo> xcAirData) {
-        this.xcAirData = xcAirData;
+    public List<CtripHb> getCtripData() {
+        return ctripData;
+    }
+
+    public void setCtripData(List<CtripHb> ctripData) {
+        this.ctripData = ctripData;
     }
 
     public List<BillVo> getAirBillData() {

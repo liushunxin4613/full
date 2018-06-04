@@ -41,6 +41,7 @@ import com.leo.core.iapi.IDataTypeApi;
 import com.leo.core.iapi.IDecodeApi;
 import com.leo.core.iapi.IFileApi;
 import com.leo.core.iapi.IGalleryApi;
+import com.leo.core.iapi.IHelperApi;
 import com.leo.core.iapi.ILoadImageApi;
 import com.leo.core.iapi.IMD5Api;
 import com.leo.core.iapi.IMergeApi;
@@ -51,6 +52,7 @@ import com.leo.core.iapi.IParseApi;
 import com.leo.core.iapi.IStartApi;
 import com.leo.core.iapi.ISubjoinApi;
 import com.leo.core.iapi.ITAction;
+import com.leo.core.iapi.IUrlApi;
 import com.leo.core.iapi.IUserApi;
 import com.leo.core.iapi.IVgRunApi;
 import com.leo.core.iapi.OnAddListener;
@@ -82,7 +84,7 @@ import static com.leo.core.util.TextUtils.getEmptyLength;
 public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi<T, C> implements
         IControllerApi<T, C>, IViewApi<T>, IShowApi<T>, IHttpApi<T>, IMD5Api, IDataApi<T>, IObjectApi<T>,
         IActionApi<T, IApi>, IStartApi<T>, IUserApi<T>, ILoadImageApi<T>, IConfigApi<T>, IDataTypeApi<T>,
-        IMergeApi<T>, IGalleryApi<T>, IFileApi, IParseApi<T> {
+        IMergeApi<T>, IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi<T> {
 
     private C controller;
     private Handler mainHandler;
@@ -112,8 +114,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private ISubjoinApi subjoinApi;
     private IGalleryApi galleryApi;
     private IFileApi fileApi;
-    private Object api;
+    private IUrlApi api;
     private IParseApi parseApi;
+    private IHelperApi helperApi;
 
     //other
     private Integer rootViewResId;
@@ -445,18 +448,34 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> B api() {
+    public IUrlApi api() {
         if (api == null) {
             api = newApi();
             if (api == null) {
                 throw new NullPointerException("newApi 不能为空");
             }
         }
-        return (B) api;
+        return api;
     }
 
     @Override
-    public <B> B newApi() {
+    public IUrlApi newApi() {
+        return null;
+    }
+
+    @Override
+    public IHelperApi helper() {
+        if(helperApi == null){
+            helperApi = newHelper();
+            if(helperApi == null){
+                throw new NullPointerException("newHelper 不能为空");
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IHelperApi newHelper() {
         return null;
     }
 
@@ -1659,6 +1678,16 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public String getDepartment() {
+        return userApi().getDepartment();
+    }
+
+    @Override
+    public String getDepartmentCode() {
+        return userApi().getDepartmentCode();
+    }
+
+    @Override
     public String getToken() {
         return userApi().getToken();
     }
@@ -1788,6 +1817,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public <A> T addList(Class<A> clz, IMsgAction<List<A>> action) {
+        parseApi().addList(clz, action);
+        return getThis();
+    }
+
+    @Override
     public <A> T add(Class<A> clz, IMsgAction<A> action) {
         parseApi().add(clz, action);
         return getThis();
@@ -1816,4 +1851,59 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         parseApi().init(what, tag);
         return getThis();
     }
+
+    @Override
+    public T get(String path) {
+        api().get(path);
+        return getThis();
+    }
+
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action) {
+        api().get(path, action);
+        return getThis();
+    }
+
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action, int what) {
+        api().get(path, action, what);
+        return getThis();
+    }
+
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action, String tag) {
+        api().get(path, action, tag);
+        return getThis();
+    }
+
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action, int what, String tag) {
+        api().get(path, action, what, tag);
+        return getThis();
+    }
+
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action) {
+        api().post(path, action);
+        return getThis();
+    }
+
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action, int what) {
+        api().post(path, action, what);
+        return getThis();
+    }
+
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action, String tag) {
+        api().post(path, action, tag);
+        return getThis();
+    }
+
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action, int what, String tag) {
+        api().post(path, action, what, tag);
+        return getThis();
+    }
+
 }

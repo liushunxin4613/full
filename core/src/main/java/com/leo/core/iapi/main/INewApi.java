@@ -304,6 +304,27 @@ public interface INewApi {
      */
     <B> B newParseApi();
 
+    /**
+     * 切换parseApi
+     * @param <B> 泛型
+     * @return B
+     */
     <B> B switchNPApi();
+
+    /**
+     * helper api
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B helper();
+
+    /**
+     * new helper api
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newHelper();
 
 }

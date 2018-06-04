@@ -1,8 +1,8 @@
 package com.ylink.fullgoal.vo;
 
-import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.hb.ReportHb;
+import com.ylink.fullgoal.hb.TraveHb;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,19 +36,11 @@ public class ReimburseVo {
     /**
      * 一般费用普票报销
      */
-    public final static String REIMBURSE_TYPE_GENERAL_COMMON = "一般费用普票报销";
-    /**
-     * 一般费用专票报销
-     */
-    public final static String REIMBURSE_TYPE_GENERAL_DEDICATED = "一般费用专票报销";
+    public final static String REIMBURSE_TYPE_GENERAL = "一般费用报销";
     /**
      * 出差费用普票报销
      */
-    public final static String REIMBURSE_TYPE_EVECTION_COMMON = "出差费用普票报销";
-    /**
-     * 出差费用专票报销
-     */
-    public final static String REIMBURSE_TYPE_EVECTION_DEDICATED = "出差费用专票报销";
+    public final static String REIMBURSE_TYPE_EVECTION = "出差费用报销";
 
     //报销类型
     /**
@@ -101,8 +93,6 @@ public class ReimburseVo {
     private List<InhibitionRuleVo> inhibitionRuleData;
     //提交标志
     private String sbumitFlag;
-    //提交图片
-    private List<ImageVo> imageList;
 
     //UI需用的
 
@@ -131,35 +121,21 @@ public class ReimburseVo {
 
     //合同付款申请单
     private String paymentRequest;
-    //投研报告
-    private String reportName;
     //招待申请单
     private String serveBill;
 
     //出差费用报销单有
 
     //出差申请单组
-    private List<BusinessVo> businessData;
+    private List<TraveHb> traveData;
+    //投研报告
+    private List<ReportHb> reportData;
     //交通费报销票据组
     private List<BillVo> trafficBillData;
     //住宿费报销票据组
     private List<BillVo> stayBillData;
     //车船机票费报销
     private AirDataVo airDataVo;
-
-    public ReimburseVo init() {
-        if (!TextUtils.isEmpty(billData)) {
-            imageList = new ArrayList<>();
-            for (BillVo vo : billData) {
-                if (vo != null) {
-                    imageList.add(new ImageVo(vo.getId(), vo.getUrl()));
-                }
-            }
-        } else {
-            imageList = null;
-        }
-        return this;
-    }
 
     public String getState() {
         return state;
@@ -337,12 +313,12 @@ public class ReimburseVo {
         this.paymentRequest = paymentRequest;
     }
 
-    public String getReportName() {
-        return reportName;
+    public List<ReportHb> getReportData() {
+        return reportData;
     }
 
-    public void setReportName(String reportName) {
-        this.reportName = reportName;
+    public void setReportData(List<ReportHb> reportData) {
+        this.reportData = reportData;
     }
 
     public String getServeBill() {
@@ -353,12 +329,12 @@ public class ReimburseVo {
         this.serveBill = serveBill;
     }
 
-    public List<BusinessVo> getBusinessData() {
-        return businessData;
+    public List<TraveHb> getTraveData() {
+        return traveData;
     }
 
-    public void setBusinessData(List<BusinessVo> businessData) {
-        this.businessData = businessData;
+    public void setTraveData(List<TraveHb> traveData) {
+        this.traveData = traveData;
     }
 
     public List<BillVo> getTrafficBillData() {
@@ -391,14 +367,6 @@ public class ReimburseVo {
 
     public void setReimburseType(String reimburseType) {
         this.reimburseType = reimburseType;
-    }
-
-    public List<ImageVo> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<ImageVo> imageList) {
-        this.imageList = imageList;
     }
 
     public String getApprovalStatus() {

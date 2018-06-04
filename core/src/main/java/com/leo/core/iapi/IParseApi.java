@@ -2,6 +2,8 @@ package com.leo.core.iapi;
 
 import com.google.gson.reflect.TypeToken;
 
+import java.util.List;
+
 public interface IParseApi<T extends IParseApi> extends IMsgApi<T> {
 
     T copy();
@@ -21,6 +23,8 @@ public interface IParseApi<T extends IParseApi> extends IMsgApi<T> {
     <A> T add(TypeToken<A> token, IMsgAction<A> action);
 
     <A> T add(Class<A> clz, IMsgAction<A> action);
+
+    <A> T addList(Class<A> clz, IMsgAction<List<A>> action);
 
     T clearAddParseMap();
 

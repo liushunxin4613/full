@@ -1,19 +1,17 @@
 package com.ylink.fullgoal.api.config;
 
-import android.util.ArrayMap;
-
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
+import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.IUrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.Api;
 import com.ylink.fullgoal.config.Config;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,7 +20,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.Observable;
 
-public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> {
+public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements IUrlApi<T> {
 
     //根URL
     private final static String ROOT_URL = Config.ROOT_URL;
@@ -113,113 +111,121 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> {
     }
 
     /**
-     * 以BASE64上传图片
-     *
-     * @param image image
-     */
-    private void uploadBase64Image(String image, String tag) {
-        observable(0, tag, getApi().uploadBase64Image(image));
-    }
-
-    /**
      * 上传图片
      */
-    public void uploadBase64Image(File file) {
-        uploadBase64Image(file, null);
-    }
-
-    /**
-     * 上传图片
-     */
-    public void uploadBase64Image(File file, String msg) {
+    public void uploadBase64Image(File file, String msg, int type, String uploadType) {
         String base64 = Base64Util.getFileToBase64(file);
         if (!TextUtils.isEmpty(base64)) {
-            uploadBase64Image(base64, msg);
+            post("uploadImage", map -> {
+                map.put("image", base64);
+                map.put("type", uploadType);
+            }, type, msg);
         }
     }
 
     /**
      * 提交post数据
      */
-    public void post(String path, Map<String, String> map) {
-        post(path, map, -1, null);
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action) {
+        post(path, action, -1, null);
+        return getThis();
     }
 
     /**
      * 提交post数据
      */
-    public void post(String path, Map<String, String> map, int what) {
-        post(path, map, what, null);
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action, int what) {
+        post(path, action, what, null);
+        return getThis();
     }
 
     /**
      * 提交post数据
      */
-    public void post(String path, Map<String, String> map, String tag) {
-        post(path, map, -1, tag);
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action, String tag) {
+        post(path, action, -1, tag);
+        return getThis();
     }
 
     /**
      * 提交post数据
      */
-    private void post(String path, Map<String, String> map, int what, String tag) {
-        if (!TextUtils.isEmpty(path) && !TextUtils.isEmpty(map)) {
-            observable(what, tag, getApi().post(path, getCleanMap(map)));
-        }
-    }
-
-    /**
-     * 提交post数据
-     */
-    public void get(String path) {
-        get(path, null, -1, null);
-    }
-
-    /**
-     * 提交get数据
-     */
-    public void get(String path, Map<String, String> map) {
-        get(path, map, -1, null);
-    }
-
-    /**
-     * 提交get数据
-     */
-    public void get(String path, Map<String, String> map, int what) {
-        get(path, map, what, null);
-    }
-
-    /**
-     * 提交get数据
-     */
-    public void get(String path, Map<String, String> map, String tag) {
-        get(path, map, -1, tag);
-    }
-
-    /**
-     * 提交get数据
-     */
-    private void get(String path, Map<String, String> map, int what, String tag) {
+    @Override
+    public T post(String path, IObjAction<Map<String, String>> action, int what, String tag) {
         if (!TextUtils.isEmpty(path)) {
-            observable(what, tag, getApi().get(path, getCleanMap(map)));
+            observable(what, tag, getApi().post(path, getCleanMapAction(action)));
         }
+        return getThis();
     }
 
-    private Map<String, String> getCleanMap(Map<String, String> map) {
-        if (TextUtils.isEmpty(map)) {
-            map = new HashMap<>();
-        } else {
-            Set<String> data = new HashSet<>();
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                if (TextUtils.isEmpty(entry.getValue())) {
-                    data.add(entry.getKey());
+    /**
+     * 提交post数据
+     */
+    @Override
+    public T get(String path) {
+        get(path, null, -1, null);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action) {
+        get(path, action, -1, null);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action, int what) {
+        get(path, action, what, null);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action, String tag) {
+        get(path, action, -1, tag);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String path, IObjAction<Map<String, String>> action, int what, String tag) {
+        if (!TextUtils.isEmpty(path)) {
+            observable(what, tag, getApi().get(path, getCleanMapAction(action)));
+        }
+        return getThis();
+    }
+
+    private Map<String, String> getCleanMapAction(IObjAction<Map<String, String>> action) {
+        if (action != null) {
+            Map<String, String> map;
+            action.execute(map = new HashMap<>());
+            if (!TextUtils.isEmpty(map)) {
+                Set<String> data = new HashSet<>();
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    if (TextUtils.isEmpty(entry.getValue())) {
+                        data.add(entry.getKey());
+                    }
                 }
-            }
-            for (String key : data) {
-                map.remove(key);
+                for (String key : data) {
+                    map.remove(key);
+                }
+                return map;
             }
         }
-        return map;
+        return new HashMap<>();
     }
 
 }

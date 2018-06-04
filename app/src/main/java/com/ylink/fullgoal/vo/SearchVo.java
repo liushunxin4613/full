@@ -3,9 +3,9 @@ package com.ylink.fullgoal.vo;
 public class SearchVo<D> {
 
     /**
-     * 报销人
+     * 员工
      */
-    public final static String REIMBURSEMENT = "报销人";
+    public final static String REIMBURSEMENT = "员工";
 
     /**
      * 预算归属部门
@@ -23,24 +23,29 @@ public class SearchVo<D> {
     public final static String CONTRACT_BILL = "合同付款申请单";
 
     /**
-     * 招待申请单
-     */
-    public final static String SERVE_BILL = "招待申请单";
-
-    /**
-     * 费用指标
-     */
-    public final static String COST_INDEX = "费用指标";
-
-    /**
      * 出差申请单
      */
     public final static String BUSINESS = "出差申请单";
 
     /**
+     * 招待申请单
+     */
+    public final static String SERVE_BILL = "招待申请单";
+
+    /**
+     * 投研报告
+     */
+    public final static String REPORT = "投研报告";
+
+    /**
      * 携程机票
      */
     public final static String XC_AIR = "携程机票";
+
+    /**
+     * 费用指标
+     */
+    public final static String COST_INDEX = "费用指标";
 
     /**
      * 搜索参数
@@ -50,10 +55,10 @@ public class SearchVo<D> {
             {BUDGET_DEPARTMENT, "BudgetDepartmentCompensation"},
             {PROJECT, "ProjectCompensation"},
             {CONTRACT_BILL, "PaymentRequestCompensation"},
-            {SERVE_BILL, "ServeBillCompensation"},
-            {COST_INDEX, ""},
-            {BUSINESS, ""},
-            {XC_AIR, ""},
+            {BUSINESS, "TraveFormCompensation"},
+            {SERVE_BILL, "TraveFormCompensation"},
+            {REPORT, "ResearchReportCompensation"},
+            {XC_AIR, "CtripCompensation"},
     };
 
     private String search;

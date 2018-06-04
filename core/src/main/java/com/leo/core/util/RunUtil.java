@@ -2,7 +2,7 @@ package com.leo.core.util;
 
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IMapAction;
-import com.leo.core.iapi.IReturnApi;
+import com.leo.core.iapi.IReturnAction;
 import com.leo.core.iapi.IObjAction;
 
 import java.util.List;
@@ -11,11 +11,11 @@ import java.util.Set;
 
 public class RunUtil {
 
-    public static <A, B> B getExecute(A a, B b, IReturnApi<A, B> api) {
+    public static <A, B> B getExecute(A a, B b, IReturnAction<A, B> api) {
         return (a == null || api == null) ? b : api.execute(a);
     }
 
-    public static <A, B> B getExecute(A a, IReturnApi<A, B> api) {
+    public static <A, B> B getExecute(A a, IReturnAction<A, B> api) {
         return getExecute(a, null, api);
     }
 
@@ -98,7 +98,7 @@ public class RunUtil {
         return true;
     }
 
-    public static <T, R> R getFirstNonItem(List<T> data, IReturnApi<T, R> api, R ro, R rd) {
+    public static <T, R> R getFirstNonItem(List<T> data, IReturnAction<T, R> api, R ro, R rd) {
         if (data != null && api != null && ro != null) {
             for (T obj : data) {
                 if (ro.equals(api.execute(obj))) {

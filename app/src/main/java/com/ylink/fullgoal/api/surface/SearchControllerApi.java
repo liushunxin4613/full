@@ -6,33 +6,31 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.IObjAction;
-import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.bean.TvBean;
+import com.ylink.fullgoal.bean.TvH2SBean;
+import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.ht.BudgetDepartmentHt;
-import com.ylink.fullgoal.ht.ListHt;
-import com.ylink.fullgoal.ht.PaymentRequestHt;
-import com.ylink.fullgoal.ht.ProjectHt;
-import com.ylink.fullgoal.ht.ReimbursementHt;
-import com.ylink.fullgoal.ht.ServeBillHt;
-import com.ylink.fullgoal.vo.AirVo;
-import com.ylink.fullgoal.vo.BusinessVo;
+import com.ylink.fullgoal.hb.CodeHb;
+import com.ylink.fullgoal.hb.CompensationHb;
+import com.ylink.fullgoal.hb.CtripHb;
+import com.ylink.fullgoal.hb.DepartHb;
+import com.ylink.fullgoal.hb.ProjectHb;
+import com.ylink.fullgoal.hb.ReportHb;
+import com.ylink.fullgoal.hb.TraveHb;
+import com.ylink.fullgoal.hb.UserHb;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 import butterknife.Bind;
 
@@ -102,68 +100,44 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
                     return true;
             }
         });
-        addRootType(new TypeToken<ListHt<ReimbursementHt>>() {
-        }, new TypeToken<ListHt<BudgetDepartmentHt>>() {
-        }, new TypeToken<ListHt<ProjectHt>>() {
-        }, new TypeToken<ListHt<PaymentRequestHt>>() {
-        }, new TypeToken<ListHt<ServeBillHt>>() {
+        //消息标志
+        add(CodeHb.class, (what, msg, bean) -> {
+            if (!bean.isSuccess()) {
+                initSearchDataAction(null);
+            }
         });
-        add(new TypeToken<List<ReimbursementHt>>() {
-        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        //员工列表
+        addList(UserHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getUserName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
-        add(new TypeToken<List<BudgetDepartmentHt>>() {
-        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        //部门列表
+        addList(DepartHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getDepartmentName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
-        add(new TypeToken<List<ProjectHt>>() {
-        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        //项目列表
+        addList(ProjectHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getProjectName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
-        add(new TypeToken<List<PaymentRequestHt>>() {
-        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        //合同付款申请单列表
+        addList(CompensationHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
-        add(new TypeToken<List<ServeBillHt>>() {
-        }, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
-                -> data.add(new TvBean(item.getCause(), (bean, view)
+        //出差申请单列表及招待申请单
+        addList(TraveHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new CCSQDBean(item.getCode(), String.format("%s天", item.getDates()),
+                item.getStartDate(), String.format("至%s", item.getEndDate()),
+                (bean, view) -> finishActivity(new SearchVo<>(search, item)))))));
+        //携程机票列表
+        addList(CtripHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new XCJPBean(item.getCrew(), item.getTicket(), item.getFlightNumber(),
+                String.format("%s 开", item.getTakeoffTime()), String.format("%s 到", item.getArrivelTime()),
+                String.format("%s - %s", item.getDeparture(), item.getDestination()),
+                (bean, view) -> finishActivity(new SearchVo<>(search, item)))))));
+        //调研报告列表
+        addList(ReportHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new TvH2SBean(item.getReportInfo(), item.getStockName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         search(null);
-    }
-
-    @Override
-    public void initData() {
-        super.initData();
-        executeBundle(bundle -> executeNon(bundle.getString(Config.SEARCH), search -> {
-            this.search = search;
-            switch (search) {
-                case SearchVo.COST_INDEX://费用指标
-//                    args = new String[]{"营销会议费", "招待费"};
-                    break;
-                case SearchVo.BUSINESS://出差申请单
-//                    List<BusinessVo> businessData = getTestData(getTestBusinessData(), new Random().nextInt(10) + 3);
-//                    dat.clear();
-//                    execute(businessData, item -> dat.add(new CCSQDBean(item.getSerialNo(),
-//                            item.getDays(), item.getStartDate(), item.getEndDate(),
-//                            (bean, view) -> finishActivity(new SearchVo<>(search, item)))));
-                    break;
-                case SearchVo.XC_AIR://携程机票
-//                    List<AirVo> airData = getTestData(getTestAirData(), new Random().nextInt(10) + 3);
-//                    dat.clear();
-//                    execute(airData, item -> dat.add(new XCJPBean(item.getUser(),
-//                            item.getMoney(), item.getType(), String.format("%s 开", item.getStartTime()),
-//                            String.format("%s 到", item.getEndTime()), String.format("%s - %s",
-//                            item.getStartPlace(), item.getEndPlace()),
-//                            (bean, view) -> finishActivity(new SearchVo<>(search, item)))));
-                    break;
-            }
-//            if (!TextUtils.isEmpty(args)) {
-//                List<String> data = getTestData(args, new Random().nextInt(10) + 3);
-//                dat.clear();
-//                execute(data, obj -> dat.add(new TvBean(obj, (bean, view) -> finishActivity(new SearchVo<>(search, obj)))));
-//            }
-//            initSearchData(dat);
-        }));
     }
 
     /**
@@ -172,20 +146,16 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
      * @param keyword 关键字
      */
     protected void search(String keyword) {
-        if (!TextUtils.isEmpty(search)) {
-            Map<String, String> map = new HashMap<>();
-            map.put("keyword", keyword);
-            api().post(getSearchValue(search), map);
-        }
+        post(getSearchValue(search), keyword);
     }
 
     private void initSearchDataAction(IObjAction<List<BaseApiBean>> action) {
-        List<BaseApiBean> data = new ArrayList<>();
-        if (action != null) {
-            action.execute(data);
-        }
         clear();
-        execute(getLineData(data), this::add);
+        if (action != null) {
+            List<BaseApiBean> data;
+            action.execute(data = new ArrayList<>());
+            execute(getLineData(data), this::add);
+        }
         notifyDataSetChanged();
     }
 
@@ -200,43 +170,6 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
             return dat;
         }
         return null;
-    }
-
-    //test
-    private <A> List<A> getTestData(A[] args, int size) {
-        if (!TextUtils.isEmpty(args) && size > 0) {
-            List<A> data = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                data.add(args[new Random().nextInt(args.length)]);
-            }
-            return data;
-        }
-        return null;
-    }
-
-    private <A> List<A> getTestData(List<A> list, int size) {
-        if (!TextUtils.isEmpty(list) && size > 0) {
-            List<A> data = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                data.add(list.get(new Random().nextInt(list.size())));
-            }
-            return data;
-        }
-        return null;
-    }
-
-    private List<AirVo> getTestAirData() {
-        return TextUtils.getListData(new AirVo("张三", "单程", "1324.00", "2018-02-23 12:23", "次日 16:40", "上海", "北京"),
-                new AirVo("李四", "单程", "1023.00", "2018-03-12 18:23", "次日 01:20", "深圳", "北京"),
-                new AirVo("王五", "单程", "1390.00", "2018-05-04 08:00", "20:00", "上海", "深圳"),
-                new AirVo("陈六", "单程", "900.00", "2018-04-26 10:55", "次日 02:30", "广州", "南京"));
-    }
-
-    private List<BusinessVo> getTestBusinessData() {
-        return TextUtils.getListData(
-                new BusinessVo("FGMC-P2018-00021", "3天", "2018-03-04", "2018-03-06"),
-                new BusinessVo("FGMC-P2018-00105", "1天", "2018-03-09", "2018-03-10"),
-                new BusinessVo("FGMC-P2018-00237", "5天", "2018-03-21", "2018-03-25"));
     }
 
     private String getSearchValue(String key) {

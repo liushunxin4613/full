@@ -1,25 +1,24 @@
 package com.ylink.fullgoal.api.surface;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.BaseApiBean;
+import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.IReturnAction;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
@@ -28,22 +27,24 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.TvBean;
-import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
-import com.ylink.fullgoal.ht.BaseHt;
-import com.ylink.fullgoal.ht.BudgetDepartmentHt;
-import com.ylink.fullgoal.ht.ImageHt;
-import com.ylink.fullgoal.ht.PaymentRequestHt;
-import com.ylink.fullgoal.ht.ProjectHt;
-import com.ylink.fullgoal.ht.ReimbursementHt;
-import com.ylink.fullgoal.ht.ServeBillHt;
+import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.hb.CompensationHb;
+import com.ylink.fullgoal.hb.CtripHb;
+import com.ylink.fullgoal.hb.DataHb;
+import com.ylink.fullgoal.hb.DepartHb;
+import com.ylink.fullgoal.hb.ImageHb;
+import com.ylink.fullgoal.hb.ProjectHb;
+import com.ylink.fullgoal.hb.ReimburseHb;
+import com.ylink.fullgoal.hb.ReportHb;
+import com.ylink.fullgoal.hb.TraveHb;
+import com.ylink.fullgoal.hb.UserHb;
+import com.ylink.fullgoal.vo.AirDataVo;
 import com.ylink.fullgoal.vo.BillVo;
-import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
-import com.ylink.fullgoal.vo.SearchVo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,6 +63,11 @@ import static com.ylink.fullgoal.config.Config.STATE;
  */
 public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends RecycleBarControllerApi<T, C> {
 
+    final static int TYPE_NONE = 0x101;
+    final static int TYPE_JT = 0x102;
+    final static int TYPE_ZS = 0x103;
+    final static int TYPE_CCJP = 0x104;
+
     private final static int PHOTO_REQUEST_CAMERA = 0x101;
 
     @Bind(R.id.sqtp_iv)
@@ -75,14 +81,14 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     @Bind(R.id.alter_vg)
     LinearLayout alterVg;
 
-    private File rootFile;
     private String state;
+    private int photoType;
+    private File rootFile;
     private File photoFile;
     private ReimburseVo vo;
     private String reimburseType;
-    private TvHEt3Bean causeBean;
 
-    public ReimburseControllerApi(C controller) {
+    ReimburseControllerApi(C controller) {
         super(controller);
         rootFile = getContext().getExternalFilesDir("photo");
     }
@@ -107,15 +113,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         return reimburseType;
     }
 
-    public TvHEt3Bean getCauseBean() {
-        return causeBean;
-    }
-
-    public TvHEt3Bean setCauseBean(TvHEt3Bean causeBean) {
-        this.causeBean = causeBean;
-        return causeBean;
-    }
-
     @Override
     public Integer getDefRootViewResId() {
         return R.layout.l_reimburse;
@@ -123,7 +120,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
 
     @Override
     protected void startSearch(String search) {
-        executeNon(getCauseBean(), obj -> executeNon(obj.getTextView(), SoftInputUtil::hidSoftInput));
+        SoftInputUtil.hidSoftInput(getRootView());
         super.startSearch(search);
     }
 
@@ -135,21 +132,11 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
             reimburseType = bundle.getString(REIMBURSE_TYPE);
             if (!TextUtils.isEmpty(reimburseType)) {
                 switch (reimburseType) {
-                    case ReimburseVo.REIMBURSE_TYPE_GENERAL_COMMON:
+                    case ReimburseVo.REIMBURSE_TYPE_GENERAL:
                         getVo().setBillType(ReimburseVo.BILL_TYPE_Y);
-                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZN);
                         break;
-                    case ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED:
-                        getVo().setBillType(ReimburseVo.BILL_TYPE_Y);
-                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZY);
-                        break;
-                    case ReimburseVo.REIMBURSE_TYPE_EVECTION_COMMON:
+                    case ReimburseVo.REIMBURSE_TYPE_EVECTION:
                         getVo().setBillType(ReimburseVo.BILL_TYPE_C);
-                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZN);
-                        break;
-                    case ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED:
-                        getVo().setBillType(ReimburseVo.BILL_TYPE_C);
-                        getVo().setIsTickets(ReimburseVo.IS_TICKET_ZY);
                         break;
                 }
             }
@@ -181,28 +168,59 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
             }
         });
         //test
-        getVo().setAgent("张三");
-        getVo().setDepartment("计划财务部");
+        getVo().setAgent(getUserName());
+        getVo().setDepartment(getDepartment());
     }
 
     @Override
     public void initData() {
         super.initData();
-        addRootType(BaseHt.class, ImageHt.class);
-        add(ImageHt.class, (what, msg, bean) -> {
+        add(ImageHb.class, (what, msg, bean) -> {
             if (TextUtils.isHttpUrl(bean.getUrl()) && !TextUtils.isEmpty(msg)) {
-                execute(getVo().getBillData(), bill -> {
-                   if(TextUtils.equals(msg, bill.getPhoto())){
-                       bill.setId(bean.getId());
-                       bill.setUrl(bean.getUrl());
-                   }
-                });
+                switch (what) {
+                    case TYPE_NONE://普通
+                        execute(getVo().getBillData(), bill -> {
+                            if (TextUtils.equals(msg, bill.getPhoto())) {
+                                bill.setId(bean.getId());
+                                bill.setUrl(bean.getUrl());
+                            }
+                        });
+                        break;
+                    case TYPE_JT://交通费
+                        execute(getVo().getTrafficBillData(), bill -> {
+                            if (TextUtils.equals(msg, bill.getPhoto())) {
+                                bill.setId(bean.getId());
+                                bill.setUrl(bean.getUrl());
+                            }
+                        });
+                        break;
+                    case TYPE_ZS://住宿费
+                        execute(getVo().getStayBillData(), bill -> {
+                            if (TextUtils.equals(msg, bill.getPhoto())) {
+                                bill.setId(bean.getId());
+                                bill.setUrl(bean.getUrl());
+                            }
+                        });
+                        break;
+                    case TYPE_CCJP://车船机票费
+                        if (getVo().getAirDataVo() != null) {
+                            execute(getVo().getAirDataVo().getAirBillData(), bill -> {
+                                if (TextUtils.equals(msg, bill.getPhoto())) {
+                                    bill.setId(bean.getId());
+                                    bill.setUrl(bean.getUrl());
+                                }
+                            });
+                        }
+                        break;
+                }
                 show("图片上传成功");
             }
         });
-        add(BaseHt.class, (what, msg, bean) -> {
-            show("报销成功");
-            getActivity().finish();
+        add(DataHb.class, (what, msg, bean) -> {
+            if (bean.isSuccess() && bean.getImage() == null) {
+                show("报销成功");
+                getActivity().finish();
+            }
         });
     }
 
@@ -210,60 +228,109 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     public void onResume() {
         super.onResume();
         //报销人
-        execute(getFinish(), new TypeToken<SearchVo<ReimbursementHt>>() {
-        }, vo -> getVo().setReimbursement(getExecute(vo.getObj(),
-                ReimbursementHt::getUserName)));
+        executeSearch(UserHb.class, hb -> getVo().setReimbursement(
+                getExecute(hb, UserHb::getUserName)));
         //预算归属部门
-        execute(getFinish(), new TypeToken<SearchVo<BudgetDepartmentHt>>() {
-        }, vo -> getVo().setBudgetDepartment(getExecute(vo.getObj(),
-                BudgetDepartmentHt::getDepartmentName)));
+        executeSearch(DepartHb.class, hb -> getVo().setBudgetDepartment(
+                getExecute(hb, DepartHb::getDepartmentName)));
         //项目
-        execute(getFinish(), new TypeToken<SearchVo<ProjectHt>>() {
-        }, vo -> getVo().setProject(getExecute(vo.getObj(),
-                ProjectHt::getProjectName)));
+        executeSearch(ProjectHb.class, hb -> getVo().setProject(
+                getExecute(hb, ProjectHb::getProjectName)));
         //合同付款申请单
-        execute(getFinish(), new TypeToken<SearchVo<PaymentRequestHt>>() {
-        }, vo -> getVo().setPaymentRequest(getExecute(vo.getObj(),
-                PaymentRequestHt::getName)));
-        //招待申请单
-        execute(getFinish(), new TypeToken<SearchVo<ServeBillHt>>() {
-        }, vo -> getVo().setServeBill(getExecute(vo.getObj(),
-                ServeBillHt::getCode)));
-        initReimburseVo(getVo());
+        executeSearch(CompensationHb.class, hb -> getVo().setPaymentRequest(
+                getExecute(hb, CompensationHb::getName)));
+        //出差申请单及招待申请单
+        executeSearch(TraveHb.class, hb -> {
+            getVo().setServeBill(getExecute(hb, TraveHb::getCode));
+            if (getVo().getTraveData() == null) {
+                getVo().setTraveData(new ArrayList<>());
+            }
+            getVo().getTraveData().add(hb);
+        });
+        //携程机票
+        executeSearch(CtripHb.class, hb -> {
+            if (getVo().getAirDataVo() == null) {
+                getVo().setAirDataVo(new AirDataVo(new ArrayList<>(), new ArrayList<>()));
+            } else {
+                if (getVo().getAirDataVo().getCtripData() == null) {
+                    getVo().getAirDataVo().setCtripData(new ArrayList<>());
+                }
+            }
+            getVo().getAirDataVo().getCtripData().add(hb);
+        });
+        //调研报告
+        executeSearch(ReportHb.class, hb -> {
+            if (getVo().getReportData() == null) {
+                getVo().setReportData(new ArrayList<>());
+            }
+            getVo().getReportData().add(hb);
+        });
+        notifyReimburseVoChanged();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PHOTO_REQUEST_CAMERA:
+                if (resultCode == RESULT_OK) {
+                    executeNon(photoFile, file -> Luban.with(getContext())
+                            .load(file)
+                            .setTargetDir(rootFile.getPath())
+                            .ignoreBy(80)
+                            .setCompressListener(new OnCompressListener() {
+                                @Override
+                                public void onStart() {
+                                }
+
+                                @Override
+                                public void onSuccess(File lubanFile) {
+                                    file.delete();
+                                    ee("lubanFile.getPath()", lubanFile.getPath());
+                                    addPhoto(lubanFile.getPath());
+                                    api().uploadBase64Image(lubanFile, lubanFile.getPath(),
+                                            photoType, getImageType(photoType));
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    e.printStackTrace();
+                                }
+                            }).launch());
+                }
+                break;
+
+        }
+    }
+
+    @Override
+    public VgBean addVgBean(IObjAction<List<BaseApiBean>> api) {
+        return super.addVgBean(data -> {
+            api.execute(data);
+            execute(data, item -> item.setEnable(isEnable()));
+        });
+    }
+
+    //私有的
+
+    /**
+     * 提交数据
+     */
     protected void submit() {
     }
 
-    protected boolean isEnable() {
-        return !TextUtils.equals(state, ReimburseVo.STATE_DETAIL);
-    }
-
-    protected boolean isAlterEnable() {
-        return TextUtils.equals(state, ReimburseVo.STATE_ALTER);
-    }
-
-    protected boolean isNoneInitiateEnable() {
-        return !TextUtils.equals(state, ReimburseVo.STATE_INITIATE);
-    }
-
-    protected <B> B getEnable(B a, B b) {
-        return isEnable() ? a : b;
-    }
-
-    protected <B> B getEnable(B a) {
-        return isEnable() ? a : null;
-    }
-
-    protected <B> B getHasEnable(B a) {
-        return isNoneInitiateEnable() ? a : null;
+    /**
+     * 初始化提交数据
+     */
+    protected ReimburseHb getReimburseHb(IReturnAction<ReimburseVo, ReimburseHb> action) {
+        return getExecute(getVo(), action);
     }
 
     /**
      * 初始化报销数据
      */
-    protected void initReimburseVo(ReimburseVo vo) {
-        executeNon(vo, obj -> {
+    void notifyReimburseVoChanged() {
+        executeNon(getVo(), obj -> {
             clear().onReimburseVo(obj);
             //更新
             notifyDataSetChanged();
@@ -280,27 +347,159 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         vo.setReimburseType(reimburseType);
     }
 
-    protected List<GridPhotoBean> getPhotoGridBeanData(List<BillVo> data) {
+    void initVgApiBean(String title, IAction action) {
+        if (!TextUtils.isEmpty(title)) {
+            RecycleControllerApi api = getDialogControllerApi(RecycleControllerApi.class,
+                    R.layout.l_dialog);
+            api.execute(() -> api.add(new TvBean("删除", (b, v) -> {
+                api.dismiss();
+                execute(action);
+            })).notifyDataSetChanged()).dialogShow()
+                    .setText(api.findViewById(R.id.title_tv), title)
+                    .setOnClickListener(api.findViewById(R.id.cancel_tv), v -> api.dismiss())
+                    .execute(() -> {
+                        Window window = api.getDialog().getWindow();
+                        if (window != null) {
+                            window.setGravity(Gravity.BOTTOM);
+                            WindowManager.LayoutParams lp = window.getAttributes();
+                            lp.width = DisneyUtil.getScreenDisplay().getX();
+                            window.setAttributes(lp);
+                        }
+                    });
+        }
+    }
+
+    private static boolean hasSdcard() {
+        return Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED);
+    }
+
+    void addVgBean(String title, GridBean bean) {
+        if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
+            if (!TextUtils.isEmpty(title)) {
+                addVgBean(new TvBean(title), bean);
+            } else {
+                addVgBean(bean);
+            }
+        }
+    }
+
+    GridBean newGridBean(int type, List<BillVo> data) {
+        return new GridBean(getPhotoGridBeanData(type, data));
+    }
+
+    private GridPhotoBean newGridPhotoBean(List<BillVo> data, BillVo vo) {
+        return getExecute(vo, obj -> new GridPhotoBean(obj.getPhoto(), obj, this::onGridPhotoClick,
+                (bean, view) -> onGridPhotoLongClick(data, bean, view)));
+    }
+
+    /**
+     * 图片点击
+     *
+     * @param bean bean
+     * @param view view
+     */
+    private void onGridPhotoClick(GridPhotoBean bean, View view) {
+        executeNon(bean, obj -> startSurfaceActivity(getBundle(bean.getObj()), BillControllerApi.class));
+    }
+
+    /**
+     * 图片长按
+     *
+     * @param bean bean
+     * @param view view
+     * @return 是否同时响应点击
+     */
+    private boolean onGridPhotoLongClick(List<BillVo> data, GridPhotoBean bean, View view) {
+        TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
+            dialog.dismiss();
+            show(item.getName());
+        }, (item, v, dialog) -> {
+            dialog.dismiss();
+            data.remove(bean.getObj());
+            notifyReimburseVoChanged();
+        });
+        ItemControllerApi api = getDialogControllerApi(ItemControllerApi.class, db.getApiType());
+        api.dialogShow().onBindViewHolder(db, 0);
+        Window window = api.getDialog().getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.width = DisneyUtil.getScreenDisplay().getX() - ResUtil.getDimenInt(R.dimen.x120);
+            window.setAttributes(lp);
+        }
+        return true;
+    }
+
+    boolean isEnable() {
+        return !TextUtils.equals(state, ReimburseVo.STATE_DETAIL);
+    }
+
+    boolean isAlterEnable() {
+        return TextUtils.equals(state, ReimburseVo.STATE_ALTER);
+    }
+
+    private boolean isNoneInitiateEnable() {
+        return !TextUtils.equals(state, ReimburseVo.STATE_INITIATE);
+    }
+
+    protected <B> B getEnable(B a, B b) {
+        return isEnable() ? a : b;
+    }
+
+    protected <B> B getEnable(B a) {
+        return isEnable() ? a : null;
+    }
+
+    <B> B getHasEnable(B a) {
+        return isNoneInitiateEnable() ? a : null;
+    }
+
+    private List<GridPhotoBean> getPhotoGridBeanData(int type, List<BillVo> data) {
         List<GridPhotoBean> gridData = new ArrayList<>();
         execute(data, obj -> gridData.add(newGridPhotoBean(data, obj).setEnable(isEnable())));
         if (isEnable()) {
-            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) -> openCamera(), null));
+            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) ->
+                    openCamera(type), null));
         }
         return gridData;
     }
 
     private void addPhoto(String path) {
-        if(!TextUtils.isEmpty(path)){
-            if(getVo().getBillData() == null){
-                getVo().setBillData(new ArrayList<>());
+        if (!TextUtils.isEmpty(path)) {
+            switch (photoType) {
+                case TYPE_NONE://普通票据
+                    if (getVo().getBillData() == null) {
+                        getVo().setBillData(new ArrayList<>());
+                    }
+                    getVo().getBillData().add(new BillVo(path, null));
+                    break;
+                case TYPE_JT://交通费
+                    if (getVo().getTrafficBillData() == null) {
+                        getVo().setTrafficBillData(new ArrayList<>());
+                    }
+                    getVo().getTrafficBillData().add(new BillVo(path, null));
+                    break;
+                case TYPE_ZS://住宿费
+                    if (getVo().getStayBillData() == null) {
+                        getVo().setStayBillData(new ArrayList<>());
+                    }
+                    getVo().getStayBillData().add(new BillVo(path, null));
+                    break;
+                case TYPE_CCJP://车船机票费
+                    if (getVo().getAirDataVo() == null) {
+                        getVo().setAirDataVo(new AirDataVo(new ArrayList<>(), new ArrayList<>()));
+                    } else if (getVo().getAirDataVo().getAirBillData() == null) {
+                        getVo().getAirDataVo().setAirBillData(new ArrayList<>());
+                    }
+                    getVo().getAirDataVo().getAirBillData().add(new BillVo(path, null));
+                    break;
             }
-            getVo().getBillData().add(new BillVo(path, null));
-            initReimburseVo(getVo());
+            notifyReimburseVoChanged();
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private void openCamera() {
+    private void openCamera(int type) {
+        this.photoType = type;
         // 激活相机
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // 判断存储卡是否可以用，可用进行存储
@@ -330,124 +529,18 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         getActivity().startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PHOTO_REQUEST_CAMERA:
-                if (resultCode == RESULT_OK) {
-                    executeNon(photoFile, file -> Luban.with(getContext())
-                            .load(file)
-                            .setTargetDir(rootFile.getPath())
-                            .ignoreBy(80)
-                            .setCompressListener(new OnCompressListener() {
-                                @Override
-                                public void onStart() {
-                                }
-
-                                @Override
-                                public void onSuccess(File lubanFile) {
-                                    file.delete();
-                                    ee("lubanFile.getPath()", lubanFile.getPath());
-                                    addPhoto(lubanFile.getPath());
-                                    api().uploadBase64Image(lubanFile, lubanFile.getPath());
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    e.printStackTrace();
-                                }
-                            }).launch());
-                }
-                break;
-
+    private String getImageType(int photoType) {
+        switch (photoType) {
+            default:
+            case TYPE_NONE:
+                return null;
+            case TYPE_JT:
+                return "1";
+            case TYPE_ZS:
+                return "2";
+            case TYPE_CCJP:
+                return "3";
         }
-    }
-
-    private Point[] getFullImgCropPoints(Drawable drawable) {
-        if (drawable != null) {
-            Point[] points = new Point[4];
-            int width = drawable.getIntrinsicWidth();
-            int height = drawable.getIntrinsicHeight();
-            points[0] = new Point(0, 0);
-            points[1] = new Point(width, 0);
-            points[2] = new Point(width, height);
-            points[3] = new Point(0, height);
-            return points;
-        }
-        return null;
-    }
-
-    /**
-     * 判断sdcard是否被挂载
-     */
-    private static boolean hasSdcard() {
-        return Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED);
-    }
-
-    @Override
-    public VgBean addVgBean(IObjAction<List<BaseApiBean>> api) {
-        return super.addVgBean(data -> {
-            api.execute(data);
-            execute(data, item -> item.setEnable(isEnable()));
-        });
-    }
-
-    protected void addVgBean(String title, GridBean bean) {
-        if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
-            if (!TextUtils.isEmpty(title)) {
-                addVgBean(new TvBean(title), bean);
-            } else {
-                addVgBean(bean);
-            }
-        }
-    }
-
-    protected GridBean newGridBean(List<BillVo> data) {
-        return new GridBean(getPhotoGridBeanData(data));
-    }
-
-    protected GridPhotoBean newGridPhotoBean(List<BillVo> data, BillVo vo) {
-        return getExecute(vo, obj -> new GridPhotoBean(obj.getPhoto(), obj, this::onGridPhotoClick,
-                (bean, view) -> onGridPhotoLongClick(data, bean, view)));
-    }
-
-    /**
-     * 图片点击
-     *
-     * @param bean bean
-     * @param view view
-     */
-    private void onGridPhotoClick(GridPhotoBean bean, View view) {
-        executeNon(bean, obj -> startSurfaceActivity(getBundle(bean.getObj()), BillControllerApi.class));
-    }
-
-    /**
-     * 图片长按
-     *
-     * @param bean bean
-     * @param view view
-     * @return 是否同时响应点击
-     */
-    private boolean onGridPhotoLongClick(List<BillVo> data, GridPhotoBean bean, View view) {
-        TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
-            dialog.dismiss();
-            show(item.getName());
-        }, (item, v, dialog) -> {
-            dialog.dismiss();
-            data.remove(bean.getObj());
-            initReimburseVo(getVo());
-        });
-        ItemControllerApi api = getDialogControllerApi(ItemControllerApi.class, db.getApiType());
-        api.dialogShow().onBindViewHolder(db, 0);
-        Window window = api.getDialog().getWindow();
-        if (window != null) {
-            WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = DisneyUtil.getScreenDisplay().getX() - ResUtil.getDimenInt(R.dimen.x120);
-            window.setAttributes(lp);
-        }
-        return true;
     }
 
 }

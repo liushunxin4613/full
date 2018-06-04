@@ -1,9 +1,9 @@
-package com.ylink.fullgoal.ht;
+package com.ylink.fullgoal.hb;
 
 /**
  * 员工
  */
-public class ReimbursementHt {
+public class ReimbursementHb {
 
     /**
      * id : 7

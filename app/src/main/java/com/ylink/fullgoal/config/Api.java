@@ -5,7 +5,6 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -43,14 +42,5 @@ public interface Api {
     @FormUrlEncoded
     @POST("{path}")
     Observable<ResponseBody> post(@Path("path") String path, @FieldMap Map<String, String> map);
-
-    //自有
-
-    /**
-     * 以BASE64上传图片
-     */
-    @FormUrlEncoded
-    @POST("uploadImage")
-    <B> Observable<ResponseBody> uploadBase64Image(@Field("image") String image);
 
 }

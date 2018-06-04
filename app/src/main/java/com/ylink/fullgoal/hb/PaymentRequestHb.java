@@ -1,9 +1,9 @@
-package com.ylink.fullgoal.ht;
+package com.ylink.fullgoal.hb;
 
 /**
  * 合同付款申请单
  */
-public class PaymentRequestHt {
+public class PaymentRequestHb {
 
     /**
      * id : 2

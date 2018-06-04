@@ -1,9 +1,9 @@
-package com.ylink.fullgoal.ht;
+package com.ylink.fullgoal.hb;
 
 /**
  * 招待申请单
  */
-public class ServeBillHt {
+public class ServeBillHb {
 
     /**
      * id : 2

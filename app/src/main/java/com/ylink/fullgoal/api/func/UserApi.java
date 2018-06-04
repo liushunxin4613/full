@@ -3,7 +3,7 @@ package com.ylink.fullgoal.api.func;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.config.Config;
-import com.leo.core.iapi.IReturnApi;
+import com.leo.core.iapi.IReturnAction;
 import com.leo.core.iapi.IUserApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.bean.UserBean;
@@ -52,8 +52,17 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public String getUserName() {
-//        return getFiled(UserBean::getUsername);
-        return null;
+        return "张三";
+    }
+
+    @Override
+    public String getDepartment() {
+        return "信息技术部";
+    }
+
+    @Override
+    public String getDepartmentCode() {
+        return "20180507001";
     }
 
     @Override
@@ -66,7 +75,7 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
         return null;
     }
 
-    private String getFiled(IReturnApi<UserBean, String> action){
+    private String getFiled(IReturnAction<UserBean, String> action){
         return getExecute(getUser(), null, action);
     }
 

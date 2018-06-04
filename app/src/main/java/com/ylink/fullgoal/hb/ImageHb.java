@@ -1,8 +1,14 @@
-package com.ylink.fullgoal.ht;
+package com.ylink.fullgoal.hb;
 
-public class ImageHt extends BaseHt {
+public class ImageHb {
+
     private String id;
     private String url;
+
+    public ImageHb(String id, String url) {
+        this.id = id;
+        this.url = url;
+    }
 
     public String getId() {
         return id;
@@ -19,4 +25,5 @@ public class ImageHt extends BaseHt {
     public void setUrl(String url) {
         this.url = url;
     }
+
 }

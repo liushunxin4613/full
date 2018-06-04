@@ -29,11 +29,16 @@ public class Config {
             {"reportName", "投研报告"},
             {"cause", "事由"},
             {"billType", "报销类型"},
-            {"isTickets", "是否专票"},
             {"totalAmountLower", "金额"},
             {"isTickets", "是否专票"},
             {"sbumitFlag", "提交标志"},
             {"imageList", "影像集合"},
+    };
+    public final static String[][] APPROVAL_STATUS = {
+            {"待处理", "1"},
+            {"审核中", "2"},
+            {"已完成", "3"},
+            {"已取消", "4"},
     };
 
     //记录参数

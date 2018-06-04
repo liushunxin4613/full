@@ -2,18 +2,14 @@ package com.ylink.fullgoal.api.surface;
 
 import android.os.Bundle;
 
-import com.google.gson.reflect.TypeToken;
-import com.leo.core.bean.BaseBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.hb.TestHb;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
-import com.ylink.fullgoal.vo.UrlVo;
-
-import java.io.File;
 
 import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
@@ -28,41 +24,32 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         super(controller);
     }
 
+
     @Override
     public void initView() {
         super.initView();
         hideBackIv().setTitle("我的报销");
-        clear().addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用普票报销", (bean, view) -> generalCommon(ReimburseVo.STATE_INITIATE)),
-                new IconTvMoreBean(R.mipmap.test_icon2, "一般费用专票报销", (bean, view) -> generalDedicated(ReimburseVo.STATE_INITIATE)))
-                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用普票报销", (bean, view) -> evectionCommon(ReimburseVo.STATE_INITIATE)),
-                        new IconTvMoreBean(R.mipmap.test_icon2, "出差费用专票报销", (bean, view) -> evectionDedicated(ReimburseVo.STATE_INITIATE)))
+        clear().addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用普票", (bean, view) -> general(ReimburseVo.STATE_INITIATE)),
+                new IconTvMoreBean(R.mipmap.test_icon2, "出差费用报销", (bean, view) -> evection(ReimburseVo.STATE_INITIATE)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view) -> startSurfaceActivity(ReimburseDataControllerApi.class)))
                 .notifyDataSetChanged();
         if (DEBUG) {
             //测试
-            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "测试", (bean, view) -> {
-                test();
-            })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用指标", (bean, view) -> startSurfaceActivity(CostIndexControllerApi.class))).
+            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用指标", (bean, view) -> startSurfaceActivity(CostIndexControllerApi.class))).
                     addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用经办人确认", (bean, view) -> {
-                generalCommon(ReimburseVo.STATE_CONFIRM);
-            }), new IconTvMoreBean(R.mipmap.test_icon2, "一般费用经办人修改", (bean, view) -> {
-                generalCommon(ReimburseVo.STATE_ALTER);
-            }), new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销详情", (bean, view) -> {
-                generalCommon(ReimburseVo.STATE_DETAIL);
-            })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用经办人确认", (bean, view) -> {
-                evectionCommon(ReimburseVo.STATE_CONFIRM);
+                        general(ReimburseVo.STATE_CONFIRM);
+                    }), new IconTvMoreBean(R.mipmap.test_icon2, "一般费用经办人修改", (bean, view) -> {
+                        general(ReimburseVo.STATE_ALTER);
+                    }), new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销详情", (bean, view) -> {
+                        general(ReimburseVo.STATE_DETAIL);
+                    })).addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "出差费用经办人确认", (bean, view) -> {
+                evection(ReimburseVo.STATE_CONFIRM);
             }), new IconTvMoreBean(R.mipmap.test_icon2, "出差费用经办人修改", (bean, view) -> {
-                evectionCommon(ReimburseVo.STATE_ALTER);
+                evection(ReimburseVo.STATE_ALTER);
             }), new IconTvMoreBean(R.mipmap.test_icon1, "出差费用报销详情", (bean, view) -> {
-                evectionCommon(ReimburseVo.STATE_DETAIL);
+                evection(ReimburseVo.STATE_DETAIL);
             })).notifyDataSetChanged();
-            //test
-//            test();
         }
-        generalCommon(ReimburseVo.STATE_INITIATE);
-    }
-
-    private void test() {
     }
 
     //私有的
@@ -77,29 +64,15 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     /**
      * 一般费用普票报销
      */
-    private void generalCommon(String state) {
-        startSurfaceActivity(GeneralControllerApi.class, ReimburseVo.REIMBURSE_TYPE_GENERAL_COMMON, state);
-    }
-
-    /**
-     * 一般费用专票报销
-     */
-    private void generalDedicated(String state) {
-        startSurfaceActivity(GeneralControllerApi.class, ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED, state);
+    private void general(String state) {
+        startSurfaceActivity(GeneralControllerApi.class, ReimburseVo.REIMBURSE_TYPE_GENERAL, state);
     }
 
     /**
      * 出差费用普票报销
      */
-    private void evectionCommon(String state) {
-        startSurfaceActivity(EvectionControllerApi.class, ReimburseVo.REIMBURSE_TYPE_EVECTION_COMMON, state);
-    }
-
-    /**
-     * 出差费用专票报销
-     */
-    private void evectionDedicated(String state) {
-        startSurfaceActivity(EvectionControllerApi.class, ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED, state);
+    private void evection(String state) {
+        startSurfaceActivity(EvectionControllerApi.class, ReimburseVo.REIMBURSE_TYPE_EVECTION, state);
     }
 
     private void startSurfaceActivity(Class<? extends IControllerApi> clz, String type, String state) {

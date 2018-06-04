@@ -1,9 +1,9 @@
-package com.ylink.fullgoal.ht;
+package com.ylink.fullgoal.hb;
 
 /**
  * 预算归属部门
  */
-public class BudgetDepartmentHt {
+public class BudgetDepartmentHb {
 
 
     /**

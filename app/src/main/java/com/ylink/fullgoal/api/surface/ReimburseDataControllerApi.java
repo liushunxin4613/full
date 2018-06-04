@@ -7,7 +7,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.View;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.core.BaseControllerApiView;
@@ -24,18 +23,18 @@ import com.ylink.fullgoal.bean.SXBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.ht.ListHt;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 
+import static com.leo.core.util.TextUtils.count;
 import static com.leo.core.util.TextUtils.getListData;
 import static com.leo.core.util.TextUtils.getSetData;
+import static com.ylink.fullgoal.config.Config.APPROVAL_STATUS;
 
 public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C> extends BarControllerApi<T, C> {
 
@@ -73,11 +72,8 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
     @Override
     public void initData() {
         super.initData();
-        addRootType(new TypeToken<ListHt<ReimburseVo>>() {
-        });
-        add(new TypeToken<ListHt<ReimburseVo>>() {
-        }, (what, msg, ht) -> execute(!TextUtils.isEmpty(msg), ()
-                -> initReimburseVoData(getReiRecycleControllerApi(msg), ht.getList())));
+        addList(ReimburseVo.class, (what, msg, data) -> execute(!TextUtils.isEmpty(msg), ()
+                -> initReimburseVoData(getReiRecycleControllerApi(msg), data)));
         getReiRecycleControllerApi("待处理");
         getReiRecycleControllerApi("审核中");
         getReiRecycleControllerApi("已完成");
@@ -96,11 +92,11 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
                 api = getRecycleControllerApi(type);
                 map.put(type, api);
                 ReimburseVo vo = new ReimburseVo();
-                vo.setAgent("张三");
+                vo.setAgent(getUserName());
                 vo.setApprovalStatus(getApprovalStatus(type));
-                Map<String, String> map = getCheck(vo, getSetData("经办人", "审批状态"), null);
+                Map<String, String> map = getCheck(vo, getSetData("经办人", "审批状态"));
                 if (!TextUtils.isEmpty(map)) {
-                    api().post("QuerytReimbursement", map, type);
+                    post("QuerytReimbursement", mp -> mp.putAll(map), type);
                 }
             }
             return api;
@@ -109,18 +105,11 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
     }
 
     private String getApprovalStatus(String type) {
-        if (!TextUtils.isEmpty(type)) {
-            switch (type) {
-                default:
-                    return "0";
-                case "待处理":
-                    return "1";
-                case "审核中":
-                    return "2";
-                case "已完成":
-                    return "3";
-                case "已取消":
-                    return "4";
+        if (!TextUtils.isEmpty(type) && !TextUtils.isEmpty(APPROVAL_STATUS)) {
+            for (String[] item : APPROVAL_STATUS) {
+                if (count(item) == 2 && TextUtils.equals(item[0], type)) {
+                    return item[1];
+                }
             }
         }
         return null;
@@ -131,20 +120,10 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
             if (!TextUtils.isEmpty(reimburseData)) {
                 api.showContentView();
                 execute(reimburseData, obj -> addVgBean(api, data -> {
-                    /*data.add(new CCSQDBean(obj.getSerialNo(), obj.getOrderNo(), "报销批次号", "报销单号"));
-                    data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(), "时间", "金额"));*/
                     if (TextUtils.equals(obj.getBillType(), "1")) {
-                        if (TextUtils.equals(obj.getIsTickets(), "1")) {
-                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_GENERAL_DEDICATED);
-                        } else if (TextUtils.equals(obj.getIsTickets(), "2")) {
-                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_GENERAL_COMMON);
-                        }
+                        obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_GENERAL);
                     } else if (TextUtils.equals(obj.getBillType(), "2")) {
-                        if (TextUtils.equals(obj.getIsTickets(), "1")) {
-                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_EVECTION_DEDICATED);
-                        } else if (TextUtils.equals(obj.getIsTickets(), "2")) {
-                            obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_EVECTION_COMMON);
-                        }
+                        obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_EVECTION);
                     }
                     data.add(new CCSQDBean(obj.getSerialNo(), obj.getReimbursementState(), "报销批次号", "报销类型"));
                     data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(), "时间", "金额"));
@@ -229,31 +208,6 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
             controllerApi.addVgBean(api);
             controllerApi.notifyDataSetChanged();
         }
-    }
-
-    //test
-
-    private List<ReimburseVo> getTestReimburseVoData(int size) {
-        if (size > 0) {
-            List<ReimburseVo> data = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                data.add(getTestReimburseVo());
-            }
-            return data;
-        }
-        return null;
-    }
-
-    private ReimburseVo getTestReimburseVo() {
-        ReimburseVo vo = new ReimburseVo();
-        vo.setAgent("张三");
-        vo.setDepartment("计划财务部");
-        vo.setSerialNo("FGMC20180508002");
-        vo.setOrderNo("FGMC-HC-20180508-0001");
-        vo.setFillDate("2018-05-08");
-        vo.setTotalAmountLower("2400.00");
-        vo.setCause("到上海出差");
-        return vo;
     }
 
 }

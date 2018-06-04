@@ -1,9 +1,9 @@
-package com.ylink.fullgoal.ht;
+package com.ylink.fullgoal.hb;
 
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.Config;
 
-public class BaseHt {
+public class CodeHb {
 
     /**
      * type : E

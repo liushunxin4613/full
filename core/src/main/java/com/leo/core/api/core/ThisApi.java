@@ -2,7 +2,7 @@ package com.leo.core.api.core;
 
 import com.leo.core.iapi.IAction;
 import com.leo.core.iapi.IMapAction;
-import com.leo.core.iapi.IReturnApi;
+import com.leo.core.iapi.IReturnAction;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.core.IThisApi;
 import com.leo.core.other.ParamType;
@@ -55,18 +55,18 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getThis();
     }
 
-    protected <A, B> B getExecute(A in, B def, IReturnApi<A, B> api) {
+    protected <A, B> B getExecute(A in, B def, IReturnAction<A, B> api) {
         if (in != null && api != null) {
             return api.execute(in);
         }
         return def;
     }
 
-    protected <A, B> B getExecute(A in, IReturnApi<A, B> api) {
+    protected <A, B> B getExecute(A in, IReturnAction<A, B> api) {
         return getExecute(in, null, api);
     }
 
-    protected <A, B> B no(A a, IReturnApi<A, B> api) {
+    protected <A, B> B no(A a, IReturnAction<A, B> api) {
         return (a == null || api == null) ? null : api.execute(a);
     }
 

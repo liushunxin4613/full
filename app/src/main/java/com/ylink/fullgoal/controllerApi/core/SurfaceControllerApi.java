@@ -9,7 +9,7 @@ import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.DateUtil;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.SearchControllerApi;
@@ -125,33 +125,20 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getThis();
     }
 
-    protected Map<String, String> getCheck(Object obj, Set<String> must, Set<String> other) {
-        Set<String> set = new LinkedHashSet<>();
-        execute(must, item -> {
-            String key = getKey(item);
-            if (!TextUtils.isEmpty(key)) {
-                set.add(key);
-            }
-        });
-        execute(other, item -> {
-            String key = getKey(item);
-            if (!TextUtils.isEmpty(key)) {
-                set.add(key);
-            }
-        });
-        if (!TextUtils.isEmpty(set) && obj != null) {
+    protected Map<String, String> getCheck(Object obj, Set<String> must, Set<String> all) {
+        if (!TextUtils.isEmpty(all) && obj != null) {
             Map<String, String> mp = new HashMap<>();
             Class clz = obj.getClass();
-            for (String key : set) {
-                String json = null;
+            for (String key : all) {
+                Object item = null;
                 try {
                     Field field = clz.getDeclaredField(key);
                     field.setAccessible(true);
-                    json = getLog(field.get(obj));
+                    item = field.get(obj);
                 } catch (Exception ignored) {
                 } finally {
-                    if (!TextUtils.isEmpty(json)) {
-                        mp.put(key, json);
+                    if (count(item) > 0) {
+                        mp.put(key, getLog(item));
                     } else if (!TextUtils.isEmpty(must) && must.contains(getValue(key))) {
                         String value = getValue(key);
                         value = TextUtils.isEmpty(value) ? key : value;
@@ -160,12 +147,21 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                     }
                 }
             }
-            //公共部分
-            mp.put("fillDate", DateUtil.getNowTimeString());
-            mp.put("channel", "android");
             return mp;
         }
         return null;
+    }
+
+    protected Map<String, String> getCheck(Object obj, Set<String> must) {
+        Set<String> all = new LinkedHashSet<>();
+        if (!TextUtils.isEmpty(FIELDS)) {
+            for (String[] args : FIELDS) {
+                if (count(args) == 2 && !TextUtils.isEmpty(args[0])) {
+                    all.add(args[0]);
+                }
+            }
+        }
+        return getCheck(obj, must, all);
     }
 
     protected String getKey(String value) {

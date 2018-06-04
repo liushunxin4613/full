@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.api.config;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.core.ThisApi;
@@ -13,8 +15,9 @@ import com.leo.core.util.GsonDecodeUtil;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.leo.core.util.ToastUtil;
-import com.ylink.fullgoal.ht.BaseHt;
+import com.ylink.fullgoal.hb.CodeHb;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -24,12 +27,16 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import okhttp3.ResponseBody;
 
 import static com.leo.core.config.Config.RX;
+import static com.leo.core.config.Config.RX_TO;
 import static com.leo.core.util.TextUtils.getEmptyLength;
 
 public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseApi<T> {
@@ -121,6 +128,12 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     @Override
+    public <A> T addList(Class<A> clz, IMsgAction<List<A>> action) {
+        add((TypeToken<List<A>>) TypeToken.getParameterized(List.class, clz), action);
+        return getThis();
+    }
+
+    @Override
     public T clearAddParseMap() {
         apiMap.clear();
         return getThis();
@@ -150,21 +163,17 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private <A> void onItem(A item, Type type) {
         executeNon(item, obj -> execute(apiMap.get(type), action -> {
-            if (obj instanceof BaseHt) {
-                if (!((BaseHt) obj).isSuccess() && !TextUtils.isEmpty(((BaseHt) obj)
-                        .getMessage())) {
-                    ToastUtil.show(((BaseHt) obj).getMessage());
-                } else {
-                    action.execute(what, msg, obj);
+            if (obj instanceof CodeHb) {
+                if (!((CodeHb) obj).isSuccess() && !TextUtils.isEmpty(((CodeHb) obj).getMessage())) {
+                    ToastUtil.show(((CodeHb) obj).getMessage());
                 }
-            } else {
-                action.execute(what, msg, obj);
             }
+            action.execute(what, msg, obj);
         }));
     }
 
     private void onString(String text) {
-        final String txt = text.replaceAll(RX, "/");
+        final String txt = getCleanJsonString(text, null);
         if (!TextUtils.isEmpty(data)) {
             int emptyCount = getEmptyLength(txt);
             execute(data, type -> {
@@ -178,6 +187,63 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         if (!TextUtils.isEmpty(typeMap)) {
             toJson(txt);
         }
+    }
+
+    @SuppressLint("NewApi")
+    private String getCleanJsonString(String text, Object obj) {
+        try {
+            if (!TextUtils.isEmpty(text)) {
+                obj = new JSONTokener(text).nextValue();
+            }
+            if (obj instanceof JSONObject) {
+                JSONObject jo = (JSONObject) obj;
+                Set<String> set = new HashSet<>();
+                for (Iterator<String> it = jo.keys(); it.hasNext(); ) {
+                    String key = it.next();
+                    Object item = jo.get(key);
+                    if (TextUtils.isEmpty(key)) {
+                        jo.remove(key);
+                    } else if (item instanceof String || item == null) {
+                        if (TextUtils.isTrimEmpty((String) item)) {
+                            set.add(key);
+                        }
+                    } else {
+                        getCleanJsonString(null, item);
+                    }
+                }
+                if (!TextUtils.isEmpty(set)) {
+                    for (String key : set) {
+                        jo.remove(key);
+                    }
+                }
+                text = jo.toString();
+                if (!TextUtils.isEmpty(text)) {
+                    return text.replaceAll(RX, RX_TO);
+                }
+            } else if (obj instanceof JSONArray) {
+                JSONArray ja = (JSONArray) obj;
+                Set<Integer> set = new HashSet<>();
+                for (int i = 0; i < ja.length(); i++) {
+                    Object item = ja.get(i);
+                    if (TextUtils.isEmpty(item)) {
+                        set.add(i);
+                    } else {
+                        getCleanJsonString(null, item);
+                    }
+                }
+                if (!TextUtils.isEmpty(set)) {
+                    for (Integer key : set) {
+                        ja.remove(key);
+                    }
+                }
+                text = ja.toString();
+                if (!TextUtils.isEmpty(text)) {
+                    return text.replaceAll(RX, RX_TO);
+                }
+            }
+        } catch (JSONException ignored) {
+        }
+        return null;
     }
 
     private void onData(Object obj, Type type) {
