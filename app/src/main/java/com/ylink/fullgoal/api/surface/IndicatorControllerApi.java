@@ -8,6 +8,9 @@ import android.widget.LinearLayout;
 
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.api.main.DataApi;
+import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.ITextAction;
+import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IndicatorBean;
@@ -30,6 +33,7 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
     private View selected;
     private ViewPager viewPager;
     private BasePagerAdapter adapter;
+    private ITextAction action;
     private DataApi<DataApi, IndicatorBean> dataApi;
 
     public IndicatorControllerApi(C controller) {
@@ -51,6 +55,16 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
 
     public DataApi<DataApi, IndicatorBean> getDataApi() {
         return dataApi;
+    }
+
+    public T setAction(ITextAction action) {
+        this.action = action;
+        return getThis();
+    }
+
+    public T clear() {
+        getDataApi().removeAll();
+        return getThis();
     }
 
     public T add(IndicatorBean bean) {
@@ -87,7 +101,7 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
         if (sum > 0 && count > 0) {
             int width = sum / count;
             vg.removeAllViews();
-            if(adapter != null){
+            if (adapter != null) {
                 adapter.getApi().removeAll();
             }
             int viewSum = 0;
@@ -96,7 +110,7 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
                 int finalI = i;
                 IndicatorBean bean = getDataApi().getItem(i);
                 if (bean != null && bean.getApiType() != null) {
-                    if(adapter != null && bean.getApi() != null){
+                    if (adapter != null && bean.getApi() != null) {
                         adapter.getApi().add(bean.getApi().getRootView());
                     }
                     View rootView = View.inflate(getContext(), bean.getApiType(), null);
@@ -169,13 +183,18 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
     private void onSelected(int position) {
         if (position < vg.getChildCount()) {
             View v = vg.getChildAt(position);
-            if (!TextUtils.equals(v, selected)) {
+            if (!TextUtils.equals(v, selected) || !v.isSelected()) {
                 if (selected != null) {
                     initSelected(selected, false);
                 }
                 initSelected(v, true);
                 selected = v;
                 scrollCenter(position);
+                //处理数据
+                if (action != null) {
+                    action.execute(getExecute(getDataApi().getItem(position),
+                            IndicatorBean::getName));
+                }
             }
         }
     }

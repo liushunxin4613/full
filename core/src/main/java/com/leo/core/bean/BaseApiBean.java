@@ -1,5 +1,6 @@
 package com.leo.core.bean;
 
+import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;

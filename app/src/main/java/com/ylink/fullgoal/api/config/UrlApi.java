@@ -215,7 +215,8 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
             if (!TextUtils.isEmpty(map)) {
                 Set<String> data = new HashSet<>();
                 for (Map.Entry<String, String> entry : map.entrySet()) {
-                    if (TextUtils.isEmpty(entry.getValue())) {
+                    if (TextUtils.isEmpty(entry.getKey()) ||
+                            TextUtils.isEmpty(entry.getValue())) {
                         data.add(entry.getKey());
                     }
                 }

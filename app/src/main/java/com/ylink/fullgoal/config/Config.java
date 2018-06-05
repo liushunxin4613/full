@@ -1,5 +1,8 @@
 package com.ylink.fullgoal.config;
 
+import static com.ylink.fullgoal.vo.ReimburseVo.BILL_TYPE_C;
+import static com.ylink.fullgoal.vo.ReimburseVo.BILL_TYPE_Y;
+
 public class Config {
 
     //固定参数
@@ -37,6 +40,18 @@ public class Config {
             {"审核中", "2"},
             {"已完成", "3"},
             {"已取消", "4"},
+    };
+    public final static String[][] BILL_TYPES = {
+            {"一般费用报销", BILL_TYPE_Y},
+            {"出差费用报销", BILL_TYPE_C},
+    };
+    public final static String[][] DATES = {
+            {"当天", "1"},
+            {"七天", "2"},
+            {"一个月", "3"},
+            {"三个月", "4"},
+            {"六个月", "5"},
+            {"一年", "6"},
     };
 
     //记录参数

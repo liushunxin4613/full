@@ -9,7 +9,6 @@ import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.SearchControllerApi;
@@ -164,9 +163,15 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getCheck(obj, must, all);
     }
 
-    protected String getKey(String value) {
-        if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(FIELDS)) {
-            for (String[] args : FIELDS) {
+    /**
+     * 获取value
+     *
+     * @param value value
+     * @return key
+     */
+    protected String getKey(String[][] argss, String value) {
+        if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(argss)) {
+            for (String[] args : argss) {
                 if (count(args) == 2 && TextUtils.equals(args[1], value)) {
                     return args[0];
                 }
@@ -175,15 +180,30 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected String getValue(String key) {
-        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(FIELDS)) {
-            for (String[] args : FIELDS) {
+    /**
+     * 获取key
+     *
+     * @param key key
+     * @return value
+     */
+    protected String getValue(String[][] argss, String key) {
+        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(argss)) {
+            for (String[] args : argss) {
                 if (count(args) == 2 && TextUtils.equals(args[0], key)) {
                     return args[1];
                 }
             }
         }
         return null;
+    }
+
+
+    protected String getKey(String value) {
+        return getKey(FIELDS, value);
+    }
+
+    protected String getValue(String key) {
+        return getValue(FIELDS, key);
     }
 
 }

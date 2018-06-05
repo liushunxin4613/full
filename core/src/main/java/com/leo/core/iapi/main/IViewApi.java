@@ -196,6 +196,22 @@ public interface IViewApi<T extends IViewApi> extends IApi {
     T setViewGroupApi(ViewGroup vg, IVgRunApi vgApi);
 
     /**
+     * 设置view的selected
+     * @param view view
+     * @param selected selected
+     * @return 本身
+     */
+    T setSelected(View view, boolean selected);
+
+    /**
+     * 设置view以及子view的selected
+     * @param view view
+     * @param selected selected
+     * @return 本身
+     */
+    T setAllSelected(View view, boolean selected);
+
+    /**
      * 设置viewBean
      * @param action action
      * @return 本身

@@ -5,7 +5,7 @@ import com.ylink.fullgoal.R;
 
 public class TvHEt3Bean extends ApiBean<TvHEt3Bean> {
 
-    private IObjAction<String> action;
+    private transient IObjAction<String> action;
 
     public TvHEt3Bean(String name, String detail, String hint, IObjAction<String> action) {
         super(name, detail, hint, null);

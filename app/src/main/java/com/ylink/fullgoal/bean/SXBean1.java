@@ -5,11 +5,11 @@ import android.widget.TextView;
 import com.leo.core.bean.BaseApiBean;
 import com.ylink.fullgoal.R;
 
-public class SXBean extends BaseApiBean {
+public class SXBean1 extends BaseApiBean {
 
     @Override
     public Integer getApiType() {
-        return R.layout.l_sx_bottom;
+        return R.layout.l_sx_bottom1;
     }
 
     private transient TextView minTv;

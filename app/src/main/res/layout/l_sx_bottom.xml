@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="@string/jneqj"
+            android:text="@string/baoxiaolx"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv" />
 
@@ -28,71 +28,39 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/pad_smal"
-            android:paddingTop="@dimen/pad_smal"
-            android:weightSum="5">
+            android:paddingTop="@dimen/pad_smal">
 
-            <EditText
-                android:id="@+id/min_et"
+            <TextView
+                android:id="@+id/name_tv"
+                style="@style/padding_vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:background="@drawable/et_shape"
-                android:hint="@string/zuidi"
-                android:inputType="numberDecimal"
+                android:layout_weight="1"
+                android:background="@drawable/tv_selector"
+                android:gravity="center"
                 android:maxLines="1"
-                android:textColor="@color/tv"
-                android:textColorHint="@color/tv1"
-                android:textSize="@dimen/tv"
-                tools:ignore="LabelFor" />
+                android:textColor="@color/tv_selected"
+                android:textSize="@dimen/tv1"
+                tools:ignore="LabelFor"
+                tools:text="一般费用报销" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1.0px"
-                android:layout_marginLeft="@dimen/pad"
-                android:layout_marginRight="@dimen/pad"
-                android:layout_weight="0.6"
-                android:background="@color/ccB" />
-
-            <EditText
-                android:id="@+id/max_et"
+            <TextView
+                android:id="@+id/detail_tv"
+                style="@style/padding_vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:background="@drawable/et_shape"
-                android:hint="@string/zuigao"
-                android:inputType="numberDecimal"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_weight="1"
+                android:background="@drawable/tv_selector"
+                android:gravity="center"
                 android:maxLines="1"
-                android:textColor="@color/tv"
-                android:textColorHint="@color/tv1"
-                tools:ignore="LabelFor" />
+                android:textColor="@color/tv_selected"
+                android:textSize="@dimen/tv1"
+                tools:ignore="LabelFor"
+                tools:text="出差费用报销" />
 
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="@string/shiyou"
-            android:textColor="@color/tv"
-            android:textSize="@dimen/tv" />
-
-        <EditText
-            android:id="@+id/name_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/pad_smal"
-            android:layout_marginEnd="@dimen/pad_big"
-            android:layout_marginRight="@dimen/pad_big"
-            android:layout_marginTop="@dimen/pad_smal"
-            android:background="@drawable/et_shape"
-            android:gravity="center_vertical"
-            android:hint="@string/qingshursygjz"
-            android:inputType="text"
-            android:maxLines="1"
-            android:textColor="@color/tv"
-            android:textColorHint="@color/tv1"
-            android:textSize="@dimen/tv"
-            tools:ignore="LabelFor" />
 
     </LinearLayout>
 

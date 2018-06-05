@@ -114,7 +114,7 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public T setEnableOnClickListener(View view, View.OnClickListener listener) {
-        if(listener != null){
+        if (listener != null) {
             setOnClickListener(view, listener);
         }
         return getThis();
@@ -122,7 +122,7 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public T setEnableOnClickListener(View.OnClickListener listener) {
-        if(listener != null){
+        if (listener != null) {
             setOnClickListener(listener);
         }
         return getThis();
@@ -130,7 +130,7 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public T setEnableOnLongClickListener(View view, View.OnLongClickListener listener) {
-        if(listener != null){
+        if (listener != null) {
             setOnLongClickListener(view, listener);
         }
         return getThis();
@@ -138,7 +138,7 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public T setEnableOnLongClickListener(View.OnLongClickListener listener) {
-        if(listener != null){
+        if (listener != null) {
             setOnLongClickListener(listener);
         }
         return getThis();
@@ -185,8 +185,30 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public T setSelected(View view, boolean selected) {
+        if (checkView(view)) {
+            view.setSelected(selected);
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setAllSelected(View view, boolean selected) {
+        if (checkView(view)) {
+            view.setSelected(selected);
+            if (view instanceof ViewGroup) {
+                ViewGroup vg = (ViewGroup) view;
+                for (int i = 0; i < vg.getChildCount(); i++) {
+                    setAllSelected(vg.getChildAt(i), selected);
+                }
+            }
+        }
+        return getThis();
+    }
+
+    @Override
     public T execute(IAction action) {
-        if(action != null){
+        if (action != null) {
             action.execute();
         }
         return getThis();

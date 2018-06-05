@@ -6,7 +6,7 @@ import com.ylink.fullgoal.R;
 
 public class TvHEtIconMoreBean extends ApiBean<TvHEtIconMoreBean> {
 
-    private IObjAction<String> action;
+    private transient IObjAction<String> action;
 
     public TvHEtIconMoreBean(String name, String detail, String hint) {
         super(name, detail, hint);

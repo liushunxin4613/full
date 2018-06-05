@@ -1,6 +1,9 @@
 package com.ylink.fullgoal.bean;
 
+import android.view.View;
+
 import com.leo.core.bean.BaseApiBean;
+import com.leo.core.iapi.IObjAction;
 import com.ylink.fullgoal.R;
 
 import java.util.ArrayList;
@@ -15,9 +18,12 @@ public class DateArrayBean extends BaseApiBean {
 
     private String name;
     private List<SelectedTvBean> data;
+    private transient IObjAction<String> action;
+    private transient View selectedView;
 
-    public DateArrayBean(String name, List<String> data) {
+    public DateArrayBean(String name, List<String> data, IObjAction<String> action) {
         this.name = name;
+        this.action = action;
         setData(data);
     }
 
@@ -39,8 +45,22 @@ public class DateArrayBean extends BaseApiBean {
         } else {
             this.data = new ArrayList<>();
             for (String item : data) {
-                this.data.add(new SelectedTvBean(item));
+                this.data.add(new SelectedTvBean(item, action, this::setSelectedView));
             }
+        }
+    }
+
+    private void setSelectedView(View view) {
+        this.selectedView = view;
+    }
+
+    public void clean() {
+        if(selectedView != null){
+            selectedView.setSelected(false);
+            selectedView = null;
+        }
+        if (action != null) {
+            action.execute(null);
         }
     }
 

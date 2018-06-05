@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/l_line" />
+
+    <LinearLayout
+        style="@style/padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/jneqj"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/pad_smal"
+            android:paddingTop="@dimen/pad_smal"
+            android:weightSum="5">
+
+            <EditText
+                android:id="@+id/min_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@drawable/et_shape"
+                android:hint="@string/zuidi"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:textColor="@color/tv"
+                android:textColorHint="@color/tv1"
+                android:textSize="@dimen/tv"
+                tools:ignore="LabelFor" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1.0px"
+                android:layout_marginLeft="@dimen/pad"
+                android:layout_marginRight="@dimen/pad"
+                android:layout_weight="0.6"
+                android:background="@color/ccB" />
+
+            <EditText
+                android:id="@+id/max_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@drawable/et_shape"
+                android:hint="@string/zuigao"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:textColor="@color/tv"
+                android:textColorHint="@color/tv1"
+                tools:ignore="LabelFor" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/shiyou"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv" />
+
+        <EditText
+            android:id="@+id/name_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pad_smal"
+            android:layout_marginEnd="@dimen/pad_big"
+            android:layout_marginRight="@dimen/pad_big"
+            android:layout_marginTop="@dimen/pad_smal"
+            android:background="@drawable/et_shape"
+            android:gravity="center_vertical"
+            android:hint="@string/qingshursygjz"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/tv"
+            android:textColorHint="@color/tv1"
+            android:textSize="@dimen/tv"
+            tools:ignore="LabelFor" />
+
+    </LinearLayout>
+
+</LinearLayout>

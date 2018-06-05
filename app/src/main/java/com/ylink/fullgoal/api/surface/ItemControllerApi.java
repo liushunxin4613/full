@@ -18,7 +18,7 @@ import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
-import com.ylink.fullgoal.bean.SXBean;
+import com.ylink.fullgoal.bean.ReimburseTypeBean;
 import com.ylink.fullgoal.bean.SearchWaterfall;
 import com.ylink.fullgoal.bean.SelectedTvBean;
 import com.ylink.fullgoal.bean.TvBean;
@@ -47,8 +47,6 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
     private TextView timeTv;
     private EditText nameEt;
     private EditText detailEt;
-    private EditText minEt;
-    private EditText maxEt;
     private ImageView iconIv;
     private ViewGroup vg;
 
@@ -75,8 +73,6 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         timeTv = findViewById(R.id.time_tv);
         nameEt = findViewById(R.id.name_et);
         detailEt = findViewById(R.id.detail_et);
-        minEt = findViewById(R.id.min_et);
-        maxEt = findViewById(R.id.max_et);
         iconIv = findViewById(R.id.icon_iv);
     }
 
@@ -123,20 +119,29 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 -> api.setText(nameTv, bean.getName())
                 .setOnClickListener(v -> {
                     ViewGroup vg = (ViewGroup) v.getParent();
-                    if (!TextUtils.equals(vg.getTag(), v)) {
+                    if (!TextUtils.equals(vg.getTag(), v) || !v.isSelected()) {
                         if (vg.getTag() instanceof View) {
                             ((View) vg.getTag()).setSelected(false);
                         }
                         v.setSelected(true);
                         vg.setTag(v);
                     }
+                    bean.execute(v, bean.getName());
                 }));
         //筛选
-        putBindBeanApi(SXBean.class, (api, bean) -> {
-            bean.setMinTv(minEt);
-            bean.setMaxTv(maxEt);
-            bean.setTextTv(nameEt);
-        });
+        putBindBeanApi(ReimburseTypeBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
+                .setOnClickListener(nameTv, v -> {
+                    api.setSelected(nameTv, true);
+                    api.setSelected(detailTv, false);
+                    bean.execute(v, bean.getName());
+                })
+                .setOnClickListener(detailTv, v -> {
+                    api.setSelected(detailTv, true);
+                    api.setSelected(nameTv, false);
+                    bean.execute(v, bean.getDetail());
+                }));
         //禁止规则
         putBindBeanApi(InhibitionRuleBean.class, (api, bean)
                 -> api.setImage(iconIv, bean.getIconResId())
@@ -161,7 +166,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setOnClickListener(v -> {
                     executeNon(bean.getTextApi(), textApi -> textApi.execute(bean.getName()));
                     ViewGroup vg = (ViewGroup) v.getParent();
-                    if (!TextUtils.equals(vg.getTag(), v)) {
+                    if (!TextUtils.equals(vg.getTag(), v) || !v.isSelected()) {
                         if (vg.getTag() instanceof View) {
                             ((View) vg.getTag()).setSelected(false);
                         }

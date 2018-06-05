@@ -45,7 +45,6 @@ import com.leo.core.iapi.IHelperApi;
 import com.leo.core.iapi.ILoadImageApi;
 import com.leo.core.iapi.IMD5Api;
 import com.leo.core.iapi.IMergeApi;
-import com.leo.core.iapi.IMsgAction;
 import com.leo.core.iapi.IObjectApi;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.IParseApi;
@@ -1192,6 +1191,18 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T setViewGroupApi(ViewGroup vg, IVgRunApi vgApi) {
         viewApi().setViewGroupApi(vg, vgApi);
+        return getThis();
+    }
+
+    @Override
+    public T setSelected(View view, boolean selected) {
+        viewApi().setSelected(view, selected);
+        return getThis();
+    }
+
+    @Override
+    public T setAllSelected(View view, boolean selected) {
+        viewApi().setAllSelected(view, selected);
         return getThis();
     }
 
