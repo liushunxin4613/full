@@ -175,7 +175,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setText(detailTv, bean.getDetail())
                 .setText(startTv, bean.getStart())
                 .setText(endTv, bean.getEnd())
-                .setOnClickListener(bean.getOnClickListener()));
+                .setEnableOnClickListener(bean.getOnClickListener()));
         //携程机票
         putBindBeanApi(XCJPBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
@@ -187,7 +187,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setOnClickListener(bean.getOnClickListener()));
         //上下集合数据
         putBindBeanApi(VgBean.class, (api, bean)
-                -> api.setViewGroupApi(vg, vg -> {
+                -> api.setOnClickListener(bean.getOnClickListener()).setViewGroupApi(vg, vg -> {
             vg.removeAllViews();
             for (int i = 0; i < bean.getLineData().size(); i++) {
                 BaseApiBean item = bean.getLineData().get(i);

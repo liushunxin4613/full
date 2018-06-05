@@ -32,13 +32,14 @@ import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.hb.CodeHb;
 import com.ylink.fullgoal.hb.CompensationHb;
 import com.ylink.fullgoal.hb.CtripHb;
-import com.ylink.fullgoal.hb.DataHb;
 import com.ylink.fullgoal.hb.DepartHb;
 import com.ylink.fullgoal.hb.ImageHb;
 import com.ylink.fullgoal.hb.ProjectHb;
 import com.ylink.fullgoal.hb.ReimburseHb;
+import com.ylink.fullgoal.hb.ReimburseUpHb;
 import com.ylink.fullgoal.hb.ReportHb;
 import com.ylink.fullgoal.hb.TraveHb;
 import com.ylink.fullgoal.hb.UserHb;
@@ -55,8 +56,10 @@ import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
 import static android.app.Activity.RESULT_OK;
-import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
+import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
+import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY;
+import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_SUBMIT;
 
 /**
  * 报销
@@ -82,11 +85,12 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     LinearLayout alterVg;
 
     private String state;
+    private String title;
     private int photoType;
     private File rootFile;
     private File photoFile;
     private ReimburseVo vo;
-    private String reimburseType;
+    private String serialNo;
 
     ReimburseControllerApi(C controller) {
         super(controller);
@@ -109,8 +113,12 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         return state;
     }
 
-    public String getReimburseType() {
-        return reimburseType;
+    protected String getTitle() {
+        return title;
+    }
+
+    protected String getSerialNo() {
+        return serialNo;
     }
 
     @Override
@@ -129,19 +137,19 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         super.initView();
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
-            reimburseType = bundle.getString(REIMBURSE_TYPE);
-            if (!TextUtils.isEmpty(reimburseType)) {
-                switch (reimburseType) {
-                    case ReimburseVo.REIMBURSE_TYPE_GENERAL:
-                        getVo().setBillType(ReimburseVo.BILL_TYPE_Y);
-                        break;
-                    case ReimburseVo.REIMBURSE_TYPE_EVECTION:
-                        getVo().setBillType(ReimburseVo.BILL_TYPE_C);
-                        break;
+            serialNo = bundle.getString(SERIAL_NO);
+            if (TextUtils.equals(state, ReimburseVo.STATE_INITIATE)) {
+                if (this instanceof GeneralControllerApi) {
+                    title = ReimburseVo.REIMBURSE_TYPE_GENERAL;
+                } else if (this instanceof EvectionControllerApi) {
+                    title = ReimburseVo.REIMBURSE_TYPE_EVECTION;
+                }
+            } else {
+                title = state;
+                if (!TextUtils.isEmpty(serialNo)) {
+                    post(REIMBURSE_QUERY, map -> map.put("serialNo", serialNo));
                 }
             }
-            String title = TextUtils.isEmpty(state) ? reimburseType : state;
-            title = TextUtils.equals(title, ReimburseVo.STATE_INITIATE) ? reimburseType : title;
             setTitle(title);
             switch (TextUtils.isEmpty(state) ? "" : state) {
                 case ReimburseVo.STATE_INITIATE:
@@ -175,7 +183,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     @Override
     public void initData() {
         super.initData();
-        add(ImageHb.class, (what, msg, bean) -> {
+        add(ImageHb.class, (path, what, msg, bean) -> {
             if (TextUtils.isHttpUrl(bean.getUrl()) && !TextUtils.isEmpty(msg)) {
                 switch (what) {
                     case TYPE_NONE://普通
@@ -216,10 +224,24 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                 show("图片上传成功");
             }
         });
-        add(DataHb.class, (what, msg, bean) -> {
-            if (bean.isSuccess() && bean.getImage() == null) {
-                show("报销成功");
-                getActivity().finish();
+        add(CodeHb.class, (path, what, msg, bean) -> {
+            if (bean.isSuccess()) {
+                switch (path) {
+                    case REIMBURSE_SUBMIT://报销提交
+                        show("报销成功");
+                        getActivity().finish();
+                        break;
+                }
+            }
+        });
+        add(ReimburseHb.class, (path, what, msg, bean) -> {
+            switch (path) {
+                case REIMBURSE_QUERY://报销获取
+                    ee("ReimburseHb", bean);
+                    setVo(new ReimburseVo(bean));
+                    getVo().setDepartment(getDepartment());
+                    notifyReimburseVoChanged();
+                    break;
             }
         });
     }
@@ -287,9 +309,10 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                                 public void onSuccess(File lubanFile) {
                                     file.delete();
                                     ee("lubanFile.getPath()", lubanFile.getPath());
-                                    addPhoto(lubanFile.getPath());
+                                    String type = getImageType(photoType);
+                                    addPhoto(lubanFile.getPath(), type);
                                     api().uploadBase64Image(lubanFile, lubanFile.getPath(),
-                                            photoType, getImageType(photoType));
+                                            photoType, type);
                                 }
 
                                 @Override
@@ -322,7 +345,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     /**
      * 初始化提交数据
      */
-    protected ReimburseHb getReimburseHb(IReturnAction<ReimburseVo, ReimburseHb> action) {
+    ReimburseUpHb getReimburseHb(IReturnAction<ReimburseVo, ReimburseUpHb> action) {
         return getExecute(getVo(), action);
     }
 
@@ -343,8 +366,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     protected void onReimburseVo(ReimburseVo vo) {
         //报销类型
         vo.setState(state);
-        //报销状态
-        vo.setReimburseType(reimburseType);
     }
 
     void initVgApiBean(String title, IAction action) {
@@ -464,26 +485,26 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         return gridData;
     }
 
-    private void addPhoto(String path) {
+    private void addPhoto(String path, String type) {
         if (!TextUtils.isEmpty(path)) {
             switch (photoType) {
                 case TYPE_NONE://普通票据
                     if (getVo().getBillData() == null) {
                         getVo().setBillData(new ArrayList<>());
                     }
-                    getVo().getBillData().add(new BillVo(path, null));
+                    getVo().getBillData().add(new BillVo(path, type, null));
                     break;
                 case TYPE_JT://交通费
                     if (getVo().getTrafficBillData() == null) {
                         getVo().setTrafficBillData(new ArrayList<>());
                     }
-                    getVo().getTrafficBillData().add(new BillVo(path, null));
+                    getVo().getTrafficBillData().add(new BillVo(path, type, null));
                     break;
                 case TYPE_ZS://住宿费
                     if (getVo().getStayBillData() == null) {
                         getVo().setStayBillData(new ArrayList<>());
                     }
-                    getVo().getStayBillData().add(new BillVo(path, null));
+                    getVo().getStayBillData().add(new BillVo(path, type, null));
                     break;
                 case TYPE_CCJP://车船机票费
                     if (getVo().getAirDataVo() == null) {
@@ -491,7 +512,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                     } else if (getVo().getAirDataVo().getAirBillData() == null) {
                         getVo().getAirDataVo().setAirBillData(new ArrayList<>());
                     }
-                    getVo().getAirDataVo().getAirBillData().add(new BillVo(path, null));
+                    getVo().getAirDataVo().getAirBillData().add(new BillVo(path, type, null));
                     break;
             }
             notifyReimburseVoChanged();
@@ -515,13 +536,15 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(MediaStore.Images.Media.DATA, photoFile.getAbsolutePath());
                 //检查是否有存储权限，以免崩溃
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     //申请WRITE_EXTERNAL_STORAGE权限
                     show("请开启存储权限");
                     return;
                 }
-                photoUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                photoUri = getActivity().getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             }
         }
@@ -533,13 +556,13 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         switch (photoType) {
             default:
             case TYPE_NONE:
-                return null;
+                return ImageHb.IMAGE_NONE;
             case TYPE_JT:
-                return "1";
+                return ImageHb.IMAGE_JT;
             case TYPE_ZS:
-                return "2";
+                return ImageHb.IMAGE_ZS;
             case TYPE_CCJP:
-                return "3";
+                return ImageHb.IMAGE_CCJP;
         }
     }
 

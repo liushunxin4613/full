@@ -19,7 +19,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-import static com.ylink.fullgoal.config.Config.ROOT_URL;
+import static com.ylink.fullgoal.config.UrlConfig.ROOT_URL;
 
 public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi<T, C> {
 

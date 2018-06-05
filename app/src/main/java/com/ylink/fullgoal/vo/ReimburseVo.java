@@ -1,16 +1,23 @@
 package com.ylink.fullgoal.vo;
 
+import com.leo.core.util.LogUtil;
+import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.hb.ImageHb;
+import com.ylink.fullgoal.hb.ReimburseHb;
 import com.ylink.fullgoal.hb.ReportHb;
 import com.ylink.fullgoal.hb.TraveHb;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 报销
  * 25个字段
  * 7个data字段、2个引入字段、16个普通字段
  */
-public class ReimburseVo {
+public class ReimburseVo extends HelpVo {
 
     //修改状态
 
@@ -136,6 +143,56 @@ public class ReimburseVo {
     private List<BillVo> stayBillData;
     //车船机票费报销
     private AirDataVo airDataVo;
+
+    public ReimburseVo() {
+    }
+
+    public ReimburseVo(ReimburseHb hb) {
+        if (hb != null) {
+            setSerialNo(hb.getSerialNo());
+            setApprovalStatus(hb.getApprovalStatus());
+            setFkApprovalNum(hb.getFkApprovalNum());
+            setChannel(hb.getChannel());
+            setAgent(hb.getAgent());
+            setReimbursement(hb.getReimbursement());
+            setFillDate(hb.getFillDate());
+            setBudgetDepartment(hb.getBudgetDepartment());
+            setTotalAmountLower(hb.getTotalAmountLower());
+            setProject(hb.getProject());
+            setPaymentRequest(hb.getPaymentRequest());
+            setServeBill(hb.getServeBill());
+            setCause(hb.getCause());
+            setBillType(hb.getBillType());
+            setIsTickets(hb.getIsTickets());
+            setSbumitFlag(hb.getSbumitFlag());
+            setTraveData(hb.getTraveList());
+            setReportData(hb.getReportName());
+            if (!TextUtils.isEmpty(hb.getTicketList()) ||
+                    !TextUtils.isEmpty(hb.getImageList())) {
+                AirDataVo vo = new AirDataVo();
+                vo.setCtripData(hb.getTicketList());
+                Map<String, List<BillVo>> map = new HashMap<>();
+                execute(hb.getImageList(), imageHb -> {
+                    List<BillVo> data = map.get(imageHb.getType());
+                    if (data == null) {
+                        map.put(imageHb.getType(), new ArrayList<>());
+                    }
+                    map.get(imageHb.getType()).add(new BillVo(imageHb));
+                });
+                //普通
+                setBillData(map.get(ImageHb.IMAGE_NONE));
+                //交通
+                setTrafficBillData(map.get(ImageHb.IMAGE_JT));
+                //住宿
+                setStayBillData(map.get(ImageHb.IMAGE_ZS));
+                //车船机票
+                vo.setAirBillData(map.get(ImageHb.IMAGE_CCJP));
+                if (!vo.isEmpty()) {
+                    setAirDataVo(vo);
+                }
+            }
+        }
+    }
 
     public String getState() {
         return state;

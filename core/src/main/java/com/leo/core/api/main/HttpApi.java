@@ -89,15 +89,15 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
 
     @Override
     public <B> T observable(Observable<B> observable) {
-        observable(observable, -1, null);
+        observable(observable, null, -1, null);
         return getThis();
     }
 
     @Override
-    public <B> T observable(Observable<B> observable, int what, String tag) {
+    public <B> T observable(Observable<B> observable, String path, int what, String tag) {
         if (observable != null) {
             MsgSubscriber<T, B> subscriber = subscriber();
-            subscriber.init(what, tag);
+            subscriber.init(path, what, tag);
             observable.compose(transformer()).subscribe((Subscriber) subscriber);
         }
         return getThis();

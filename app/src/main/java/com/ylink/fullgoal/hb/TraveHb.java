@@ -3,7 +3,7 @@ package com.ylink.fullgoal.hb;
 /**
  * 出差申请单
  */
-public class TraveHb {
+public class TraveHb extends SerialNoHb {
 
     /**
      * workName : CRE

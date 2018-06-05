@@ -1,113 +1,96 @@
 package com.ylink.fullgoal.hb;
 
-import com.leo.core.util.DateUtil;
-
 import java.util.List;
 
 /**
- * 报销
+ * 报销获取
  */
 public class ReimburseHb {
 
-    //渠道
-    private final static String CHANNEL = "android";
-    //一般费用报销
-    private final static String GENERAL_BILL_TYPE = "1";
-    //出差费用报销
-    private final static String EVECTION_BILL_TYPE = "2";
+    /**
+     * id : 79
+     * serialNo : 2018060509751
+     * approvalStatus : 1
+     * fkApprovalNum :
+     * channel : android
+     * agent : 张三
+     * reimbursement : 曹勤莉
+     * fillDate : 2018-06-05 09:11:51
+     * budgetDepartment : 机构中台
+     * totalAmountLower :
+     * project : 项目查看
+     * paymentRequest :
+     * serveBill :
+     * cause : 22
+     * billType : 2
+     * isTickets :
+     * sbumitFlag :
+     * traveList : [{"serialNo":"2018060509751","code":"201909023"}]
+     * reportName : [{"serialNo":"2018060509751","reportCode":"2018091003"}]
+     * ticketList : [{"serialNo":"2018060509751","flightNumber":"20180109"}]
+     * imageList : [{"id":"244","url":"http://111.231.231.226/uploadfile/image/20180605/20180605091135N72K1.jpg","type":"1","serialNo":"2018060509751"},{"id":"245","url":"http://111.231.231.226/uploadfile/image/20180605/20180605091140KFQRD.jpg","type":"2","serialNo":"2018060509751"},{"id":"246","url":"http://111.231.231.226/uploadfile/image/20180605/20180605091145YFE18.jpg","type":"3","serialNo":"2018060509751"}]
+     */
 
-    //经办人
-    private String agent;
-    //渠道
-    private String channel;
-    //报销人
-    private String reimbursement;
-    //发起时间
-    private String fillDate;
-    //报销流水号
+    private String id;
     private String serialNo;
-    //报销类型
-    private String billType;
-    //预算归属部门
+    private String approvalStatus;
+    private String fkApprovalNum;
+    private String channel;
+    private String agent;
+    private String reimbursement;
+    private String fillDate;
     private String budgetDepartment;
-    //事由
-    private String cause;
-    //金额
     private String totalAmountLower;
-    //项目
     private String project;
-    //合同申请单
     private String paymentRequest;
-    //招待申请单
     private String serveBill;
-    //出差申请单编号集合
-    private List<String> traveList;
-    //投研报告编号集合
-    private List<String> reportName;
-    //携程机票编号集合
-    private List<String> ticketList;
-    //票据影像集合
+    private String cause;
+    private String billType;
+    private String isTickets;
+    private String sbumitFlag;
+    private List<TraveHb> traveList;
+    private List<ReportHb> reportName;
+    private List<CtripHb> ticketList;
     private List<ImageHb> imageList;
 
-    /**
-     * 初始化一般费用报销数据
-     *
-     * @param agent            经办人
-     * @param reimbursement    报销人
-     * @param budgetDepartment 预算归属部门
-     * @param project          项目
-     * @param cause            事由
-     * @param paymentRequest   合同申请单
-     * @param serveBill        招待申请单
-     */
-    public ReimburseHb(String agent, String reimbursement, String budgetDepartment, String project,
-                       String cause, String paymentRequest, String serveBill, List<ImageHb> imageList) {
-        this.billType = GENERAL_BILL_TYPE;
-        this.agent = agent;
-        this.reimbursement = reimbursement;
-        this.budgetDepartment = budgetDepartment;
-        this.project = project;
-        this.cause = cause;
-        this.paymentRequest = paymentRequest;
-        this.serveBill = serveBill;
-        this.imageList = imageList;
-        init();
+    public String getId() {
+        return id;
     }
 
-    /**
-     * 初始化出差费用报销数据
-     *
-     * @param agent            经办人
-     * @param reimbursement    报销人
-     * @param budgetDepartment 预算归属部门
-     * @param project          项目
-     * @param cause            事由
-     * @param traveList        投研报告编号集合
-     * @param reportName       出差申请单编号集合
-     * @param ticketList       携程机票编号集合
-     */
-    public ReimburseHb(String agent, String billType, String reimbursement, String budgetDepartment,
-                       String project, String cause, List<String> traveList, List<String> reportName,
-                       List<String> ticketList, List<ImageHb> imageList) {
-        this.billType = EVECTION_BILL_TYPE;
-        this.agent = agent;
-        this.reimbursement = reimbursement;
-        this.budgetDepartment = budgetDepartment;
-        this.project = project;
-        this.cause = cause;
-        this.traveList = traveList;
-        this.reportName = reportName;
-        this.ticketList = ticketList;
-        this.imageList = imageList;
-        init();
+    public void setId(String id) {
+        this.id = id;
     }
 
-    /**
-     * 初始化
-     */
-    private void init() {
-        this.channel = CHANNEL;
-        this.fillDate = DateUtil.getNowTimeString();
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public String getFkApprovalNum() {
+        return fkApprovalNum;
+    }
+
+    public void setFkApprovalNum(String fkApprovalNum) {
+        this.fkApprovalNum = fkApprovalNum;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
     public String getAgent() {
@@ -134,44 +117,12 @@ public class ReimburseHb {
         this.fillDate = fillDate;
     }
 
-    public String getSerialNo() {
-        return serialNo;
-    }
-
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
-    }
-
-    public String getBillType() {
-        return billType;
-    }
-
-    public void setBillType(String billType) {
-        this.billType = billType;
-    }
-
     public String getBudgetDepartment() {
         return budgetDepartment;
     }
 
     public void setBudgetDepartment(String budgetDepartment) {
         this.budgetDepartment = budgetDepartment;
-    }
-
-    public String getCause() {
-        return cause;
-    }
-
-    public void setCause(String cause) {
-        this.cause = cause;
-    }
-
-    public List<ImageHb> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<ImageHb> imageList) {
-        this.imageList = imageList;
     }
 
     public String getTotalAmountLower() {
@@ -206,35 +157,68 @@ public class ReimburseHb {
         this.serveBill = serveBill;
     }
 
-    public String getChannel() {
-        return channel;
+    public String getCause() {
+        return cause;
     }
 
-    public void setChannel(String channel) {
-        this.channel = channel;
+    public void setCause(String cause) {
+        this.cause = cause;
     }
 
-    public List<String> getTraveList() {
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    public String getIsTickets() {
+        return isTickets;
+    }
+
+    public void setIsTickets(String isTickets) {
+        this.isTickets = isTickets;
+    }
+
+    public String getSbumitFlag() {
+        return sbumitFlag;
+    }
+
+    public void setSbumitFlag(String sbumitFlag) {
+        this.sbumitFlag = sbumitFlag;
+    }
+
+    public List<TraveHb> getTraveList() {
         return traveList;
     }
 
-    public void setTraveList(List<String> traveList) {
+    public void setTraveList(List<TraveHb> traveList) {
         this.traveList = traveList;
     }
 
-    public List<String> getReportName() {
+    public List<ReportHb> getReportName() {
         return reportName;
     }
 
-    public void setReportName(List<String> reportName) {
+    public void setReportName(List<ReportHb> reportName) {
         this.reportName = reportName;
     }
 
-    public List<String> getTicketList() {
+    public List<CtripHb> getTicketList() {
         return ticketList;
     }
 
-    public void setTicketList(List<String> ticketList) {
+    public void setTicketList(List<CtripHb> ticketList) {
         this.ticketList = ticketList;
     }
+
+    public List<ImageHb> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<ImageHb> imageList) {
+        this.imageList = imageList;
+    }
+
 }

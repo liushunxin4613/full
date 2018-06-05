@@ -19,13 +19,13 @@ public interface ILoadImageApi<T extends ILoadImageApi> extends IApi {
      * 默认图片
      * @return 图片资源
      */
-    int getDefaultRes();
+    Integer getDefaultRes();
 
     /**
      * 异常图片
      * @return 图片资源
      */
-    int getErrorRes();
+    Integer getErrorRes();
 
     /**
      * 是否缓存

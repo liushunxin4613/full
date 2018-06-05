@@ -20,9 +20,9 @@ public class RetrofitSubscriber<T extends RetrofitSubscriber, B> extends MsgSubs
     }
 
     @Override
-    public T init(int what, String tag) {
+    public T init(String msg, int what, String tag) {
         if(api != null){
-            api.init(what, tag);
+            api.init(msg, what, tag);
         }
         return (T) this;
     }

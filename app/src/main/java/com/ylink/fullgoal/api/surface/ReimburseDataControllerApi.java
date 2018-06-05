@@ -2,6 +2,7 @@ package com.ylink.fullgoal.api.surface;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
@@ -11,6 +12,7 @@ import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -21,8 +23,11 @@ import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IndicatorBean;
 import com.ylink.fullgoal.bean.SXBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
+import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.hb.ReimburseHb;
+import com.ylink.fullgoal.hb.ReimburseUpHb;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
 import java.util.HashMap;
@@ -35,6 +40,9 @@ import static com.leo.core.util.TextUtils.count;
 import static com.leo.core.util.TextUtils.getListData;
 import static com.leo.core.util.TextUtils.getSetData;
 import static com.ylink.fullgoal.config.Config.APPROVAL_STATUS;
+import static com.ylink.fullgoal.config.Config.SERIAL_NO;
+import static com.ylink.fullgoal.config.Config.STATE;
+import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY_LIST;
 
 public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C> extends BarControllerApi<T, C> {
 
@@ -72,7 +80,7 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
     @Override
     public void initData() {
         super.initData();
-        addList(ReimburseVo.class, (what, msg, data) -> execute(!TextUtils.isEmpty(msg), ()
+        addList(ReimburseHb.class, (path, what, msg, data) -> execute(!TextUtils.isEmpty(msg), ()
                 -> initReimburseVoData(getReiRecycleControllerApi(msg), data)));
         getReiRecycleControllerApi("待处理");
         getReiRecycleControllerApi("审核中");
@@ -96,7 +104,7 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
                 vo.setApprovalStatus(getApprovalStatus(type));
                 Map<String, String> map = getCheck(vo, getSetData("经办人", "审批状态"));
                 if (!TextUtils.isEmpty(map)) {
-                    post("QuerytReimbursement", mp -> mp.putAll(map), type);
+                    post(REIMBURSE_QUERY_LIST, mp -> mp.putAll(map), type);
                 }
             }
             return api;
@@ -115,24 +123,46 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
         return null;
     }
 
-    private void initReimburseVoData(RecycleControllerApi api, List<ReimburseVo> reimburseData) {
+    private void initReimburseVoData(RecycleControllerApi api, List<ReimburseHb> reimburseData) {
         if (api != null) {
             if (!TextUtils.isEmpty(reimburseData)) {
                 api.showContentView();
                 execute(reimburseData, obj -> addVgBean(api, data -> {
-                    if (TextUtils.equals(obj.getBillType(), "1")) {
-                        obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_GENERAL);
-                    } else if (TextUtils.equals(obj.getBillType(), "2")) {
-                        obj.setReimbursementState(ReimburseVo.REIMBURSE_TYPE_EVECTION);
-                    }
-                    data.add(new CCSQDBean(obj.getSerialNo(), obj.getReimbursementState(), "报销批次号", "报销类型"));
-                    data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(), "时间", "金额"));
+                    String type = TextUtils.equals(obj.getBillType(), ReimburseUpHb.EVECTION_BILL_TYPE)
+                            ? ReimburseVo.REIMBURSE_TYPE_EVECTION : ReimburseVo.REIMBURSE_TYPE_GENERAL;
+                    data.add(new CCSQDBean(obj.getSerialNo(), type,
+                            "报销批次号", "报销类型"));
+                    data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(),
+                            "时间", "金额"));
                     data.add(new TvHTv3Bean("事由", obj.getCause()));
-                }));
+                }, vg -> vg.setOnClickListener(v -> {
+                    if (!TextUtils.isEmpty(obj.getBillType()) && !TextUtils.isEmpty(obj.getSerialNo())) {
+                        switch (obj.getBillType()) {
+                            case ReimburseVo.BILL_TYPE_Y://一般费用报销
+                                show("一般费用报销: " + obj.getSerialNo());
+                                startSurfaceActivity(GeneralControllerApi.class,
+                                        ReimburseVo.STATE_DETAIL, obj.getSerialNo());
+                                break;
+                            case ReimburseVo.BILL_TYPE_C://出差费用报销
+                                show("出差费用报销: " + obj.getSerialNo());
+                                startSurfaceActivity(EvectionControllerApi.class,
+                                        ReimburseVo.STATE_DETAIL, obj.getSerialNo());
+                                break;
+                        }
+                    }
+                })));
             } else {
                 api.showNullView(true);
             }
         }
+    }
+
+    private void startSurfaceActivity(Class<? extends IControllerApi> clz,
+                                      String state, String serialNo) {
+        Bundle bundle = new Bundle();
+        bundle.putString(STATE, state);
+        bundle.putString(SERIAL_NO, serialNo);
+        startSurfaceActivity(bundle, clz);
     }
 
     private RecycleControllerApi getRecycleControllerApi(String name) {
@@ -203,9 +233,10 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
                 .setAdapter(new BasePagerAdapter());
     }
 
-    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseApiBean>> api) {
+    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseApiBean>> api,
+                           IObjAction<VgBean> vgAction) {
         if (controllerApi != null && api != null) {
-            controllerApi.addVgBean(api);
+            executeNon(controllerApi.addVgBean(api), vgAction);
             controllerApi.notifyDataSetChanged();
         }
     }

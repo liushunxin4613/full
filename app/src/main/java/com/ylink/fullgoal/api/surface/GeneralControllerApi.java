@@ -9,7 +9,7 @@ import com.ylink.fullgoal.bean.TvH4Bean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.hb.ImageHb;
-import com.ylink.fullgoal.hb.ReimburseHb;
+import com.ylink.fullgoal.hb.ReimburseUpHb;
 import com.ylink.fullgoal.vo.ReimburseVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.leo.core.util.TextUtils.getSetData;
+import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_SUBMIT;
 
 /**
  * 一般费用报销
@@ -71,16 +72,18 @@ public class GeneralControllerApi<T extends GeneralControllerApi, C> extends Rei
     @Override
     protected void submit() {
         super.submit();
-        ReimburseHb hb = getReimburseHb(vo -> {
+        ReimburseUpHb hb = getReimburseHb(vo -> {
             List<ImageHb> data = new ArrayList<>();
-            execute(vo.getBillData(), bill -> data.add(new ImageHb(bill.getId(), bill.getUrl())));
-            return new ReimburseHb(getUserName(), vo.getReimbursement(), vo.getBudgetDepartment(),
+            //普通票据
+            execute(vo.getBillData(), bill -> data.add(new ImageHb(bill.getId(), bill.getType(),
+                    bill.getUrl())));
+            return new ReimburseUpHb(getUserName(), vo.getReimbursement(), vo.getBudgetDepartment(),
                     vo.getProject(), vo.getCause(), vo.getPaymentRequest(), vo.getServeBill(), data);
         });
-        Map<String, String> checkMap = getCheck(hb, getSetData("报销类型",
-                "经办人", "报销人", "预算归属部门", "事由", "影像集合"));
+        Map<String, String> checkMap = getCheck(hb, getSetData("报销类型", "经办人", "报销人",
+                "预算归属部门", "事由", "影像集合"));
         if (!TextUtils.isEmpty(checkMap)) {
-            post("FkSbumitCompensation", map -> map.putAll(checkMap));
+            post(REIMBURSE_SUBMIT, map -> map.putAll(checkMap));
         }
     }
 

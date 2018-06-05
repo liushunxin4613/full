@@ -14,6 +14,8 @@ import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.hb.CtripHb;
+import com.ylink.fullgoal.hb.ImageHb;
+import com.ylink.fullgoal.hb.ReimburseUpHb;
 import com.ylink.fullgoal.hb.ReportHb;
 import com.ylink.fullgoal.hb.TraveHb;
 import com.ylink.fullgoal.vo.AirDataVo;
@@ -21,10 +23,12 @@ import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.leo.core.util.TextUtils.getSetData;
+import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_SUBMIT;
 
 /**
  * 出差费用报销
@@ -88,7 +92,7 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             AirDataVo airDataVo = vo.getAirDataVo();
             List<CtripHb> airData = no(airDataVo, AirDataVo::getCtripData);
             List<BillVo> airBillData = no(airDataVo, AirDataVo::getAirBillData);
-            if (!(!isEnable() && airDataVo.isEmpty())) {
+            if (!(!isEnable() && (airDataVo == null || airDataVo.isEmpty()))) {
                 data.add(new TvBean("车船机票费报销"));
             }
             execute(airData, item -> data.add(getXCJPBean(item)));
@@ -112,14 +116,31 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
     @Override
     protected void submit() {
         super.submit();
-        Map<String, String> checkMap = getCheck(getVo(), getSetData("报销类型",
-                "经办人", "报销人", "预算归属部门", "事由"), getSetData("项目",
-                "出差申请单", "交通费", "住宿费", "车船机票费"));
-        ee("vo", getVo());
-        ee("checkMap", checkMap);
-        /*if (!TextUtils.isEmpty(checkMap)) {
-            post("FkSbumitCompensation", map -> map.putAll(checkMap));
-        }*/
+        ReimburseUpHb hb = getReimburseHb(vo -> {
+            //投研报告编号集合
+            List<String> traveList = new ArrayList<>();
+            execute(vo.getTraveData(), trave -> traveList.add(trave.getCode()));
+            //出差申请单编号集合
+            List<String> reportName = new ArrayList<>();
+            execute(vo.getReportData(), report -> reportName.add(report.getReportCode()));
+            //携程机票编号集合
+            List<String> ticketList = new ArrayList<>();
+            AirDataVo airVo = vo.getAirDataVo();
+            executeNon(airVo, air -> execute(air.getCtripData(), ctrip
+                    -> ticketList.add(ctrip.getFlightNumber())));
+            //影像集合
+            List<ImageHb> data = new ArrayList<>();
+            execute((BillVo bill) -> data.add(new ImageHb(bill.getId(), bill.getType(),
+                            bill.getUrl())), vo.getTrafficBillData(), vo.getStayBillData(),
+                    getExecute(airVo, AirDataVo::getAirBillData));
+            return new ReimburseUpHb(getUserName(), vo.getReimbursement(), vo.getBudgetDepartment(),
+                    vo.getProject(), vo.getCause(), traveList, reportName, ticketList, data);
+        });
+        Map<String, String> checkMap = getCheck(hb, getSetData("报销类型", "经办人", "报销人",
+                "预算归属部门", "事由"));
+        if (!TextUtils.isEmpty(checkMap)) {
+            post(REIMBURSE_SUBMIT, map -> map.putAll(checkMap));
+        }
     }
 
     //私有的

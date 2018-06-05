@@ -49,6 +49,7 @@ import com.leo.core.iapi.IMsgAction;
 import com.leo.core.iapi.IObjectApi;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.IParseApi;
+import com.leo.core.iapi.IPathMsgAction;
 import com.leo.core.iapi.IStartApi;
 import com.leo.core.iapi.ISubjoinApi;
 import com.leo.core.iapi.ITAction;
@@ -1141,6 +1142,30 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public T setEnableOnClickListener(View view, View.OnClickListener listener) {
+        viewApi().setEnableOnClickListener(view, listener);
+        return getThis();
+    }
+
+    @Override
+    public T setEnableOnClickListener(View.OnClickListener listener) {
+        viewApi().setEnableOnClickListener(listener);
+        return getThis();
+    }
+
+    @Override
+    public T setEnableOnLongClickListener(View view, View.OnLongClickListener listener) {
+        viewApi().setOnLongClickListener(view, listener);
+        return getThis();
+    }
+
+    @Override
+    public T setEnableOnLongClickListener(View.OnLongClickListener listener) {
+        viewApi().setEnableOnLongClickListener(listener);
+        return getThis();
+    }
+
+    @Override
     public T setTextHint(EditText et, String hint) {
         viewApi().setTextHint(et, hint);
         return getThis();
@@ -1291,9 +1316,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> T observable(Observable<B> observable, int what, String tag) {
+    public <B> T observable(Observable<B> observable, String path, int what, String tag) {
         httpApi().setNewSubscriber(newSubscriber());
-        httpApi().observable(observable, what, tag);
+        httpApi().observable(observable, path, what, tag);
         return getThis();
     }
 
@@ -1703,12 +1728,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public int getDefaultRes() {
+    public Integer getDefaultRes() {
         return loadImageApi().getDefaultRes();
     }
 
     @Override
-    public int getErrorRes() {
+    public Integer getErrorRes() {
         return loadImageApi().getErrorRes();
     }
 
@@ -1811,19 +1836,19 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <A> T add(TypeToken<A> token, IMsgAction<A> action) {
+    public <A> T add(TypeToken<A> token, IPathMsgAction<A> action) {
         parseApi().add(token, action);
         return getThis();
     }
 
     @Override
-    public <A> T addList(Class<A> clz, IMsgAction<List<A>> action) {
+    public <A> T addList(Class<A> clz, IPathMsgAction<List<A>> action) {
         parseApi().addList(clz, action);
         return getThis();
     }
 
     @Override
-    public <A> T add(Class<A> clz, IMsgAction<A> action) {
+    public <A> T add(Class<A> clz, IPathMsgAction<A> action) {
         parseApi().add(clz, action);
         return getThis();
     }
@@ -1847,8 +1872,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T init(int what, String tag) {
-        parseApi().init(what, tag);
+    public T init(String path, int what, String tag) {
+        parseApi().init(path, what, tag);
         return getThis();
     }
 

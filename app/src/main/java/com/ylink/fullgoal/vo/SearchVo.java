@@ -51,13 +51,21 @@ public class SearchVo<D> {
      * 搜索参数
      */
     public final static String[][] SEARCHS = {
+            //员工
             {REIMBURSEMENT, "reimbursementCompensation"},
+            //预算归属部门
             {BUDGET_DEPARTMENT, "BudgetDepartmentCompensation"},
+            //项目
             {PROJECT, "ProjectCompensation"},
+            //合同付款申请单
             {CONTRACT_BILL, "PaymentRequestCompensation"},
+            //出差申请单
             {BUSINESS, "TraveFormCompensation"},
+            //招待申请单
             {SERVE_BILL, "TraveFormCompensation"},
+            //投研报告
             {REPORT, "ResearchReportCompensation"},
+            //携程机票
             {XC_AIR, "CtripCompensation"},
     };
 

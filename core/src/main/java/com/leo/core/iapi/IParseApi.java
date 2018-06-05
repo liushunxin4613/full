@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public interface IParseApi<T extends IParseApi> extends IMsgApi<T> {
+public interface IParseApi<T extends IParseApi> extends IPathMsgApi<T> {
 
     T copy();
 
@@ -20,11 +20,11 @@ public interface IParseApi<T extends IParseApi> extends IMsgApi<T> {
 
     T clearPutParseMap();
 
-    <A> T add(TypeToken<A> token, IMsgAction<A> action);
+    <A> T add(TypeToken<A> token, IPathMsgAction<A> action);
 
-    <A> T add(Class<A> clz, IMsgAction<A> action);
+    <A> T add(Class<A> clz, IPathMsgAction<A> action);
 
-    <A> T addList(Class<A> clz, IMsgAction<List<A>> action);
+    <A> T addList(Class<A> clz, IPathMsgAction<List<A>> action);
 
     T clearAddParseMap();
 

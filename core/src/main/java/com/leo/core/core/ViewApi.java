@@ -113,6 +113,38 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public T setEnableOnClickListener(View view, View.OnClickListener listener) {
+        if(listener != null){
+            setOnClickListener(view, listener);
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setEnableOnClickListener(View.OnClickListener listener) {
+        if(listener != null){
+            setOnClickListener(listener);
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setEnableOnLongClickListener(View view, View.OnLongClickListener listener) {
+        if(listener != null){
+            setOnLongClickListener(view, listener);
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setEnableOnLongClickListener(View.OnLongClickListener listener) {
+        if(listener != null){
+            setOnLongClickListener(listener);
+        }
+        return getThis();
+    }
+
+    @Override
     public T setTextHint(EditText et, String hint) {
         if (checkView(et)) {
             et.setHint(hint);

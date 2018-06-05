@@ -35,6 +35,15 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getThis();
     }
 
+    protected <B> T execute(IObjAction<B> action, List<B>... args) {
+        if (action != null && !TextUtils.isEmpty(args)) {
+            for (List<B> data : args) {
+                RunUtil.execute(data, action);
+            }
+        }
+        return getThis();
+    }
+
     protected <B> T execute(Set<B> data, IObjAction<B> action) {
         RunUtil.execute(data, action);
         return getThis();

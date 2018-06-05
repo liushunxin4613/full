@@ -45,7 +45,7 @@ public class XCJPBean extends BaseApiBean {
     }
 
     public View.OnClickListener getOnClickListener() {
-        return onClickListener;
+        return getEnable(onClickListener, null);
     }
 
     public String getName() {

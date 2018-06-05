@@ -7,12 +7,10 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
-import com.ylink.fullgoal.hb.TestHb;
 import com.ylink.fullgoal.vo.BillVo;
 import com.ylink.fullgoal.vo.ReimburseVo;
 
 import static com.ylink.fullgoal.config.Config.DEBUG;
-import static com.ylink.fullgoal.config.Config.REIMBURSE_TYPE;
 import static com.ylink.fullgoal.config.Config.STATE;
 
 /**
@@ -77,7 +75,6 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
 
     private void startSurfaceActivity(Class<? extends IControllerApi> clz, String type, String state) {
         Bundle bundle = new Bundle();
-        bundle.putString(REIMBURSE_TYPE, type);
         bundle.putString(STATE, state);
         startSurfaceActivity(bundle, clz);
     }

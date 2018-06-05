@@ -3,7 +3,7 @@ package com.ylink.fullgoal.hb;
 /**
  * 携程机票
  */
-public class CtripHb {
+public class CtripHb extends SerialNoHb {
 
     /**
      * crew : 陈莹磊

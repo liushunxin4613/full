@@ -1,8 +1,5 @@
 package com.ylink.fullgoal.hb;
 
-import com.leo.core.util.RunUtil;
-import com.ylink.fullgoal.vo.ReimburseVo;
-
 import java.util.List;
 
 /**
@@ -29,13 +26,9 @@ public class DataHb {
     //调研报告列表
     private List<ReportHb> reportList;
     //报销
-    private ReimburseVo reimburseData;
+    private ReimburseHb reimburseData;
     //报销列表
-    private List<ReimburseVo> reimburseList;
-
-    public boolean isSuccess() {
-        return RunUtil.getExecute(getReturnCode(), false, CodeHb::isSuccess);
-    }
+    private List<ReimburseHb> reimburseList;
 
     public CodeHb getReturnCode() {
         return returnCode;
@@ -109,19 +102,19 @@ public class DataHb {
         this.reportList = reportList;
     }
 
-    public ReimburseVo getReimburseData() {
+    public ReimburseHb getReimburseData() {
         return reimburseData;
     }
 
-    public void setReimburseData(ReimburseVo reimburseData) {
+    public void setReimburseData(ReimburseHb reimburseData) {
         this.reimburseData = reimburseData;
     }
 
-    public List<ReimburseVo> getReimburseList() {
+    public List<ReimburseHb> getReimburseList() {
         return reimburseList;
     }
 
-    public void setReimburseList(List<ReimburseVo> reimburseList) {
+    public void setReimburseList(List<ReimburseHb> reimburseList) {
         this.reimburseList = reimburseList;
     }
 

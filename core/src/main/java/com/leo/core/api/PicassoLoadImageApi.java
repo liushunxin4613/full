@@ -10,6 +10,7 @@ import com.leo.core.iapi.ICallbackApi;
 import com.leo.core.iapi.ILoadImageApi;
 import com.leo.core.util.TextUtils;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -18,19 +19,20 @@ import java.util.Map;
 
 public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<T> implements ILoadImageApi<T> {
 
-    public final static int CALLBACK_SUCCESS = 200;
+    private final static int CALLBACK_SUCCESS = 200;
     public final static int CALLBACK_ERROR = 201;
 
     private Picasso picasso;
-    private int defaultRes;
-    private int errorRes;
+    private Integer defaultRes;
+    private Integer errorRes;
     private boolean cacheEnable;
     private Map<String, ?> map;
 
-    public PicassoLoadImageApi(Context context, int defaultRes, int errorRes) {
+    public PicassoLoadImageApi(Context context, Integer defaultRes, Integer errorRes) {
         this.picasso = Picasso.with(context);
         this.defaultRes = defaultRes;
         this.errorRes = errorRes;
+        this.cacheEnable = true;
     }
 
     @Override
@@ -39,12 +41,12 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
     }
 
     @Override
-    public int getDefaultRes() {
+    public Integer getDefaultRes() {
         return defaultRes;
     }
 
     @Override
-    public int getErrorRes() {
+    public Integer getErrorRes() {
         return errorRes;
     }
 
@@ -106,6 +108,15 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
     private void init(RequestCreator rc) {
         if (rc != null) {
             rc.config(Bitmap.Config.RGB_565);
+            if (!cacheEnable) {
+                rc.memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_CACHE);
+            }
+            if (getDefaultRes() != null) {
+                rc.placeholder(getDefaultRes());
+            }
+            if (getErrorRes() != null) {
+                rc.error(getErrorRes());
+            }
             if (!TextUtils.isEmpty(map)) {
                 for (Map.Entry<String, ?> entry : map.entrySet()) {
                     switchParam(entry.getKey(), entry.getValue());

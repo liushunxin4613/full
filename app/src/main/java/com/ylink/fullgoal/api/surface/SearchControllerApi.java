@@ -101,40 +101,40 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
             }
         });
         //消息标志
-        add(CodeHb.class, (what, msg, bean) -> {
+        add(CodeHb.class, (path, what, msg, bean) -> {
             if (!bean.isSuccess()) {
                 initSearchDataAction(null);
             }
         });
         //员工列表
-        addList(UserHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        addList(UserHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getUserName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //部门列表
-        addList(DepartHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        addList(DepartHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getDepartmentName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //项目列表
-        addList(ProjectHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        addList(ProjectHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getProjectName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //合同付款申请单列表
-        addList(CompensationHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        addList(CompensationHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //出差申请单列表及招待申请单
-        addList(TraveHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        addList(TraveHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new CCSQDBean(item.getCode(), String.format("%s天", item.getDates()),
                 item.getStartDate(), String.format("至%s", item.getEndDate()),
                 (bean, view) -> finishActivity(new SearchVo<>(search, item)))))));
         //携程机票列表
-        addList(CtripHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        addList(CtripHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new XCJPBean(item.getCrew(), item.getTicket(), item.getFlightNumber(),
                 String.format("%s 开", item.getTakeoffTime()), String.format("%s 到", item.getArrivelTime()),
                 String.format("%s - %s", item.getDeparture(), item.getDestination()),
                 (bean, view) -> finishActivity(new SearchVo<>(search, item)))))));
         //调研报告列表
-        addList(ReportHb.class, (what, msg, list) -> initSearchDataAction(data -> execute(list, item
+        addList(ReportHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvH2SBean(item.getReportInfo(), item.getStockName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         search(null);

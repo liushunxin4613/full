@@ -118,6 +118,40 @@ public interface IViewApi<T extends IViewApi> extends IApi {
     T setOnLongClickListener(View.OnLongClickListener listener);
 
     /**
+     * 设置view的可控点击事件
+     *
+     * @param view     View
+     * @param listener 点击监听
+     * @return 媒介
+     */
+    T setEnableOnClickListener(View view, View.OnClickListener listener);
+
+    /**
+     * 设置view的可控点击事件
+     *
+     * @param listener 点击监听
+     * @return 媒介
+     */
+    T setEnableOnClickListener(View.OnClickListener listener);
+
+    /**
+     * 设置view的可控长按点击事件
+     *
+     * @param view     View
+     * @param listener 长按点击监听
+     * @return 媒介
+     */
+    T setEnableOnLongClickListener(View view, View.OnLongClickListener listener);
+
+    /**
+     * 设置view的可控长按点击事件
+     *
+     * @param listener 长按点击监听
+     * @return 媒介
+     */
+    T setEnableOnLongClickListener(View.OnLongClickListener listener);
+
+    /**
      * 设置EditText hint
      *
      * @param et   EditText

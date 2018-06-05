@@ -8,8 +8,8 @@ import com.leo.core.api.core.ThisApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.DataEmpty;
 import com.leo.core.bean.HttpError;
-import com.leo.core.iapi.IMsgAction;
 import com.leo.core.iapi.IParseApi;
+import com.leo.core.iapi.IPathMsgAction;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.GsonDecodeUtil;
 import com.leo.core.util.LogUtil;
@@ -43,18 +43,21 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private int what;
     private String msg;
+    private String path;
     private List<Type> data;
     private Map<String, Type> typeMap;
-    private Map<Type, List<IMsgAction>> apiMap;
+    private Map<Type, List<IPathMsgAction>> apiMap;
 
     public ParseApi() {
+        LogUtil.closeThisLog(this);
         this.data = new ArrayList<>();
         this.typeMap = new HashMap<>();
         this.apiMap = new HashMap<>();
     }
 
     @Override
-    public T init(int what, String msg) {
+    public T init(String path, int what, String msg) {
+        this.path = path;
         this.what = what;
         this.msg = msg;
         return getThis();
@@ -110,9 +113,9 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     @Override
-    public <A> T add(TypeToken<A> token, IMsgAction<A> action) {
+    public <A> T add(TypeToken<A> token, IPathMsgAction<A> action) {
         if (token != null && action != null) {
-            List<IMsgAction> data = apiMap.get(token.getType());
+            List<IPathMsgAction> data = apiMap.get(token.getType());
             if (data == null) {
                 apiMap.put(token.getType(), new ArrayList<>());
             }
@@ -122,13 +125,13 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     @Override
-    public <A> T add(Class<A> clz, IMsgAction<A> action) {
+    public <A> T add(Class<A> clz, IPathMsgAction<A> action) {
         add(TypeToken.get(clz), action);
         return getThis();
     }
 
     @Override
-    public <A> T addList(Class<A> clz, IMsgAction<List<A>> action) {
+    public <A> T addList(Class<A> clz, IPathMsgAction<List<A>> action) {
         add((TypeToken<List<A>>) TypeToken.getParameterized(List.class, clz), action);
         return getThis();
     }
@@ -162,13 +165,15 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private <A> void onItem(A item, Type type) {
+//        LogUtil.ee(this, "type: " + type + ", apiMap.get(type): " + (apiMap.get(type) == null) +
+//                ", item: " + LogUtil.getLog(item));
         executeNon(item, obj -> execute(apiMap.get(type), action -> {
             if (obj instanceof CodeHb) {
                 if (!((CodeHb) obj).isSuccess() && !TextUtils.isEmpty(((CodeHb) obj).getMessage())) {
                     ToastUtil.show(((CodeHb) obj).getMessage());
                 }
             }
-            action.execute(what, msg, obj);
+            action.execute(path == null ? "" : path, what, msg, obj);
         }));
     }
 
@@ -176,9 +181,13 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         final String txt = getCleanJsonString(text, null);
         if (!TextUtils.isEmpty(data)) {
             int emptyCount = getEmptyLength(txt);
+            LogUtil.ee(this, "txt: " + txt);
+            LogUtil.ee(this, "emptyCount: " + emptyCount);
             execute(data, type -> {
                 Object obj = GsonDecodeUtil.decode(txt, type);
                 String encode = GsonDecodeUtil.encode(obj);
+                LogUtil.ee(this, "getEmptyLength(encode): " + getEmptyLength(encode));
+                LogUtil.ee(this, "encode: " + encode);
                 if (emptyCount == getEmptyLength(encode)) {
                     onData(obj, type);
                 }

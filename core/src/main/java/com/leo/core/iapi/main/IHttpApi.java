@@ -81,6 +81,6 @@ public interface IHttpApi<T extends IHttpApi> {
      * @param <B> B
      * @return 本身
      */
-    <B> T observable(Observable<B> observable, int what, String tag);
+    <B> T observable(Observable<B> observable, String path, int what, String tag);
 
 }

@@ -7,7 +7,7 @@ import com.leo.core.iapi.IUrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.Api;
-import com.ylink.fullgoal.config.Config;
+import com.ylink.fullgoal.config.UrlConfig;
 
 import java.io.File;
 import java.util.HashMap;
@@ -23,11 +23,11 @@ import rx.Observable;
 public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements IUrlApi<T> {
 
     //根URL
-    private final static String ROOT_URL = Config.ROOT_URL;
+    private final static String ROOT_URL = UrlConfig.ROOT_URL;
     //上传URL
-    private final static String UPLOAD_URL = Config.UPLOAD_URL;
+    private final static String UPLOAD_URL = UrlConfig.UPLOAD_URL;
     //图片上传页面
-    private final static String UPLOAD_IMAGE_URL = Config.UPLOAD_IMAGE_URL;
+    private final static String UPLOAD_IMAGE_URL = UrlConfig.UPLOAD_IMAGE_URL;
     //图片上传固定参数
     private final static String UPLOAD_IMAGE_PARAM = "files";
     //图片上传类型
@@ -68,8 +68,8 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         controllerApi().observable(observable);
     }
 
-    private <B> void observable(int what, String msg, Observable<B> observable) {
-        controllerApi().observable(observable, what, msg);
+    private <B> void observable(String path, int what, String msg, Observable<B> observable) {
+        controllerApi().observable(observable, path, what, msg);
     }
 
     /**
@@ -156,7 +156,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
     @Override
     public T post(String path, IObjAction<Map<String, String>> action, int what, String tag) {
         if (!TextUtils.isEmpty(path)) {
-            observable(what, tag, getApi().post(path, getCleanMapAction(action)));
+            observable(path, what, tag, getApi().post(path, getCleanMapAction(action)));
         }
         return getThis();
     }
@@ -203,7 +203,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
     @Override
     public T get(String path, IObjAction<Map<String, String>> action, int what, String tag) {
         if (!TextUtils.isEmpty(path)) {
-            observable(what, tag, getApi().get(path, getCleanMapAction(action)));
+            observable(path, what, tag, getApi().get(path, getCleanMapAction(action)));
         }
         return getThis();
     }

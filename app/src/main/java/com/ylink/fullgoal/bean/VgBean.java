@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.bean;
 
+import android.view.View;
+
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -16,6 +18,7 @@ public class VgBean extends BaseApiBean {
 
     private int type;
     private List<BaseApiBean> data;
+    private transient View.OnClickListener onClickListener;
 
     public VgBean(List<BaseApiBean> data) {
         this.data = data;
@@ -72,6 +75,15 @@ public class VgBean extends BaseApiBean {
             return getData().indexOf(bean);
         }
         return -1;
+    }
+
+    public View.OnClickListener getOnClickListener() {
+        return onClickListener;
+    }
+
+    public VgBean setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+        return this;
     }
 
 }

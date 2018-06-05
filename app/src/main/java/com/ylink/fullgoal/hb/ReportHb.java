@@ -3,7 +3,7 @@ package com.ylink.fullgoal.hb;
 /**
  * 调研报告
  */
-public class ReportHb {
+public class ReportHb extends SerialNoHb {
 
     /**
      * reportCode : 2018091001
