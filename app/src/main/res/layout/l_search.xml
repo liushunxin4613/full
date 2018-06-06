@@ -79,6 +79,6 @@
         android:layout_gravity="bottom"
         android:background="@color/ccC" />
 
-    <include layout="@layout/l_recycle" />
+    <include layout="@layout/l_search_content_recycle" />
 
 </LinearLayout>

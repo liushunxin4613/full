@@ -7,7 +7,7 @@ import com.leo.core.iapi.OnBVClickListener;
 import com.leo.core.iapi.OnBVLongClickListener;
 import com.ylink.fullgoal.R;
 
-public class GridPhotoBean extends BaseApiBean {
+public class GridPhotoBean extends BaseApiBean<GridPhotoBean> {
 
     @Override
     public Integer getApiType() {

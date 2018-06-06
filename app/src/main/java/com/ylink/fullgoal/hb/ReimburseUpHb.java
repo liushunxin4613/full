@@ -52,21 +52,26 @@ public class ReimburseUpHb {
     /**
      * 初始化一般费用报销数据
      *
+     * @param serialNo         报销批次号
      * @param agent            经办人
      * @param reimbursement    报销人
      * @param budgetDepartment 预算归属部门
      * @param project          项目
+     * @param totalAmountLower 金额
      * @param cause            事由
      * @param paymentRequest   合同申请单
      * @param serveBill        招待申请单
      */
-    public ReimburseUpHb(String agent, String reimbursement, String budgetDepartment, String project,
-                       String cause, String paymentRequest, String serveBill, List<ImageHb> imageList) {
+    public ReimburseUpHb(String serialNo, String agent, String reimbursement, String budgetDepartment, String project,
+                         String totalAmountLower, String cause, String paymentRequest, String serveBill,
+                         List<ImageHb> imageList) {
         this.billType = GENERAL_BILL_TYPE;
+        this.serialNo = serialNo;
         this.agent = agent;
         this.reimbursement = reimbursement;
         this.budgetDepartment = budgetDepartment;
         this.project = project;
+        this.totalAmountLower = totalAmountLower;
         this.cause = cause;
         this.paymentRequest = paymentRequest;
         this.serveBill = serveBill;
@@ -77,23 +82,27 @@ public class ReimburseUpHb {
     /**
      * 初始化出差费用报销数据
      *
+     * @param serialNo         报销批次号
      * @param agent            经办人
      * @param reimbursement    报销人
      * @param budgetDepartment 预算归属部门
      * @param project          项目
+     * @param totalAmountLower 金额
      * @param cause            事由
      * @param traveList        投研报告编号集合
      * @param reportName       出差申请单编号集合
      * @param ticketList       携程机票编号集合
      */
-    public ReimburseUpHb(String agent, String reimbursement, String budgetDepartment, String project,
-                       String cause, List<String> traveList, List<String> reportName,
-                       List<String> ticketList, List<ImageHb> imageList) {
+    public ReimburseUpHb(String serialNo, String agent, String reimbursement, String budgetDepartment, String project,
+                         String totalAmountLower, String cause, List<String> traveList,
+                         List<String> reportName, List<String> ticketList, List<ImageHb> imageList) {
         this.billType = EVECTION_BILL_TYPE;
+        this.serialNo = serialNo;
         this.agent = agent;
         this.reimbursement = reimbursement;
         this.budgetDepartment = budgetDepartment;
         this.project = project;
+        this.totalAmountLower = totalAmountLower;
         this.cause = cause;
         this.traveList = traveList;
         this.reportName = reportName;

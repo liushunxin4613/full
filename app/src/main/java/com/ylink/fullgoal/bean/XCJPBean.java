@@ -9,7 +9,7 @@ import com.ylink.fullgoal.R;
 /**
  * 携程机票
  */
-public class XCJPBean extends BaseApiBean {
+public class XCJPBean extends BaseApiBean<XCJPBean> {
 
     private transient View.OnClickListener onClickListener;
 

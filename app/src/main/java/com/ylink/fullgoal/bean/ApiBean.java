@@ -2,6 +2,7 @@ package com.ylink.fullgoal.bean;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,7 +12,7 @@ import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 
-public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
+public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
 
     //不做引入处理
     private transient View.OnClickListener onClickListener;
@@ -21,6 +22,7 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
     private String name;
     private String detail;
     private String hint;
+    private transient boolean isMoneyInputType;
 
     public ApiBean(String name) {
         this(null, name, null, null, null);
@@ -70,6 +72,14 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
         setOnBVClickListener(listener);
     }
 
+    public boolean isMoneyInputType() {
+        return isMoneyInputType;
+    }
+
+    public void setMoneyInputType(boolean moneyInputType) {
+        isMoneyInputType = moneyInputType;
+    }
+
     public String getName() {
         return name;
     }
@@ -117,9 +127,13 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
     public void setTextView(TextView textView) {
         this.textView = textView;
         if (this.textView != null) {
+            if (isMoneyInputType()) {
+                this.textView.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
+            }
             this.textView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+
                 }
 
                 @Override
@@ -128,6 +142,16 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean {
 
                 @Override
                 public void afterTextChanged(Editable text) {
+                    if (isMoneyInputType() && !TextUtils.isEmpty(text)) {
+                        int index = text.toString().lastIndexOf(".");
+                        if (index >= 0) {
+                            int end = index + 3;
+                            if (end < text.length()) {
+                                text.delete(end, text.length());
+                                return;
+                            }
+                        }
+                    }
                     String str = RunUtil.getExecute(text, CharSequence::toString);
                     if (!TextUtils.equals(str, getHint())) {
                         setDetail(str);

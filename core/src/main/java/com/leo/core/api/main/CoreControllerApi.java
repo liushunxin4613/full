@@ -1919,6 +1919,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public T post(String path) {
+        api().post(path);
+        return getThis();
+    }
+
+    @Override
     public T post(String path, IObjAction<Map<String, String>> action) {
         api().post(path, action);
         return getThis();

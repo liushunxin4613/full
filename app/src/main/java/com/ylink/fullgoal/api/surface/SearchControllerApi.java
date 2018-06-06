@@ -5,13 +5,17 @@ import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
+import com.leo.core.bean.Completed;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.ApiBean;
 import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.bean.TvBean;
@@ -44,8 +48,14 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
     EditText nameEt;
     @Bind(R.id.icon_iv)
     ImageView iconIv;
+    @Bind(R.id.null_tv)
+    TextView nullTv;
+    @Bind(R.id.null_vg)
+    LinearLayout nullVg;
 
     private String search;
+    private String keyword;
+    private List<String> filterData;
 
     public SearchControllerApi(C controller) {
         super(controller);
@@ -72,10 +82,15 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
     public void initView() {
         super.initView();
         getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
+        adapterDataApi().setEmptyAction(this::showView);
         setOnClickListener(backIv, view -> onBackPressed());
         setOnClickListener(iconIv, v -> setText(nameEt, null));
-        executeBundle(bundle -> executeNon(bundle.getString(Config.SEARCH), search
-                -> this.search = search));
+        setText(nullTv, "没有更多的数据");
+        setNullView(nullVg);
+        executeBundle(bundle -> {
+            executeNon(bundle.getString(Config.SEARCH), search -> this.search = search);
+            executeNon(bundle.getStringArrayList(Config.FILTERS), data -> this.filterData = data);
+        });
         nameEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {
@@ -101,11 +116,7 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
             }
         });
         //消息标志
-        add(CodeHb.class, (path, what, msg, bean) -> {
-            if (!bean.isSuccess()) {
-                initSearchDataAction(null);
-            }
-        });
+        add(CodeHb.class, (path, what, msg, bean) -> showView(bean.isSuccess()));
         //员工列表
         addList(UserHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getUserName(), (bean, view)
@@ -137,7 +148,9 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
         addList(ReportHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvH2SBean(item.getReportInfo(), item.getStockName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
-        search(null);
+        //完成
+        add(Completed.class, (path, what, msg, bean) -> search(keyword));
+        posts(getSearchValue(search));
     }
 
     /**
@@ -146,7 +159,31 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
      * @param keyword 关键字
      */
     protected void search(String keyword) {
-        post(getSearchValue(search), keyword);
+        this.keyword = keyword;
+        adapterDataApi().initFilterAction(obj -> {
+            String key = null;
+            if (obj instanceof ApiBean) {
+                key = ((ApiBean) obj).getName();
+            } else if (obj instanceof CCSQDBean) {
+                key = ((CCSQDBean) obj).getName();
+            } else if (obj instanceof XCJPBean) {
+                key = ((XCJPBean) obj).getType();
+            } else if (obj instanceof LineBean) {
+                return !(adapterDataApi().getLastItem(0) instanceof LineBean)
+                        && adapterDataApi().getCount() != 0;
+            }
+            if (!TextUtils.isEmpty(filterData)) {
+                for (String filter : filterData) {
+                    if (!TextUtils.isEmpty(filter) && !TextUtils.isEmpty(key)
+                            && key.contains(filter)) {
+                        return false;
+                    }
+                }
+            }
+            return TextUtils.isEmpty(keyword) || !TextUtils.isEmpty(key)
+                    && key.contains(keyword);
+        });
+        notifyDataSetChanged();
     }
 
     private void initSearchDataAction(IObjAction<List<BaseApiBean>> action) {
@@ -184,6 +221,14 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
             }
         }
         return null;
+    }
+
+    private void showView(boolean enable) {
+        if (enable) {
+            showContentView();
+        } else {
+            showNullView(true);
+        }
     }
 
 }

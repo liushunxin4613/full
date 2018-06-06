@@ -1,10 +1,13 @@
 package com.leo.core.api.main;
 
 import com.leo.core.api.core.ThisApi;
+import com.leo.core.iapi.IAction;
+import com.leo.core.iapi.IBolAction;
 import com.leo.core.iapi.ICheckApi;
+import com.leo.core.iapi.IbooleanAction;
 import com.leo.core.iapi.main.IDataApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
+import com.leo.core.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +17,8 @@ import java.util.Set;
 public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataApi<T, D> {
 
     private List<D> data;
+    private List<D> filterData;
+    private IbooleanAction emptyAction;
     private ICheckApi<ICheckApi, D> api;
 
     public DataApi() {
@@ -32,6 +37,25 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
 
     public T setApi(ICheckApi<ICheckApi, D> api) {
         this.api = api;
+        return getThis();
+    }
+
+    public T setEmptyAction(IbooleanAction action) {
+        this.emptyAction = action;
+        return getThis();
+    }
+
+    public T initFilterAction(IBolAction<D> action) {
+        if (action != null && !TextUtils.isEmpty(getData())) {
+            filterData = new ArrayList<>();
+            for (D obj : getData()) {
+                if (obj != null && action.execute(obj)) {
+                    filterData.add(obj);
+                }
+            }
+        } else {
+            filterData = null;
+        }
         return getThis();
     }
 
@@ -58,6 +82,11 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
     @Override
     public List<D> getData() {
         return data;
+    }
+
+    @Override
+    public List<D> getFilterData() {
+        return filterData == null ? getData() : filterData;
     }
 
     @Override
@@ -97,7 +126,11 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
 
     @Override
     public int getCount() {
-        return getData() == null ? 0 : getData().size();
+        int count = getFilterData() == null ? 0 : getFilterData().size();
+        if (emptyAction != null) {
+            emptyAction.execute(count > 0);
+        }
+        return count;
     }
 
     @Override
@@ -426,7 +459,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
     @Override
     public D getItem(int position) {
         if (position >= 0 && position < getCount())
-            return getData().get(position);
+            return getFilterData().get(position);
         return null;
     }
 

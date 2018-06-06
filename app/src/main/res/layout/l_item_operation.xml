@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical|right"
+    android:orientation="horizontal"
+    tools:ignore="RtlHardcoded">
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="@drawable/tv_shape"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingBottom="4dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/tv1"
+        android:textSize="@dimen/tv1"
+        tools:ignore="RtlHardcoded"
+        tools:text="确认" />
+
+    <TextView
+        android:id="@+id/detail_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="@drawable/tv_shape"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingBottom="4dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/tv1"
+        android:textSize="@dimen/tv1"
+        tools:ignore="RtlHardcoded"
+        tools:text="修改" />
+
+</LinearLayout>

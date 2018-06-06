@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.ICallbackApi;
 import com.leo.core.iapi.ILoadImageApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -109,7 +109,7 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
         if (rc != null) {
             rc.config(Bitmap.Config.RGB_565);
             if (!cacheEnable) {
-                rc.memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_CACHE);
+                rc.skipMemoryCache();
             }
             if (getDefaultRes() != null) {
                 rc.placeholder(getDefaultRes());

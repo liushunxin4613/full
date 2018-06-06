@@ -18,6 +18,7 @@ import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
+import com.ylink.fullgoal.bean.ItemOperationBean;
 import com.ylink.fullgoal.bean.ReimburseTypeBean;
 import com.ylink.fullgoal.bean.SearchWaterfall;
 import com.ylink.fullgoal.bean.SelectedTvBean;
@@ -263,6 +264,11 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setText(detailTv, bean.getDetail())
                 .setText(typeTv, bean.getType())
                 .setText(timeTv, bean.getTime()));
+        //审批意见
+        putBindBeanApi(ItemOperationBean.class, (api, bean) -> api.setText(nameTv, bean.getName())
+                .setText(detailTv, bean.getDetail())
+                .setOnClickListener(nameTv, bean.getNameOnClickListener())
+                .setOnClickListener(detailTv, bean.getDetailOnClickListener()));
     }
 
 }

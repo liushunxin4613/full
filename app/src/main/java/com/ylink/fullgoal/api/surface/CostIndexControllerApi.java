@@ -66,9 +66,9 @@ public class CostIndexControllerApi<T extends CostIndexControllerApi, C> extends
     }
 
     @Override
-    protected void startSearch(String search) {
-        super.startSearch(search);
+    protected void startSearch(String search, ArrayList<String> filterData) {
         SoftInputUtil.hidSoftInput(getRootView());
+        super.startSearch(search, filterData);
     }
 
     @Override

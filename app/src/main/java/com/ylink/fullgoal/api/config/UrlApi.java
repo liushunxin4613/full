@@ -5,6 +5,7 @@ import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.iapi.IObjAction;
 import com.leo.core.iapi.IUrlApi;
 import com.leo.core.util.Base64Util;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.Api;
 import com.ylink.fullgoal.config.UrlConfig;
@@ -127,6 +128,15 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交post数据
      */
     @Override
+    public T post(String path) {
+        post(path, null, -1, null);
+        return getThis();
+    }
+
+    /**
+     * 提交post数据
+     */
+    @Override
     public T post(String path, IObjAction<Map<String, String>> action) {
         post(path, action, -1, null);
         return getThis();
@@ -223,6 +233,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
                 for (String key : data) {
                     map.remove(key);
                 }
+//                LogUtil.ee(this, "map: " + LogUtil.getLog(map));
                 return map;
             }
         }

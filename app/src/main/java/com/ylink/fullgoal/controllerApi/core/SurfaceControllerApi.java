@@ -16,8 +16,10 @@ import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.main.SurfaceActivity;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -104,10 +106,15 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected void startSearch(String search) {
+    protected void startSearch(String search, ArrayList<String> filterData) {
         Bundle bundle = new Bundle();
         bundle.putString(Config.SEARCH, search);
+        bundle.putStringArrayList(Config.FILTERS, filterData);
         startSurfaceActivity(bundle, SearchControllerApi.class);
+    }
+
+    protected void startSearch(String search) {
+        startSearch(search, null);
     }
 
     protected int getResTvColor(CharSequence text) {

@@ -16,6 +16,8 @@ public interface IUrlApi<T> extends IApi {
 
     T get(String path, IObjAction<Map<String, String>> action, int what, String tag);
 
+    T post(String path);
+
     T post(String path, IObjAction<Map<String, String>> action);
 
     T post(String path, IObjAction<Map<String, String>> action, int what);

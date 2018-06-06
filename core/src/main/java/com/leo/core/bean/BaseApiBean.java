@@ -1,6 +1,8 @@
 package com.leo.core.bean;
 
-import com.leo.core.iapi.IObjAction;
+import android.view.View;
+
+import com.leo.core.iapi.OnBVClickListener;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
@@ -8,7 +10,7 @@ import com.leo.core.util.TextUtils;
 /**
  * 基础ApiBean
  */
-public abstract class BaseApiBean implements IApiBean {
+public abstract class BaseApiBean<T extends BaseApiBean> implements IApiBean {
 
     private transient Object apiId = TextUtils.getRandom();
     private transient IControllerApi api;
@@ -46,8 +48,12 @@ public abstract class BaseApiBean implements IApiBean {
         return this;
     }
 
-    protected  <B> B getEnable(B a, B b) {
+    protected <B> B getEnable(B a, B b) {
         return isEnable() ? a : b;
+    }
+
+    protected View.OnClickListener getOnBVClickListener(OnBVClickListener<T> bvListener) {
+        return bvListener == null ? null : v -> bvListener.onBVClick((T) this, v);
     }
 
 }

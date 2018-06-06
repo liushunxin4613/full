@@ -21,11 +21,13 @@ import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.DateArrayBean;
 import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IndicatorBean;
+import com.ylink.fullgoal.bean.ItemOperationBean;
 import com.ylink.fullgoal.bean.ReimburseTypeBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.hb.DataHb;
 import com.ylink.fullgoal.hb.ReimburseHb;
 import com.ylink.fullgoal.hb.ReimburseUpHb;
 import com.ylink.fullgoal.vo.ReimburseVo;
@@ -84,12 +86,18 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
     @Override
     public void initData() {
         super.initData();
-        addList(ReimburseHb.class, (path, what, msg, data) -> execute(!TextUtils.isEmpty(msg), ()
-                -> initReimburseVoData(getReiRecycleControllerApi(msg), data)));
+        add(DataHb.class, (path, what, msg, bean) -> execute(!TextUtils.isEmpty(msg), ()
+                -> initReimburseVoData(getReiRecycleControllerApi(msg), bean.getReimburseList())));
         getReiRecycleControllerApi("待处理");
         getReiRecycleControllerApi("审核中");
         getReiRecycleControllerApi("已完成");
         getReiRecycleControllerApi("已取消");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        query(type);
     }
 
     private void query(String type) {
@@ -131,24 +139,26 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
                     data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(),
                             "时间", "金额"));
                     data.add(new TvHTv3Bean("事由", obj.getCause()));
-                }, vg -> vg.setOnClickListener(v -> {
-                    if (!TextUtils.isEmpty(obj.getBillType()) && !TextUtils.isEmpty(obj.getSerialNo())) {
-                        switch (obj.getBillType()) {
-                            case ReimburseVo.BILL_TYPE_Y://一般费用报销
-                                show("一般费用报销: " + obj.getSerialNo());
-                                startSurfaceActivity(GeneralControllerApi.class,
-                                        ReimburseVo.STATE_DETAIL, obj.getSerialNo());
-                                break;
-                            case ReimburseVo.BILL_TYPE_C://出差费用报销
-                                show("出差费用报销: " + obj.getSerialNo());
-                                startSurfaceActivity(EvectionControllerApi.class,
-                                        ReimburseVo.STATE_DETAIL, obj.getSerialNo());
-                                break;
-                        }
-                    }
-                })));
+                    data.add(new ItemOperationBean("确认", "修改",
+                            (bean, view) -> startSurfaceActivity(obj, ReimburseVo.STATE_CONFIRM),
+                            (bean, view) -> startSurfaceActivity(obj, ReimburseVo.STATE_ALTER)));
+                }, vg -> vg.setOnClickListener(v -> startSurfaceActivity(obj, ReimburseVo.STATE_DETAIL))));
             } else {
                 api.showNullView(true);
+            }
+        }
+    }
+
+    private void startSurfaceActivity(ReimburseHb hb, String state) {
+        if (hb != null && !TextUtils.isEmpty(state) && !TextUtils.isEmpty(hb.getBillType())
+                && !TextUtils.isEmpty(hb.getSerialNo())) {
+            switch (hb.getBillType()) {
+                case ReimburseVo.BILL_TYPE_Y://一般费用报销
+                    startSurfaceActivity(GeneralControllerApi.class, state, hb.getSerialNo());
+                    break;
+                case ReimburseVo.BILL_TYPE_C://出差费用报销
+                    startSurfaceActivity(EvectionControllerApi.class, state, hb.getSerialNo());
+                    break;
             }
         }
     }

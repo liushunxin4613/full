@@ -53,6 +53,13 @@ public interface IDataApi<T extends IDataApi, D> extends ICheckApi<T, D> {
     List<D> getData();
 
     /**
+     * 获取所有过滤对象
+     *
+     * @return 数据流
+     */
+    List<D> getFilterData();
+
+    /**
      * 复制数据流
      *
      * @return 数据流

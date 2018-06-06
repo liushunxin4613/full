@@ -9,7 +9,7 @@ import com.ylink.fullgoal.R;
 /**
  * 出差申请单
  */
-public class CCSQDBean extends BaseApiBean {
+public class CCSQDBean extends BaseApiBean<CCSQDBean> {
 
     private transient View.OnClickListener onClickListener;
 

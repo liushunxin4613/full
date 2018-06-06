@@ -127,9 +127,9 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     }
 
     @Override
-    protected void startSearch(String search) {
+    protected void startSearch(String search, ArrayList<String> filterData) {
         SoftInputUtil.hidSoftInput(getRootView());
-        super.startSearch(search);
+        super.startSearch(search, filterData);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                     setRightTv("提交", v -> submit());
                     break;
                 case ReimburseVo.STATE_CONFIRM:
-                    setRightTv("确认", v -> show("确认"));
+                    setRightTv("确认", v -> submit());
                     break;
                 case ReimburseVo.STATE_ALTER:
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
@@ -167,7 +167,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                         show("我不要了");
                     }).setOnClickListener(xgtjIv, v -> {
                         //修改提交
-                        show("修改提交");
+                        submit();
                     }).setOnClickListener(qxbxIv, v -> {
                         //取消报销
                         show("取消报销");
@@ -228,7 +228,19 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
             if (bean.isSuccess()) {
                 switch (path) {
                     case REIMBURSE_SUBMIT://报销提交
-                        show("报销成功");
+                        if (!TextUtils.isEmpty(getState())) {
+                            switch (getState()) {
+                                case ReimburseVo.STATE_INITIATE://经办人发起
+                                    show("报销成功");
+                                    break;
+                                case ReimburseVo.STATE_CONFIRM://经办人确认
+                                    show("报销确认成功");
+                                    break;
+                                case ReimburseVo.STATE_ALTER://经办人修改
+                                    show("报销修改成功");
+                                    break;
+                            }
+                        }
                         getActivity().finish();
                         break;
                 }
@@ -237,7 +249,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         add(ReimburseHb.class, (path, what, msg, bean) -> {
             switch (path) {
                 case REIMBURSE_QUERY://报销获取
-                    ee("ReimburseHb", bean);
                     setVo(new ReimburseVo(bean));
                     getVo().setDepartment(getDepartment());
                     notifyReimburseVoChanged();
@@ -563,6 +574,12 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                 return ImageHb.IMAGE_ZS;
             case TYPE_CCJP:
                 return ImageHb.IMAGE_CCJP;
+        }
+    }
+
+    <D> void checkAdd(List<D> data, String text, D obj) {
+        if (data != null && !(!isEnable() && TextUtils.isEmpty(text))) {
+            data.add(obj);
         }
     }
 

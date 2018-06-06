@@ -11,7 +11,6 @@ import com.leo.core.iapi.main.CreateControllerApiCallback;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiAdapter,

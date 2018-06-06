@@ -8,8 +8,10 @@ public class TvHEtIconMoreBean extends ApiBean<TvHEtIconMoreBean> {
 
     private transient IObjAction<String> action;
 
-    public TvHEtIconMoreBean(String name, String detail, String hint) {
+    public TvHEtIconMoreBean(String name, String detail, String hint, IObjAction<String> action) {
         super(name, detail, hint);
+        this.action = action;
+        setMoneyInputType(true);
     }
 
     public TvHEtIconMoreBean(Integer iconResId, String name, String detail, String hint,
@@ -21,7 +23,7 @@ public class TvHEtIconMoreBean extends ApiBean<TvHEtIconMoreBean> {
     @Override
     public void setDetail(String detail) {
         super.setDetail(detail);
-        if(action != null){
+        if (action != null) {
             action.execute(getDetail());
         }
     }

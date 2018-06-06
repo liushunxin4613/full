@@ -136,6 +136,40 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
         }
     }
 
+    public void posts(String path) {
+        if (!TextUtils.isEmpty(path)) {
+            switch (path) {
+                case "reimbursementCompensation"://员工列表
+                    post(path);
+                    break;
+                case "BudgetDepartmentCompensation"://部门列表
+                    post(path);
+                    break;
+                case "ProjectCompensation"://项目列表
+                    post(path, map -> map.put("departmentCode", getDepartmentCode()));
+                    break;
+                case "PaymentRequestCompensation"://合同付款申请单列表
+                    post(path, map -> map.put("reimbursement", getUserName()));
+                    break;
+                case "TraveFormCompensation"://出差申请单列表
+                    post(path, map -> {
+                        map.put("reimbursement", getUserName());
+                        map.put("departmentCode", getDepartmentCode());
+                    });
+                    break;
+                case "CtripCompensation"://携程机票列表
+                    post(path, map -> map.put("reimbursement", getUserName()));
+                    break;
+                case "ResearchReportCompensation"://调研报告列表
+                    post(path, map -> {
+                        map.put("reimbursement", getUserName());
+                        map.put("departmentCode", getDepartmentCode());
+                    });
+                    break;
+            }
+        }
+    }
+
     protected <A> void executeSearch(Class<A> clz, IObjAction<A> action) {
         if (clz != null && action != null) {
             TypeToken<SearchVo<A>> token = (TypeToken<SearchVo<A>>) TypeToken
