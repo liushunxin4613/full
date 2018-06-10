@@ -166,9 +166,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                 serialNo = (String) dataMap.get(SERIAL_NO);
                 CostFg cost = decode(encode(dataMap.get(COST_LIST)), CostFg.class);
                 if (cost != null) {
-                    if (cost.getAmount() == null) {
-                        cost.setAmount((String) dataMap.get(MONEY));
-                    }
+                    cost.setAmount((String) dataMap.get(MONEY));
                     cost.setTaxAmount("0");
                     cost.setExTaxAmount("0");
                     onCost(cost);

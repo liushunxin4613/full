@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.api.config;
 
 import com.leo.core.api.main.CoreControllerApi;
+import com.leo.core.bean.Uri;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.net.UrlApi;
@@ -218,7 +219,6 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void submitReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {
-            ee("map", map);
             post(ROOT_URL, FULL_REIMBURSE_SUBMIT, g(mp -> mp.putAll(map)));
         }
     }
@@ -283,7 +283,18 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
         }
     }
 
-    // <<< ****************************** 2018-07-05 11:38 ****************************** <<<
+    // >>> ****************************** 2018-06-09 19:25 ****************************** >>>
+
+    public void download(String url) {
+        Uri uri = new Uri(url);
+        if (uri.check()) {
+            get(uri.getStart(), uri.getContent() + uri.getEnd(), uri.getEnd());
+        }
+    }
+
+    public void queryConfig(){
+        post("http://111.231.231.226/", "app/fullApp/queryConfig", g(map -> map.put("channel", "android")));
+    }
 
     //私有的
 

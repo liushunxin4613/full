@@ -33,4 +33,8 @@ public class SbumitFlagController<T extends SbumitFlagController> extends String
         initDB("1");
     }
 
+    public boolean isOpen(){
+        return TextUtils.equals("1", getDB());
+    }
+
 }

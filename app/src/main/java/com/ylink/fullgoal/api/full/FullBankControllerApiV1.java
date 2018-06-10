@@ -46,6 +46,7 @@ public class FullBankControllerApiV1<T extends FullBankControllerApiV1, C> exten
     @Override
     public void initView() {
         super.initView();
+        switchDefault();
         setTitle("选择银行卡");
         setText(nullTv, "你还没有相关的银行卡信息");
         bankFg = getBean(BANK, BankFg.class);
@@ -56,6 +57,7 @@ public class FullBankControllerApiV1<T extends FullBankControllerApiV1, C> exten
                         -> data.add(new TvH2SBean(bank.getBankName(), bank.getBankNo(),
                         TextUtils.isEmpty(data), (bean, view) -> {
                     saveData(BANK, bank);
+                    bankFg = getBean(BANK, BankFg.class);
                     getActivity().finish();
                     api().submitBankV1(bank.getBankNo(), bank.getBankName());
                 }))));

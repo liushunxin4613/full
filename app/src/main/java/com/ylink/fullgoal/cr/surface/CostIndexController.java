@@ -21,6 +21,21 @@ import static com.ylink.fullgoal.config.ComConfig.YB;
  */
 public class CostIndexController<T extends CostIndexController> extends BaseController<T, CostFg, CostFg> {
 
+    public T update(String money) {
+        if (getDB() != null) {
+            if (TextUtils.isEmpty(getDB().getAmount())) {
+                getDB().setAmount(money);
+            }
+            if (TextUtils.isEmpty(getDB().getTaxAmount())) {
+                getDB().setTaxAmount("0");
+            }
+            if (TextUtils.isEmpty(getDB().getExTaxAmount())) {
+                getDB().setExTaxAmount("0");
+            }
+        }
+        return getThis();
+    }
+
     @Override
     public T initDB(CostFg costIndexFg) {
         return super.initDB(costIndexFg);

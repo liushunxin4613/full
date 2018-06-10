@@ -5,12 +5,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 
 import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.iapi.api.ICameraApi;
 import com.leo.core.iapi.inter.IMsgAction;
 import com.leo.core.util.BitmapUtil;
@@ -27,7 +25,7 @@ import static com.leo.core.util.LogUtil.ii;
 /**
  * 拍照
  */
-public class CameraApi extends HasCoreControllerApi<CameraApi> implements ICameraApi {
+public class CameraApi extends DirApi implements ICameraApi {
 
     private final static int PHOTO_REQUEST_CAMERA = 10001;
     private final static String ROOT_DIR = "photo";
@@ -41,13 +39,8 @@ public class CameraApi extends HasCoreControllerApi<CameraApi> implements ICamer
     }
 
     @Override
-    public boolean hasSdCard() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-    }
-
-    @Override
     public File getRootDir() {
-        return controllerApi().getContext().getExternalFilesDir(ROOT_DIR);
+        return getRootDir(ROOT_DIR);
     }
 
     @Override

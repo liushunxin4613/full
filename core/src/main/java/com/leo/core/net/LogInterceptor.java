@@ -29,7 +29,6 @@ import okio.BufferedSource;
 import static com.leo.core.config.Config.COOKIE;
 import static com.leo.core.config.Config.RX;
 import static com.leo.core.config.Config.RX_TO;
-import static com.leo.core.config.Config.USER;
 import static com.leo.core.util.DecoderUtil.decode;
 
 public class LogInterceptor implements Interceptor {
@@ -41,6 +40,7 @@ public class LogInterceptor implements Interceptor {
         Request request = chain.request();
         String url = request.url().toString();
         Request.Builder builder = request.newBuilder();
+        builder.url(decode(url));
         List<String> cookies = getUserDataApi().getStringData(COOKIE);
         if (!TextUtils.isEmpty(cookies)) {
             for (String cookie : cookies) {
@@ -137,13 +137,14 @@ public class LogInterceptor implements Interceptor {
     }
 
     private IDataApi getUserDataApi() {
-        return DataFactory.getApi().switchTable(USER);
+//        return DataFactory.getApi().switchTable(USER);
+        return DataFactory.getApi();
     }
 
     private void print(String key, String value) {
         if (!TextUtils.isEmpty(key)) {
-            if(TextUtils.count(value) > 1000){
-                value = value.substring(0, 1000);
+            if(TextUtils.count(value) > 10000){
+                value = value.substring(0, 10000);
             }
             LogUtil.ii(this, key + ": " + value);
         }

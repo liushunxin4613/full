@@ -30,6 +30,7 @@ import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
+import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
@@ -167,11 +168,20 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     break;
                 case QR:
                     setRightTv("确认", v -> {
+                        String money = vor(DVo::getMoney, DoubleController::getDBMoney);
+                        vos(DVo::getCostIndex, obj -> obj.update(money));
                         Map<String, Object> map = getSubmitMap();
                         if (!TextUtils.isEmpty(map)) {
-                            String share = vor(DVo::getCostIndex, CostIndexController::getDB,
+                            /*String share = vor(DVo::getCostIndex, CostIndexController::getDB,
                                     CostFg::getShare);
                             if (TextUtils.equals(share, "无需分摊")) {
+                                api().submitReimburse(map);
+                            } else {
+                                Bundle os = new Bundle();
+                                os.putString(DATA_QR, encode(map));
+                                startSurfaceActivity(os, FullCostIndexControllerApi.class);
+                            }*/
+                            if (vor(DVo::getSbumitFlag, SbumitFlagController::isOpen)) {
                                 api().submitReimburse(map);
                             } else {
                                 Bundle os = new Bundle();
@@ -230,7 +240,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                         if (!TextUtils.isEmpty(getState())) {
                             switch (getState()) {
                                 case FQ://经办人发起
-                                    show("报销成功");
+//                                    show("报销成功");
                                     again();
                                     break;
                                 case QR://经办人确认

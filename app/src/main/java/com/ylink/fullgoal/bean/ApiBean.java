@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.bean;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -154,12 +156,30 @@ public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
 
     public void setTextView(TextView textView) {
         this.textView = textView;
-        if (textView instanceof EditText && !isEtEnable() && isMoneyEnable()) {
-            HelperUtil.addMoneyTextChangedListener((EditText) textView, this::getMax, text -> {
-                if (!TextUtils.equals(text, getHint())) {
-                    setDetail(text);
-                }
-            });
+        if (textView instanceof EditText) {
+            if(!isEtEnable() && isMoneyEnable()){
+                HelperUtil.addMoneyTextChangedListener((EditText) textView, this::getMax, text -> {
+                    if (!TextUtils.equals(text, getHint())) {
+                        setDetail(text);
+                    }
+                });
+            } else {
+                textView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        String text = s.toString();
+                        if (!TextUtils.equals(text, getHint())) {
+                            setDetail(text);
+                        }
+                    }
+                });
+            }
         }
     }
 

@@ -391,4 +391,20 @@ public interface INewApi {
      */
     <B> B newVosApi();
 
+    /**
+     * dirApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B dirApi();
+
+    /**
+     * new dirApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newDirApi();
+
 }

@@ -9,6 +9,7 @@ import com.leo.core.api.api.CameraApi;
 import com.leo.core.api.api.ConfigApi;
 import com.leo.core.api.api.DataApi;
 import com.leo.core.api.api.DataTypeApi;
+import com.leo.core.api.api.DirApi;
 import com.leo.core.api.api.FileApi;
 import com.leo.core.api.api.GalleryApi;
 import com.leo.core.api.api.GsonDecodeApi;
@@ -26,6 +27,7 @@ import com.leo.core.api.main.HttpApi;
 import com.leo.core.api.main.ShowApi;
 import com.leo.core.factory.ActionApiFactory;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
+import com.leo.core.iapi.api.IDirApi;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.api.IVosApi;
 import com.leo.core.iapi.api.IVsApi;
@@ -227,6 +229,16 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
+    public IActivityLifecycleCallbacksApi newActivityLifecycleApi() {
+        return new ActivityLifecycleCallbacksApi();
+    }
+
+    @Override
+    public IDirApi newDirApi() {
+        return new DirApi(getThis());
+    }
+
+    @Override
     public <B, M> Observable.Transformer<B, M> newTransformer() {
         return new Transformer();
     }
@@ -234,11 +246,6 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     @Override
     public <B> MsgSubscriber<T, B> newSubscriber() {
         return new RetrofitSubscriber(parseApi().copy());
-    }
-
-    @Override
-    public IActivityLifecycleCallbacksApi newActivityLifecycleApi() {
-        return new ActivityLifecycleCallbacksApi();
     }
 
     @Override

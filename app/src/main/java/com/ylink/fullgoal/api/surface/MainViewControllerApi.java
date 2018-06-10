@@ -10,6 +10,7 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullBankControllerApiV1;
 import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
+import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApiV1;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
@@ -69,8 +70,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 addUI(3000, (IAction) this::dismissLoading);
                 start();
             }));
+            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用分摊", (bean, view) -> test()));
         }
-        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用分摊", (bean, view) -> test()));
         showContentView();
     }
 
@@ -78,7 +79,6 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     public void initData() {
         super.initData();
         add(StatusFg.class, (path, what, msg, bean) -> ii(String.format("SSO认证%s", bean.isSuccess() ? "成功" : "失败")));
-        general(FQ);
     }
 
     private void test() {
@@ -110,7 +110,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
      * 一般费用普票报销
      */
     private void general(String state) {
-        startSurfaceActivity(FullGeneralControllerApiV1.class, YB, state);
+//        startSurfaceActivity(FullGeneralControllerApiV1.class, YB, state);
+        startSurfaceActivity(FullGeneralControllerApi.class, YB, state);
     }
 
     /**

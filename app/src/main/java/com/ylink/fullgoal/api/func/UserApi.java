@@ -2,7 +2,6 @@ package com.ylink.fullgoal.api.func;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
-import com.leo.core.config.Config;
 import com.leo.core.iapi.api.IUserApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.bean.UserBean;
@@ -10,15 +9,8 @@ import com.ylink.fullgoal.fg.DepartmentFg;
 
 public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implements IUserApi<T> {
 
-    private final static String USER = Config.USER;
-
     public UserApi(CoreControllerApi controllerApi) {
         super(controllerApi);
-    }
-
-    @Override
-    protected String getDefTable() {
-        return USER;
     }
 
     @Override
@@ -34,7 +26,7 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
     @Override
     public <R> T initUser(R user) {
         if (user instanceof UserBean) {
-            saveData(USER, user);
+            saveData("user", user);
         }
         return getThis();
     }
@@ -46,7 +38,7 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public UserBean getUser() {
-        return getBean(USER, UserBean.class);
+        return getBean("user", UserBean.class);
     }
 
     @Override

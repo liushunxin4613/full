@@ -133,7 +133,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         //费用指标维度列表
         addList(DimenListFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getName(), (bean, view)
-                -> finishActivity(new SearchVo<>(getSearch(), getExecute(decode(getSearch(),
+                -> finishActivity(new SearchVo<>(getSearch(), getExecute(decode(getKey(),
                 DimenFg.class), DimenFg::getCode), item)))))));
         //申请单内容
         addList(DataFgV1.class, ApplyContentFgV1.class, (path, what, msg, list) -> initDataAction(data

@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 public class FileUtil {
 
@@ -53,19 +55,49 @@ public class FileUtil {
         return null;
     }
 
-    public static String getFileSuffix(File file, boolean suffix){
+    public static String getFileSuffix(File file, boolean suffix) {
         return file == null ? null : getFileSuffix(file.getName(), suffix);
     }
 
-    public static String getFileSuffix(String fileName, boolean suffix){
-        if(!TextUtils.isEmpty(fileName)){
+    private static String getFileSuffix(String fileName, boolean suffix) {
+        if (!TextUtils.isEmpty(fileName)) {
             int index = fileName.lastIndexOf(".");
-            if(index >= 0){
+            if (index >= 0) {
                 return suffix ? fileName.substring(index)
                         : fileName.substring(0, index);
             }
         }
         return fileName;
+    }
+
+    public static boolean writeFile(String filePath, InputStream inputStream) {
+        if (null == filePath || filePath.length() < 1) {
+            return false;
+        }
+        try {
+            File file = new File(filePath);
+            if(file.getParentFile().exists()){
+                file.getParentFile().mkdirs();
+            }
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            if(file.exists() && file.isFile()){
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int c = inputStream.read(buf);
+                while (-1 != c) {
+                    fileOutputStream.write(buf, 0, c);
+                    c = inputStream.read(buf);
+                }
+                fileOutputStream.flush();
+                fileOutputStream.close();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

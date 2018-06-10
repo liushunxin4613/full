@@ -149,6 +149,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private boolean checkRootType(Type type) {
         return type != null && !TextUtils.equals(type, ResponseBody.class)
+                && !TextUtils.equals(type, String.class)
                 && !TextUtils.equals(type, Completed.class)
                 && !TextUtils.equals(type, Exceptions.class);
     }
@@ -171,10 +172,9 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      * @param text text
      */
     private void onString(String text) {
+        onObj(text, String.class);
         execute(map, (type, map) -> {
-            if (TextUtils.equals(String.class, type)) {
-                onData(text, type, map);
-            } else if (checkRootType(type)) {
+            if (checkRootType(type)) {
                 onData(api.decode(text, type), type, map);
             }
         });
@@ -185,9 +185,9 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      *
      * @param obj obj
      */
-    private void onObj(Object obj) {
-        if (check(obj)) {
-            onData(obj, obj.getClass(), map.get(obj.getClass()));
+    private void onObj(Object obj, Class clz) {
+        if (check(obj, clz) && clz.isInstance(obj)) {
+            onData(obj, clz, map.get(clz));
         }
     }
 
@@ -233,6 +233,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private void onResponseBody(ResponseBody body) {
         try {
+            onObj(body, ResponseBody.class);
             onString(body.string());
         } catch (IOException e) {
             onExceptions(new Exceptions("body.string()异常", 102, e));
@@ -240,11 +241,11 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private void onCompleted(Completed completed) {
-        onObj(completed);
+        onObj(completed, Completed.class);
     }
 
     private void onExceptions(Exceptions exception) {
-        onObj(exception);
+        onObj(exception, Exceptions.class);
         executeNon(exception.getE(), Throwable::printStackTrace);
     }
 

@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.fg;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -30,6 +32,7 @@ public class DataFg extends StatusCodeFg {
     //报销查询列表
     private List<ApplicationtFg> applicationtList;
     //银行卡查询列表
+    @SerializedName("bank")
     private List<BankFg> bankCardtList2;
     //银行卡查询列表
     private List<DimenFg> dimen;

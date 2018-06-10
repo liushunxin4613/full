@@ -95,23 +95,27 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         return new HashMap<>();
     }
 
-    protected void post(String url, String path) {
+    public void get(String url, String path, String tag) {
+        get(url, path, null, WHAT_DEFAULT, tag);
+    }
+
+    public void post(String url, String path) {
         post(url, path, null, WHAT_DEFAULT, null);
     }
 
-    protected void get(String url, String path, IObjAction<Map<String, Object>> action) {
+    public void get(String url, String path, IObjAction<Map<String, Object>> action) {
         get(url, path, action, WHAT_DEFAULT, null);
     }
 
-    protected void post(String url, String path, IObjAction<Map<String, Object>> action) {
+    public void post(String url, String path, IObjAction<Map<String, Object>> action) {
         post(url, path, action, WHAT_DEFAULT, null);
     }
 
-    protected void jsonPost(String url, String path, IObjAction<Map<String, Object>> action) {
+    public void jsonPost(String url, String path, IObjAction<Map<String, Object>> action) {
         jsonPost(url, path, action, WHAT_DEFAULT, null);
     }
 
-    protected void post(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+    public void post(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
         post(url, path, action, WHAT_DEFAULT, tag);
     }
 

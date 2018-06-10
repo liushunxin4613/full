@@ -2,26 +2,14 @@ package com.leo.core.iapi.api;
 
 import android.content.Intent;
 
-import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.inter.IMsgAction;
-import com.leo.core.iapi.inter.IObjAction;
 
 import java.io.File;
 
 /**
  * 拍照api
  */
-public interface ICameraApi extends IApi {
-
-    /**
-     * 是否有sdCard
-     */
-    boolean hasSdCard();
-
-    /**
-     * 根文件夹
-     */
-    File getRootDir();
+public interface ICameraApi extends IDirApi {
 
     /**
      * 打开相机

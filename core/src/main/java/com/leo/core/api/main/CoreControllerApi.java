@@ -33,6 +33,7 @@ import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.ICameraApi;
+import com.leo.core.iapi.api.IDirApi;
 import com.leo.core.iapi.api.IVosApi;
 import com.leo.core.iapi.api.IVsApi;
 import com.leo.core.iapi.inter.IAction;
@@ -74,6 +75,7 @@ import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.StatusBarUtil;
 import com.leo.core.util.TextUtils;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +95,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         IControllerApi<T, C>, IViewApi<T>, IShowApi<T>, IHttpApi<T>, IMD5Api, IDataApi<T>, IObjectApi<T>,
         IActionApi<T, IApi>, IStartApi<T>, IUserApi<T>, ILoadImageApi<T>, IConfigApi<T>, IDataTypeApi<T>,
         IMergeApi<T>, IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi<T>, IVsApi<T>,
-        IVosApi<T> {
+        IVosApi<T>, IDirApi {
 
     private C controller;
     private Handler mainHandler;
@@ -130,6 +132,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IActivityLifecycleCallbacksApi activityLifecycleApi;
     private IVsApi vsApi;
     private IVosApi vosApi;
+    private IDirApi dirApi;
 
     //other
     private Integer rootViewResId;
@@ -581,6 +584,22 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public IVosApi newVosApi() {
+        return null;
+    }
+
+    @Override
+    public IDirApi dirApi() {
+        if (dirApi == null) {
+            dirApi = newDirApi();
+            if (dirApi == null) {
+                throw new NullPointerException("newVosApi 不能为空");
+            }
+        }
+        return dirApi;
+    }
+
+    @Override
+    public IDirApi newDirApi() {
         return null;
     }
 
@@ -2143,6 +2162,21 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public <AA, BB, CC, DD, EE, FF> FF vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de, IReturnAction<EE, FF> ef) {
         return (FF) vosApi().vor(ab, bc, cd, de, ef);
+    }
+
+    @Override
+    public boolean hasSdCard() {
+        return dirApi().hasSdCard();
+    }
+
+    @Override
+    public File getRootDir(String dir) {
+        return dirApi().getRootDir(dir);
+    }
+
+    @Override
+    public File getRootDir() {
+        return dirApi().getRootDir();
     }
 
 }

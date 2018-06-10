@@ -16,12 +16,8 @@ public class HasCoreControllerApi<T extends HasCoreControllerApi> extends HasCon
         return (CoreControllerApi) super.controllerApi();
     }
 
-    protected String getDefTable() {
-        return "App";
-    }
-
     protected IDataApi dataApi() {
-        return controllerApi().switchTable(getDefTable());
+        return controllerApi();
     }
 
     protected T remove(String key) {

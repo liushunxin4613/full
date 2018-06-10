@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leo.core.iapi.api.IDataApi;
 import com.leo.core.other.ParameterizedTypeImpl;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.util.List;
@@ -63,6 +64,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     public <V> T saveData(String key, V value) {
         if (!TextUtils.isEmpty(key)) {
             if (value == null) {
+                LogUtil.ii("saveData value=null", key);
                 preferences.edit().remove(key).apply();
             } else {
                 preferences.edit().putString(key, gson.toJson(value)).apply();
@@ -83,6 +85,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     public <V> T saveData(String key, List<V> value) {
         if (!TextUtils.isEmpty(key)) {
             if (value == null) {
+                LogUtil.ii("saveData value=null", key + LIST_END);
                 preferences.edit().remove(key + LIST_END).apply();
             } else {
                 preferences.edit().putString(key + LIST_END, gson.toJson(value)).apply();
@@ -168,6 +171,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     @Override
     public T remove(String key) {
         if (!TextUtils.isEmpty(key)) {
+            LogUtil.ii("remove key", key);
             preferences.edit().remove(key).apply();
         }
         return getThis();
@@ -175,6 +179,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
 
     @Override
     public T removeDataAll() {
+        LogUtil.ii("removeDataAll");
         preferences.edit().clear().apply();
         return getThis();
     }
@@ -182,6 +187,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     @Override
     public T remove(Class clz) {
         if (clz != null) {
+            LogUtil.ii("remove clz", clz.getName());
             remove(clz.getName());
         }
         return getThis();
@@ -190,6 +196,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     @Override
     public T removeData(String key) {
         if (!TextUtils.isEmpty(key)) {
+            LogUtil.ii("removeData key + LIST_END", key + LIST_END);
             remove(key + LIST_END);
         }
         return getThis();
@@ -198,6 +205,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     @Override
     public T removeData(Class clz) {
         if (!TextUtils.isEmpty(clz)) {
+            LogUtil.ii("removeData clz.getName() + LIST_END", clz.getName() + LIST_END);
             remove(clz.getName() + LIST_END);
         }
         return getThis();

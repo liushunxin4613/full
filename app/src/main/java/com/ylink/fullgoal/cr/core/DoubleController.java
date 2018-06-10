@@ -34,7 +34,7 @@ public abstract class DoubleController<T extends DoubleController> extends BaseC
 
     @Override
     public String getViewBean() {
-        return TextUtils.getMoneyString(getDB());
+        return getDBMoney();
     }
 
     @Override
