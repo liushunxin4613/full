@@ -1,0 +1,40 @@
+{
+  "download": [
+    {
+      "name": "l_view.xml",
+      "url": "http://111.231.231.226/uploadfile/20180710/l_view.xml"
+    }
+  ],
+  "view": [
+    {
+      "name": "l_view.xml",
+      "data": [
+        {
+          "code": "1",
+          "data": [
+            {
+              "vId": "tv1",
+              "key": "name"
+            },
+            {
+              "vId": "tv2",
+              "key": "detail"
+            },
+            {
+              "vId": "tv3",
+              "key": "time"
+            },
+            {
+              "vId": "tv4",
+              "key": "age"
+            },
+            {
+              "vId": "tv5",
+              "key": "text"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

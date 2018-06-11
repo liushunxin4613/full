@@ -13,6 +13,7 @@ import com.leo.core.util.NetUtils;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.ylink.fullgoal.config.ConfigManager;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
 
@@ -35,8 +36,11 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
         NetUtils.init(getApplication());
         RetrofitFactory.show(false);
         //友盟初始化
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> new MaterialHeader(context));
-        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> new ClassicsFooter(context));
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout)
+                -> new MaterialHeader(context));
+        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout)
+                -> new ClassicsFooter(context));
+        new ConfigManager().init(getThis()).start();
     }
 
 }

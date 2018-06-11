@@ -3,66 +3,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/padding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/name_tv"
+        android:id="@id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:textColor="@color/tv"
         android:textSize="@dimen/tv"
         tools:ignore="RtlHardcoded"
-        android:text="{name}"
         tools:text="张三" />
 
     <TextView
-        android:id="@+id/detail_tv"
+        android:id="@+id/tv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:maxLines="1"
         android:textColor="@color/tv"
         android:textSize="@dimen/tv"
-        android:text="{detail}"
         tools:ignore="RelativeOverlap,RtlHardcoded"
         tools:text="职员" />
 
     <TextView
-        android:id="@+id/time_tv"
+        android:id="@+id/tv3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_tv"
+        android:layout_below="@id/tv1"
         android:maxLines="1"
         android:textColor="@color/tv"
         android:textSize="@dimen/tv"
         tools:ignore="RtlHardcoded"
-        android:text="{time}"
         tools:text="2018-07-07" />
 
     <TextView
-        android:id="@+id/age_tv"
+        android:id="@+id/tv4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/name_tv"
+        android:layout_below="@id/tv1"
         android:maxLines="1"
         android:textColor="@color/tv"
         android:textSize="@dimen/tv"
         tools:ignore="RtlHardcoded"
-        android:text="{age}"
         tools:text="12" />
 
     <TextView
-        android:id="@+id/text_tv"
+        android:id="@+id/tv5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/time_tv"
+        android:layout_below="@id/tv3"
         android:maxLines="1"
         android:textColor="@color/tv"
         android:textSize="@dimen/tv"
         tools:ignore="RtlHardcoded"
-        android:text="{text}"
         tools:text="招待费" />
 
 </RelativeLayout>

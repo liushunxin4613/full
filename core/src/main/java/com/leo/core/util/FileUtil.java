@@ -1,14 +1,18 @@
 package com.leo.core.util;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class FileUtil {
 
@@ -70,19 +74,52 @@ public class FileUtil {
         return fileName;
     }
 
+    /**
+     * 读取小型文件的内容
+     *
+     * @param file 想要读取的文件对象
+     * @return 返回文件内容
+     */
+    @SuppressLint("NewApi")
+    public static String readFile(File file) {
+        if (!(file != null && file.exists() && file.isFile())) {
+            return null;
+        }
+        if (file.length() >= 8 * 1024 * 1024) {
+            return null;
+        }
+        StringBuilder result = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(file), "UTF-8"));
+            String s;
+            while ((s = br.readLine()) != null) {// 使用readLine方法，一次读一行
+                result.append(System.lineSeparator()).append(s);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String text = result.toString();
+        if (!TextUtils.isEmpty(text)) {
+            text = text.trim();
+        }
+        return text;
+    }
+
     public static boolean writeFile(String filePath, InputStream inputStream) {
         if (null == filePath || filePath.length() < 1) {
             return false;
         }
         try {
             File file = new File(filePath);
-            if(file.getParentFile().exists()){
+            if (file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.createNewFile();
             }
-            if(file.exists() && file.isFile()){
+            if (file.exists() && file.isFile()) {
                 FileOutputStream fileOutputStream = new FileOutputStream(file);
                 byte[] buf = new byte[1024];
                 int c = inputStream.read(buf);

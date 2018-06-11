@@ -1,7 +1,6 @@
 package com.ylink.fullgoal.config;
 
 import static com.ylink.fullgoal.config.Config.LOCAL;
-import static com.ylink.fullgoal.config.Config.TEST;
 
 /**
  * 网络配置
@@ -13,8 +12,9 @@ public class UrlConfig {
     public final static String ROOT_URL = ROOT_IP + "app/fullApp/";//根api地址
     private final static String FG_ROOT_IP = LOCAL ? "http://192.168.8.102:8080/"
             : "http://192.168.8.108:8088/";
-    public final static String FG_ROOT_URL = TEST ? "http://192.168.41.123:7001/ssca/"
-            : FG_ROOT_IP + "ssca/";//fg调试地址
+//    public final static String FG_ROOT_URL = TEST ? "http://192.168.41.123:7001/ssca/"
+//            : FG_ROOT_IP + "ssca/";//fg调试地址
+    public final static String FG_ROOT_URL = "http://192.168.8.109:8088/ssca/";
     public final static String UPLOAD_URL = ROOT_IP + "app/fullApp/upload";//根api地址
     public final static String UPLOAD_IMAGE_URL = UPLOAD_URL;//根api地址
 

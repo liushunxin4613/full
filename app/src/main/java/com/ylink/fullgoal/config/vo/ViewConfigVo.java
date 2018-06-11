@@ -1,4 +1,4 @@
-package com.ylink.fullgoal.config;
+package com.ylink.fullgoal.config.vo;
 
 public class ViewConfigVo {
 
