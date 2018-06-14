@@ -8,8 +8,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IVgRunApi;
+import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.api.IVgRunApi;
 import com.leo.core.iapi.core.IApi;
 
 public interface IViewApi<T extends IViewApi> extends IApi {
@@ -210,6 +210,11 @@ public interface IViewApi<T extends IViewApi> extends IApi {
      * @return 本身
      */
     T setAllSelected(View view, boolean selected);
+
+    /**
+     * 设置布局大小
+     */
+    T setLayoutParams(View view, ViewGroup.LayoutParams params);
 
     /**
      * 设置viewBean

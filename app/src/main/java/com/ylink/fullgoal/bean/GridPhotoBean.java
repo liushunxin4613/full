@@ -3,8 +3,8 @@ package com.ylink.fullgoal.bean;
 import android.view.View;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.OnBVClickListener;
-import com.leo.core.iapi.OnBVLongClickListener;
+import com.leo.core.iapi.inter.OnBVClickListener;
+import com.leo.core.iapi.inter.OnBVLongClickListener;
 import com.ylink.fullgoal.R;
 
 public class GridPhotoBean extends BaseApiBean<GridPhotoBean> {
@@ -17,6 +17,7 @@ public class GridPhotoBean extends BaseApiBean<GridPhotoBean> {
     private transient int unit;
     private Object res;
     private Object obj;
+    private transient boolean visible;
     private transient View.OnClickListener onClickListener;
     private transient View.OnLongClickListener onLongClickListener;
 
@@ -73,6 +74,15 @@ public class GridPhotoBean extends BaseApiBean<GridPhotoBean> {
     @Override
     public GridPhotoBean setEnable(boolean enable) {
         super.setEnable(enable);
+        return this;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public GridPhotoBean setVisible(boolean visible) {
+        this.visible = visible;
         return this;
     }
 }

@@ -1,6 +1,6 @@
 package com.leo.core.iapi.main;
 
-import com.leo.core.iapi.ICheckApi;
+import com.leo.core.iapi.api.ICheckApi;
 
 import java.util.List;
 import java.util.Set;

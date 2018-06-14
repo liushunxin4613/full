@@ -1,7 +1,7 @@
 package com.leo.core.util;
 
-import com.leo.core.api.ClassChild1HelperApi;
-import com.leo.core.iapi.IClassChild1Api;
+import com.leo.core.api.api.ClassChild1HelperApi;
+import com.leo.core.iapi.api.IClassChild1Api;
 
 /**
  * class 辅助工具类

@@ -1,9 +1,7 @@
 package com.leo.core.iapi.main;
 
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.iapi.core.IApi;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IThisApi;
-import com.leo.core.net.RetrofitSubscriber;
 
 public interface ISubscriberApi<T extends ISubscriberApi> extends IThisApi<T> {
 

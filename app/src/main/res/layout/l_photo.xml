@@ -5,11 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/l_top_bar" />
-
     <include
         android:id="@+id/vg"
-        layout="@layout/l_h_tv2_more_s"
+        layout="@layout/l_h_money"
         android:visibility="gone" />
 
     <uk.co.senab.photoview.PhotoView

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.bean.Completed;
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -115,6 +115,16 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
                     return true;
             }
         });
+        initAdds();
+    }
+
+    @Override
+    public void initData() {
+        super.initData();
+//        posts(getSearchValue(search));
+    }
+
+    private void initAdds() {
         //消息标志
         add(CodeHb.class, (path, what, msg, bean) -> showView(bean.isSuccess()));
         //员工列表
@@ -144,13 +154,12 @@ public class SearchControllerApi<T extends SearchControllerApi, C> extends Recyc
                 String.format("%s 开", item.getTakeoffTime()), String.format("%s 到", item.getArrivelTime()),
                 String.format("%s - %s", item.getDeparture(), item.getDestination()),
                 (bean, view) -> finishActivity(new SearchVo<>(search, item)))))));
-        //调研报告列表
+        //投研报告列表
         addList(ReportHb.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
                 -> data.add(new TvH2SBean(item.getReportInfo(), item.getStockName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //完成
         add(Completed.class, (path, what, msg, bean) -> search(keyword));
-        posts(getSearchValue(search));
     }
 
     /**

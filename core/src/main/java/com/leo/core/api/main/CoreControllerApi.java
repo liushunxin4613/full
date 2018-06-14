@@ -27,35 +27,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
-import com.leo.core.api.MsgSubscriber;
+import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
 import com.leo.core.config.Config;
 import com.leo.core.core.BaseControllerApiView;
-import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IActionApi;
-import com.leo.core.iapi.IBindBeanApi;
-import com.leo.core.iapi.ICallbackApi;
-import com.leo.core.iapi.IConfigApi;
-import com.leo.core.iapi.IDataApi;
-import com.leo.core.iapi.IDataTypeApi;
-import com.leo.core.iapi.IDecodeApi;
-import com.leo.core.iapi.IFileApi;
-import com.leo.core.iapi.IGalleryApi;
-import com.leo.core.iapi.IHelperApi;
-import com.leo.core.iapi.ILoadImageApi;
-import com.leo.core.iapi.IMD5Api;
-import com.leo.core.iapi.IMergeApi;
-import com.leo.core.iapi.IObjectApi;
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.iapi.IParseApi;
-import com.leo.core.iapi.IPathMsgAction;
-import com.leo.core.iapi.IStartApi;
-import com.leo.core.iapi.ISubjoinApi;
-import com.leo.core.iapi.ITAction;
-import com.leo.core.iapi.IUrlApi;
-import com.leo.core.iapi.IUserApi;
-import com.leo.core.iapi.IVgRunApi;
-import com.leo.core.iapi.OnAddListener;
+import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.api.IActionApi;
+import com.leo.core.iapi.api.IBindBeanApi;
+import com.leo.core.iapi.api.ICallbackApi;
+import com.leo.core.iapi.api.IConfigApi;
+import com.leo.core.iapi.api.IDataApi;
+import com.leo.core.iapi.api.IDataTypeApi;
+import com.leo.core.iapi.api.IDecodeApi;
+import com.leo.core.iapi.api.IFileApi;
+import com.leo.core.iapi.api.IGalleryApi;
+import com.leo.core.iapi.api.IHelperApi;
+import com.leo.core.iapi.api.ILoadImageApi;
+import com.leo.core.iapi.api.IMD5Api;
+import com.leo.core.iapi.api.IMergeApi;
+import com.leo.core.iapi.api.IObjectApi;
+import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.api.IParseApi;
+import com.leo.core.iapi.inter.IPathMsgAction;
+import com.leo.core.iapi.api.ISerialVersionTagApi;
+import com.leo.core.iapi.api.IStartApi;
+import com.leo.core.iapi.api.ISubjoinApi;
+import com.leo.core.iapi.inter.ITAction;
+import com.leo.core.iapi.api.IUrlApi;
+import com.leo.core.iapi.api.IUserApi;
+import com.leo.core.iapi.api.IVgRunApi;
+import com.leo.core.iapi.inter.OnAddListener;
 import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IControllerApi;
@@ -465,9 +466,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public IHelperApi helper() {
-        if(helperApi == null){
+        if (helperApi == null) {
             helperApi = newHelper();
-            if(helperApi == null){
+            if (helperApi == null) {
                 throw new NullPointerException("newHelper 不能为空");
             }
         }
@@ -741,11 +742,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public synchronized <B> void onBindViewHolder(B bean, int position) {
+    public synchronized <B> T onBindViewHolder(B bean, int position) {
         executeNon(bean, obj -> executeNon(apiMap.get(bean.getClass()), api -> {
             onFindViewByIds();
             api.onItem(getThis(), bean);
         }));
+        return getThis();
     }
 
     @Override
@@ -789,6 +791,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                     }
                 }
             }
+            return null;
         }
         return (B) finish;
     }
@@ -796,6 +799,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return false;
+    }
+
+    @Override
+    public void notifyDataChanged() {
     }
 
     @Override
@@ -839,9 +846,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         init(savedInstanceState);
         if (isActivity()) {
             if (getRootViewClz() != null) {
-                rootView = getObject(getRootViewClz()
-                        , new Class[]{Context.class}
-                        , new Object[]{getContext()});
+                if(rootView == null){
+                    rootView = getObject(getRootViewClz()
+                            , new Class[]{Context.class}
+                            , new Object[]{getContext()});
+                }
                 if (rootView instanceof BaseControllerApiView && getRootViewClzApi() != null) {
                     ((BaseControllerApiView) rootView).init(getRootViewClzApi(), (View) null);
                 }
@@ -856,9 +865,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             initData();
         } else if (isDialog()) {
             if (getRootViewClz() != null) {
-                rootView = getObject(getRootViewClz()
-                        , new Class[]{Context.class}
-                        , new Object[]{getContext()});
+                if(rootView == null){
+                    rootView = getObject(getRootViewClz()
+                            , new Class[]{Context.class}
+                            , new Object[]{getContext()});
+                }
                 if (rootView instanceof BaseControllerApiView && getRootViewClzApi() != null) {
                     ((BaseControllerApiView) rootView).init(getRootViewClzApi(), (View) null);
                 }
@@ -886,9 +897,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (isFragment()) {
             if (getRootViewClz() != null && getRootViewClzApi() != null) {
-                rootView = getObject(getRootViewClz()
-                        , new Class[]{Class.class, Context.class}
-                        , new Object[]{getRootViewClzApi(), getContext()});
+                if(rootView == null){
+                    rootView = getObject(getRootViewClz()
+                            , new Class[]{Class.class, Context.class}
+                            , new Object[]{getRootViewClzApi(), getContext()});
+                }
             }
         }
         if (getRootViewResId() != null) {
@@ -1055,15 +1068,23 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public <B> T execute(Object obj, TypeToken<B> token, IObjAction<B> action) {
-        if (obj != null && token != null && token.getType() != null && action != null) {
+        Type type = token == null ? null : token.getType();
+        if (obj != null && type != null && action != null) {
             if (obj instanceof String) {
                 final String txt = ((String) obj).replaceAll(RX, "/");
-                B item = decode(txt, token.getType());
-                if (getEmptyLength(txt) == getEmptyLength(encode(item))) {
+                B item = decode(txt, type);
+                if (item instanceof ISerialVersionTagApi) {
+                    if(((ISerialVersionTagApi) item).isSerialVersionTag(type.toString())){
+                        action.execute(item);
+                        return getThis();
+                    }
+                } else if (getEmptyLength(txt) == getEmptyLength(encode(item))) {
                     action.execute(item);
+                    return getThis();
                 }
             } else {
-                action.execute(decode(obj, token.getType()));
+                action.execute(decode(obj, type));
+                return getThis();
             }
         }
         return getThis();
@@ -1203,6 +1224,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T setAllSelected(View view, boolean selected) {
         viewApi().setAllSelected(view, selected);
+        return getThis();
+    }
+
+    @Override
+    public T setLayoutParams(View view, ViewGroup.LayoutParams params) {
+        viewApi().setLayoutParams(view, params);
         return getThis();
     }
 
@@ -1714,8 +1741,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public String getDepartment() {
-        return userApi().getDepartment();
+    public <A> A getDepartment() {
+        return (A) userApi().getDepartment();
     }
 
     @Override
@@ -1895,25 +1922,25 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action) {
+    public T get(String path, IObjAction<Map<String, Object>> action) {
         api().get(path, action);
         return getThis();
     }
 
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action, int what) {
+    public T get(String path, IObjAction<Map<String, Object>> action, int what) {
         api().get(path, action, what);
         return getThis();
     }
 
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action, String tag) {
+    public T get(String path, IObjAction<Map<String, Object>> action, String tag) {
         api().get(path, action, tag);
         return getThis();
     }
 
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action, int what, String tag) {
+    public T get(String path, IObjAction<Map<String, Object>> action, int what, String tag) {
         api().get(path, action, what, tag);
         return getThis();
     }
@@ -1925,27 +1952,96 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action) {
+    public T post(String path, IObjAction<Map<String, Object>> action) {
         api().post(path, action);
         return getThis();
     }
 
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action, int what) {
+    public T post(String path, IObjAction<Map<String, Object>> action, int what) {
         api().post(path, action, what);
         return getThis();
     }
 
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action, String tag) {
+    public T post(String path, IObjAction<Map<String, Object>> action, String tag) {
         api().post(path, action, tag);
         return getThis();
     }
 
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action, int what, String tag) {
+    public T post(String path, IObjAction<Map<String, Object>> action, int what, String tag) {
         api().post(path, action, what, tag);
         return getThis();
     }
 
+    @Override
+    public T get(String url, String path) {
+        api().get(url, path);
+        return getThis();
+    }
+
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action) {
+        api().get(url, path, action);
+        return getThis();
+    }
+
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what) {
+        api().get(url, path, action, what);
+        return getThis();
+    }
+
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+        api().get(url, path, action, tag);
+        return getThis();
+    }
+
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
+        api().get(url, path, action, what, tag);
+        return getThis();
+    }
+
+    @Override
+    public T post(String url, String path) {
+        api().post(url, path);
+        return getThis();
+    }
+
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action) {
+        api().post(url, path, action);
+        return getThis();
+    }
+
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what) {
+        api().post(url, path, action, what);
+        return getThis();
+    }
+
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+        api().post(url, path, action, tag);
+        return getThis();
+    }
+
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
+        api().post(url, path, action, what, tag);
+        return getThis();
+    }
+
+    @Override
+    public Map<String, String> getCleanMapAction(IObjAction<Map<String, Object>> action) {
+        return api().getCleanMapAction(action);
+    }
+
+    @Override
+    public <B> B uApi() {
+        return null;
+    }
 }

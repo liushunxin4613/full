@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.hb;
 
+import com.ylink.fullgoal.fg.ResearchReportFg;
+
 /**
  * 调研报告
  */
@@ -28,6 +30,20 @@ public class ReportHb extends SerialNoHb {
     private String stockName;
     private String reimbursement;
     private String departmentCode;
+    private String projectCode;
+
+    public ReportHb(ResearchReportFg fg) {
+        if (fg != null) {
+            setReportInfo(fg.getReportInfo());
+            setUploadTime(fg.getUploadTime());
+            setEndTime(fg.getEndTime());
+            setStatus(fg.getStatus());
+            setType(fg.getType());
+            setStockCode(fg.getStockCode());
+            setStockName(fg.getStockName());
+            setProjectCode(fg.getProjectCode());
+        }
+    }
 
     public String getReportCode() {
         return reportCode;
@@ -107,6 +123,14 @@ public class ReportHb extends SerialNoHb {
 
     public void setDepartmentCode(String departmentCode) {
         this.departmentCode = departmentCode;
+    }
+
+    public String getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
     }
 
 }

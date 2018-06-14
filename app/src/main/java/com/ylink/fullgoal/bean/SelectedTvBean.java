@@ -3,8 +3,7 @@ package com.ylink.fullgoal.bean;
 import android.view.View;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.util.LogUtil;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.RunUtil;
 import com.ylink.fullgoal.R;
 

@@ -62,9 +62,9 @@ public class ReimburseUpHb {
      * @param paymentRequest   合同申请单
      * @param serveBill        招待申请单
      */
-    public ReimburseUpHb(String serialNo, String agent, String reimbursement, String budgetDepartment, String project,
-                         String totalAmountLower, String cause, String paymentRequest, String serveBill,
-                         List<ImageHb> imageList) {
+    public ReimburseUpHb(String serialNo, String agent, String reimbursement, String budgetDepartment,
+                         String project, String totalAmountLower, String cause, String paymentRequest,
+                         String serveBill, List<ImageHb> imageList) {
         this.billType = GENERAL_BILL_TYPE;
         this.serialNo = serialNo;
         this.agent = agent;
@@ -93,8 +93,8 @@ public class ReimburseUpHb {
      * @param reportName       出差申请单编号集合
      * @param ticketList       携程机票编号集合
      */
-    public ReimburseUpHb(String serialNo, String agent, String reimbursement, String budgetDepartment, String project,
-                         String totalAmountLower, String cause, List<String> traveList,
+    public ReimburseUpHb(String serialNo, String agent, String reimbursement, String budgetDepartment,
+                         String project, String totalAmountLower, String cause, List<String> traveList,
                          List<String> reportName, List<String> ticketList, List<ImageHb> imageList) {
         this.billType = EVECTION_BILL_TYPE;
         this.serialNo = serialNo;

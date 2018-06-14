@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
-import com.leo.core.iapi.IAction;
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.util.TextUtils;
 
 public class BasePagerAdapter<T extends View> extends PagerAdapter {

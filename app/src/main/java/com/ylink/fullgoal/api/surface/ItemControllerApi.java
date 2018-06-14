@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
@@ -19,6 +20,7 @@ import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.ItemOperationBean;
+import com.ylink.fullgoal.bean.MoneyBean;
 import com.ylink.fullgoal.bean.ReimburseTypeBean;
 import com.ylink.fullgoal.bean.SearchWaterfall;
 import com.ylink.fullgoal.bean.SelectedTvBean;
@@ -36,6 +38,7 @@ import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseItemControllerApi;
+import com.ylink.fullgoal.vo.BillVo;
 
 public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemControllerApi<T, C> {
 
@@ -91,8 +94,15 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //图片处理
         putBindBeanApi(GridPhotoBean.class, (api, bean)
                 -> api.setImage(iconIv, bean.getRes())
-                .execute(() -> api.getRootView().setLayoutParams(
-                        new ViewGroup.LayoutParams(-1, bean.getUnit())))
+                .execute(() -> {
+                    if (bean.getObj() instanceof BillVo) {
+                        BillVo vo = (BillVo) bean.getObj();
+                        setText(nameTv, String.format("金额: %s", TextUtils.isEmpty(vo.getMoney())
+                                ? "0" : vo.getMoney()));
+                    }
+                })
+                .setLayoutParams(iconIv, new LinearLayout.LayoutParams(-1, bean.getUnit()))
+                .setVisibility(nameTv, bean.isVisible() ? View.VISIBLE : View.GONE)
                 .setOnClickListener(bean.getOnClickListener())
                 .setOnLongClickListener(bean.getOnLongClickListener()));
         //dialog双文字按钮处理
@@ -222,11 +232,16 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //图标文字输入图标监听
         putBindBeanApi(TvHEtIconMoreBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
-                .setText(detailTv, bean.getDetail())
                 .execute(() -> bean.setTextView(detailEt))
                 .setImage(iconIv, bean.getIconResId())
                 .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
                 .setOnClickListener(iconIv, bean.getOnClickListener())
+                .setTextHint(detailEt, bean.getHint())
+                .setText(detailEt, bean.getDetail()));
+        //金额监听
+        putBindBeanApi(MoneyBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .execute(() -> bean.setTextView(detailEt))
                 .setTextHint(detailEt, bean.getHint())
                 .setText(detailEt, bean.getDetail()));
         //双文字点击

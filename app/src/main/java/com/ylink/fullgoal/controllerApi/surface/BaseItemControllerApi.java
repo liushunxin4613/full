@@ -2,7 +2,7 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import android.view.ViewGroup;
 
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 

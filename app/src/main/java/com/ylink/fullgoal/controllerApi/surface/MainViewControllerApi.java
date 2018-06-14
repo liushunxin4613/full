@@ -4,10 +4,9 @@ import android.support.v4.app.Fragment;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
-import com.leo.core.api.BaseRadioFragmentApi;
+import com.leo.core.api.api.BaseRadioFragmentApi;
 import com.leo.core.bean.RadioButtonBean;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.api.surface.Camera1ControllerApi;
 import com.ylink.fullgoal.api.surface.Camera2ControllerApi;
 import com.ylink.fullgoal.api.surface.CountyControllerApi;
 import com.ylink.fullgoal.api.surface.MyControllerApi;

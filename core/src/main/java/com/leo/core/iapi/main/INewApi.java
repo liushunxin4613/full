@@ -327,4 +327,11 @@ public interface INewApi {
      */
     <B> B newHelper();
 
+    /**
+     * 网络请求
+     * @param <B> <B>
+     * @return B
+     */
+    <B> B uApi();
+
 }

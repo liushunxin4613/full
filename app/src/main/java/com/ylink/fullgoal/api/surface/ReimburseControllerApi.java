@@ -16,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.iapi.IReturnAction;
+import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
@@ -66,7 +66,11 @@ import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_SUBMIT;
  */
 public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends RecycleBarControllerApi<T, C> {
 
-    final static int TYPE_NONE = 0x101;
+    public ReimburseControllerApi(C controller) {
+        super(controller);
+    }
+
+    /*final static int TYPE_NONE = 0x101;
     final static int TYPE_JT = 0x102;
     final static int TYPE_ZS = 0x103;
     final static int TYPE_CCJP = 0x104;
@@ -95,13 +99,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     ReimburseControllerApi(C controller) {
         super(controller);
         rootFile = getContext().getExternalFilesDir("photo");
-    }
-
-    protected ReimburseVo getVo() {
-        if (vo == null) {
-            vo = new ReimburseVo();
-        }
-        return vo;
     }
 
     protected T setVo(ReimburseVo vo) {
@@ -176,8 +173,8 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
             }
         });
         //test
-        getVo().setAgent(getUserName());
-        getVo().setDepartment(getDepartment());
+//        getVo().setAgent(getUserName());
+//        getVo().setDepartment(getDepartment());
     }
 
     @Override
@@ -250,7 +247,7 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
             switch (path) {
                 case REIMBURSE_QUERY://报销获取
                     setVo(new ReimburseVo(bean));
-                    getVo().setDepartment(getDepartment());
+//                    getVo().setDepartment(getDepartment());
                     notifyReimburseVoChanged();
                     break;
             }
@@ -261,8 +258,8 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
     public void onResume() {
         super.onResume();
         //报销人
-        executeSearch(UserHb.class, hb -> getVo().setReimbursement(
-                getExecute(hb, UserHb::getUserName)));
+//        executeSearch(UserHb.class, hb -> getVo().setReimbursement(
+//                getExecute(hb, UserHb::getUserName)));
         //预算归属部门
         executeSearch(DepartHb.class, hb -> getVo().setBudgetDepartment(
                 getExecute(hb, DepartHb::getDepartmentName)));
@@ -270,8 +267,8 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         executeSearch(ProjectHb.class, hb -> getVo().setProject(
                 getExecute(hb, ProjectHb::getProjectName)));
         //合同付款申请单
-        executeSearch(CompensationHb.class, hb -> getVo().setPaymentRequest(
-                getExecute(hb, CompensationHb::getName)));
+//        executeSearch(CompensationHb.class, hb -> getVo().setPaymentRequest(
+//                getExecute(hb, CompensationHb::getName)));
         //出差申请单及招待申请单
         executeSearch(TraveHb.class, hb -> {
             getVo().setServeBill(getExecute(hb, TraveHb::getCode));
@@ -347,22 +344,22 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
 
     //私有的
 
-    /**
+    *//**
      * 提交数据
-     */
+     *//*
     protected void submit() {
     }
 
-    /**
+    *//**
      * 初始化提交数据
-     */
+     *//*
     ReimburseUpHb getReimburseHb(IReturnAction<ReimburseVo, ReimburseUpHb> action) {
         return getExecute(getVo(), action);
     }
 
-    /**
+    *//**
      * 初始化报销数据
-     */
+     *//*
     void notifyReimburseVoChanged() {
         executeNon(getVo(), obj -> {
             clear().onReimburseVo(obj);
@@ -371,9 +368,9 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         });
     }
 
-    /**
+    *//**
      * 报销数据回调
-     */
+     *//*
     protected void onReimburseVo(ReimburseVo vo) {
         //报销类型
         vo.setState(state);
@@ -425,23 +422,23 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
                 (bean, view) -> onGridPhotoLongClick(data, bean, view)));
     }
 
-    /**
+    *//**
      * 图片点击
      *
      * @param bean bean
      * @param view view
-     */
+     *//*
     private void onGridPhotoClick(GridPhotoBean bean, View view) {
         executeNon(bean, obj -> startSurfaceActivity(getBundle(bean.getObj()), BillControllerApi.class));
     }
 
-    /**
+    *//**
      * 图片长按
      *
      * @param bean bean
      * @param view view
      * @return 是否同时响应点击
-     */
+     *//*
     private boolean onGridPhotoLongClick(List<BillVo> data, GridPhotoBean bean, View view) {
         TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
             dialog.dismiss();
@@ -581,6 +578,6 @@ public class ReimburseControllerApi<T extends ReimburseControllerApi, C> extends
         if (data != null && !(!isEnable() && TextUtils.isEmpty(text))) {
             data.add(obj);
         }
-    }
+    }*/
 
 }

@@ -2,7 +2,7 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import android.view.View;
 
-import com.leo.core.iapi.IContentApi;
+import com.leo.core.iapi.api.IContentApi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class ContentControllerApi<T extends ContentControllerApi, C> extends SurfaceControllerApi<T, C>

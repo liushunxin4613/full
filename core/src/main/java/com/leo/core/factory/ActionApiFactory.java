@@ -1,6 +1,6 @@
 package com.leo.core.factory;
 
-import com.leo.core.api.ActionApi;
+import com.leo.core.api.api.ActionApi;
 import com.leo.core.iapi.core.IApi;
 
 public class ActionApiFactory<T extends ActionApiFactory, A extends IApi> extends ActionApi<T, A> {

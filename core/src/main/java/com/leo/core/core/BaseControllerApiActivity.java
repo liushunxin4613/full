@@ -10,14 +10,15 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
-import static com.leo.core.iapi.IStartApi.CONTROLLER_API;
-import static com.leo.core.iapi.IStartApi.ROOT_VIEW_CLZ_API;
+import static com.leo.core.iapi.api.IStartApi.CONTROLLER_API;
+import static com.leo.core.iapi.api.IStartApi.ROOT_VIEW_CLZ_API;
 
 public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C extends IControllerApi> extends AppCompatActivity implements IAFVApi<T, C> {
 
@@ -143,14 +144,16 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
         try {
             Class clz = (Class) intent.getSerializableExtra(CONTROLLER_API);
             Class rootViewClz = (Class) intent.getSerializableExtra(ROOT_VIEW_CLZ_API);
-            if (CoreControllerApi.class.isAssignableFrom(clz)) {
+            if (clz != null && CoreControllerApi.class.isAssignableFrom(clz)) {
                 controllerApi = (IControllerApi) ObjectUtil.getObject(clz, Object.class, this);
                 ((CoreControllerApi) controllerApi()).remove(clz);
             }
-            if (controllerApi != null && IControllerApi.class.isAssignableFrom(rootViewClz)) {
+            if (controllerApi != null && rootViewClz != null &&
+                    IControllerApi.class.isAssignableFrom(rootViewClz)) {
                 controllerApi.setRootViewClzApi(rootViewClz);
             }
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
     }
 

@@ -3,7 +3,7 @@ package com.ylink.fullgoal.bean;
 import android.view.View;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.OnBVClickListener;
+import com.leo.core.iapi.inter.OnBVClickListener;
 import com.ylink.fullgoal.R;
 
 /**
@@ -16,6 +16,11 @@ public class CCSQDBean extends BaseApiBean<CCSQDBean> {
     @Override
     public Integer getApiType() {
         return R.layout.l_ccsqd;
+    }
+
+    @Override
+    protected String getDefaultKeyword() {
+        return getName();
     }
 
     private String name;

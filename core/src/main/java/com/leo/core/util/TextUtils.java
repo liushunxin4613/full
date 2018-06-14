@@ -2,7 +2,7 @@ package com.leo.core.util;
 
 import android.util.SparseArray;
 
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 
 import java.util.ArrayList;
 import java.util.Collection;

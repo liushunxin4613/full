@@ -1,6 +1,6 @@
 package com.leo.core.iapi.main;
 
-import com.leo.core.api.MsgSubscriber;
+import com.leo.core.api.inter.MsgSubscriber;
 
 import rx.Observable;
 

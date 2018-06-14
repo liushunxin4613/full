@@ -1,6 +1,6 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.iapi.OnBVClickListener;
+import com.leo.core.iapi.inter.OnBVClickListener;
 import com.ylink.fullgoal.R;
 
 public class TvBean extends ApiBean<TvBean> {

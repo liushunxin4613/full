@@ -2,23 +2,23 @@ package com.ylink.fullgoal.controllerApi.core;
 
 import android.view.View;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.core.BaseControllerApi;
 import com.leo.core.core.BaseControllerApiView;
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.api.config.FgApi;
 import com.ylink.fullgoal.api.config.ParseApi;
 import com.ylink.fullgoal.api.config.UrlApi;
 import com.ylink.fullgoal.api.func.UserApi;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.config.Api;
+import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.fg.DepartmentFg;
+import com.ylink.fullgoal.fg.UserFg;
+import com.ylink.fullgoal.fg.UserList;
 import com.ylink.fullgoal.hb.DataHb;
-import com.ylink.fullgoal.vo.SearchVo;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 
+import static com.ylink.fullgoal.config.Config.FULL;
 import static com.ylink.fullgoal.config.UrlConfig.ROOT_URL;
 
 public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi<T, C> {
@@ -70,13 +70,23 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     }
 
     @Override
+    public FgApi uApi() {
+        return new FgApi(getThis());
+    }
+
+    @Override
     public boolean isLogin() {
         return super.isLogin();
     }
 
     @Override
-    public UserBean getUser() {
+    public UserList getUser() {
         return super.getUser();
+    }
+
+    @Override
+    public DepartmentFg getDepartment() {
+        return super.getDepartment();
     }
 
     @Override
@@ -88,99 +98,10 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     public void initView() {
         if (getRootView() != null)
             ButterKnife.bind(this, getRootView());
-        addRootType(DataHb.class);
-    }
-
-    public void post(String path, String keyword) {
-        if (!TextUtils.isEmpty(path)) {
-            switch (path) {
-                case "reimbursementCompensation"://员工列表
-                    post(path, map -> map.put("keyword", keyword));
-                    break;
-                case "BudgetDepartmentCompensation"://部门列表
-                    post(path, map -> map.put("keyword", keyword));
-                    break;
-                case "ProjectCompensation"://项目列表
-                    post(path, map -> {
-                        map.put("departmentCode", getDepartmentCode());
-                        map.put("keyword", keyword);
-                    });
-                    break;
-                case "PaymentRequestCompensation"://合同付款申请单列表
-                    post(path, map -> {
-                        map.put("reimbursement", getUserName());
-                        map.put("keyword", keyword);
-                    });
-                    break;
-                case "TraveFormCompensation"://出差申请单列表
-                    post(path, map -> {
-                        map.put("reimbursement", getUserName());
-                        map.put("departmentCode", getDepartmentCode());
-                        map.put("keyword", keyword);
-                    });
-                    break;
-                case "CtripCompensation"://携程机票列表
-                    post(path, map -> {
-                        map.put("reimbursement", getUserName());
-                        map.put("keyword", keyword);
-                    });
-                    break;
-                case "ResearchReportCompensation"://调研报告列表
-                    post(path, map -> {
-                        map.put("reimbursement", getUserName());
-                        map.put("departmentCode", getDepartmentCode());
-                        map.put("keyword", keyword);
-                    });
-                    break;
-            }
-        }
-    }
-
-    public void posts(String path) {
-        if (!TextUtils.isEmpty(path)) {
-            switch (path) {
-                case "reimbursementCompensation"://员工列表
-                    post(path);
-                    break;
-                case "BudgetDepartmentCompensation"://部门列表
-                    post(path);
-                    break;
-                case "ProjectCompensation"://项目列表
-                    post(path, map -> map.put("departmentCode", getDepartmentCode()));
-                    break;
-                case "PaymentRequestCompensation"://合同付款申请单列表
-                    post(path, map -> map.put("reimbursement", getUserName()));
-                    break;
-                case "TraveFormCompensation"://出差申请单列表
-                    post(path, map -> {
-                        map.put("reimbursement", getUserName());
-                        map.put("departmentCode", getDepartmentCode());
-                    });
-                    break;
-                case "CtripCompensation"://携程机票列表
-                    post(path, map -> map.put("reimbursement", getUserName()));
-                    break;
-                case "ResearchReportCompensation"://调研报告列表
-                    post(path, map -> {
-                        map.put("reimbursement", getUserName());
-                        map.put("departmentCode", getDepartmentCode());
-                    });
-                    break;
-            }
-        }
-    }
-
-    protected <A> void executeSearch(Class<A> clz, IObjAction<A> action) {
-        if (clz != null && action != null) {
-            TypeToken<SearchVo<A>> token = (TypeToken<SearchVo<A>>) TypeToken
-                    .getParameterized(SearchVo.class, clz);
-            execute(getFinish(), token, vo -> action.execute(vo.getObj()));
-        }
-    }
-
-    protected void addListRootType(Class... args) {
-        if (!TextUtils.isEmpty(args)) {
-            execute(args, item -> addRootType(TypeToken.getParameterized(List.class, item)));
+        if (FULL) {
+            addRootType(DataFg.class);
+        } else {
+            addRootType(DataHb.class);
         }
     }
 

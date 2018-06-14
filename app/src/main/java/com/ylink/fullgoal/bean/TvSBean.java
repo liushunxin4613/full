@@ -1,6 +1,6 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.ylink.fullgoal.R;
 
 public class TvSBean extends ApiBean<TvSBean> {

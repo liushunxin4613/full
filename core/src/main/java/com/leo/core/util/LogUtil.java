@@ -1,7 +1,7 @@
 package com.leo.core.util;
 
-import com.leo.core.api.LogApi;
-import com.leo.core.iapi.ILogApi;
+import com.leo.core.api.api.LogApi;
+import com.leo.core.iapi.api.ILogApi;
 
 public class LogUtil {
 

@@ -3,10 +3,10 @@ package com.ylink.fullgoal.api.func;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.config.Config;
-import com.leo.core.iapi.IReturnAction;
-import com.leo.core.iapi.IUserApi;
+import com.leo.core.iapi.api.IUserApi;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.bean.UserBean;
+import com.ylink.fullgoal.fg.DepartmentFg;
+import com.ylink.fullgoal.fg.UserList;
 
 public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implements IUserApi<T> {
 
@@ -28,10 +28,6 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public T loginOut() {
-        UserBean bean = getUser();
-        if(bean != null){
-            initUser(bean);
-        }
         return getThis();
     }
 
@@ -41,28 +37,34 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public String getDepartmentCode() {
+        return getDepartment().getDepartmentCode();
+    }
+
+    /*@Override
     public UserBean getUser() {
         return getBean(USER, UserBean.class);
+    }*/
+
+    @Override
+    public UserList getUser() {
+        return new UserList(getUId(), getUserName());
     }
 
     @Override
     public String getUId() {
-        return null;
+//        return "12001324";
+        return "001";
     }
 
     @Override
     public String getUserName() {
-        return "张三";
+        return "李四";
     }
 
     @Override
-    public String getDepartment() {
-        return "信息技术部";
-    }
-
-    @Override
-    public String getDepartmentCode() {
-        return "20180507001";
+    public DepartmentFg getDepartment() {
+        return new DepartmentFg("20180507001", "信息技术部");
     }
 
     @Override
@@ -73,10 +75,6 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
     @Override
     public String getUTime() {
         return null;
-    }
-
-    private String getFiled(IReturnAction<UserBean, String> action){
-        return getExecute(getUser(), null, action);
     }
 
 }

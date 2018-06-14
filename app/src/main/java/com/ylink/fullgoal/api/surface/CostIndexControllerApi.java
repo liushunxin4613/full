@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;

@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.view.View;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.OnBVDialogClickListener;
+import com.leo.core.iapi.inter.OnBVDialogClickListener;
 import com.ylink.fullgoal.R;
 
 public class TvV2DialogBean extends BaseApiBean {

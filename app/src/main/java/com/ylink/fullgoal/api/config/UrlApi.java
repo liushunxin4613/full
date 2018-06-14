@@ -2,8 +2,8 @@ package com.ylink.fullgoal.api.config;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.iapi.IUrlApi;
+import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
@@ -12,9 +12,7 @@ import com.ylink.fullgoal.config.UrlConfig;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -137,7 +135,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交post数据
      */
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action) {
+    public T post(String path, IObjAction<Map<String, Object>> action) {
         post(path, action, -1, null);
         return getThis();
     }
@@ -146,7 +144,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交post数据
      */
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action, int what) {
+    public T post(String path, IObjAction<Map<String, Object>> action, int what) {
         post(path, action, what, null);
         return getThis();
     }
@@ -155,7 +153,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交post数据
      */
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action, String tag) {
+    public T post(String path, IObjAction<Map<String, Object>> action, String tag) {
         post(path, action, -1, tag);
         return getThis();
     }
@@ -164,7 +162,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交post数据
      */
     @Override
-    public T post(String path, IObjAction<Map<String, String>> action, int what, String tag) {
+    public T post(String path, IObjAction<Map<String, Object>> action, int what, String tag) {
         if (!TextUtils.isEmpty(path)) {
             observable(path, what, tag, getApi().post(path, getCleanMapAction(action)));
         }
@@ -184,7 +182,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交get数据
      */
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action) {
+    public T get(String path, IObjAction<Map<String, Object>> action) {
         get(path, action, -1, null);
         return getThis();
     }
@@ -193,7 +191,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交get数据
      */
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action, int what) {
+    public T get(String path, IObjAction<Map<String, Object>> action, int what) {
         get(path, action, what, null);
         return getThis();
     }
@@ -202,7 +200,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交get数据
      */
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action, String tag) {
+    public T get(String path, IObjAction<Map<String, Object>> action, String tag) {
         get(path, action, -1, tag);
         return getThis();
     }
@@ -211,29 +209,120 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
      * 提交get数据
      */
     @Override
-    public T get(String path, IObjAction<Map<String, String>> action, int what, String tag) {
+    public T get(String path, IObjAction<Map<String, Object>> action, int what, String tag) {
         if (!TextUtils.isEmpty(path)) {
             observable(path, what, tag, getApi().get(path, getCleanMapAction(action)));
         }
         return getThis();
     }
 
-    private Map<String, String> getCleanMapAction(IObjAction<Map<String, String>> action) {
+    /**
+     * 提交post数据
+     */
+    @Override
+    public T post(String url, String path) {
+        post(url, path, null, -1, null);
+        return getThis();
+    }
+
+    /**
+     * 提交post数据
+     */
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action) {
+        post(url, path, action, -1, null);
+        return getThis();
+    }
+
+    /**
+     * 提交post数据
+     */
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what) {
+        post(url, path, action, what, null);
+        return getThis();
+    }
+
+    /**
+     * 提交post数据
+     */
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+        post(url, path, action, -1, tag);
+        return getThis();
+    }
+
+    /**
+     * 提交post数据
+     */
+    @Override
+    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
+        if (!TextUtils.isEmpty(path)) {
+            observable(path, what, tag, getApi(url).post(path, getCleanMapAction(action)));
+        }
+        return getThis();
+    }
+
+    /**
+     * 提交post数据
+     */
+    @Override
+    public T get(String url, String path) {
+        get(url, path, null, -1, null);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action) {
+        get(url, path, action, -1, null);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what) {
+        get(url, path, action, what, null);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+        get(url, path, action, -1, tag);
+        return getThis();
+    }
+
+    /**
+     * 提交get数据
+     */
+    @Override
+    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
+        if (!TextUtils.isEmpty(path)) {
+            observable(path, what, tag, getApi(url).get(path, getCleanMapAction(action)));
+        }
+        return getThis();
+    }
+
+    @Override
+    public Map<String, String> getCleanMapAction(IObjAction<Map<String, Object>> action) {
         if (action != null) {
-            Map<String, String> map;
-            action.execute(map = new HashMap<>());
-            if (!TextUtils.isEmpty(map)) {
-                Set<String> data = new HashSet<>();
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    if (TextUtils.isEmpty(entry.getKey()) ||
-                            TextUtils.isEmpty(entry.getValue())) {
-                        data.add(entry.getKey());
+            Map<String, String> map = new HashMap<>();
+            Map<String, Object> actionMap = new HashMap<>();
+            action.execute(actionMap);
+            if (!TextUtils.isEmpty(actionMap)) {
+                for (Map.Entry<String, Object> entry : actionMap.entrySet()) {
+                    if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
+                        map.put(entry.getKey(), controllerApi().getLog(entry.getValue()));
                     }
                 }
-                for (String key : data) {
-                    map.remove(key);
-                }
-//                LogUtil.ee(this, "map: " + LogUtil.getLog(map));
+//                LogUtil.ii(this, "map -> " + LogUtil.getLog(map));
                 return map;
             }
         }

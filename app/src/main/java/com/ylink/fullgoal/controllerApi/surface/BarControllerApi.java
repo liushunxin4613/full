@@ -24,11 +24,6 @@ public class BarControllerApi<T extends BarControllerApi, C> extends SurfaceCont
         super(controller);
     }
 
-    @Override
-    public Integer getDefRootViewResId() {
-        return R.layout.l_top_bar;
-    }
-
     public T setTitle(CharSequence title) {
         setText(centerTv, title);
         setText(backTv, title);

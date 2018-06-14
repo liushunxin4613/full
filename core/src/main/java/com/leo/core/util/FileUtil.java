@@ -53,4 +53,19 @@ public class FileUtil {
         return null;
     }
 
+    public static String getFileSuffix(File file, boolean suffix){
+        return file == null ? null : getFileSuffix(file.getName(), suffix);
+    }
+
+    public static String getFileSuffix(String fileName, boolean suffix){
+        if(!TextUtils.isEmpty(fileName)){
+            int index = fileName.lastIndexOf(".");
+            if(index >= 0){
+                return suffix ? fileName.substring(index)
+                        : fileName.substring(0, index);
+            }
+        }
+        return fileName;
+    }
+
 }

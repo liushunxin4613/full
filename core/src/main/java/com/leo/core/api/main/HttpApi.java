@@ -1,8 +1,8 @@
 package com.leo.core.api.main;
 
-import com.leo.core.api.MsgSubscriber;
+import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.IParseApi;
+import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.net.RetrofitFactory;
 import com.leo.core.util.TextUtils;

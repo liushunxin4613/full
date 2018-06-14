@@ -2,11 +2,11 @@ package com.leo.core.util;
 
 import android.content.Context;
 
-import com.leo.core.api.ClassBindImplApi;
-import com.leo.core.api.ClassCreateApi;
+import com.leo.core.api.api.ClassBindImplApi;
+import com.leo.core.api.api.ClassCreateApi;
 import com.leo.core.core.MainManage;
 import com.leo.core.iapi.core.IApi;
-import com.leo.core.iapi.IBindContextApi;
+import com.leo.core.iapi.api.IBindContextApi;
 
 public class ClassBindUtil {
 

@@ -1,6 +1,9 @@
 package com.ylink.fullgoal.vo;
 
-public class SearchVo<D> {
+import com.google.gson.reflect.TypeToken;
+import com.ylink.fullgoal.fg.SerialVersionTag;
+
+public class SearchVo<D> extends SerialVersionTag {
 
     /**
      * 员工
@@ -33,6 +36,11 @@ public class SearchVo<D> {
     public final static String SERVE_BILL = "招待申请单";
 
     /**
+     * 费用指标
+     */
+    public final static String COST_INDEX = "费用指标";
+
+    /**
      * 投研报告
      */
     public final static String REPORT = "投研报告";
@@ -41,11 +49,6 @@ public class SearchVo<D> {
      * 携程机票
      */
     public final static String XC_AIR = "携程机票";
-
-    /**
-     * 费用指标
-     */
-    public final static String COST_INDEX = "费用指标";
 
     /**
      * 搜索参数
@@ -75,6 +78,8 @@ public class SearchVo<D> {
     public SearchVo(String search, D obj) {
         this.search = search;
         this.obj = obj;
+        setSerialVersionTag(obj == null ? null : TypeToken.getParameterized(SearchVo.class,
+                obj.getClass()).getType().toString());
     }
 
     public String getSearch() {

@@ -23,9 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
-import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IBindBeanApi;
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.api.IBindBeanApi;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IAttachApi;
 
 import java.lang.reflect.Type;
@@ -483,7 +483,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @param position position
      * @param <B>      B
      */
-    <B> void onBindViewHolder(B bean, int position);
+    <B> T onBindViewHolder(B bean, int position);
 
     /**
      * 测量view的大学
@@ -539,6 +539,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     boolean onTouchEvent(MotionEvent event);
 
     //自定义的
+
+    /**
+     * 更新数据
+     */
+    void notifyDataChanged();
 
     /**
      * 执行

@@ -2,7 +2,7 @@ package com.leo.core.iapi.main;
 
 import android.support.annotation.NonNull;
 
-import com.leo.core.iapi.IDecodeApi;
+import com.leo.core.iapi.api.IDecodeApi;
 import com.leo.core.iapi.core.IApi;
 
 public interface IShowApi<T extends IShowApi> extends IApi {

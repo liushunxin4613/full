@@ -9,6 +9,7 @@ public class CastTargetVo {
 
     //费用指标
     private String castTarget;
+    private String castTargetShow;
     //金额
     private String money;
     //是否需要分摊
@@ -21,6 +22,11 @@ public class CastTargetVo {
     private String yetApportionPercent;
     //费用分摊组
     private List<CastApportionVo> castApportionData;
+
+    public CastTargetVo(String castTarget, String castTargetShow) {
+        this.castTarget = castTarget;
+        this.castTargetShow = castTargetShow;
+    }
 
     public CastTargetVo(String castTarget, String money, String apportionState, String taxMoney, String hasCastMoney, String yetApportionPercent) {
         this.castTarget = castTarget;
@@ -85,6 +91,14 @@ public class CastTargetVo {
 
     public void setCastApportionData(List<CastApportionVo> castApportionData) {
         this.castApportionData = castApportionData;
+    }
+
+    public String getCastTargetShow() {
+        return castTargetShow;
+    }
+
+    public void setCastTargetShow(String castTargetShow) {
+        this.castTargetShow = castTargetShow;
     }
 
 }

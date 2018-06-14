@@ -1,8 +1,8 @@
 package com.leo.core.factory;
 
-import com.leo.core.api.DataApi;
+import com.leo.core.api.api.DataApi;
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.IDataApi;
+import com.leo.core.iapi.api.IDataApi;
 import com.leo.core.util.ClassBindUtil;
 
 public class DataFactory<T extends DataFactory> extends ThisApi<T> {

@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
-import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IVgRunApi;
+import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.api.IVgRunApi;
 import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
@@ -202,6 +202,14 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
                     setAllSelected(vg.getChildAt(i), selected);
                 }
             }
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setLayoutParams(View view, ViewGroup.LayoutParams params) {
+        if (checkView(view)) {
+            view.setLayoutParams(params);
         }
         return getThis();
     }

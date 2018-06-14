@@ -8,8 +8,11 @@ import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import com.leo.core.config.Config;
+import com.leo.core.util.LogUtil;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -24,6 +27,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * Created by Ryan on 2015/12/30.
  */
 public class RetrofitFactory {
+
+    private final static int TIME_OUT_SECONDS = Config.TIME_OUT_SECONDS;
 
     private static boolean log;
     private static RetrofitFactory instance;
@@ -120,17 +125,28 @@ public class RetrofitFactory {
                     out.value(value);
                 }
             };
-            gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(double.class, Double.class, DOUBLE));
-            gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(long.class, Long.class, LONG));
-            gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(int.class, Integer.class, INT));
-            OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-            clientBuilder.addInterceptor(new LogInterceptor());
+            gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(
+                    double.class, Double.class, DOUBLE));
+            gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(
+                    long.class, Long.class, LONG));
+            gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(
+                    int.class, Integer.class, INT));
+            OkHttpClient.Builder client = new OkHttpClient.Builder();
+            client.addInterceptor(new LogInterceptor());
+            /*try {
+                client.addInterceptor(new LogInterceptor());
+            } catch (Exception ignored) {
+                LogUtil.ee(this, "连接异常: " + ignored.getMessage());
+            }*/
+            client.connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                    .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                    .writeTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS);
             builder.baseUrl(url)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(NullOnEmptyConverterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
-                    .client(clientBuilder.build());
+                    .client(client.build());
         }
         return builder.baseUrl(url).build();
     }

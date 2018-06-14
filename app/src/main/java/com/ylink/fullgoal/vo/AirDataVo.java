@@ -16,7 +16,6 @@ public class AirDataVo {
     private List<BillVo> airBillData;
 
     public AirDataVo() {
-
     }
 
     public AirDataVo(List<CtripHb> ctripData, List<BillVo> airBillData) {

@@ -3,9 +3,9 @@ package com.leo.core.core;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.leo.core.api.ObjectApi;
-import com.leo.core.iapi.IBindContextApi;
-import com.leo.core.iapi.IObjectApi;
+import com.leo.core.api.api.ObjectApi;
+import com.leo.core.iapi.api.IBindContextApi;
+import com.leo.core.iapi.api.IObjectApi;
 import com.leo.core.iapi.core.IApi;
 
 import java.util.HashMap;

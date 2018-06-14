@@ -3,7 +3,7 @@ package com.leo.core.helper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.leo.core.iapi.IBindContextApi;
+import com.leo.core.iapi.api.IBindContextApi;
 
 public class BaseBindContextHelper<T extends BaseBindContextHelper> extends BaseHelper<T> implements IBindContextApi<T>{
 

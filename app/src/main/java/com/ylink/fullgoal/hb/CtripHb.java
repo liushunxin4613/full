@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.hb;
 
+import com.ylink.fullgoal.fg.CtripTicketsFg;
+
 /**
  * 携程机票
  */
@@ -28,6 +30,20 @@ public class CtripHb extends SerialNoHb {
     private String arrivelTime;
     private String ticket;
     private String reimbursement;
+
+    public CtripHb(CtripTicketsFg fg) {
+        if (fg != null) {
+            setCrew(fg.getCrew());
+            setFlightNumber(fg.getFlightNumber());
+            setDeparture(fg.getDeparture());
+            setDestination(fg.getDestination());
+            setTakeoffDate(fg.getTakeOffDate());
+            setTakeoffTime(fg.getTakeOffTime());
+            setArrivelDate(fg.getArrivelDate());
+            setArrivelTime(fg.getArrivelTime());
+            setTicket(fg.getTicket());
+        }
+    }
 
     public String getCrew() {
         return crew;

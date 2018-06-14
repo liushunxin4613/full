@@ -9,8 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.util.LogUtil;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.SoftInputUtil;
 

@@ -2,9 +2,11 @@ package com.ylink.fullgoal.api.surface;
 
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.ApiBean;
 import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
+import com.ylink.fullgoal.bean.MoneyBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
@@ -39,24 +41,24 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
         super(controller);
     }
 
-    @Override
+    /*@Override
     protected void onReimburseVo(ReimburseVo vo) {
         super.onReimburseVo(vo);
         //VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
-            data.add(new TvH2Bean(vo.getAgent(), vo.getDepartment()));
+            *//*data.add(new TvH2Bean(vo.getAgent(), vo.getDepartment()));
             checkAdd(data, vo.getReimbursement(), new TvHEtIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", vo.getReimbursement(), "请输入报销人", (bean, view)
                     -> startSearch(SearchVo.REIMBURSEMENT), vo::setReimbursement));
             checkAdd(data, vo.getBudgetDepartment(), new TvH2MoreBean("预算归属部门",
                     vo.getBudgetDepartment(), "请选择预算归属部门",
-                    (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
+                    (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));*//*
             checkAdd(data, vo.getProject(), new TvH2MoreBean("项目", vo.getProject(), "请选择项目",
                     (bean, view) -> startSearch(SearchVo.PROJECT)));
             //经办人确认、经办人修改
             if (!TextUtils.equals(vo.getState(), ReimburseVo.STATE_INITIATE)) {
-                checkAdd(data, vo.getTotalAmountLower(), new TvHEtIconMoreBean("金额",
+                checkAdd(data, vo.getTotalAmountLower(), new MoneyBean("金额",
                         vo.getTotalAmountLower(), "请输入金额", vo::setTotalAmountLower));
             }
             checkAdd(data, vo.getCause(), new TvHEt3Bean("事由", vo.getCause(), "请输入事由", vo::setCause));
@@ -151,11 +153,12 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
             execute((BillVo bill) -> data.add(new ImageHb(bill.getId(), bill.getType(),
                             bill.getUrl())), vo.getTrafficBillData(), vo.getStayBillData(),
                     getExecute(airVo, AirDataVo::getAirBillData));
-            return new ReimburseUpHb(vo.getSerialNo(), getUserName(), vo.getReimbursement(), vo.getBudgetDepartment(),
+            *//*return new ReimburseUpHb(vo.getSerialNo(), getUserName(), vo.getReimbursement(), vo.getBudgetDepartment(),
                     vo.getProject(), vo.getTotalAmountLower(), vo.getCause(), traveList, reportName,
-                    ticketList, data);
+                    ticketList, data);*//*
+            return null;
         });
-        Map<String, String> checkMap = getCheck(hb, getSetData("报销类型", "经办人", "报销人",
+        Map<String, Object> checkMap = getCheck(hb, getSetData("报销类型", "经办人", "报销人",
                 "预算归属部门", "事由"));
         if (!TextUtils.isEmpty(checkMap)) {
             post(REIMBURSE_SUBMIT, map -> map.putAll(checkMap));
@@ -196,6 +199,6 @@ public class EvectionControllerApi<T extends EvectionControllerApi, C> extends R
                         notifyReimburseVoChanged();
                     }
                 }))));
-    }
+    }*/
 
 }

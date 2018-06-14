@@ -11,7 +11,7 @@ import android.view.View;
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.core.BaseControllerApiView;
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;

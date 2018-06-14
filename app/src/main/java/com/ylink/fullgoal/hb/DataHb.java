@@ -1,11 +1,18 @@
 package com.ylink.fullgoal.hb;
 
+import com.leo.core.iapi.api.IIsSuccessApi;
+
 import java.util.List;
 
 /**
  * 公共数据源
  */
-public class DataHb {
+public class DataHb implements IIsSuccessApi {
+
+    @Override
+    public boolean isSuccess() {
+        return getReturnCode() != null && getReturnCode().isSuccess();
+    }
 
     //返回码
     private CodeHb returnCode;

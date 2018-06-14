@@ -2,17 +2,22 @@ package com.ylink.fullgoal.bean;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.OnBVClickListener;
+import com.leo.core.iapi.inter.OnBVClickListener;
+import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 
 public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
+
+    @Override
+    protected String getDefaultKeyword() {
+        return getName();
+    }
 
     //不做引入处理
     private transient View.OnClickListener onClickListener;
@@ -23,6 +28,7 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
     private String detail;
     private String hint;
     private transient boolean isMoneyInputType;
+    private transient boolean b5;
 
     public ApiBean(String name) {
         this(null, name, null, null, null);
@@ -80,6 +86,10 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
         isMoneyInputType = moneyInputType;
     }
 
+    public void setB5(boolean b5) {
+        this.b5 = b5;
+    }
+
     public String getName() {
         return name;
     }
@@ -127,13 +137,9 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
     public void setTextView(TextView textView) {
         this.textView = textView;
         if (this.textView != null) {
-            if (isMoneyInputType()) {
-                this.textView.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
-            }
             this.textView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence text, int start, int count, int after) {
-
                 }
 
                 @Override
@@ -142,22 +148,37 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
 
                 @Override
                 public void afterTextChanged(Editable text) {
-                    if (isMoneyInputType() && !TextUtils.isEmpty(text)) {
-                        int index = text.toString().lastIndexOf(".");
-                        if (index >= 0) {
-                            int end = index + 3;
-                            if (end < text.length()) {
-                                text.delete(end, text.length());
-                                return;
-                            }
-                        }
-                    }
-                    String str = RunUtil.getExecute(text, CharSequence::toString);
-                    if (!TextUtils.equals(str, getHint())) {
-                        setDetail(str);
-                    }
+                    onAfterTextChanged(text);
                 }
             });
+        }
+    }
+
+    private void onAfterTextChanged(Editable text) {
+        String temp = text.toString();
+        int posDot = temp.indexOf(".");
+        int endPosDot = temp.lastIndexOf(".");
+        if (posDot >= 0 && endPosDot != posDot) {
+            text.delete(endPosDot, endPosDot + 1);
+            return;
+        }
+        if (posDot > 0) {
+            if (temp.length() - posDot - 1 > 2) {
+                text.delete(posDot + 3, posDot + 4);
+                return;
+            }
+        } else if (posDot == 0) {
+            text.insert(0, "0");
+        }
+        if (b5) {
+            float f = JavaTypeUtil.getfloat(temp, 0);
+            if (f > 100) {
+                text.delete(temp.length() - 1, temp.length());
+                return;
+            }
+        }
+        if (!TextUtils.equals(temp, getHint())) {
+            setDetail(temp);
         }
     }
 

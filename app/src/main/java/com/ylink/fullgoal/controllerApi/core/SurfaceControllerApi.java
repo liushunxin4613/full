@@ -2,20 +2,32 @@ package com.ylink.fullgoal.controllerApi.core;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.iapi.inter.IController;
+import com.leo.core.iapi.inter.IMapAction;
+import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.api.full.FullSearchControllerApi;
 import com.ylink.fullgoal.api.surface.SearchControllerApi;
 import com.ylink.fullgoal.config.Config;
+import com.ylink.fullgoal.cr.main.DVo;
 import com.ylink.fullgoal.main.SurfaceActivity;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -25,9 +37,12 @@ import java.util.Set;
 
 import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.Config.FIELDS;
+import static com.ylink.fullgoal.config.Config.FULL;
 
 @SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
+
+    private DVo core;
 
     public SurfaceControllerApi(C controller) {
         super(controller);
@@ -92,7 +107,15 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     protected <B> B getBundle(Bundle bundle, Class<B> clz) {
         if (bundle != null && clz != null) {
-            return decode(bundle.getString(clz.getName()), clz);
+            return decode(bundle.getString(clz.toString()), clz);
+        }
+        return null;
+    }
+
+    protected <B> List<B> getBundleList(Bundle bundle, Class<B> clz) {
+        if (bundle != null && clz != null) {
+            Type type = TypeToken.getParameterized(List.class, clz).getType();
+            return decode(bundle.getString(type.toString()), type);
         }
         return null;
     }
@@ -100,7 +123,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     protected Bundle getBundle(Object... args) {
         if (!TextUtils.isEmpty(args)) {
             Bundle bundle = new Bundle();
-            execute(args, obj -> bundle.putString(obj.getClass().getName(), encode(obj)));
+            execute(args, obj -> bundle.putString(getObjectType(obj).toString(), encode(obj)));
             return bundle;
         }
         return null;
@@ -110,7 +133,8 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         Bundle bundle = new Bundle();
         bundle.putString(Config.SEARCH, search);
         bundle.putStringArrayList(Config.FILTERS, filterData);
-        startSurfaceActivity(bundle, SearchControllerApi.class);
+        startSurfaceActivity(bundle, FULL ? FullSearchControllerApi.class
+                : SearchControllerApi.class);
     }
 
     protected void startSearch(String search) {
@@ -131,9 +155,9 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getThis();
     }
 
-    protected Map<String, String> getCheck(Object obj, Set<String> must, Set<String> all) {
+    protected Map<String, Object> getCheck(Object obj, Set<String> must, Set<String> all) {
         if (!TextUtils.isEmpty(all) && obj != null) {
-            Map<String, String> mp = new HashMap<>();
+            Map<String, Object> mp = new HashMap<>();
             Class clz = obj.getClass();
             for (String key : all) {
                 Object item = null;
@@ -144,7 +168,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 } catch (Exception ignored) {
                 } finally {
                     if (count(item) > 0) {
-                        mp.put(key, getLog(item));
+                        mp.put(key, item);
                     } else if (!TextUtils.isEmpty(must) && must.contains(getValue(key))) {
                         String value = getValue(key);
                         value = TextUtils.isEmpty(value) ? key : value;
@@ -158,7 +182,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected Map<String, String> getCheck(Object obj, Set<String> must) {
+    protected Map<String, Object> getCheck(Object obj, Set<String> must) {
         Set<String> all = new LinkedHashSet<>();
         if (!TextUtils.isEmpty(FIELDS)) {
             for (String[] args : FIELDS) {
@@ -168,6 +192,23 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             }
         }
         return getCheck(obj, must, all);
+    }
+
+    protected Map<String, Object> getCheckMap(Object obj, Set<String> must) {
+        if (obj != null) {
+            Map<String, Object> map = getFieldMap(obj);
+            if (!TextUtils.isEmpty(map) && !TextUtils.isEmpty(must)) {
+                Set<String> keys = map.keySet();
+                for (String key : must) {
+                    if(!TextUtils.isEmpty(key) && !keys.contains(getKey(key))){
+                        show(String.format("%s(%s)不能为空", key, getKey(key)));
+                        return null;
+                    }
+                }
+            }
+            return map;
+        }
+        return null;
     }
 
     /**
@@ -193,7 +234,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
      * @param key key
      * @return value
      */
-    protected String getValue(String[][] argss, String key) {
+    protected String getValue(String[][] argss, String key, String def) {
         if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(argss)) {
             for (String[] args : argss) {
                 if (count(args) == 2 && TextUtils.equals(args[0], key)) {
@@ -201,7 +242,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 }
             }
         }
-        return null;
+        return def;
     }
 
 
@@ -210,7 +251,236 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     protected String getValue(String key) {
-        return getValue(FIELDS, key);
+        return getValue(FIELDS, key, null);
+    }
+
+    protected String getValue(String[][] argss, String key) {
+        return getValue(argss, key, null);
+    }
+
+    protected <A> void executeSearch(Class<A> clz, IObjAction<A> action) {
+        if (clz != null && action != null) {
+            TypeToken<SearchVo<A>> token = (TypeToken<SearchVo<A>>) TypeToken
+                    .getParameterized(SearchVo.class, clz);
+            execute(getFinish(), token, vo -> action.execute(vo.getObj()));
+        }
+    }
+
+    protected void addListRootType(Class... args) {
+        if (!TextUtils.isEmpty(args)) {
+            execute(args, item -> addRootType(TypeToken.getParameterized(List.class, item)));
+        }
+    }
+
+
+    protected TextWatcher getMoneyTextWatcher(IObjAction<String> action) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                onAfterTextChanged(s, action);
+            }
+        };
+    }
+
+    protected void onAfterTextChanged(Editable text, IObjAction<String> action) {
+        String temp = text.toString();
+        int posDot = temp.indexOf(".");
+        int endPosDot = temp.lastIndexOf(".");
+        if (posDot >= 0 && endPosDot != posDot) {
+            text.delete(endPosDot, endPosDot + 1);
+            return;
+        }
+        if (posDot > 0) {
+            if (temp.length() - posDot - 1 > 2) {
+                text.delete(posDot + 3, posDot + 4);
+            }
+        } else if (posDot == 0) {
+            text.insert(0, "0");
+        }
+        executeNon(temp, action);
+    }
+
+    protected Type getObjectType(Object obj) {
+        if (obj instanceof List) {
+            List data = (List) obj;
+            if (!TextUtils.isEmpty(data)) {
+                for (Object item : data) {
+                    if (item != null) {
+                        return TypeToken.getParameterized(List.class,
+                                getObjectType(item)).getType();
+                    }
+                }
+            }
+            return List.class;
+        } else if (obj != null) {
+            return obj.getClass();
+        }
+        return null;
+    }
+
+    public Map<String, String> getFieldStringMap(Object obj) {
+        if (obj != null) {
+            Map<String, String> map = new HashMap<>();
+            initFieldMap(obj, (key, value) -> map.put(key, getLog(value)));
+            return map;
+        }
+        return null;
+    }
+
+    public Map<String, Object> getFieldMap(Object obj) {
+        if (obj != null) {
+            Map<String, Object> map = new HashMap<>();
+            initFieldMap(obj, map::put);
+            return map;
+        }
+        return null;
+    }
+
+    public void initFieldMap(Object obj, IMapAction<String, Object> action) {
+        if (obj != null && action != null) {
+            Set<Field> set = getFields(obj);
+            if (!TextUtils.isEmpty(set)) {
+                for (Field field : set) {
+                    try {
+                        field.setAccessible(true);
+                        Object value = field.get(obj);
+                        if (value != null) {
+                            action.execute(field.getName(), value);
+                        }
+                    } catch (IllegalAccessException ignored) {
+                    }
+                }
+            }
+        }
+    }
+
+    public Set<Field> getFields(Object obj) {
+        if (obj != null) {
+            Set<Field> set = new LinkedHashSet<>();
+            Class clz = obj.getClass();
+            while (clz != Object.class) {
+                Field[] fields = clz.getDeclaredFields();
+                for (Field field : fields) {
+                    if (checkField(field)) {
+                        set.add(field);
+                    }
+                }
+                clz = clz.getSuperclass();
+            }
+            return set;
+        }
+        return null;
+    }
+
+    private boolean checkField(Field field) {
+        if (field != null) {
+            int m = field.getModifiers();
+            return field != null && !TextUtils.isEmpty(field.getName())
+                    && !Modifier.isAbstract(m) && !Modifier.isFinal(m)
+                    && !Modifier.isTransient(m) && !Modifier.isStatic(m)
+                    && !Modifier.isInterface(field.getType().getModifiers());
+        }
+        return false;
+    }
+
+    protected <D> D get(List<D> data){
+        if(!TextUtils.isEmpty(data)){
+            return data.get(0);
+        }
+        return null;
+    }
+
+    protected String getNull(String text){
+        return TextUtils.isEmpty(text) ? null : text;
+    }
+
+    //有关于数据处理的
+
+    protected <B> B no(IReturnAction<DVo, B> action) {
+        return no(getVo(), action);
+    }
+
+    protected <A extends IController, B> B gt(Class<B> clz, IReturnAction<DVo, A> action){
+        if(clz != null && action != null){
+            A obj = no(action);
+            if(obj != null && clz.isInstance(obj)){
+                return (B) obj;
+            }
+        }
+        return null;
+    }
+
+    protected <A extends IController, B> B gt(IReturnAction<DVo, A> action, IReturnAction<A, B> an){
+        if(action != null && an != null){
+            A obj = no(action);
+            if(obj != null){
+                return an.execute(obj);
+            }
+        }
+        return null;
+    }
+
+    protected <A extends IController, B> B gt(IReturnAction<DVo, A> action){
+        if(action != null){
+            A obj = no(action);
+            if(obj != null){
+                return (B) obj.getViewBean();
+            }
+        }
+        return null;
+    }
+
+    protected DVo getVo() {
+        if (core == null) {
+            core = new DVo();
+        }
+        return core;
+    }
+
+    protected T ioo(IObjAction<DVo> action) {
+        executeNon(getVo(), action);
+        return getThis();
+    }
+
+    protected <B> T iso(IReturnAction<DVo, B> action, IObjAction<B> ac){
+        if(action != null && ac != null){
+            B obj = no(action);
+            if(obj != null){
+                ac.execute(obj);
+            }
+        }
+        return getThis();
+    }
+
+    protected <B, D> T ioo(IReturnAction<DVo, B> action, IReturnAction<B, D> an){
+        if(action != null && an != null){
+            B obj = no(action);
+            if(obj != null){
+                an.execute(obj);
+            }
+        }
+        return getThis();
+    }
+
+    protected <B, D> T iso(IReturnAction<DVo, B> action, IReturnAction<B, D> an, IObjAction<D> ac){
+        if(action != null && an != null && ac != null){
+            B obj = no(action);
+            if(obj != null){
+                D item = an.execute(obj);
+                if(item != null){
+                    ac.execute(item);
+                }
+            }
+        }
+        return getThis();
     }
 
 }

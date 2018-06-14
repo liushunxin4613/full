@@ -2,8 +2,8 @@ package com.leo.core.util;
 
 import android.graphics.drawable.Drawable;
 
-import com.leo.core.api.ResApi;
-import com.leo.core.iapi.IResApi;
+import com.leo.core.api.api.ResApi;
+import com.leo.core.iapi.api.IResApi;
 
 public class ResUtil {
 

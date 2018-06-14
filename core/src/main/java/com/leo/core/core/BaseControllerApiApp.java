@@ -3,10 +3,9 @@ package com.leo.core.core;
 import android.app.Application;
 import android.content.Context;
 
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
 public class BaseControllerApiApp<T extends BaseControllerApiApp, C extends IControllerApi> extends Application implements IAFVApi<T, C> {

@@ -2,6 +2,13 @@ package com.leo.core.config;
 
 public class Config {
 
+    //系统配置
+
+    //超时时间(单位:秒)
+    public final static int TIME_OUT_SECONDS = 10;
+
+    //其他
+
     public final static String STATUS_BAR_KEY = "statusBarKey";
     public final static String STATUS_BAR_KEY_LIGHT = "statusBarKeyLight";
     public final static String STATUS_BAR_VALUE = "statusBarValue";

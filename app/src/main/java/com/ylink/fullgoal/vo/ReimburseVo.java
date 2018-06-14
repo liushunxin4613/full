@@ -1,16 +1,28 @@
 package com.ylink.fullgoal.vo;
 
-import com.leo.core.util.LogUtil;
+import com.leo.core.util.JavaTypeUtil;
+import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.fg.ContractPaymentFg;
+import com.ylink.fullgoal.fg.CostIndexFg;
+import com.ylink.fullgoal.fg.MessageBackFg;
+import com.ylink.fullgoal.fg.UserList;
+import com.ylink.fullgoal.hb.CtripHb;
 import com.ylink.fullgoal.hb.ImageHb;
 import com.ylink.fullgoal.hb.ReimburseHb;
 import com.ylink.fullgoal.hb.ReportHb;
 import com.ylink.fullgoal.hb.TraveHb;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_CCJP;
+import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_JT;
+import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_YB;
+import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_ZS;
 
 /**
  * 报销
@@ -96,6 +108,8 @@ public class ReimburseVo extends HelpVo {
     private String apportion;
     //费用指标
     private CastTargetVo castTarget;
+    //费用指标
+    private CostIndexFg costIndexFg;
     //禁止规则组
     private List<InhibitionRuleVo> inhibitionRuleData;
     //提交标志
@@ -106,15 +120,18 @@ public class ReimburseVo extends HelpVo {
     //报销批次号
     private String serialNo;
     //经办人
-    private String agent;
+    private UserList agent;
+    //报销人
+    private UserList reimbursement;
     //部门
     private String department;
-    //报销人
-    private String reimbursement;
+    private String departmentShow;
     //预算归属部门
     private String budgetDepartment;
+    private String budgetDepartmentShow;
     //项目
     private String project;
+    private String projectShow;
     //金额
     private String totalAmountLower;
     //事由
@@ -127,9 +144,10 @@ public class ReimburseVo extends HelpVo {
     //一般费用报销单有
 
     //合同付款申请单
-    private String paymentRequest;
+    private List<ContractPaymentFg> paymentRequestList;
     //招待申请单
     private String serveBill;
+    private String serveBillShow;
 
     //出差费用报销单有
 
@@ -144,7 +162,50 @@ public class ReimburseVo extends HelpVo {
     //车船机票费报销
     private AirDataVo airDataVo;
 
+    //总金额
+    private double sum;
+
     public ReimburseVo() {
+    }
+
+    public ReimburseVo(MessageBackFg fg, String serialNo) {
+        if (fg != null) {
+            setAgent(fg.getAgent());
+            setDepartment(fg.getBudgetDepartment());
+            setReimbursement(fg.getReimbursement());
+            setBudgetDepartment(fg.getBudgetDepartment());
+            setCause(fg.getCause());
+            setPaymentRequestList(fg.getPaymentRequest());
+            setProject(fg.getProject());
+            setServeBill(fg.getProcess());
+            setCostIndexFg(RunUtil.getFirstNonItem(fg.getCostList()));
+            setTotalAmountLower(fg.getTotalAmountLower());
+            setReportData(getExecute(fg.getReport(), ReportHb::new));
+            setTraveData(getExecute(fg.getTravel(), TraveHb::new));
+            AirDataVo vo = new AirDataVo();
+            vo.setCtripData(getExecute(fg.getCtrip(), CtripHb::new));
+            Map<String, List<BillVo>> map = new HashMap<>();
+            execute(fg.getImageList(), imageHb -> {
+                List<BillVo> data = map.get(imageHb.getInvoiceUse());
+                if (data == null) {
+                    map.put(imageHb.getInvoiceUse(), new ArrayList<>());
+                }
+                if (!TextUtils.isEmpty(imageHb.getImageURL())) {
+                    imageHb.setImageURL(imageHb.getImageURL().replaceAll("\\\\", "/"));
+                }
+                map.get(imageHb.getInvoiceUse()).add(new BillVo(imageHb, serialNo));
+            });
+            //一般
+            setBillData(map.get(MESSAGE_BACK_IMAGE_INVOICE_USE_YB));
+            //交通
+            setTrafficBillData(map.get(MESSAGE_BACK_IMAGE_INVOICE_USE_JT));
+            //住宿
+            setStayBillData(map.get(MESSAGE_BACK_IMAGE_INVOICE_USE_ZS));
+            //车船机票
+            vo.setAirBillData(map.get(MESSAGE_BACK_IMAGE_INVOICE_USE_CCJP));
+            setAirDataVo(vo);
+            initTotalAmountLower();
+        }
     }
 
     public ReimburseVo(ReimburseHb hb) {
@@ -153,13 +214,13 @@ public class ReimburseVo extends HelpVo {
             setApprovalStatus(hb.getApprovalStatus());
             setFkApprovalNum(hb.getFkApprovalNum());
             setChannel(hb.getChannel());
-            setAgent(hb.getAgent());
-            setReimbursement(hb.getReimbursement());
+            /*setAgent(hb.getAgent());
+            setReimbursement(hb.getReimbursement());*/
             setFillDate(hb.getFillDate());
             setBudgetDepartment(hb.getBudgetDepartment());
             setTotalAmountLower(hb.getTotalAmountLower());
             setProject(hb.getProject());
-            setPaymentRequest(hb.getPaymentRequest());
+            /*setPaymentRequest(hb.getPaymentRequest());*/
             setServeBill(hb.getServeBill());
             setCause(hb.getCause());
             setBillType(hb.getBillType());
@@ -194,252 +255,345 @@ public class ReimburseVo extends HelpVo {
         }
     }
 
+    /**
+     * 重算金额
+     */
+    public void initTotalAmountLower() {
+        setTotalAmountLower(new DecimalFormat("#").format(getSumBill()));
+    }
+
+    /**
+     * 计算所有金额
+     */
+    public double getSumBill() {
+        sum = 0;
+        execute((BillVo vo) -> sum += JavaTypeUtil.getdouble(vo.getMoney(), 0),
+                getBillData(), getStayBillData(), getTrafficBillData(),
+                getExecute(getAirDataVo(), AirDataVo::getAirBillData));
+        return sum;
+    }
+
+    public UserList getAgent() {
+        return agent;
+    }
+
+    public void setAgent(UserList agent) {
+        this.agent = agent;
+    }
+
+    public UserList getReimbursement() {
+        return reimbursement;
+    }
+
+    public void setReimbursement(UserList reimbursement) {
+        this.reimbursement = reimbursement;
+    }
+
     public String getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public ReimburseVo setState(String state) {
         this.state = state;
+        return this;
     }
 
     public String getChannel() {
         return channel;
     }
 
-    public void setChannel(String channel) {
+    public ReimburseVo setChannel(String channel) {
         this.channel = channel;
+        return this;
     }
 
     public String getFillDate() {
         return fillDate;
     }
 
-    public void setFillDate(String fillDate) {
+    public ReimburseVo setFillDate(String fillDate) {
         this.fillDate = fillDate;
+        return this;
     }
 
     public String getReimbursementState() {
         return reimbursementState;
     }
 
-    public void setReimbursementState(String reimbursementState) {
+    public ReimburseVo setReimbursementState(String reimbursementState) {
         this.reimbursementState = reimbursementState;
+        return this;
     }
 
     public String getOrderNo() {
         return orderNo;
     }
 
-    public void setOrderNo(String orderNo) {
+    public ReimburseVo setOrderNo(String orderNo) {
         this.orderNo = orderNo;
+        return this;
     }
 
     public String getApportion() {
         return apportion;
     }
 
-    public void setApportion(String apportion) {
+    public ReimburseVo setApportion(String apportion) {
         this.apportion = apportion;
+        return this;
     }
 
     public CastTargetVo getCastTarget() {
         return castTarget;
     }
 
-    public void setCastTarget(CastTargetVo castTarget) {
+    public ReimburseVo setCastTarget(CastTargetVo castTarget) {
         this.castTarget = castTarget;
+        return this;
     }
 
     public List<InhibitionRuleVo> getInhibitionRuleData() {
         return inhibitionRuleData;
     }
 
-    public void setInhibitionRuleData(List<InhibitionRuleVo> inhibitionRuleData) {
+    public ReimburseVo setInhibitionRuleData(List<InhibitionRuleVo> inhibitionRuleData) {
         this.inhibitionRuleData = inhibitionRuleData;
+        return this;
     }
 
     public String getSerialNo() {
         return serialNo;
     }
 
-    public void setSerialNo(String serialNo) {
+    public ReimburseVo setSerialNo(String serialNo) {
         this.serialNo = serialNo;
-    }
-
-    public String getAgent() {
-        return agent;
-    }
-
-    public void setAgent(String agent) {
-        this.agent = agent;
+        return this;
     }
 
     public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public ReimburseVo setDepartment(String department) {
         this.department = department;
-    }
-
-    public String getReimbursement() {
-        return reimbursement;
-    }
-
-    public void setReimbursement(String reimbursement) {
-        this.reimbursement = reimbursement;
+        return this;
     }
 
     public String getBudgetDepartment() {
         return budgetDepartment;
     }
 
-    public void setBudgetDepartment(String budgetDepartment) {
+    public ReimburseVo setBudgetDepartment(String budgetDepartment) {
         this.budgetDepartment = budgetDepartment;
+        return this;
     }
 
     public String getProject() {
         return project;
     }
 
-    public void setProject(String project) {
+    public ReimburseVo setProject(String project) {
         this.project = project;
+        return this;
     }
 
     public String getTotalAmountLower() {
         return totalAmountLower;
     }
 
-    public void setTotalAmountLower(String totalAmountLower) {
+    public ReimburseVo setTotalAmountLower(String totalAmountLower) {
         this.totalAmountLower = totalAmountLower;
+        return this;
     }
 
     public String getCause() {
         return cause;
     }
 
-    public void setCause(String cause) {
+    public ReimburseVo setCause(String cause) {
         this.cause = cause;
+        return this;
     }
 
     public List<BillVo> getBillData() {
         return billData;
     }
 
-    public void setBillData(List<BillVo> billData) {
+    public ReimburseVo setBillData(List<BillVo> billData) {
         this.billData = billData;
+        return this;
     }
 
     public List<ProcessVo> getProcessData() {
         return processData;
     }
 
-    public void setProcessData(List<ProcessVo> processData) {
+    public ReimburseVo setProcessData(List<ProcessVo> processData) {
         this.processData = processData;
+        return this;
     }
 
     public String getBillType() {
         return billType;
     }
 
-    public void setBillType(String billType) {
+    public ReimburseVo setBillType(String billType) {
         this.billType = billType;
+        return this;
     }
 
     public String getIsTickets() {
         return isTickets;
     }
 
-    public void setIsTickets(String isTickets) {
+    public ReimburseVo setIsTickets(String isTickets) {
         this.isTickets = isTickets;
+        return this;
     }
 
     public String getSbumitFlag() {
         return sbumitFlag;
     }
 
-    public void setSbumitFlag(String sbumitFlag) {
+    public ReimburseVo setSbumitFlag(String sbumitFlag) {
         this.sbumitFlag = sbumitFlag;
+        return this;
     }
 
-    public String getPaymentRequest() {
-        return paymentRequest;
+    public List<ContractPaymentFg> getPaymentRequestList() {
+        return paymentRequestList;
     }
 
-    public void setPaymentRequest(String paymentRequest) {
-        this.paymentRequest = paymentRequest;
+    public ReimburseVo setPaymentRequestList(List<ContractPaymentFg> paymentRequestList) {
+        this.paymentRequestList = paymentRequestList;
+        return this;
     }
 
     public List<ReportHb> getReportData() {
         return reportData;
     }
 
-    public void setReportData(List<ReportHb> reportData) {
+    public ReimburseVo setReportData(List<ReportHb> reportData) {
         this.reportData = reportData;
+        return this;
     }
 
     public String getServeBill() {
         return serveBill;
     }
 
-    public void setServeBill(String serveBill) {
+    public ReimburseVo setServeBill(String serveBill) {
         this.serveBill = serveBill;
+        return this;
     }
 
     public List<TraveHb> getTraveData() {
         return traveData;
     }
 
-    public void setTraveData(List<TraveHb> traveData) {
+    public ReimburseVo setTraveData(List<TraveHb> traveData) {
         this.traveData = traveData;
+        return this;
     }
 
     public List<BillVo> getTrafficBillData() {
         return trafficBillData;
     }
 
-    public void setTrafficBillData(List<BillVo> trafficBillData) {
+    public ReimburseVo setTrafficBillData(List<BillVo> trafficBillData) {
         this.trafficBillData = trafficBillData;
+        return this;
     }
 
     public List<BillVo> getStayBillData() {
         return stayBillData;
     }
 
-    public void setStayBillData(List<BillVo> stayBillData) {
+    public ReimburseVo setStayBillData(List<BillVo> stayBillData) {
         this.stayBillData = stayBillData;
+        return this;
     }
 
     public AirDataVo getAirDataVo() {
         return airDataVo;
     }
 
-    public void setAirDataVo(AirDataVo airDataVo) {
+    public ReimburseVo setAirDataVo(AirDataVo airDataVo) {
         this.airDataVo = airDataVo;
+        return this;
     }
 
     public String getReimburseType() {
         return reimburseType;
     }
 
-    public void setReimburseType(String reimburseType) {
+    public ReimburseVo setReimburseType(String reimburseType) {
         this.reimburseType = reimburseType;
+        return this;
     }
 
     public String getApprovalStatus() {
         return approvalStatus;
     }
 
-    public void setApprovalStatus(String approvalStatus) {
+    public ReimburseVo setApprovalStatus(String approvalStatus) {
         this.approvalStatus = approvalStatus;
+        return this;
     }
 
     public String getFkApprovalNum() {
         return fkApprovalNum;
     }
 
-    public void setFkApprovalNum(String fkApprovalNum) {
+    public ReimburseVo setFkApprovalNum(String fkApprovalNum) {
         this.fkApprovalNum = fkApprovalNum;
+        return this;
+    }
+
+    public CostIndexFg getCostIndexFg() {
+        return costIndexFg;
+    }
+
+    public void setCostIndexFg(CostIndexFg costIndexFg) {
+        this.costIndexFg = costIndexFg;
+    }
+
+    public List<CostIndexFg> getCostIndexData() {
+        return costIndexFg == null ? TextUtils.getListData() : TextUtils.getListData(costIndexFg);
+    }
+
+    //******************** show *********************
+
+    public String getDepartmentShow() {
+        return getExecute(departmentShow, department);
+    }
+
+    public void setDepartmentShow(String departmentShow) {
+        this.departmentShow = departmentShow;
+    }
+
+    public String getBudgetDepartmentShow() {
+        return getExecute(budgetDepartmentShow, budgetDepartment);
+    }
+
+    public void setBudgetDepartmentShow(String budgetDepartmentShow) {
+        this.budgetDepartmentShow = budgetDepartmentShow;
+    }
+
+    public String getProjectShow() {
+        return getExecute(projectShow, project);
+    }
+
+    public void setProjectShow(String projectShow) {
+        this.projectShow = projectShow;
+    }
+
+    public String getServeBillShow() {
+        return getExecute(serveBillShow, serveBill);
+    }
+
+    public void setServeBillShow(String serveBillShow) {
+        this.serveBillShow = serveBillShow;
     }
 
 }

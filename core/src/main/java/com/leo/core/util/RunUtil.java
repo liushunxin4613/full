@@ -1,9 +1,9 @@
 package com.leo.core.util;
 
-import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IMapAction;
-import com.leo.core.iapi.IReturnAction;
-import com.leo.core.iapi.IObjAction;
+import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.inter.IMapAction;
+import com.leo.core.iapi.inter.IReturnAction;
+import com.leo.core.iapi.inter.IObjAction;
 
 import java.util.List;
 import java.util.Map;

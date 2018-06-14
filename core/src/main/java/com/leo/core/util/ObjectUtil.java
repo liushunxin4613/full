@@ -1,7 +1,7 @@
 package com.leo.core.util;
 
-import com.leo.core.api.ObjectApi;
-import com.leo.core.iapi.IObjectApi;
+import com.leo.core.api.api.ObjectApi;
+import com.leo.core.iapi.api.IObjectApi;
 
 public class ObjectUtil {
 

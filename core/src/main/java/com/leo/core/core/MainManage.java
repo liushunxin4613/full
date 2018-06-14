@@ -6,7 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.leo.core.iapi.core.IApi;
-import com.leo.core.iapi.IBindContextApi;
+import com.leo.core.iapi.api.IBindContextApi;
 
 /**
  * 公共管理类

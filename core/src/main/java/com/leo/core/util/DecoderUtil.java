@@ -1,6 +1,5 @@
 package com.leo.core.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 public class DecoderUtil {
@@ -9,7 +8,7 @@ public class DecoderUtil {
         if (!TextUtils.isEmpty(text)) {
             try {
                 return URLDecoder.decode(text, "utf-8");
-            } catch (UnsupportedEncodingException ignored) {
+            } catch (Exception ignored) {
             }
         }
         return text;

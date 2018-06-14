@@ -1,11 +1,11 @@
 package com.leo.core.util;
 
-import com.leo.core.api.ADisplayApi;
-import com.leo.core.api.Dip2PxContextApi;
-import com.leo.core.api.Px2DipContextApi;
-import com.leo.core.api.Px2SpContextApi;
-import com.leo.core.api.Sp2PxContextApi;
-import com.leo.core.iapi.IDisplayApi;
+import com.leo.core.api.api.ADisplayApi;
+import com.leo.core.api.api.Dip2PxContextApi;
+import com.leo.core.api.api.Px2DipContextApi;
+import com.leo.core.api.api.Px2SpContextApi;
+import com.leo.core.api.api.Sp2PxContextApi;
+import com.leo.core.iapi.api.IDisplayApi;
 
 /**
  * 屏幕分辨率工具类

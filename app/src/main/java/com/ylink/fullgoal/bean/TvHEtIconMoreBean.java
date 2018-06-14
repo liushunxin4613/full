@@ -1,7 +1,7 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.iapi.OnBVClickListener;
+import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.OnBVClickListener;
 import com.ylink.fullgoal.R;
 
 public class TvHEtIconMoreBean extends ApiBean<TvHEtIconMoreBean> {
@@ -11,7 +11,6 @@ public class TvHEtIconMoreBean extends ApiBean<TvHEtIconMoreBean> {
     public TvHEtIconMoreBean(String name, String detail, String hint, IObjAction<String> action) {
         super(name, detail, hint);
         this.action = action;
-        setMoneyInputType(true);
     }
 
     public TvHEtIconMoreBean(Integer iconResId, String name, String detail, String hint,

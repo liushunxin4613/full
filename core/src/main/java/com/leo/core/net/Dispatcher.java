@@ -1,7 +1,7 @@
 package com.leo.core.net;
 
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.IDispatcher;
+import com.leo.core.iapi.inter.IDispatcher;
 import com.leo.core.util.TextUtils;
 
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.hb;
 
+import com.ylink.fullgoal.fg.TravelFormFg;
+
 /**
  * 出差申请单
  */
@@ -26,6 +28,18 @@ public class TraveHb extends SerialNoHb {
     private String dates;
     private String reimbursement;
     private String departmentCode;
+
+    public TraveHb(TravelFormFg fg) {
+        if (fg != null) {
+            setWorkName(fg.getWorkName());
+            setCode(fg.getCode());
+            setDestination(fg.getDestination());
+            setStartDate(fg.getStartDate());
+            setEndDate(fg.getEndDate());
+            setAmount(fg.getAmount());
+            setDates(fg.getDates());
+        }
+    }
 
     public String getWorkName() {
         return workName;

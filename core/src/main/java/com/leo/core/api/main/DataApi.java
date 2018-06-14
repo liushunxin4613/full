@@ -1,10 +1,9 @@
 package com.leo.core.api.main;
 
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.IAction;
-import com.leo.core.iapi.IBolAction;
-import com.leo.core.iapi.ICheckApi;
-import com.leo.core.iapi.IbooleanAction;
+import com.leo.core.iapi.inter.IBolAction;
+import com.leo.core.iapi.api.ICheckApi;
+import com.leo.core.iapi.inter.IbooleanAction;
 import com.leo.core.iapi.main.IDataApi;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;

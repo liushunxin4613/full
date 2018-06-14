@@ -3,7 +3,7 @@ package com.leo.core.api.main;
 import android.support.annotation.NonNull;
 
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.IDecodeApi;
+import com.leo.core.iapi.api.IDecodeApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;

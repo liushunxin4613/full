@@ -1,9 +1,10 @@
 package com.ylink.fullgoal.hb;
 
+import com.leo.core.iapi.api.IIsSuccessApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.Config;
 
-public class CodeHb {
+public class CodeHb implements IIsSuccessApi {
 
     /**
      * type : E
@@ -15,6 +16,7 @@ public class CodeHb {
     private String code;
     private String message;
 
+    @Override
     public boolean isSuccess() {
         return TextUtils.equals(getCode(), Config.HTTP_SUCCESS);
     }

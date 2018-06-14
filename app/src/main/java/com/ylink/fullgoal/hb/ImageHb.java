@@ -3,13 +3,13 @@ package com.ylink.fullgoal.hb;
 public class ImageHb extends SerialNoHb {
 
     //普通
-    public final static String IMAGE_NONE = null;
+    public final static String IMAGE_NONE = "一般";
     //交通
-    public final static String IMAGE_JT = "1";
+    public final static String IMAGE_JT = "交通";
     //住宿
-    public final static String IMAGE_ZS = "2";
+    public final static String IMAGE_ZS = "住宿";
     //车船机票
-    public final static String IMAGE_CCJP = "3";
+    public final static String IMAGE_CCJP = "车船机票";
 
     private String id;
     private String type;

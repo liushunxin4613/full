@@ -1,7 +1,7 @@
 package com.leo.core.util;
 
-import com.leo.core.api.GsonDecodeApi;
-import com.leo.core.iapi.IGsonDecodeApi;
+import com.leo.core.api.api.GsonDecodeApi;
+import com.leo.core.iapi.api.IGsonDecodeApi;
 
 public class GsonDecodeUtil {
 

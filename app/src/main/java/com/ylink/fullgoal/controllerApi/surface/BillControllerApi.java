@@ -2,6 +2,8 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leo.core.util.TextUtils;
@@ -15,8 +17,10 @@ public class BillControllerApi<T extends BillControllerApi, C> extends BarContro
 
     @Bind(R.id.name_tv)
     TextView nameTv;
-    @Bind(R.id.detail_tv)
-    TextView detailTv;
+    @Bind(R.id.detail_et)
+    EditText detailEt;
+    @Bind(R.id.icon_iv)
+    ImageView iconIv;
     @Bind(R.id.photo_iv)
     PhotoView photoIv;
     @Bind(R.id.vg)
@@ -39,7 +43,9 @@ public class BillControllerApi<T extends BillControllerApi, C> extends BarContro
                 -> setVisibility(TextUtils.isEmpty(vo.getMoney()) ? View.GONE : View.VISIBLE, vg)
                 .setVisibility(TextUtils.isEmpty(vo.getPhoto()) ? View.INVISIBLE : View.VISIBLE, photoIv)
                 .setText(nameTv, "金额")
-                .setText(detailTv, vo.getMoney())
+                .setText(detailEt, vo.getMoney())
+                .setTextHint(detailEt, "请输入票据金额")
+                .setVisibility(iconIv, View.INVISIBLE)
                 .setImage(photoIv, vo.getPhoto())));
     }
 

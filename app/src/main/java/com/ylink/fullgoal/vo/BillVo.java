@@ -17,6 +17,18 @@ public class BillVo {
     private String money;
     //类型
     private String type;
+    //报销批次号
+    private String serialNo;
+
+    private transient boolean show;
+
+    public BillVo(String id, Object photo, String url, String money, String type) {
+        this.id = id;
+        this.photo = photo;
+        this.url = url;
+        this.money = money;
+        this.type = type;
+    }
 
     public BillVo(Object photo, String money) {
         this.photo = photo;
@@ -41,6 +53,9 @@ public class BillVo {
     public Object getPhoto() {
         if (photo instanceof Double) {
             photo = ((Double) photo).intValue();
+        }
+        if(photo == null){
+            return getUrl();
         }
         return photo;
     }
@@ -79,6 +94,23 @@ public class BillVo {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    public boolean isShow() {
+        return show;
+    }
+
+    public BillVo setShow(boolean show) {
+        this.show = show;
+        return this;
     }
 
 }

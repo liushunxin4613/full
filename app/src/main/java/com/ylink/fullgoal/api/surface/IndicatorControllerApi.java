@@ -8,9 +8,7 @@ import android.widget.LinearLayout;
 
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.api.main.DataApi;
-import com.leo.core.iapi.IObjAction;
-import com.leo.core.iapi.ITextAction;
-import com.leo.core.util.RunUtil;
+import com.leo.core.iapi.inter.ITextAction;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IndicatorBean;
