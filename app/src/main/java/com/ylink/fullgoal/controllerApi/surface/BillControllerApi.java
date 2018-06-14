@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.vo.BillVo;
+import com.ylink.fullgoal.vo1.BillVo;
 
 import butterknife.Bind;
 import uk.co.senab.photoview.PhotoView;

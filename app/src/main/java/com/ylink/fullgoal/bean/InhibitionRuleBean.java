@@ -2,7 +2,7 @@ package com.ylink.fullgoal.bean;
 
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.vo.InhibitionRuleVo;
+import com.ylink.fullgoal.vo1.InhibitionRuleVo;
 
 public class InhibitionRuleBean extends ApiBean<InhibitionRuleBean> {
 

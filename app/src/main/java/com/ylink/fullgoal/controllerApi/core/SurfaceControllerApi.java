@@ -23,7 +23,7 @@ import com.ylink.fullgoal.api.surface.SearchControllerApi;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.cr.main.DVo;
 import com.ylink.fullgoal.main.SurfaceActivity;
-import com.ylink.fullgoal.vo.SearchVo;
+import com.ylink.fullgoal.vo1.SearchVo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -36,6 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.leo.core.util.TextUtils.count;
+import static com.ylink.fullgoal.config.ComConfig.SHOW;
+import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.Config.FIELDS;
 import static com.ylink.fullgoal.config.Config.FULL;
 
@@ -46,6 +48,21 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     public SurfaceControllerApi(C controller) {
         super(controller);
+    }
+
+    @Override
+    public void onCom(int what, String com, String msg, Object... args) {
+        super.onCom(what, com, msg, args);
+        executeNon(com, c -> {
+            switch (c){
+                case UPDATE:
+                    notifyDataChanged();
+                    break;
+                case SHOW:
+                    show(msg);
+                    break;
+            }
+        });
     }
 
     //自定义
@@ -194,19 +211,22 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getCheck(obj, must, all);
     }
 
-    protected Map<String, Object> getCheckMap(Object obj, Set<String> must) {
-        if (obj != null) {
-            Map<String, Object> map = getFieldMap(obj);
-            if (!TextUtils.isEmpty(map) && !TextUtils.isEmpty(must)) {
-                Set<String> keys = map.keySet();
-                for (String key : must) {
-                    if(!TextUtils.isEmpty(key) && !keys.contains(getKey(key))){
-                        show(String.format("%s(%s)不能为空", key, getKey(key)));
-                        return null;
-                    }
+    protected Map<String, Object> getCheckMap(Map<String, Object> map, Set<String> must) {
+        if (!TextUtils.isEmpty(map) && !TextUtils.isEmpty(must)) {
+            Set<String> keys = map.keySet();
+            for (String key : must) {
+                if(!TextUtils.isEmpty(key) && !keys.contains(getKey(key))){
+                    show(String.format("%s(%s)不能为空", key, getKey(key)));
+                    return null;
                 }
             }
-            return map;
+        }
+        return map;
+    }
+
+    protected Map<String, Object> getCheckMap(Object obj, Set<String> must) {
+        if (obj != null) {
+            return getCheckMap(getFieldMap(obj), must);
         }
         return null;
     }
@@ -428,11 +448,21 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected <A extends IController, B> B gt(IReturnAction<DVo, A> action){
+    protected <A extends IController, B> B gtv(IReturnAction<DVo, A> action){
         if(action != null){
             A obj = no(action);
             if(obj != null){
                 return (B) obj.getViewBean();
+            }
+        }
+        return null;
+    }
+
+    protected <A extends IController, B> B gtd(IReturnAction<DVo, A> action){
+        if(action != null){
+            A obj = no(action);
+            if(obj != null){
+                return (B) obj.getDB();
             }
         }
         return null;

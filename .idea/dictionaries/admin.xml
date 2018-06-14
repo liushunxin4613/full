@@ -31,6 +31,7 @@
       <w>ment</w>
       <w>newsubjoin</w>
       <w>objs</w>
+      <w>perposition</w>
       <w>proj</w>
       <w>projectt</w>
       <w>queryt</w>
@@ -48,6 +49,8 @@
       <w>wanggangyi</w>
       <w>wbyl</w>
       <w>xgtj</w>
+      <w>xztx</w>
+      <w>zcxg</w>
     </words>
   </dictionary>
 </component>

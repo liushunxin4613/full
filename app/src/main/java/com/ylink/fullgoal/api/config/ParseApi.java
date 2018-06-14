@@ -50,7 +50,6 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     private Map<Type, List<IPathMsgAction>> apiMap;
 
     public ParseApi() {
-        LogUtil.closeThisLog(this);
         this.data = new ArrayList<>();
         this.typeMap = new HashMap<>();
         this.apiMap = new HashMap<>();
@@ -166,8 +165,8 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private <A> void onItem(A item, Type type) {
-//        LogUtil.ee(this, "type: " + type + ", apiMap.get(type): " + (apiMap.get(type) == null) +
-//                ", item: " + LogUtil.getLog(item));
+        /*LogUtil.ee(this, "type: " + type + ", apiMap.get(type): " + (apiMap.get(type) == null) +
+                ", item: " + LogUtil.getLog(item));*/
         executeNon(item, obj -> execute(apiMap.get(type), action -> {
             if (obj instanceof DataFg) {
                 if (!((DataFg) obj).isSuccess() && !TextUtils.isEmpty(((DataFg) obj).getMessage())) {
@@ -187,14 +186,14 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         final String txt = getCleanJsonString(text, null);
         if (!TextUtils.isEmpty(data)) {
             int emptyCount = getEmptyLength(txt);
-            LogUtil.ee(this, "txt: " + txt);
-            LogUtil.ee(this, "emptyCount: " + emptyCount);
+            /*LogUtil.ee(this, "txt: " + txt);
+            LogUtil.ee(this, "emptyCount: " + emptyCount);*/
             execute(data, type -> {
                 Object obj = GsonDecodeUtil.decode(txt, type);
                 String encode = GsonDecodeUtil.encode(obj);
-                LogUtil.ee(this, "type: " + type.toString());
+                /*LogUtil.ee(this, "type: " + type.toString());
                 LogUtil.ee(this, "getEmptyLength(encode): " + getEmptyLength(encode));
-                LogUtil.ee(this, "encode: " + encode);
+                LogUtil.ee(this, "encode: " + encode);*/
                 if (emptyCount == getEmptyLength(encode)) {
                     onData(obj, type);
                 }
@@ -334,13 +333,14 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private void onCompleted(Completed completed) {
-        LogUtil.ii(this, "本次请求结束!!!");
+        LogUtil.ii(this, "*********************** 本次请求结束!!! ***********************");
         onItem(completed, completed.getClass());
     }
 
     private void onExceptions(Exceptions exception) {
         onItem(exception, exception.getClass());
 //        executeNon(exception.getE(), Throwable::printStackTrace);
+        LogUtil.ii(this, "本次异常: " + exception.getMessage());
     }
 
     private Class getDataItemType(List data) {

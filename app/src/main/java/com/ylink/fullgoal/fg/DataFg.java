@@ -17,7 +17,7 @@ public class DataFg extends StatusCodeFg {
     //招待申请单列表
     private List<ProcessFg> processList;
     //费用指标列表
-    private List<CostIndexFg> costIndextList;
+    private List<CostFg> costIndextList;
     //出差申请单列表
     private List<TravelFormFg> travelList;
     //投研报告列表
@@ -59,11 +59,11 @@ public class DataFg extends StatusCodeFg {
         this.processList = processList;
     }
 
-    public List<CostIndexFg> getCostIndextList() {
+    public List<CostFg> getCostIndextList() {
         return costIndextList;
     }
 
-    public void setCostIndextList(List<CostIndexFg> costIndextList) {
+    public void setCostIndextList(List<CostFg> costIndextList) {
         this.costIndextList = costIndextList;
     }
 

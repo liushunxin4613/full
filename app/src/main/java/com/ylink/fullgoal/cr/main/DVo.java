@@ -1,29 +1,50 @@
 package com.ylink.fullgoal.cr.main;
 
 import com.leo.core.bean.NewFieldBean;
-import com.ylink.fullgoal.cr.CauseController;
-import com.ylink.fullgoal.cr.ContractPaymentController;
-import com.ylink.fullgoal.cr.CostIndexController;
-import com.ylink.fullgoal.cr.CtripTicketsController;
-import com.ylink.fullgoal.cr.DepartmentController;
-import com.ylink.fullgoal.cr.ImageListController;
-import com.ylink.fullgoal.cr.ProcessController;
-import com.ylink.fullgoal.cr.ProjectController;
-import com.ylink.fullgoal.cr.ResearchReportController;
-import com.ylink.fullgoal.cr.SerialNoController;
-import com.ylink.fullgoal.cr.StateController;
-import com.ylink.fullgoal.cr.TravelFormController;
-import com.ylink.fullgoal.cr.UserController;
+import com.ylink.fullgoal.cr.surface.BillTypeController;
+import com.ylink.fullgoal.cr.surface.CauseController;
+import com.ylink.fullgoal.cr.surface.ContractPaymentController;
+import com.ylink.fullgoal.cr.surface.CostIndexController;
+import com.ylink.fullgoal.cr.surface.CtripTicketsController;
+import com.ylink.fullgoal.cr.surface.DepartmentController;
+import com.ylink.fullgoal.cr.surface.FillDateController;
+import com.ylink.fullgoal.cr.surface.FirstController;
+import com.ylink.fullgoal.cr.surface.ImageListController;
+import com.ylink.fullgoal.cr.surface.LogoController;
+import com.ylink.fullgoal.cr.surface.MoneyController;
+import com.ylink.fullgoal.cr.surface.ProcessController;
+import com.ylink.fullgoal.cr.surface.ProjectController;
+import com.ylink.fullgoal.cr.surface.ResearchReportController;
+import com.ylink.fullgoal.cr.surface.RuleController;
+import com.ylink.fullgoal.cr.surface.SbumitFlagController;
+import com.ylink.fullgoal.cr.surface.SerialNoController;
+import com.ylink.fullgoal.cr.surface.TaskTypeController;
+import com.ylink.fullgoal.cr.surface.TravelFormController;
+import com.ylink.fullgoal.cr.surface.UserController;
 
 /**
  * 数据核心
  */
 public class DVo extends NewFieldBean {
 
-    //不处理数据
-    private StateController state;
     //报销批次号
     private SerialNoController serialNo;
+    //是否第一次提交
+    private FirstController first;
+    //提交时间
+    private FillDateController fillDate;
+    //报销类型
+    private BillTypeController billType;
+    //报销修改的 提交方式
+    private LogoController logo;
+    //金额
+    private MoneyController money;
+    //提交标识
+    private SbumitFlagController sbumitFlag;
+    //提交标识
+    private TaskTypeController taskType;
+    //事由控制器
+    private CauseController cause;
     //经办人
     private UserController agent;
     //报销人
@@ -46,13 +67,21 @@ public class DVo extends NewFieldBean {
     private ResearchReportController report;
     //携程机票
     private CtripTicketsController ctrip;
-    //事由控制器
-    private CauseController cause;
     //图片
     private ImageListController imageList;
+    //评审结果集
+    private RuleController ruleList;
 
     public DVo() {
         initNewFields();
+    }
+
+    public FirstController getFirst() {
+        return first;
+    }
+
+    public void setFirst(FirstController first) {
+        this.first = first;
     }
 
     public SerialNoController getSerialNo() {
@@ -151,14 +180,6 @@ public class DVo extends NewFieldBean {
         this.ctrip = ctrip;
     }
 
-    public StateController getState() {
-        return state;
-    }
-
-    public void setState(StateController state) {
-        this.state = state;
-    }
-
     public CauseController getCause() {
         return cause;
     }
@@ -173,6 +194,62 @@ public class DVo extends NewFieldBean {
 
     public void setImageList(ImageListController imageList) {
         this.imageList = imageList;
+    }
+
+    public FillDateController getFillDate() {
+        return fillDate;
+    }
+
+    public void setFillDate(FillDateController fillDate) {
+        this.fillDate = fillDate;
+    }
+
+    public BillTypeController getBillType() {
+        return billType;
+    }
+
+    public void setBillType(BillTypeController billType) {
+        this.billType = billType;
+    }
+
+    public LogoController getLogo() {
+        return logo;
+    }
+
+    public void setLogo(LogoController logo) {
+        this.logo = logo;
+    }
+
+    public MoneyController getMoney() {
+        return money;
+    }
+
+    public void setMoney(MoneyController money) {
+        this.money = money;
+    }
+
+    public SbumitFlagController getSbumitFlag() {
+        return sbumitFlag;
+    }
+
+    public void setSbumitFlag(SbumitFlagController sbumitFlag) {
+        this.sbumitFlag = sbumitFlag;
+    }
+
+    public TaskTypeController getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskTypeController taskType) {
+        this.taskType = taskType;
+    }
+
+    public RuleController getRuleList() {
+        return ruleList;
+    }
+
+    public void setRuleList(RuleController ruleList) {
+        this.ruleList = ruleList;
     }
 
 }

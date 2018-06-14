@@ -36,7 +36,7 @@ import java.lang.reflect.Type;
  * @param <T> 自身
  * @param <C> 控制器
  */
-public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IAttachApi<T, C> {
+public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IAttachApi<T, C>, IOnCom{
 
     /**
      * 初始化controller

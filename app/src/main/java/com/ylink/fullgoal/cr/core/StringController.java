@@ -23,8 +23,13 @@ public abstract class StringController<T extends StringController> extends BaseS
     }
 
     @Override
-    protected String getDefUB(){
-        return getDB();
+    protected String getOnUBKey(String key) {
+        return super.getOnUBKey(key);
+    }
+
+    @Override
+    protected String getOnUB(String key) {
+        return super.getOnUB(key);
     }
 
     @Override

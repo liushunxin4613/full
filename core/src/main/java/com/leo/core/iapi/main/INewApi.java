@@ -334,4 +334,20 @@ public interface INewApi {
      */
     <B> B uApi();
 
+    /**
+     * cameraApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B cameraApi();
+
+    /**
+     * new cameraApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newCameraApi();
+
 }

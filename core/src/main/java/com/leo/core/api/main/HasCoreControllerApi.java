@@ -112,4 +112,12 @@ public class HasCoreControllerApi<T extends HasCoreControllerApi> extends HasCon
         }
     }
 
+    protected void ee(CharSequence text, Object obj){
+        controllerApi().ee(text, obj);
+    }
+
+    protected void show(CharSequence text){
+        controllerApi().show(text);
+    }
+
 }

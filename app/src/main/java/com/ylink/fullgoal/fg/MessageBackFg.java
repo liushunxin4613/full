@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.fg;
 
+import com.ylink.fullgoal.vo.ImageVo;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,6 @@ public class MessageBackFg extends StatusCodeFg {
     private UserList agent;
     //报销人
     private UserList reimbursement;
-
     //预算归属部门
     private String budgetDepartment;
     //事由
@@ -23,9 +24,9 @@ public class MessageBackFg extends StatusCodeFg {
     //招待申请单
     private String process;
     //费用指标
-    private List<CostIndexFg> costList;
+    private List<CostFg> costIndextList;
     //图片
-    private List<MImageFg> imageList;
+    private List<ImageVo> imageList;
     //携程机票
     private List<CtripTicketsFg> ctrip;
     //投研报告
@@ -83,11 +84,11 @@ public class MessageBackFg extends StatusCodeFg {
         this.project = project;
     }
 
-    public List<MImageFg> getImageList() {
+    public List<ImageVo> getImageList() {
         return imageList;
     }
 
-    public void setImageList(List<MImageFg> imageList) {
+    public void setImageList(List<ImageVo> imageList) {
         this.imageList = imageList;
     }
 
@@ -131,12 +132,12 @@ public class MessageBackFg extends StatusCodeFg {
         this.process = process;
     }
 
-    public List<CostIndexFg> getCostList() {
-        return costList;
+    public List<CostFg> getCostIndextList() {
+        return costIndextList;
     }
 
-    public void setCostList(List<CostIndexFg> costList) {
-        this.costList = costList;
+    public void setCostIndextList(List<CostFg> costIndextList) {
+        this.costIndextList = costIndextList;
     }
 
 }

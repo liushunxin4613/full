@@ -9,8 +9,11 @@ import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
-import com.ylink.fullgoal.vo.ReimburseVo;
 
+import static com.ylink.fullgoal.config.ComConfig.CC;
+import static com.ylink.fullgoal.config.ComConfig.FQ;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.YB;
 import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.config.Config.FULL;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
@@ -31,21 +34,21 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         super.initView();
         hideBackIv().setTitle("我的报销");
         clear().addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销", (bean, view)
-                        -> general(ReimburseVo.STATE_INITIATE)),
+                        -> general(FQ)),
                 new IconTvMoreBean(R.mipmap.test_icon2, "出差费用报销", (bean, view)
-                        -> evection(ReimburseVo.STATE_INITIATE)))
+                        -> evection(FQ)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view)
                         -> startSurfaceActivity(FullReimburseDataControllerApi.class)))
                 .notifyDataSetChanged();
         if (FULL && DEBUG) {
             addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般报销确认", (bean, view) -> {
                 Bundle bundle = new Bundle();
-                bundle.putString(STATE, ReimburseVo.STATE_CONFIRM);
+                bundle.putString(STATE, QR);
                 bundle.putString(SERIAL_NO, "201806120016000259");
                 startSurfaceActivity(bundle, FullGeneralControllerApi.class);
             }), new IconTvMoreBean(R.mipmap.test_icon1, "出差报销确认", (bean, view) -> {
                 Bundle bundle = new Bundle();
-                bundle.putString(STATE, ReimburseVo.STATE_CONFIRM);
+                bundle.putString(STATE, QR);
                 bundle.putString(SERIAL_NO, "201806122916000263");
                 startSurfaceActivity(bundle, FullEvectionControllerApi.class);
             }));
@@ -62,7 +65,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
      */
     private void general(String state) {
         startSurfaceActivity(FULL ? FullGeneralControllerApi.class : GeneralControllerApi.class,
-                ReimburseVo.REIMBURSE_TYPE_GENERAL, state);
+                YB, state);
     }
 
     /**
@@ -70,7 +73,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
      */
     private void evection(String state) {
         startSurfaceActivity(FULL ? FullEvectionControllerApi.class : EvectionControllerApi.class,
-                ReimburseVo.REIMBURSE_TYPE_EVECTION, state);
+                CC, state);
     }
 
     private void startSurfaceActivity(Class<? extends IControllerApi> clz, String type, String state) {

@@ -31,14 +31,14 @@ import com.ylink.fullgoal.hb.ProjectHb;
 import com.ylink.fullgoal.hb.ReportHb;
 import com.ylink.fullgoal.hb.TraveHb;
 import com.ylink.fullgoal.hb.UserHb;
-import com.ylink.fullgoal.vo.SearchVo;
+import com.ylink.fullgoal.vo1.SearchVo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 
-import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
+import static com.ylink.fullgoal.vo1.SearchVo.SEARCHS;
 
 public class SearchControllerApi<T extends SearchControllerApi, C> extends RecycleControllerApi<T, C> {
 

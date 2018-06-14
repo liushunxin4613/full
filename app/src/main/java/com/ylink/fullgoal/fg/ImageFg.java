@@ -14,7 +14,11 @@ public class ImageFg extends StatusCodeFg {
      */
 
     public boolean isUpload() {
-        return isSuccess() && !TextUtils.isEmpty(getMessage()) && getMessage().contains("上传");
+        return isSuccess() && !TextUtils.isEmpty(getMessage()) && getMessage().contains("上传成功");
+    }
+
+    public boolean isDelete() {
+        return isSuccess() && !TextUtils.isEmpty(getMessage()) && getMessage().contains("删除成功");
     }
 
     private String imageId;

@@ -47,7 +47,11 @@ public class NewFieldBean {
         initFields(field -> {
             try {
                 field.setAccessible(true);
-                field.set(this, field.getType().newInstance());
+                Object obj = field.getType().newInstance();
+                if (obj instanceof IController) {
+                    ((IController) obj).initField(field.getName());
+                }
+                field.set(this, obj);
             } catch (Exception e) {
                 e.printStackTrace();
             }

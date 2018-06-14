@@ -1,6 +1,7 @@
 package com.leo.core.api.core;
 
 import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -24,6 +25,10 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
     protected <B> T executeNon(B obj, IObjAction<B> api) {
         RunUtil.executeNon(obj, api);
         return getThis();
+    }
+
+    protected static <A> void executeBol(List<A> data, IBolAction<A> action) {
+        RunUtil.executeBol(data, action);
     }
 
     protected boolean execute(boolean is, IAction action) {

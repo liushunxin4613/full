@@ -5,11 +5,11 @@ public class ImageHb extends SerialNoHb {
     //普通
     public final static String IMAGE_NONE = "一般";
     //交通
-    public final static String IMAGE_JT = "交通";
+    public final static String IMAGE_JT = "交通费";
     //住宿
-    public final static String IMAGE_ZS = "住宿";
+    public final static String IMAGE_ZS = "住宿费";
     //车船机票
-    public final static String IMAGE_CCJP = "车船机票";
+    public final static String IMAGE_CCJP = "车船机票费";
 
     private String id;
     private String type;

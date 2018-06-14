@@ -1,7 +1,7 @@
 package com.ylink.fullgoal.fg;
 
 import com.leo.core.util.DateUtil;
-import com.ylink.fullgoal.vo.HelpVo;
+import com.ylink.fullgoal.vo1.HelpVo;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class ReimburseUpFg extends HelpVo {
     //招待申请单
     private String entertainrequest;
     //费用指标
-    private List<CostIndexFg> costList;
+    private List<CostFg> costList;
     //出差申请单编号集合
     private List<String> traveList;
     //投研报告编号集合
@@ -75,7 +75,7 @@ public class ReimburseUpFg extends HelpVo {
                          UserList reimbursement, String budgetDepartment,
                          String project, String totalAmountLower,
                          String cause, List<ContractPaymentFg> paymentRequest,
-                         String entertainrequest, List<CostIndexFg> costList) {
+                         String entertainrequest, List<CostFg> costList) {
         this.billType = GENERAL_BILL_TYPE;
         this.first = first;
         this.serialNo = serialNo;
@@ -266,11 +266,11 @@ public class ReimburseUpFg extends HelpVo {
         this.taskType = taskType;
     }
 
-    public List<CostIndexFg> getCostList() {
+    public List<CostFg> getCostList() {
         return costList;
     }
 
-    public void setCostList(List<CostIndexFg> costList) {
+    public void setCostList(List<CostFg> costList) {
         this.costList = costList;
     }
 

@@ -1,65 +1,6 @@
 package com.ylink.fullgoal.api.surface;
 
-import android.Manifest;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import com.leo.core.bean.BaseApiBean;
-import com.leo.core.iapi.inter.IAction;
-import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.iapi.inter.IReturnAction;
-import com.leo.core.util.DisneyUtil;
-import com.leo.core.util.ResUtil;
-import com.leo.core.util.SoftInputUtil;
-import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.GridBean;
-import com.ylink.fullgoal.bean.GridPhotoBean;
-import com.ylink.fullgoal.bean.TvBean;
-import com.ylink.fullgoal.bean.TvV2DialogBean;
-import com.ylink.fullgoal.bean.VgBean;
-import com.ylink.fullgoal.controllerApi.surface.BillControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
-import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.hb.CodeHb;
-import com.ylink.fullgoal.hb.CompensationHb;
-import com.ylink.fullgoal.hb.CtripHb;
-import com.ylink.fullgoal.hb.DepartHb;
-import com.ylink.fullgoal.hb.ImageHb;
-import com.ylink.fullgoal.hb.ProjectHb;
-import com.ylink.fullgoal.hb.ReimburseHb;
-import com.ylink.fullgoal.hb.ReimburseUpHb;
-import com.ylink.fullgoal.hb.ReportHb;
-import com.ylink.fullgoal.hb.TraveHb;
-import com.ylink.fullgoal.hb.UserHb;
-import com.ylink.fullgoal.vo.AirDataVo;
-import com.ylink.fullgoal.vo.BillVo;
-import com.ylink.fullgoal.vo.ReimburseVo;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.Bind;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
-
-import static android.app.Activity.RESULT_OK;
-import static com.ylink.fullgoal.config.Config.SERIAL_NO;
-import static com.ylink.fullgoal.config.Config.STATE;
-import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY;
-import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_SUBMIT;
 
 /**
  * 报销

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.ylink.fullgoal.vo.BillVo;
+import com.ylink.fullgoal.vo.ImageVo;
 
 import butterknife.Bind;
 import uk.co.senab.photoview.PhotoView;
@@ -36,13 +36,13 @@ public class FullPhotoControllerApi<T extends FullPhotoControllerApi, C> extends
     @Override
     public void initView() {
         super.initView();
-        putBindBeanApi(BillVo.class, (api, bean)
+        putBindBeanApi(ImageVo.class, (api, bean)
                 -> setVisibility(bean.isShow() ? View.VISIBLE : View.GONE, vg)
                 .setVisibility(TextUtils.isEmpty(bean.getPhoto()) ? View.INVISIBLE : View.VISIBLE, photoIv)
                 .setText(nameTv, "金额")
-                .setText(detailEt, bean.getMoney())
+                .setText(detailEt, bean.getAmount())
                 .setImage(photoIv, bean.getPhoto())
-                .execute(() -> detailEt.addTextChangedListener(getMoneyTextWatcher(bean::setMoney))));
+                .execute(() -> detailEt.addTextChangedListener(getMoneyTextWatcher(bean::setAmount))));
     }
 
 }

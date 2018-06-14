@@ -1,6 +1,7 @@
 package com.leo.core.util;
 
 import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -17,6 +18,12 @@ public class RunUtil {
 
     public static <A, B> B getExecute(A a, IReturnAction<A, B> api) {
         return getExecute(a, null, api);
+    }
+
+    public static void execute(IAction action){
+        if(action != null){
+            action.execute();
+        }
     }
 
     public static boolean execute(boolean is, IAction action) {
@@ -40,6 +47,18 @@ public class RunUtil {
         for (T obj : data) {
             if (obj != null) {
                 action.execute(obj);
+            }
+        }
+        return true;
+    }
+
+    public static <T> boolean executeBol(List<T> data, IBolAction<T> action) {
+        if (action == null || data == null) {
+            return false;
+        }
+        for (T obj : data) {
+            if (obj != null && action.execute(obj)) {
+                return true;
             }
         }
         return true;

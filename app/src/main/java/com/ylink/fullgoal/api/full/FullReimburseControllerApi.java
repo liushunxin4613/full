@@ -1,14 +1,5 @@
 package com.ylink.fullgoal.api.full;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -20,9 +11,7 @@ import com.leo.core.bean.BaseApiBean;
 import com.leo.core.bean.Bol;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.util.BitmapUtil;
 import com.leo.core.util.DisneyUtil;
-import com.leo.core.util.FileSizeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -35,15 +24,14 @@ import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.cr.ImageListController;
 import com.ylink.fullgoal.cr.main.DVo;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
-import com.ylink.fullgoal.fg.CostIndexFg;
+import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.ImageFg;
-import com.ylink.fullgoal.fg.MImageFg;
+import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.fg.MessageBackFg;
 import com.ylink.fullgoal.fg.ProcessFg;
 import com.ylink.fullgoal.fg.ProjectFg;
@@ -51,19 +39,19 @@ import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
 import com.ylink.fullgoal.fg.UserList;
-import com.ylink.fullgoal.hb.ImageHb;
-import com.ylink.fullgoal.vo.BillVo;
-import com.ylink.fullgoal.vo.ReimburseVo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
-import static android.app.Activity.RESULT_OK;
+import static com.leo.core.util.TextUtils.getSetData;
+import static com.ylink.fullgoal.config.ComConfig.FQ;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.TP;
+import static com.ylink.fullgoal.config.ComConfig.XG;
+import static com.ylink.fullgoal.config.ComConfig.XQ;
+import static com.ylink.fullgoal.config.Config.BILL_TYPE_TITLES;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
@@ -72,12 +60,7 @@ import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
 /**
  * 报销
  */
-public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C> extends RecycleBarControllerApi<T, C> {
-
-    final static int TYPE_NONE = 0x101;
-    final static int TYPE_JT = 0x102;
-    final static int TYPE_ZS = 0x103;
-    final static int TYPE_CCJP = 0x104;
+public abstract class FullReimburseControllerApi<T extends FullReimburseControllerApi, C> extends RecycleBarControllerApi<T, C> {
 
     private final static int PHOTO_REQUEST_CAMERA = 0x101;
 
@@ -94,14 +77,9 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
 
     private String state;
     private String title;
-    private int photoType;
-    private File rootFile;
-    private String photo;
-    private String serialNo;
 
-    FullReimburseControllerApi(C controller) {
+    protected FullReimburseControllerApi(C controller) {
         super(controller);
-        rootFile = getContext().getExternalFilesDir("photo");
     }
 
     public String getState() {
@@ -112,14 +90,25 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         return title;
     }
 
-    protected String getSerialNo() {
-        return serialNo;
-    }
-
     @Override
     public Integer getDefRootViewResId() {
         return R.layout.l_reimburse;
     }
+
+    /**
+     * 报销类型
+     */
+    protected abstract String getBType();
+
+    /**
+     * 报销名称
+     */
+    protected abstract String getBTitle();
+
+    /**
+     * 报销数据回调
+     */
+    protected abstract void onData();
 
     @Override
     protected void startSearch(String search, ArrayList<String> filterData) {
@@ -134,30 +123,28 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         addRootType(MessageBackFg.class);
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
-            serialNo = bundle.getString(SERIAL_NO);
-            if (TextUtils.equals(state, ReimburseVo.STATE_INITIATE)) {
-                if (this instanceof FullGeneralControllerApi) {
-                    title = ReimburseVo.REIMBURSE_TYPE_GENERAL;
-                } else if (this instanceof FullEvectionControllerApi) {
-                    title = ReimburseVo.REIMBURSE_TYPE_EVECTION;
-                }
+            iso(DVo::getFirst, obj -> obj.initDB(state));
+            String serialNo = bundle.getString(SERIAL_NO);
+            iso(DVo::getSerialNo, obj -> obj.initDB(serialNo));
+            if (TextUtils.equals(state, FQ)) {
+                title = getBTitle();
             } else {
-                title = state;
+                title = getKey(BILL_TYPE_TITLES, state);
                 if (!TextUtils.isEmpty(serialNo)) {
                     uApi().queryMessageBack(serialNo);
                 }
             }
             setTitle(title);
             switch (TextUtils.isEmpty(state) ? "" : state) {
-                case ReimburseVo.STATE_INITIATE:
+                case FQ:
                     setRightTv("提交", v -> submit());
                     break;
-                case ReimburseVo.STATE_CONFIRM:
+                case QR:
                     setRightTv("确认", v -> {
 
                     });
                     break;
-                case ReimburseVo.STATE_ALTER:
+                case XG:
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
                         //申请特批
                         show("申请特批");
@@ -182,42 +169,13 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         ee("core", getVo().toCheckString());
     }
 
-    private void onBillData(List<MImageFg> data, String msg, ImageFg bean) {
-        if (!TextUtils.isEmpty(data) && !TextUtils.isEmpty(msg)) {
-            for (MImageFg vo : data) {
-                if (TextUtils.equals(msg, vo.getPhoto())) {
-                    vo.setImageID(bean.getImageId());
-                    show("图片上传成功");
-                } else if (TextUtils.equals(msg, vo.getImageID())) {
-//                    getVo().getBillData().remove(vo); //TODO 删除图片
-//                    notifyDataChanged();
-                    return;
-                }
-            }
-        }
-    }
-
     @Override
     public void initData() {
         super.initData();
         add(ImageFg.class, (path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(msg)) {
-                serialNo = bean.getSerialNo();
-                iso(DVo::getSerialNo, obj -> obj.initDB(serialNo));
-                switch (what) {
-                    case TYPE_NONE://普通
-                        onBillData(gt(DVo::getImageList, ImageListController::getYbData), msg, bean);
-                        break;
-                    case TYPE_JT://交通费
-                        onBillData(gt(DVo::getImageList, ImageListController::getJtfData), msg, bean);
-                        break;
-                    case TYPE_ZS://住宿费
-                        onBillData(gt(DVo::getImageList, ImageListController::getZsfData), msg, bean);
-                        break;
-                    case TYPE_CCJP://车船机票费
-                        onBillData(gt(DVo::getImageList, ImageListController::getCcjpfData), msg, bean);
-                        break;
-                }
+                iso(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
+                iso(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
             }
         });
         add(DataFg.class, (path, what, msg, bean) -> {
@@ -226,13 +184,13 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
                     case FULL_REIMBURSE_SUBMIT://报销提交
                         if (!TextUtils.isEmpty(getState())) {
                             switch (getState()) {
-                                case ReimburseVo.STATE_INITIATE://经办人发起
+                                case FQ://经办人发起
                                     show("报销成功");
                                     break;
-                                case ReimburseVo.STATE_CONFIRM://经办人确认
+                                case QR://经办人确认
                                     show("报销确认成功");
                                     break;
-                                case ReimburseVo.STATE_ALTER://经办人修改
+                                case XG://经办人修改
                                     show("报销修改成功");
                                     break;
                             }
@@ -257,7 +215,6 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         });
     }
 
-    @SuppressLint("DefaultLocale")
     @Override
     public void onResume() {
         super.onResume();
@@ -273,7 +230,7 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         //招待申请单
         executeSearch(ProcessFg.class, fg -> iso(DVo::getProcess, obj -> obj.initDB(fg)));
         //费用指标
-        executeSearch(CostIndexFg.class, fg -> iso(DVo::getCostIndex, obj -> obj.initDB(fg)));
+        executeSearch(CostFg.class, fg -> iso(DVo::getCostIndex, obj -> obj.initDB(fg)));
         //出差申请单
         executeSearch(TravelFormFg.class, fg -> iso(DVo::getTrave, obj -> obj.initDB(fg)));
         //调研报告
@@ -292,46 +249,6 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PHOTO_REQUEST_CAMERA:
-                if (resultCode == RESULT_OK) {
-                    executeNon(new File(rootFile, photo), file -> {
-                        BitmapUtil.saveBitmapFile(BitmapUtil.getOptionBitmap(file.getPath(), 2), file);
-                        Luban.with(getContext())
-                                .load(file)
-                                .setTargetDir(rootFile.getPath())
-                                .ignoreBy(100)
-                                .setCompressListener(new OnCompressListener() {
-                                    @Override
-                                    public void onStart() {
-                                    }
-
-                                    @Override
-                                    public void onSuccess(File lubanFile) {
-                                        file.delete();
-                                        ee("lubanFile.getPath()", lubanFile.getPath());
-                                        ee("lubanFile", FileSizeUtil.getFormetFileSize(lubanFile));
-                                        String type = getImageType(photoType);
-                                        addPhoto(lubanFile.getPath(), type);
-                                        uApi().imageUpload(getImageFirst(), getSerialNo(),
-                                                type, lubanFile, photoType, lubanFile.getPath());
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        e.printStackTrace();
-                                    }
-                                }).launch();
-                    });
-                }
-                break;
-
-        }
-    }
-
-    @Override
     public VgBean addVgBean(IObjAction<List<BaseApiBean>> api) {
         return super.addVgBean(data -> {
             api.execute(data);
@@ -341,19 +258,29 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
 
     //私有的
 
+    private List<GridPhotoBean> getPhotoGridBeanData(int type, List<ImageVo> data) {
+        List<GridPhotoBean> gridData = new ArrayList<>();
+        execute(data, obj -> gridData.add(newGridPhotoBean(data, obj).setEnable(isEnable())
+                .setVisible(isNoneInitiateEnable())));
+        if (isEnable()) {
+            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) ->
+                    cameraApi().openCamera(type, (what, msg, file) -> {
+                        //打开图片
+                        addPhoto(file.getPath(), what);
+                        uApi().imageUpload(gt(DVo::getFirst, obj -> obj.getUB(TP)),
+                                what, gtd(DVo::getSerialNo), file, file.getPath());
+                    }), null));
+        }
+        return gridData;
+    }
+
     /**
      * 提交数据
      */
     protected void submit() {
-        ee("core", getVo().toCheckString());
+        uApi().submitReimburse(getCheckMap(getVo().getCheckMap(getBType(), getState()),
+                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由")));
     }
-
-//    /**
-//     * 初始化提交数据
-//     */
-//    ReimburseUpFg getReimburseUpFg(IReturnAction<ReimburseVo, ReimburseUpFg> action) {
-//        return getExecute(getVo(), action);
-//    }
 
     @Override
     public void notifyDataChanged() {
@@ -365,32 +292,7 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         });
     }
 
-    /**
-     * 报销数据回调
-     */
-    protected void onData() {
-    }
-
-    String getFirst() {
-        if (!TextUtils.isEmpty(getState())) {
-            switch (getState()) {
-                case ReimburseVo.STATE_INITIATE://发起
-                    return "1";
-                case ReimburseVo.STATE_CONFIRM://确认
-                    return "2";
-                case ReimburseVo.STATE_ALTER://修改
-                    return "3";
-            }
-        }
-        return null;
-    }
-
-    private String getImageFirst() {
-        String first = getFirst();
-        return TextUtils.equals(first, "1") && !TextUtils.isEmpty(getSerialNo()) ? "6" : first;
-    }
-
-    void initVgApiBean(String title, IAction action) {
+    protected void initVgApiBean(String title, IAction action) {
         if (!TextUtils.isEmpty(title)) {
             RecycleControllerApi api = getDialogControllerApi(RecycleControllerApi.class,
                     R.layout.l_dialog);
@@ -412,12 +314,7 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         }
     }
 
-    private static boolean hasSdcard() {
-        return Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED);
-    }
-
-    void addVgBean(String title, GridBean bean) {
+    protected void addVgBean(String title, GridBean bean) {
         if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
             if (!TextUtils.isEmpty(title)) {
                 addVgBean(new TvBean(title), bean);
@@ -427,11 +324,16 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         }
     }
 
-    GridBean newGridBean(int type, List<MImageFg> data) {
+    protected GridBean newGridBean(int type) {
+        return new GridBean(getPhotoGridBeanData(type,
+                gt(DVo::getImageList, obj -> obj.getFilterDBData(type))));
+    }
+
+    protected GridBean newGridBean(int type, List<ImageVo> data) {
         return new GridBean(getPhotoGridBeanData(type, data));
     }
 
-    private GridPhotoBean newGridPhotoBean(List<MImageFg> data, MImageFg vo) {
+    private GridPhotoBean newGridPhotoBean(List<ImageVo> data, ImageVo vo) {
         return getExecute(vo, obj -> new GridPhotoBean(obj.getPhoto(), obj,
                 (bean, view) -> onGridPhotoClick(data, vo),
                 (bean, view) -> onGridPhotoLongClick(data, bean, view)));
@@ -443,7 +345,7 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
      * @param data data
      * @param vo   vo
      */
-    private void onGridPhotoClick(List<MImageFg> data, MImageFg vo) {
+    private void onGridPhotoClick(List<ImageVo> data, ImageVo vo) {
         executeNon(vo, obj -> startSurfaceActivity(getBundle(data, vo,
                 new Bol(isNoneInitiateEnable())), FullBillControllerApi.class));
     }
@@ -455,16 +357,16 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
      * @param view view
      * @return 是否同时响应点击
      */
-    private boolean onGridPhotoLongClick(List<MImageFg> data, GridPhotoBean bean, View view) {
+    private boolean onGridPhotoLongClick(List<ImageVo> data, GridPhotoBean bean, View view) {
         TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
             dialog.dismiss();
             show(item.getName());
         }, (item, v, dialog) -> {
             dialog.dismiss();
-            if (bean.getObj() instanceof BillVo) {
-                BillVo vo = (BillVo) bean.getObj();
-                uApi().imageDelete(getSerialNo(), vo.getId(), vo.getMoney(),
-                        getPhotoType(vo.getType()), vo.getId());
+            if (bean.getObj() instanceof ImageVo) {
+                ImageVo fg = (ImageVo) bean.getObj();
+                uApi().imageDelete(gtd(DVo::getSerialNo), fg.getImageID(), fg.getAmount(),
+                        fg.getKey(), fg.getImageID());
             }
             notifyDataChanged();
         });
@@ -479,16 +381,25 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         return true;
     }
 
-    boolean isEnable() {
-        return !TextUtils.equals(state, ReimburseVo.STATE_DETAIL);
+    /**
+     * 不为详情
+     */
+    protected boolean isEnable() {
+        return !TextUtils.equals(state, XQ);
     }
 
-    boolean isAlterEnable() {
-        return TextUtils.equals(state, ReimburseVo.STATE_ALTER);
+    /**
+     * 不为修改
+     */
+    protected boolean isAlterEnable() {
+        return TextUtils.equals(state, XG);
     }
 
-    private boolean isNoneInitiateEnable() {
-        return !TextUtils.equals(state, ReimburseVo.STATE_INITIATE);
+    /**
+     * 不为发起
+     */
+    protected boolean isNoneInitiateEnable() {
+        return !TextUtils.equals(state, FQ);
     }
 
     protected <B> B getEnable(B a, B b) {
@@ -499,92 +410,18 @@ public class FullReimburseControllerApi<T extends FullReimburseControllerApi, C>
         return isEnable() ? a : null;
     }
 
-    <B> B getHasEnable(B a) {
+    protected <B> B getHasEnable(B a) {
         return isNoneInitiateEnable() ? a : null;
     }
 
-    private List<GridPhotoBean> getPhotoGridBeanData(int type, List<MImageFg> data) {
-        List<GridPhotoBean> gridData = new ArrayList<>();
-        ee("data", data);
-        execute(data, obj -> gridData.add(newGridPhotoBean(data, obj).setEnable(isEnable())
-                .setVisible(isNoneInitiateEnable())));
-        if (isEnable()) {
-            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) ->
-                    openCamera(type), null));
-        }
-        return gridData;
-    }
-
-    private void addPhoto(String path, String type) {
+    private void addPhoto(String path, int type) {
         if (!TextUtils.isEmpty(path)) {
-            iso(DVo::getImageList, obj -> obj.initDB(new MImageFg(path, type)));
+            iso(DVo::getImageList, obj -> obj.initDB(new ImageVo(path, type)));
             notifyDataChanged();
         }
     }
 
-    private void openCamera(int type) {
-        // 判断存储卡是否可以用，可用进行存储
-        if (hasSdcard()) {
-            this.photoType = type;
-            // 激活相机
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            Uri photoUri;
-            photo = System.currentTimeMillis() + ".jpg";
-            File photoFile = new File(rootFile, photo);
-            if (android.os.Build.VERSION.SDK_INT < 24) {
-                // 从文件中创建uri
-                photoUri = Uri.fromFile(photoFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            } else {
-                //兼容android7.0 使用共享文件的形式
-                ContentValues contentValues = new ContentValues(1);
-                contentValues.put(MediaStore.Images.Media.DATA, photoFile.getAbsolutePath());
-                //检查是否有存储权限，以免崩溃
-                if (ContextCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    //申请WRITE_EXTERNAL_STORAGE权限
-                    show("请开启存储权限");
-                    return;
-                }
-                photoUri = getActivity().getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            }
-            // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CAMERA
-            getActivity().startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
-        }
-    }
-
-    private String getImageType(int photoType) {
-        switch (photoType) {
-            default:
-            case TYPE_NONE:
-                return ImageHb.IMAGE_NONE;
-            case TYPE_JT:
-                return ImageHb.IMAGE_JT;
-            case TYPE_ZS:
-                return ImageHb.IMAGE_ZS;
-            case TYPE_CCJP:
-                return ImageHb.IMAGE_CCJP;
-        }
-    }
-
-    private int getPhotoType(String imageType) {
-        switch (imageType == null ? "" : imageType) {
-            default:
-            case ImageHb.IMAGE_NONE:
-                return TYPE_NONE;
-            case ImageHb.IMAGE_JT:
-                return TYPE_JT;
-            case ImageHb.IMAGE_ZS:
-                return TYPE_ZS;
-            case ImageHb.IMAGE_CCJP:
-                return TYPE_CCJP;
-        }
-    }
-
-    <D> void checkAdd(List<D> data, String text, D obj) {
+    protected <D> void checkAdd(List<D> data, String text, D obj) {
         if (data != null && !(!isEnable() && TextUtils.isEmpty(text))) {
             data.add(obj);
         }

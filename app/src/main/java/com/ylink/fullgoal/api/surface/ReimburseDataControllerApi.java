@@ -17,20 +17,16 @@ import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.DateArrayBean;
 import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IndicatorBean;
-import com.ylink.fullgoal.bean.ItemOperationBean;
 import com.ylink.fullgoal.bean.ReimburseTypeBean;
-import com.ylink.fullgoal.bean.TvHTv3Bean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.hb.DataHb;
 import com.ylink.fullgoal.hb.ReimburseHb;
-import com.ylink.fullgoal.hb.ReimburseUpHb;
-import com.ylink.fullgoal.vo.ReimburseVo;
+import com.ylink.fullgoal.vo1.ReimburseVo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -131,18 +127,18 @@ public class ReimburseDataControllerApi<T extends ReimburseDataControllerApi, C>
         if (api != null) {
             if (!TextUtils.isEmpty(reimburseData)) {
                 api.clear().showContentView();
-                execute(reimburseData, obj -> addVgBean(api, data -> {
+                /*execute(reimburseData, obj -> addVgBean(api, data -> {
                     String type = TextUtils.equals(obj.getBillType(), ReimburseUpHb.EVECTION_BILL_TYPE)
-                            ? ReimburseVo.REIMBURSE_TYPE_EVECTION : ReimburseVo.REIMBURSE_TYPE_GENERAL;
+                            ? BILL_TYPE_GENERAL : BILL_TYPE_EVECTION;
                     data.add(new CCSQDBean(obj.getSerialNo(), type,
                             "报销批次号", "报销类型"));
                     data.add(new CCSQDBean(obj.getFillDate(), obj.getTotalAmountLower(),
                             "时间", "金额"));
                     data.add(new TvHTv3Bean("事由", obj.getCause()));
                     data.add(new ItemOperationBean("确认", "修改",
-                            (bean, view) -> startSurfaceActivity(obj, ReimburseVo.STATE_CONFIRM),
-                            (bean, view) -> startSurfaceActivity(obj, ReimburseVo.STATE_ALTER)));
-                }, vg -> vg.setOnClickListener(v -> startSurfaceActivity(obj, ReimburseVo.STATE_DETAIL))));
+                            (bean, view) -> startSurfaceActivity(obj, STATE_CONFIRM),
+                            (bean, view) -> startSurfaceActivity(obj, STATE_ALTER)));
+                }, vg -> vg.setOnClickListener(v -> startSurfaceActivity(obj, STATE_DETAIL))));*/
             } else {
                 api.showNullView(true);
             }

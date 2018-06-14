@@ -31,6 +31,7 @@ import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
 import com.leo.core.config.Config;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.iapi.api.ICameraApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IActionApi;
 import com.leo.core.iapi.api.IBindBeanApi;
@@ -118,6 +119,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IUrlApi api;
     private IParseApi parseApi;
     private IHelperApi helperApi;
+    private ICameraApi cameraApi;
 
     //other
     private Integer rootViewResId;
@@ -503,6 +505,27 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public <B> B uApi() {
+        return null;
+    }
+
+    @Override
+    public ICameraApi cameraApi() {
+        if (cameraApi == null) {
+            cameraApi = newCameraApi();
+            if (cameraApi == null) {
+                throw new NullPointerException("newCameraApi 不能为空");
+            }
+        }
+        return cameraApi;
+    }
+
+    @Override
+    public ICameraApi newCameraApi() {
+        return null;
+    }
+
+    @Override
     public C getController() {
         return controller;
     }
@@ -806,6 +829,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public void onCom(int what, String com, String msg, Object... args) {
+    }
+
+    @Override
     public T executeBundle(IObjAction<Bundle> api) {
         if (api != null) {
             if (isActivity()) {
@@ -846,7 +873,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         init(savedInstanceState);
         if (isActivity()) {
             if (getRootViewClz() != null) {
-                if(rootView == null){
+                if (rootView == null) {
                     rootView = getObject(getRootViewClz()
                             , new Class[]{Context.class}
                             , new Object[]{getContext()});
@@ -865,7 +892,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             initData();
         } else if (isDialog()) {
             if (getRootViewClz() != null) {
-                if(rootView == null){
+                if (rootView == null) {
                     rootView = getObject(getRootViewClz()
                             , new Class[]{Context.class}
                             , new Object[]{getContext()});
@@ -897,7 +924,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (isFragment()) {
             if (getRootViewClz() != null && getRootViewClzApi() != null) {
-                if(rootView == null){
+                if (rootView == null) {
                     rootView = getObject(getRootViewClz()
                             , new Class[]{Class.class, Context.class}
                             , new Object[]{getRootViewClzApi(), getContext()});
@@ -992,6 +1019,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         executeViewControllerApi(obj -> obj.onActivityResult(requestCode, resultCode, data));
+        cameraApi().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -1074,7 +1102,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 final String txt = ((String) obj).replaceAll(RX, "/");
                 B item = decode(txt, type);
                 if (item instanceof ISerialVersionTagApi) {
-                    if(((ISerialVersionTagApi) item).isSerialVersionTag(type.toString())){
+                    if (((ISerialVersionTagApi) item).isSerialVersionTag(type.toString())) {
                         action.execute(item);
                         return getThis();
                     }
@@ -2040,8 +2068,4 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         return api().getCleanMapAction(action);
     }
 
-    @Override
-    public <B> B uApi() {
-        return null;
-    }
 }

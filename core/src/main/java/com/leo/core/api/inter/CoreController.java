@@ -8,12 +8,28 @@ import com.leo.core.util.TextUtils;
 
 public abstract class CoreController<T extends CoreController, DB> extends ThisApi<T> implements IController<T, DB> {
 
+    private String field;
     private DB db;
+
+    @Override
+    public T initField(String field) {
+        this.field = field;
+        return getThis();
+    }
 
     @Override
     public T initDB(DB db) {
         this.db = db;
         return getThis();
+    }
+
+    protected <A> A toUB(IReturnAction<DB, A> action){
+        return getExecute(getDB(), action);
+    }
+
+    @Override
+    public <A> A toField(IReturnAction<String, A> action) {
+        return getExecute(field, action);
     }
 
     @Override

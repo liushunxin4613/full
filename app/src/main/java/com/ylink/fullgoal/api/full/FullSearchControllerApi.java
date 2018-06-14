@@ -24,7 +24,7 @@ import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
-import com.ylink.fullgoal.fg.CostIndexFg;
+import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DepartmentFg;
@@ -33,23 +33,23 @@ import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
-import com.ylink.fullgoal.vo.SearchVo;
+import com.ylink.fullgoal.vo1.SearchVo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 
-import static com.ylink.fullgoal.vo.SearchVo.BUDGET_DEPARTMENT;
-import static com.ylink.fullgoal.vo.SearchVo.BUSINESS;
-import static com.ylink.fullgoal.vo.SearchVo.CONTRACT_BILL;
-import static com.ylink.fullgoal.vo.SearchVo.COST_INDEX;
-import static com.ylink.fullgoal.vo.SearchVo.PROJECT;
-import static com.ylink.fullgoal.vo.SearchVo.REIMBURSEMENT;
-import static com.ylink.fullgoal.vo.SearchVo.REPORT;
-import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
-import static com.ylink.fullgoal.vo.SearchVo.SERVE_BILL;
-import static com.ylink.fullgoal.vo.SearchVo.XC_AIR;
+import static com.ylink.fullgoal.vo1.SearchVo.BUDGET_DEPARTMENT;
+import static com.ylink.fullgoal.vo1.SearchVo.BUSINESS;
+import static com.ylink.fullgoal.vo1.SearchVo.CONTRACT_BILL;
+import static com.ylink.fullgoal.vo1.SearchVo.COST_INDEX;
+import static com.ylink.fullgoal.vo1.SearchVo.PROJECT;
+import static com.ylink.fullgoal.vo1.SearchVo.REIMBURSEMENT;
+import static com.ylink.fullgoal.vo1.SearchVo.REPORT;
+import static com.ylink.fullgoal.vo1.SearchVo.SEARCHS;
+import static com.ylink.fullgoal.vo1.SearchVo.SERVE_BILL;
+import static com.ylink.fullgoal.vo1.SearchVo.XC_AIR;
 
 public class FullSearchControllerApi<T extends FullSearchControllerApi, C> extends RecycleControllerApi<T, C> {
 
@@ -158,8 +158,8 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 -> data.add(new CCSQDBean(item.getApplicant(), item.getAdvAmount(), item.getCode(),
                 item.getDate(), (bean, view) -> finishActivity(new SearchVo<>(search, item)))))));
         //费用指标列表
-        addList(CostIndexFg.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
-                -> data.add(new TvBean(item.getName(), (bean, view)
+        addList(CostFg.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item
+                -> data.add(new TvBean(item.getCostIndex(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //出差申请单
         addList(TravelFormFg.class, (path, what, msg, list) -> initSearchDataAction(data -> execute(list, item

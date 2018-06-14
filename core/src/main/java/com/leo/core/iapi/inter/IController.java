@@ -13,12 +13,26 @@ import java.lang.reflect.Type;
 public interface IController<T extends IController, DB> extends IApi {
 
     /**
+     * 初始化field
+     * @param field field
+     * @return 本身
+     */
+    T initField(String field);
+
+    /**
      * 初始化db数据
      *
      * @param db db
      * @return 本身
      */
     T initDB(DB db);
+
+    /**
+     * filed
+     * @param action action
+     * @return 本身
+     */
+    <A> A toField(IReturnAction<String, A> action);
 
     /**
      * 基本数据对象,驱动源

@@ -5,6 +5,7 @@ import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.vo.ImageVo;
 
 import java.io.File;
 import java.util.HashMap;
@@ -116,18 +117,20 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
     /**
      * 上传图片
      *
-     * @param first      是否第一次上传:1.首次;2.确认;3.修改;
-     * @param file       文件
-     * @param serialNo   报销序列号
-     * @param invoiceUse 报销类型:一般、交通、住宿、车船机票;
-     * @param type       图片类型
-     * @param tag        标志:文件地址;
+     * @param first     是否第一次上传:1.首次;2.确认;3.修改;
+     * @param file      文件
+     * @param serialNo  报销序列号
+     * @param photoType 图片类型
+     * @param tag       标志:文件地址;
      */
-    public void imageUpload(String first, String serialNo, String invoiceUse, File file, int type, String tag) {
+    public void imageUpload(String first, int photoType, String serialNo, File file, String tag) {
         if (file != null) {
             String base64 = Base64Util.getFileToBase64(file);
+            String invoiceUse = ImageVo.getValue(photoType);
+            final String fst = (TextUtils.equals("1", first) &&
+                    !TextUtils.isEmpty(serialNo)) ? "6" : first;
             api().post(ROOT_URL, FULL_IMAGE_UPLOAD, get(map -> {
-                map.put("first", first);
+                map.put("first", fst);
                 map.put("agent", api().getUId());
                 map.put("stream", base64);
                 map.put("serialNo", serialNo);
@@ -135,7 +138,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
                 map.put("status", "上传");
                 map.put("invoiceUse", invoiceUse);
                 map.put("invoiceAmount", "");
-            }), type, tag);
+            }), photoType, tag);
         }
     }
 
@@ -186,7 +189,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
     private IObjAction<Map<String, String>> get(IObjAction<Map<String, Object>> action) {
         Map<String, Object> mp;
         executeNon(mp = new HashMap<>(), action);
-        if(!TextUtils.isEmpty(mp)){
+        if (!TextUtils.isEmpty(mp)) {
             return map -> map.put("REQINFO", api().encode(mp));
         }
         return null;

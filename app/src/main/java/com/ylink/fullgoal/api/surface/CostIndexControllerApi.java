@@ -17,8 +17,8 @@ import com.ylink.fullgoal.bean.TvSBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.view.MViewPager;
-import com.ylink.fullgoal.vo.CastTargetVo;
-import com.ylink.fullgoal.vo.SearchVo;
+import com.ylink.fullgoal.vo1.CastTargetVo;
+import com.ylink.fullgoal.vo1.SearchVo;
 
 import java.util.ArrayList;
 import java.util.List;

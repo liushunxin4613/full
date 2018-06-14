@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 
 import com.leo.core.R;
+import com.leo.core.api.api.CameraApi;
 import com.leo.core.api.api.ConfigApi;
 import com.leo.core.api.api.DataApi;
 import com.leo.core.api.api.DataTypeApi;
@@ -23,6 +24,7 @@ import com.leo.core.api.main.HttpApi;
 import com.leo.core.api.main.ShowApi;
 import com.leo.core.config.Config;
 import com.leo.core.factory.ActionApiFactory;
+import com.leo.core.iapi.api.ICameraApi;
 import com.leo.core.net.RetrofitSubscriber;
 import com.leo.core.other.Transformer;
 
@@ -192,6 +194,16 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     @Override
     public FileApi newFileApi() {
         return new FileApi(getThis());
+    }
+
+    @Override
+    public CameraApi cameraApi() {
+        return (CameraApi) super.cameraApi();
+    }
+
+    @Override
+    public CameraApi newCameraApi() {
+        return new CameraApi(getThis());
     }
 
     @Override

@@ -38,7 +38,7 @@ import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseItemControllerApi;
-import com.ylink.fullgoal.vo.BillVo;
+import com.ylink.fullgoal.vo1.BillVo;
 
 public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemControllerApi<T, C> {
 

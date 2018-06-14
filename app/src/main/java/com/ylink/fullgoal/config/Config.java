@@ -1,5 +1,9 @@
 package com.ylink.fullgoal.config;
 
+import static com.ylink.fullgoal.config.ComConfig.CC;
+import static com.ylink.fullgoal.config.ComConfig.FQ;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_QR;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_XG;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_DCL;
@@ -8,8 +12,6 @@ import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_YQ
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_YWC;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY_BILL_TYPE_CC;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY_BILL_TYPE_YB;
-import static com.ylink.fullgoal.vo.ReimburseVo.STATE_ALTER;
-import static com.ylink.fullgoal.vo.ReimburseVo.STATE_CONFIRM;
 
 public class Config {
 
@@ -22,8 +24,8 @@ public class Config {
     public final static int TIME_SPLASH = 1;//引导页时间
     public final static String HTTP_SUCCESS = "AAAAAA";//接口成功标志
     public final static String[][] FIELDS = {
-            {"agent", "经办人"},
-            {"reimbursement", "报销人"},
+            {"agentList", "经办人"},
+            {"reimbursementList", "报销人"},
             {"fillDate", "发起日期"},
             {"serialNo", "报销流水号"},
             {"approvalStatus", "审批状态"},
@@ -59,6 +61,10 @@ public class Config {
             {"一般费用报销", REIMBURSE_QUERY_BILL_TYPE_YB},
             {"出差费用报销", REIMBURSE_QUERY_BILL_TYPE_CC},
     };
+    public final static String[][] BILL_TYPE_TITLES = {
+            {"一般费用报销", FQ},
+            {"出差费用报销", CC},
+    };
     public final static String[][] DATES = {
             {"当天", "1"},
             {"七天", "2"},
@@ -69,9 +75,9 @@ public class Config {
     };
     public final static String[][] FULL_STATUS = {
             //经办人确认
-            {REIMBURSE_LIST_QUERY_RETURN_STATUS_QR, STATE_CONFIRM},
+            {REIMBURSE_LIST_QUERY_RETURN_STATUS_QR, QR},
             //经办人修改
-            {REIMBURSE_LIST_QUERY_RETURN_STATUS_XG, STATE_ALTER},
+            {REIMBURSE_LIST_QUERY_RETURN_STATUS_XG, XG},
     };
 
     //记录参数

@@ -17,4 +17,14 @@ public abstract class BaseController<T extends BaseController, DB> extends CoreC
         return getExecute(getClz(), c -> c);
     }
 
+    @Override
+    protected String getDefUBKey() {
+        return null;
+    }
+
+    @Override
+    protected <UB> UB getDefUB() {
+        return null;
+    }
+    
 }
