@@ -180,6 +180,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      */
     public void submitReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {
+            ee("map", map);
             api().post(ROOT_URL, FULL_REIMBURSE_SUBMIT, get(mp -> mp.putAll(map)));
         }
     }

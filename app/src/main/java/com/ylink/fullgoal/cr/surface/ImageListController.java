@@ -27,6 +27,14 @@ public class ImageListController<T extends ImageListController> extends AddContr
         return super.remove(imageVo, action);
     }
 
+    @Override
+    protected ImageVo onAddDB(ImageVo imageVo) {
+        if (!TextUtils.isEmpty(imageVo.getImageURL())) {
+            imageVo.setImageURL(imageVo.getImageURL().replaceAll("\\\\", "/"));
+        }
+        return super.onAddDB(imageVo);
+    }
+
     /**
      * 处理返回消息
      *

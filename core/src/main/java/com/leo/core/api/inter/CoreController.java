@@ -1,12 +1,14 @@
 package com.leo.core.api.inter;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.util.TextUtils;
 
-public abstract class CoreController<T extends CoreController, DB> extends ThisApi<T> implements IController<T, DB> {
+public abstract class CoreController<T extends CoreController, DB, UB> extends ThisApi<T> implements IController<T, DB, UB> {
 
     private String field;
     private DB db;
@@ -23,7 +25,7 @@ public abstract class CoreController<T extends CoreController, DB> extends ThisA
         return getThis();
     }
 
-    protected <A> A toUB(IReturnAction<DB, A> action){
+    protected <A> A toUB(IReturnAction<DB, A> action) {
         return getExecute(getDB(), action);
     }
 
@@ -55,31 +57,56 @@ public abstract class CoreController<T extends CoreController, DB> extends ThisA
     }
 
     @Override
-    public <UB> UB getUB(String... args){
+    public UB getUB(String... args) {
         return getValue(args, getDefUB(), this::getOnUB);
     }
+
+    @NonNull
+    @Override
+    public UB getSafeUB(String... args) {
+        UB ub = getUB(args);
+        if (ub == null){
+            ub = getNoneUB();
+        }
+        return ub;
+    }
+
+    /**
+     * 当UB为空时,safeUB的处理
+     */
+    @NonNull
+    protected UB getNoneUB(){
+        Class<UB> clz = getUBClz();
+        if(clz != null){
+            try {
+                return clz.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        throw new NullPointerException("getNoneUB()返回值不能为空");
+    }
+
+    /**
+     * 获取UB类型
+     */
+    protected abstract Class<UB> getUBClz();
 
     /**
      * 默认上传参数
      *
      * @return 参数
      */
-    protected abstract String getDefUBKey();
+    protected String getDefUBKey(){
+        return null;
+    }
 
     /**
      * 默认上传值
      *
      * @return 值
      */
-    protected abstract <UB> UB getDefUB();
-
-    /**
-     * 不同调用可用
-     *
-     * @param key key
-     * @return 值
-     */
-    protected String getOnUBKey(String key){
+    protected UB getDefUB(){
         return null;
     }
 
@@ -89,7 +116,17 @@ public abstract class CoreController<T extends CoreController, DB> extends ThisA
      * @param key key
      * @return 值
      */
-    protected <UB> UB getOnUB(String key){
+    protected String getOnUBKey(String key) {
+        return null;
+    }
+
+    /**
+     * 不同调用可用
+     *
+     * @param key key
+     * @return 值
+     */
+    protected UB getOnUB(String key) {
         return null;
     }
 
@@ -97,12 +134,12 @@ public abstract class CoreController<T extends CoreController, DB> extends ThisA
         return no(getDB(), action);
     }
 
-    private <A> A getValue(String[] args, A def, IReturnAction<String, A> action){
+    private <A> A getValue(String[] args, A def, IReturnAction<String, A> action) {
         if (!TextUtils.isEmpty(args) && action != null) {
             for (String key : args) {
-                if(!TextUtils.isEmpty(key)){
+                if (!TextUtils.isEmpty(key)) {
                     A value = action.execute(key);
-                    if(TextUtils.count(value) > 0){
+                    if (TextUtils.count(value) > 0) {
                         return value;
                     }
                 }

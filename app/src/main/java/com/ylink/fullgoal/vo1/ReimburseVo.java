@@ -1,13 +1,11 @@
 package com.ylink.fullgoal.vo1;
 
 import com.leo.core.util.JavaTypeUtil;
-import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.MessageBackFg;
 import com.ylink.fullgoal.fg.UserList;
-import com.ylink.fullgoal.hb.CtripHb;
 import com.ylink.fullgoal.hb.ImageHb;
 import com.ylink.fullgoal.hb.ReimburseHb;
 import com.ylink.fullgoal.hb.ReportHb;
@@ -18,11 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_CCJP;
-import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_JT;
-import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_YB;
-import static com.ylink.fullgoal.config.UrlConfig.MESSAGE_BACK_IMAGE_INVOICE_USE_ZS;
 
 /**
  * 报销
@@ -169,7 +162,7 @@ public class ReimburseVo extends HelpVo {
     }
 
     public ReimburseVo(MessageBackFg fg, String serialNo) {
-        if (fg != null) {
+        /*if (fg != null) {
             setAgent(fg.getAgent());
             setDepartment(fg.getBudgetDepartment());
             setReimbursement(fg.getReimbursement());
@@ -205,7 +198,7 @@ public class ReimburseVo extends HelpVo {
             vo.setAirBillData(map.get(MESSAGE_BACK_IMAGE_INVOICE_USE_CCJP));
             setAirDataVo(vo);
             initTotalAmountLower();
-        }
+        }*/
     }
 
     public ReimburseVo(ReimburseHb hb) {

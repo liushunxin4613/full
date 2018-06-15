@@ -1,4 +1,4 @@
-package com.ylink.fullgoal.cr.main;
+package com.ylink.fullgoal.vo;
 
 import com.leo.core.bean.NewFieldBean;
 import com.ylink.fullgoal.cr.surface.BillTypeController;
@@ -23,7 +23,7 @@ import com.ylink.fullgoal.cr.surface.TravelFormController;
 import com.ylink.fullgoal.cr.surface.UserController;
 
 /**
- * 数据核心
+ * 提交数据核心
  */
 public class DVo extends NewFieldBean {
 

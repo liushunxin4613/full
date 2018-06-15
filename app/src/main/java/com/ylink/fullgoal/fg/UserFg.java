@@ -13,6 +13,17 @@ public class UserFg {
     private String userCode;
     private String userName;
 
+    /**
+     * 此处不可去除
+     */
+    public UserFg() {
+    }
+
+    public UserFg(String userCode, String userName) {
+        this.userCode = userCode;
+        this.userName = userName;
+    }
+
     public String getUserCode() {
         return userCode;
     }

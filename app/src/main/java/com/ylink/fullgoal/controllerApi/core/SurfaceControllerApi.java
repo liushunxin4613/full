@@ -14,14 +14,15 @@ import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullSearchControllerApi;
-import com.ylink.fullgoal.api.surface.SearchControllerApi;
 import com.ylink.fullgoal.config.Config;
-import com.ylink.fullgoal.cr.main.DVo;
+import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.main.SurfaceActivity;
 import com.ylink.fullgoal.vo1.SearchVo;
 
@@ -39,12 +40,11 @@ import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.ComConfig.SHOW;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.Config.FIELDS;
-import static com.ylink.fullgoal.config.Config.FULL;
 
 @SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
 
-    private DVo core;
+    private DVo vo;
 
     public SurfaceControllerApi(C controller) {
         super(controller);
@@ -146,12 +146,21 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
+    /**
+     * 查询基础类
+     * @param clz clz
+     * @param action action
+     * @param <B> B
+     */
+    protected <B> void addList(Class<B> clz, IPathMsgAction<List<B>> action){
+        addList(DataFg.class, clz, action);
+    }
+
     protected void startSearch(String search, ArrayList<String> filterData) {
         Bundle bundle = new Bundle();
         bundle.putString(Config.SEARCH, search);
         bundle.putStringArrayList(Config.FILTERS, filterData);
-        startSurfaceActivity(bundle, FULL ? FullSearchControllerApi.class
-                : SearchControllerApi.class);
+        startSurfaceActivity(bundle, FullSearchControllerApi.class);
     }
 
     protected void startSearch(String search) {
@@ -285,13 +294,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             execute(getFinish(), token, vo -> action.execute(vo.getObj()));
         }
     }
-
-    protected void addListRootType(Class... args) {
-        if (!TextUtils.isEmpty(args)) {
-            execute(args, item -> addRootType(TypeToken.getParameterized(List.class, item)));
-        }
-    }
-
 
     protected TextWatcher getMoneyTextWatcher(IObjAction<String> action) {
         return new TextWatcher() {
@@ -468,11 +470,16 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
+    protected T setVo(DVo vo){
+        this.vo = vo;
+        return getThis();
+    }
+
     protected DVo getVo() {
-        if (core == null) {
-            core = new DVo();
+        if (vo == null) {
+            vo = new DVo();
         }
-        return core;
+        return vo;
     }
 
     protected T ioo(IObjAction<DVo> action) {

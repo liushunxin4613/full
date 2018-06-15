@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.cr.core;
 
+import android.support.annotation.NonNull;
+
 public abstract class StringController<T extends StringController> extends BaseStringController<T, String> {
 
     @Override
@@ -35,6 +37,23 @@ public abstract class StringController<T extends StringController> extends BaseS
     @Override
     public String getUB(String... args) {
         return super.getUB(args);
+    }
+
+    @NonNull
+    @Override
+    public String getSafeUB(String... args) {
+        return super.getSafeUB(args);
+    }
+
+    @NonNull
+    @Override
+    protected String getNoneUB() {
+        return "";
+    }
+
+    @Override
+    protected Class<String> getUBClz() {
+        return null;
     }
 
 }

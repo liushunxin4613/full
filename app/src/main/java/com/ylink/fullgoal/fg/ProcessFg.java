@@ -21,6 +21,12 @@ public class ProcessFg {
     private String code;
     private String date;
 
+    /**
+     * 此处不可取消
+     */
+    public ProcessFg() {
+    }
+
     public String getAdvAmount() {
         return advAmount;
     }

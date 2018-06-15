@@ -1,27 +1,32 @@
 package com.ylink.fullgoal.cr.surface;
 
 import com.ylink.fullgoal.cr.core.BaseStringController;
-import com.ylink.fullgoal.fg.UserList;
+import com.ylink.fullgoal.fg.UserFg;
 
 /**
  * 用户控制器
  */
-public class UserController<T extends UserController> extends BaseStringController<T, UserList> {
+public class UserController<T extends UserController> extends BaseStringController<T, UserFg> {
 
     @Override
-    public T initDB(UserList userList) {
-        return super.initDB(userList);
+    public T initDB(UserFg userFg) {
+        return super.initDB(userFg);
     }
 
     @Override
-    public UserList getDB() {
+    public UserFg getDB() {
         return super.getDB();
+    }
+
+    @Override
+    protected Class<UserFg> getUBClz() {
+        return UserFg.class;
     }
 
     @Override
     protected String getOnUBKey(String key) {
         return toField(field -> {
-            switch (field){
+            switch (field) {
                 case "agent":
                     return "agentList";
                 case "reimbursement":
@@ -32,13 +37,13 @@ public class UserController<T extends UserController> extends BaseStringControll
     }
 
     @Override
-    public Class<UserList> getClz() {
-        return UserList.class;
+    public Class<UserFg> getClz() {
+        return UserFg.class;
     }
 
     @Override
     public String getViewBean() {
-        return no(UserList::getName);
+        return no(UserFg::getUserName);
     }
 
 }

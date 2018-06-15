@@ -19,6 +19,11 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
     }
 
     @Override
+    protected Class<DepartmentFg> getUBClz() {
+        return DepartmentFg.class;
+    }
+
+    @Override
     protected String getOnUBKey(String key) {
         return toField(field -> {
             switch (field){

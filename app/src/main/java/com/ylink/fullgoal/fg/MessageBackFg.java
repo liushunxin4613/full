@@ -10,21 +10,21 @@ import java.util.List;
 public class MessageBackFg extends StatusCodeFg {
 
     //经办人
-    private UserList agent;
+    private UserFg agent;
     //报销人
-    private UserList reimbursement;
+    private UserFg reimbursement;
     //预算归属部门
-    private String budgetDepartment;
+    private DepartmentFg budgetDepartment;
     //事由
     private String cause;
     //合同申请单
-    private List<ContractPaymentFg> paymentRequest;
+    private ContractPaymentFg paymentRequest;
     //项目
-    private String project;
+    private ProjectFg project;
     //招待申请单
-    private String process;
+    private ProcessFg process;
     //费用指标
-    private List<CostFg> costIndextList;
+    private CostFg costList;
     //图片
     private List<ImageVo> imageList;
     //携程机票
@@ -36,27 +36,27 @@ public class MessageBackFg extends StatusCodeFg {
     //金额
     private String totalAmountLower;
 
-    public UserList getAgent() {
+    public UserFg getAgent() {
         return agent;
     }
 
-    public void setAgent(UserList agent) {
+    public void setAgent(UserFg agent) {
         this.agent = agent;
     }
 
-    public UserList getReimbursement() {
+    public UserFg getReimbursement() {
         return reimbursement;
     }
 
-    public void setReimbursement(UserList reimbursement) {
+    public void setReimbursement(UserFg reimbursement) {
         this.reimbursement = reimbursement;
     }
 
-    public String getBudgetDepartment() {
+    public DepartmentFg getBudgetDepartment() {
         return budgetDepartment;
     }
 
-    public void setBudgetDepartment(String budgetDepartment) {
+    public void setBudgetDepartment(DepartmentFg budgetDepartment) {
         this.budgetDepartment = budgetDepartment;
     }
 
@@ -68,20 +68,36 @@ public class MessageBackFg extends StatusCodeFg {
         this.cause = cause;
     }
 
-    public List<ContractPaymentFg> getPaymentRequest() {
+    public ContractPaymentFg getPaymentRequest() {
         return paymentRequest;
     }
 
-    public void setPaymentRequest(List<ContractPaymentFg> paymentRequest) {
+    public void setPaymentRequest(ContractPaymentFg paymentRequest) {
         this.paymentRequest = paymentRequest;
     }
 
-    public String getProject() {
+    public ProjectFg getProject() {
         return project;
     }
 
-    public void setProject(String project) {
+    public void setProject(ProjectFg project) {
         this.project = project;
+    }
+
+    public ProcessFg getProcess() {
+        return process;
+    }
+
+    public void setProcess(ProcessFg process) {
+        this.process = process;
+    }
+
+    public CostFg getCostList() {
+        return costList;
+    }
+
+    public void setCostList(CostFg costList) {
+        this.costList = costList;
     }
 
     public List<ImageVo> getImageList() {
@@ -122,22 +138,6 @@ public class MessageBackFg extends StatusCodeFg {
 
     public void setTotalAmountLower(String totalAmountLower) {
         this.totalAmountLower = totalAmountLower;
-    }
-
-    public String getProcess() {
-        return process;
-    }
-
-    public void setProcess(String process) {
-        this.process = process;
-    }
-
-    public List<CostFg> getCostIndextList() {
-        return costIndextList;
-    }
-
-    public void setCostIndextList(List<CostFg> costIndextList) {
-        this.costIndextList = costIndextList;
     }
 
 }

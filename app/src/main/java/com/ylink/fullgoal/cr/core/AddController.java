@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.cr.core;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.main.IOnCom;
 import com.leo.core.util.TextUtils;
@@ -13,7 +15,7 @@ import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 /**
  * 添加更多控制器
  */
-public abstract class AddController<T extends AddController, DB> extends BaseController<T, DB> {
+public abstract class AddController<T extends AddController, DB> extends BaseController<T, DB, List<DB>> {
 
     private List<DB> data;
 
@@ -27,6 +29,33 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
             getData().add(db);
         }
         return super.initDB(db);
+    }
+
+    /**
+     * 初始化data
+     *
+     * @param data data
+     * @return 本身
+     */
+    public T initDB(List<DB> data) {
+        this.data.clear();
+        execute(data, item -> executeNon(onAddDB(item), db -> this.data.add(db)));
+        return getThis();
+    }
+
+    protected DB onAddDB(DB db) {
+        return db;
+    }
+
+    @NonNull
+    @Override
+    protected List<DB> getNoneUB() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected Class<List<DB>> getUBClz() {
+        return null;
     }
 
     public List<DB> getData() {
@@ -104,22 +133,12 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
     }
 
     @Override
-    public List<DB> getUB(String... args) {
-        return super.getUB(args);
-    }
-
-    @Override
     protected List<DB> getOnUB(String key) {
         switch (key) {
             case CC:
                 return getData();
         }
         return super.getOnUB(key);
-    }
-
-    @Override
-    protected List<DB> getDefUB() {
-        return super.getDefUB();
     }
 
 }

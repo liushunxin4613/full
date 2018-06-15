@@ -1,7 +1,5 @@
 package com.ylink.fullgoal.config;
 
-import static com.ylink.fullgoal.config.ComConfig.CC;
-import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_QR;
@@ -16,9 +14,8 @@ import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY_BILL_TYPE_YB;
 public class Config {
 
     //配置
-    public final static boolean DEBUG = false;//debug模式是否开启
+    public final static boolean DEBUG = true;//debug模式是否开启
     final static boolean LOCAL = false;//本地模式是否开启
-    public final static boolean FULL = true;//富国模式是否开启
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间
     public final static int TIME_SPLASH = 1;//引导页时间
@@ -62,8 +59,8 @@ public class Config {
             {"出差费用报销", REIMBURSE_QUERY_BILL_TYPE_CC},
     };
     public final static String[][] BILL_TYPE_TITLES = {
-            {"一般费用报销", FQ},
-            {"出差费用报销", CC},
+            {"报销确认", QR},
+            {"报销修改", XG},
     };
     public final static String[][] DATES = {
             {"当天", "1"},

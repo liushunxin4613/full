@@ -8,17 +8,12 @@ import com.ylink.fullgoal.api.config.FgApi;
 import com.ylink.fullgoal.api.config.ParseApi;
 import com.ylink.fullgoal.api.config.UrlApi;
 import com.ylink.fullgoal.api.func.UserApi;
-import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.config.Api;
-import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.UserFg;
-import com.ylink.fullgoal.fg.UserList;
-import com.ylink.fullgoal.hb.DataHb;
 
 import butterknife.ButterKnife;
 
-import static com.ylink.fullgoal.config.Config.FULL;
 import static com.ylink.fullgoal.config.UrlConfig.ROOT_URL;
 
 public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi<T, C> {
@@ -80,7 +75,7 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     }
 
     @Override
-    public UserList getUser() {
+    public UserFg getUser() {
         return super.getUser();
     }
 
@@ -98,11 +93,6 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     public void initView() {
         if (getRootView() != null)
             ButterKnife.bind(this, getRootView());
-        if (FULL) {
-            addRootType(DataFg.class);
-        } else {
-            addRootType(DataHb.class);
-        }
     }
 
 }

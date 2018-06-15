@@ -12,7 +12,7 @@ import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.XCJPBean;
-import com.ylink.fullgoal.cr.main.DVo;
+import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.cr.surface.CtripTicketsController;
 import com.ylink.fullgoal.cr.surface.ResearchReportController;
 import com.ylink.fullgoal.cr.surface.RuleController;
@@ -61,7 +61,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             checkAdd(data, gtv(DVo::getReimbursement), new TvHEtIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", gtv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> startSearch(SearchVo.REIMBURSEMENT), text
-                    -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setName(text))));
+                    -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
             checkAdd(data, gtv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
                     gtv(DVo::getBudgetDepartment), "请选择预算归属部门",
                     (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));

@@ -45,6 +45,7 @@ import static com.ylink.fullgoal.config.Config.STATE;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB;
 
+@SuppressLint("RtlHardcoded")
 public class FullReimburseDataControllerApi<T extends FullReimburseDataControllerApi, C> extends BarControllerApi<T, C> {
 
     @Bind(R.id.api_view)
@@ -54,15 +55,12 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     @Bind(R.id.drawerLayout)
     DrawerLayout drawerLayout;
 
-    private IndicatorControllerApi api;
-    private Map<String, RecycleControllerApi> map;
-
-    @SuppressLint("RtlHardcoded")
-    private int gravity = Gravity.RIGHT;
-
     private String type;
     private String dateText;
     private String typeText;
+    private IndicatorControllerApi api;
+    private int gravity = Gravity.RIGHT;
+    private Map<String, RecycleControllerApi> map;
 
     public FullReimburseDataControllerApi(C controller) {
         super(controller);

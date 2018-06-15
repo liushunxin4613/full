@@ -5,6 +5,9 @@ public class UserList {
     private String code;
     private String name;
 
+    public UserList() {
+    }
+
     public UserList(String code, String name) {
         this.code = code;
         this.name = name;

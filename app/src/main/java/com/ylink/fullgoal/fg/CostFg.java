@@ -10,6 +10,12 @@ public class CostFg {
     private String share;//分摊
     private String explain;//分摊说明
 
+    /**
+     * 此处不可取消
+     */
+    public CostFg() {
+    }
+
     public CostFg(String costCode, String costIndex) {
         this.costCode = costCode;
         this.costIndex = costIndex;

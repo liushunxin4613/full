@@ -8,7 +8,7 @@ import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.UserController;
-import com.ylink.fullgoal.cr.main.DVo;
+import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.fg.RuleFg;
 import com.ylink.fullgoal.vo1.SearchVo;
 
@@ -45,7 +45,7 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
             checkAdd(data, gtv(DVo::getReimbursement), new TvHEtIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", gtv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> startSearch(SearchVo.REIMBURSEMENT), text
-                    -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setName(text))));
+                    -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
             checkAdd(data, gtv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
                     gtv(DVo::getBudgetDepartment), "请选择预算归属部门",
                     (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));

@@ -1,9 +1,10 @@
 package com.ylink.fullgoal.cr.surface;
 
+import android.support.annotation.NonNull;
+
 import com.ylink.fullgoal.cr.core.BaseController;
 import com.ylink.fullgoal.fg.CostFg;
 
-import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 
 /**
@@ -11,7 +12,7 @@ import static com.ylink.fullgoal.config.ComConfig.YB;
  *
  * @param <T>
  */
-public class CostIndexController<T extends CostIndexController> extends BaseController<T, CostFg> {
+public class CostIndexController<T extends CostIndexController> extends BaseController<T, CostFg, CostFg> {
 
     @Override
     public T initDB(CostFg costIndexFg) {
@@ -38,9 +39,15 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
         return super.getUB(args);
     }
 
+    @NonNull
     @Override
-    protected CostFg getDefUB() {
-        return super.getDefUB();
+    protected CostFg getNoneUB() {
+        return null;
+    }
+
+    @Override
+    protected Class<CostFg> getUBClz() {
+        return CostFg.class;
     }
 
     @Override

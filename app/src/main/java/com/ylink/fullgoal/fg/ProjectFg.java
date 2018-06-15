@@ -23,6 +23,12 @@ public class ProjectFg{
     private String projectCode;
     private String projectName;
 
+    /**
+     * 此处不可取消
+     */
+    public ProjectFg() {
+    }
+
     public String getAmount() {
         return amount;
     }

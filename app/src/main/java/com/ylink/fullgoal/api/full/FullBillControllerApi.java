@@ -34,7 +34,6 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
     @Override
     public void initView() {
         super.initView();
-        addRootType(ImageFg.class);
         executeBundle(bundle -> {
             executeNon(getBundleList(bundle, ImageVo.class), data -> this.data = data);
             executeNon(getBundle(bundle, ImageVo.class), vo -> this.vo = vo);

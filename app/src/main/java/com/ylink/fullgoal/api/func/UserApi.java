@@ -6,7 +6,7 @@ import com.leo.core.config.Config;
 import com.leo.core.iapi.api.IUserApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.fg.DepartmentFg;
-import com.ylink.fullgoal.fg.UserList;
+import com.ylink.fullgoal.fg.UserFg;
 
 public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implements IUserApi<T> {
 
@@ -47,19 +47,19 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
     }*/
 
     @Override
-    public UserList getUser() {
-        return new UserList(getUId(), getUserName());
+    public UserFg getUser() {
+        return new UserFg(getUId(), getUserName());
     }
 
     @Override
     public String getUId() {
 //        return "12001324";
-        return "001";
+        return "003";
     }
 
     @Override
     public String getUserName() {
-        return "李四";
+        return "张三";
     }
 
     @Override

@@ -181,7 +181,7 @@ public abstract class BaseRadioFragmentApi<T extends BaseRadioFragmentApi> exten
 
     @Override
     public void onCheckRadioGroup(int position) {
-        if (fragmentIndex != position && !TextUtils.isEmits(getContentLayout(), getPagerAdapter())) {
+        if (fragmentIndex != position && TextUtils.isEmits(getContentLayout(), getPagerAdapter())) {
             FragmentTransaction transaction = getFragmentActivity().getSupportFragmentManager().beginTransaction();
             RadioButtonBean oldBean = getItem(-1, fragmentIndex);
             RadioButtonBean bean = getItem(-1, position);

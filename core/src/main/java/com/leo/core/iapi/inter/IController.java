@@ -1,5 +1,7 @@
 package com.leo.core.iapi.inter;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.iapi.core.IApi;
 
 import java.lang.reflect.Type;
@@ -10,7 +12,7 @@ import java.lang.reflect.Type;
  * <blockquote/>
  * 不能有构造方法
  */
-public interface IController<T extends IController, DB> extends IApi {
+public interface IController<T extends IController, DB, UB> extends IApi {
 
     /**
      * 初始化field
@@ -67,10 +69,16 @@ public interface IController<T extends IController, DB> extends IApi {
     /**
      * 数据提交,上传数据参数
      *
-     * @param <UB> UB
      * @return UB
      */
-    <UB> UB getUB(String... args);
+    UB getUB(String... args);
+
+    /**
+     * 安全上传参数
+     * @return 上传参数
+     */
+    @NonNull
+    UB getSafeUB(String... args);
 
     /**
      * 获取DB的class

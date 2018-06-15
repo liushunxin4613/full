@@ -24,7 +24,7 @@ import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.cr.main.DVo;
+import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
@@ -32,13 +32,12 @@ import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.ImageFg;
 import com.ylink.fullgoal.vo.ImageVo;
-import com.ylink.fullgoal.fg.MessageBackFg;
 import com.ylink.fullgoal.fg.ProcessFg;
 import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
-import com.ylink.fullgoal.fg.UserList;
+import com.ylink.fullgoal.vo.RVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,8 +118,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     @Override
     public void initView() {
         super.initView();
-        addRootType(ImageFg.class);
-        addRootType(MessageBackFg.class);
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
             iso(DVo::getFirst, obj -> obj.initDB(state));
@@ -166,7 +163,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         iso(DVo::getReimbursement, obj -> obj.initDB(getUser()));
         iso(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
         iso(DVo::getBudgetDepartment, obj -> obj.initDB(getDepartment()));
-        ee("core", getVo().toCheckString());
+//        ee("core", getVo().toCheckString());
     }
 
     @Override
@@ -200,16 +197,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 }
             }
         });
-        add(MessageBackFg.class, (path, what, msg, bean) -> {
+        add(RVo.class, (path, what, msg, bean) -> {
             switch (path) {
                 case FULL_REIMBURSE_QUERY://报销获取
-//                    setVo(new ReimburseVo(bean, getSerialNo()));
-                    /*getVo().setAgent(getUser());
-                    getVo().setReimbursement(getUser());
-                    getVo().setDepartment(getDepartmentCode());
-                    getVo().setDepartmentShow(getDepartment());
-                    ee("vo", getVo());*/
+                    setVo(bean.get());
+                    iso(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
                     notifyDataChanged();
+//                    ee("core", getVo().toCheckString());
                     break;
             }
         });
@@ -219,8 +213,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     public void onResume() {
         super.onResume();
         //报销人
-        executeSearch(UserFg.class, fg -> iso(DVo::getReimbursement,
-                obj -> obj.initDB(new UserList(fg.getUserCode(), fg.getUserName()))));
+        executeSearch(UserFg.class, fg -> iso(DVo::getReimbursement, obj -> obj.initDB(fg)));
         //预算归属部门
         executeSearch(DepartmentFg.class, fg -> iso(DVo::getBudgetDepartment, obj -> obj.initDB(fg)));
         //项目

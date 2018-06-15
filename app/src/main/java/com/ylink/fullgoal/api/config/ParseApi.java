@@ -1,58 +1,41 @@
 package com.ylink.fullgoal.api.config;
 
-import android.annotation.SuppressLint;
-
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.api.api.GsonDecodeApi;
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.DataEmpty;
-import com.leo.core.bean.HttpError;
+import com.leo.core.iapi.api.IGsonDecodeApi;
 import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.net.Exceptions;
-import com.leo.core.util.GsonDecodeUtil;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
-import com.leo.core.util.ToastUtil;
-import com.ylink.fullgoal.fg.DataFg;
-import com.ylink.fullgoal.hb.CodeHb;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import okhttp3.ResponseBody;
 
-import static com.leo.core.config.Config.RX;
-import static com.leo.core.config.Config.RX_TO;
-import static com.leo.core.util.TextUtils.getEmptyLength;
+import static com.leo.core.util.TextUtils.check;
+import static com.leo.core.util.TextUtils.getListData;
 
 public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseApi<T> {
 
     private int what;
     private String msg;
     private String path;
-    private List<Type> data;
-    private Map<String, Type> typeMap;
-    private Map<Type, List<IPathMsgAction>> apiMap;
+    private IGsonDecodeApi api;
+    private Map<Type, Map<Type, List<IPathMsgAction>>> map;
 
     public ParseApi() {
-        this.data = new ArrayList<>();
-        this.typeMap = new HashMap<>();
-        this.apiMap = new HashMap<>();
+        map = new HashMap<>();
+        api = new GsonDecodeApi();
     }
 
     @Override
@@ -66,87 +49,88 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     @Override
     public T copy() {
         ParseApi<T> api = new ParseApi<>();
-        api.data = data;
-        api.typeMap = typeMap;
-        api.apiMap = apiMap;
+        api.map = map;
         return (T) api;
     }
 
     @Override
-    public T addRootType(Class... args) {
-        execute(args, obj -> executeNon(getExecute(TypeToken.get(obj), TypeToken::getType),
-                item -> data.add(item)));
+    public <A> T add(Class<A> root, IPathMsgAction<A> action) {
+        add(root, root, action);
         return getThis();
     }
 
     @Override
-    public T addRootType(TypeToken... args) {
-        execute(args, obj -> executeNon(getExecute(obj, TypeToken::getType),
-                item -> data.add(item)));
+    public <A> T add(TypeToken<A> root, IPathMsgAction<A> action) {
+        add(root, root, action);
         return getThis();
     }
 
     @Override
-    public T clearRootData() {
-        data.clear();
-        return getThis();
-    }
-
-    @Override
-    public <A> T put(String key, TypeToken<A> token) {
-        if (!TextUtils.isEmpty(key) && token != null) {
-            typeMap.put(key, token.getType());
+    public <A, B> T add(Class<A> root, Class<B> clz, IPathMsgAction<B> action) {
+        if (check(root, clz, action)) {
+            mapAdd(root, clz, action);
         }
         return getThis();
     }
 
     @Override
-    public <A> T put(String key, Class<A> clz) {
-        put(key, TypeToken.get(clz));
+    public <A, B> T addList(Class<A> root, Class<B> clz, IPathMsgAction<List<B>> action) {
+        if (check(root, clz, action)) {
+            mapAdd(root, TypeToken.getParameterized(List.class, clz).getType(), action);
+        }
         return getThis();
     }
 
     @Override
-    public T clearPutParseMap() {
-        typeMap.clear();
+    public <A, B> T add(Class<A> root, TypeToken<B> token, IPathMsgAction<B> action) {
+        if (check(root, token, action)) {
+            mapAdd(root, token.getType(), action);
+        }
         return getThis();
     }
 
     @Override
-    public <A> T add(TypeToken<A> token, IPathMsgAction<A> action) {
-        if (token != null && action != null) {
-            List<IPathMsgAction> data = apiMap.get(token.getType());
-            if (data == null) {
-                apiMap.put(token.getType(), new ArrayList<>());
+    public <A, B> T add(TypeToken<A> root, Class<B> clz, IPathMsgAction<B> action) {
+        if (check(root, clz, action)) {
+            mapAdd(root.getType(), clz, action);
+        }
+        return getThis();
+    }
+
+    @Override
+    public <A, B> T addList(TypeToken<A> root, Class<B> clz, IPathMsgAction<List<B>> action) {
+        if (check(root, clz, action)) {
+            mapAdd(root.getType(), TypeToken.getParameterized(List.class, clz).getType(), action);
+        }
+        return getThis();
+    }
+
+    @Override
+    public <A, B> T add(TypeToken<A> root, TypeToken<B> token, IPathMsgAction<B> action) {
+        if (check(root, token, action)) {
+            mapAdd(root.getType(), token.getType(), action);
+        }
+        return getThis();
+    }
+
+    private void mapAdd(Type root, Type type, IPathMsgAction action) {
+        if (check(root, type, action)) {
+            Map<Type, List<IPathMsgAction>> rootMap = map.get(root);
+            if (rootMap != null && rootMap.get(type) != null) {
+                map.get(root).get(type).add(action);
+            } else if (rootMap != null) {
+                map.get(root).put(type, getListData(action));
+            } else {
+                rootMap = new HashMap<>();
+                rootMap.put(type, getListData(action));
+                map.put(root, rootMap);
             }
-            apiMap.get(token.getType()).add(action);
         }
-        return getThis();
-    }
-
-    @Override
-    public <A> T add(Class<A> clz, IPathMsgAction<A> action) {
-        add(TypeToken.get(clz), action);
-        return getThis();
-    }
-
-    @Override
-    public <A> T addList(Class<A> clz, IPathMsgAction<List<A>> action) {
-        add((TypeToken<List<A>>) TypeToken.getParameterized(List.class, clz), action);
-        return getThis();
-    }
-
-    @Override
-    public T clearAddParseMap() {
-        apiMap.clear();
-        return getThis();
     }
 
     @Override
     public T clearParse() {
-        clearRootData();
-        clearPutParseMap();
-        clearAddParseMap();
+        map.clear();
         return getThis();
     }
 
@@ -164,158 +148,72 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         return getThis();
     }
 
-    private <A> void onItem(A item, Type type) {
-        /*LogUtil.ee(this, "type: " + type + ", apiMap.get(type): " + (apiMap.get(type) == null) +
-                ", item: " + LogUtil.getLog(item));*/
-        executeNon(item, obj -> execute(apiMap.get(type), action -> {
-            if (obj instanceof DataFg) {
-                if (!((DataFg) obj).isSuccess() && !TextUtils.isEmpty(((DataFg) obj).getMessage())) {
-                    ToastUtil.show(((DataFg) obj).getMessage());
-                }
-            }
-            if (obj instanceof CodeHb) {
-                if (!((CodeHb) obj).isSuccess() && !TextUtils.isEmpty(((CodeHb) obj).getMessage())) {
-                    ToastUtil.show(((CodeHb) obj).getMessage());
-                }
-            }
-            action.execute(path == null ? "" : path, what, msg, obj);
-        }));
+    /**
+     * 核心解析对象数据
+     *
+     * @param obj  传出对象
+     * @param data 传出回调
+     */
+    private void onItem(Object obj, List<IPathMsgAction> data) {
+        if (check(obj, data)) {
+            execute(data, action -> action.execute(path, what, msg, obj));
+        }
     }
 
+    /**
+     * 解析string
+     *
+     * @param text text
+     */
     private void onString(String text) {
-        final String txt = getCleanJsonString(text, null);
-        if (!TextUtils.isEmpty(data)) {
-            int emptyCount = getEmptyLength(txt);
-            /*LogUtil.ee(this, "txt: " + txt);
-            LogUtil.ee(this, "emptyCount: " + emptyCount);*/
-            execute(data, type -> {
-                Object obj = GsonDecodeUtil.decode(txt, type);
-                String encode = GsonDecodeUtil.encode(obj);
-                /*LogUtil.ee(this, "type: " + type.toString());
-                LogUtil.ee(this, "getEmptyLength(encode): " + getEmptyLength(encode));
-                LogUtil.ee(this, "encode: " + encode);*/
-                if (emptyCount == getEmptyLength(encode)) {
-                    onData(obj, type);
-                }
-            });
-        }
-        if (!TextUtils.isEmpty(typeMap)) {
-            toJson(txt);
+        execute(map, (type, map) -> onData(api.decode(text, type), type, map));
+    }
+
+    /**
+     * 解出对象
+     *
+     * @param obj obj
+     */
+    private void onObj(Object obj) {
+        if (check(obj)) {
+            onData(obj, obj.getClass(), map.get(obj.getClass()));
         }
     }
 
-    @SuppressLint("NewApi")
-    private String getCleanJsonString(String text, Object obj) {
-        try {
-            if (!TextUtils.isEmpty(text)) {
-                obj = new JSONTokener(text).nextValue();
-            }
-            if (obj instanceof JSONObject) {
-                JSONObject jo = (JSONObject) obj;
-                Set<String> set = new HashSet<>();
-                for (Iterator<String> it = jo.keys(); it.hasNext(); ) {
-                    String key = it.next();
-                    Object item = jo.get(key);
-                    if (TextUtils.isEmpty(key)) {
-                        jo.remove(key);
-                    } else if (item instanceof String || item == null) {
-                        if (TextUtils.isTrimEmpty((String) item)) {
-                            set.add(key);
-                        }
-                    } else {
-                        getCleanJsonString(null, item);
-                    }
-                }
-                if (!TextUtils.isEmpty(set)) {
-                    for (String key : set) {
-                        jo.remove(key);
-                    }
-                }
-                text = jo.toString();
-                if (!TextUtils.isEmpty(text)) {
-                    return text.replaceAll(RX, RX_TO);
-                }
-            } else if (obj instanceof JSONArray) {
-                JSONArray ja = (JSONArray) obj;
-                Set<Integer> set = new HashSet<>();
-                for (int i = 0; i < ja.length(); i++) {
-                    Object item = ja.get(i);
-                    if (TextUtils.isEmpty(item)) {
-                        set.add(i);
-                    } else {
-                        getCleanJsonString(null, item);
-                    }
-                }
-                if (!TextUtils.isEmpty(set)) {
-                    for (Integer key : set) {
-                        ja.remove(key);
-                    }
-                }
-                text = ja.toString();
-                if (!TextUtils.isEmpty(text)) {
-                    return text.replaceAll(RX, RX_TO);
-                }
-            }
-        } catch (JSONException ignored) {
-        }
-        return null;
-    }
-
-    private void onData(Object obj, Type type) {
-        if (obj != null) {
-            onItem(obj, type);
+    /**
+     * 递归遍历处理
+     *
+     * @param obj  传入对象
+     * @param type 传入对象类型
+     * @param map  传入对象可能对应map
+     */
+    private void onData(Object obj, Type type, Map<Type, List<IPathMsgAction>> map) {
+        if (check(obj, map)) {
+            onItem(obj, map.get(type));
             Class clz = obj.getClass();
             if (obj instanceof List) {
                 if (!TextUtils.isEmpty(obj)) {
                     Class itemClz = getDataItemType((List) obj);
                     if (itemClz != null) {
-                        onItem(obj, TypeToken.getParameterized(List.class, itemClz).getType());
+                        onItem(obj, map.get(TypeToken.getParameterized(List.class, itemClz).getType()));
                     } else {
-                        onItem(new DataEmpty(), DataEmpty.class);
+                        onItem(new DataEmpty(), map.get(DataEmpty.class));
                     }
                 }
-            } else if (check(clz)) {
+            } else if (checkClz(clz)) {
                 execute(clz.getDeclaredFields(), field -> execute(!Modifier.isStatic(
-                        field.getModifiers()) && check(field.getType()) &&
-                        !TextUtils.equals(field.getName(), "val$contentType"), () -> {
+                        field.getModifiers()) && checkClz(field.getType()), () -> {
                     try {
                         field.setAccessible(true);
                         Object item = field.get(obj);
                         if (item != null) {
-                            onData(item, item.getClass());
+                            onData(item, item.getClass(), map);
                         }
                     } catch (IllegalAccessException e) {
                         onExceptions(new Exceptions("解析异常", 101, e));
                     }
                 }));
             }
-        }
-    }
-
-    private void toJson(String text) {
-        try {
-            if (!TextUtils.isEmpty(text)) {
-                Object obj = new JSONTokener(text).nextValue();
-                if (obj instanceof JSONObject) {
-                    JSONObject jo = (JSONObject) obj;
-                    execute(typeMap, (key, value) -> execute(jo.has(key), () -> {
-                        try {
-                            Object mode = jo.get(key);
-                            if (mode instanceof String) {
-                                Object item = GsonDecodeUtil.decode(mode, value);
-                                onData(item, item.getClass());
-                            }
-                        } catch (JSONException e) {
-                            onExceptions(new Exceptions("json解析异常", HttpError.ERROR_JSON_PARSE, e));
-                        }
-                    }));
-                }
-            } else {
-                onExceptions(new Exceptions("json字符串不能为空", HttpError.ERROR_DATA_NULL,
-                        new RuntimeException("json字符串不能为空")));
-            }
-        } catch (Exception e) {
-            onExceptions(new Exceptions("json解析异常", HttpError.ERROR_JSON_PARSE, e));
         }
     }
 
@@ -327,21 +225,18 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         }
     }
 
-    private boolean check(Class clz) {
-        return clz != null && !clz.isPrimitive() && !String.class.isAssignableFrom(clz) &&
-                !LinkedTreeMap.class.isAssignableFrom(clz);
-    }
-
     private void onCompleted(Completed completed) {
         LogUtil.ii(this, "*********************** 本次请求结束!!! ***********************");
-        onItem(completed, completed.getClass());
+        onObj(completed);
     }
 
     private void onExceptions(Exceptions exception) {
-        onItem(exception, exception.getClass());
-//        executeNon(exception.getE(), Throwable::printStackTrace);
+        //executeNon(exception.getE(), Throwable::printStackTrace);
         LogUtil.ii(this, "本次异常: " + exception.getMessage());
+        onObj(exception);
     }
+
+    //以下为私有方法
 
     private Class getDataItemType(List data) {
         if (!TextUtils.isEmpty(data)) {
@@ -352,6 +247,11 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
             }
         }
         return null;
+    }
+
+    private boolean checkClz(Class clz) {
+        return clz != null && !clz.isPrimitive() && !String.class.isAssignableFrom(clz) &&
+                !LinkedTreeMap.class.isAssignableFrom(clz);
     }
 
 }

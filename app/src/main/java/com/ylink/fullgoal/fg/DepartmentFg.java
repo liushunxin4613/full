@@ -13,6 +13,12 @@ public class DepartmentFg {
     private String departmentCode;
     private String departmentName;
 
+    /**
+     * 此处不可取消
+     */
+    public DepartmentFg() {
+    }
+
     public DepartmentFg(String departmentCode, String departmentName) {
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;

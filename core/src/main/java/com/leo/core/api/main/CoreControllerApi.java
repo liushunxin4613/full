@@ -49,10 +49,10 @@ import com.leo.core.iapi.api.IMergeApi;
 import com.leo.core.iapi.api.IObjectApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IParseApi;
-import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.api.ISerialVersionTagApi;
 import com.leo.core.iapi.api.IStartApi;
 import com.leo.core.iapi.api.ISubjoinApi;
+import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.ITAction;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.api.IUserApi;
@@ -1866,62 +1866,50 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T addRootType(Class... args) {
-        parseApi().addRootType(args);
+    public <A> T add(Class<A> root, IPathMsgAction<A> action) {
+        parseApi().add(root, action);
         return getThis();
     }
 
     @Override
-    public T addRootType(TypeToken... args) {
-        parseApi().addRootType(args);
+    public <A> T add(TypeToken<A> root, IPathMsgAction<A> action) {
+        parseApi().add(root, action);
         return getThis();
     }
 
     @Override
-    public T clearRootData() {
-        parseApi().clearRootData();
+    public <A, B> T add(Class<A> root, Class<B> clz, IPathMsgAction<B> action) {
+        parseApi().add(root, clz, action);
         return getThis();
     }
 
     @Override
-    public <A> T put(String key, TypeToken<A> token) {
-        parseApi().put(key, token);
+    public <A, B> T addList(Class<A> root, Class<B> clz, IPathMsgAction<List<B>> action) {
+        parseApi().addList(root, clz, action);
         return getThis();
     }
 
     @Override
-    public <A> T put(String key, Class<A> clz) {
-        parseApi().put(key, clz);
+    public <A, B> T add(Class<A> root, TypeToken<B> token, IPathMsgAction<B> action) {
+        parseApi().add(root, token, action);
         return getThis();
     }
 
     @Override
-    public T clearPutParseMap() {
-        parseApi().clearPutParseMap();
+    public <A, B> T add(TypeToken<A> root, Class<B> clz, IPathMsgAction<B> action) {
+        parseApi().add(root, clz, action);
         return getThis();
     }
 
     @Override
-    public <A> T add(TypeToken<A> token, IPathMsgAction<A> action) {
-        parseApi().add(token, action);
+    public <A, B> T addList(TypeToken<A> root, Class<B> clz, IPathMsgAction<List<B>> action) {
+        parseApi().addList(root, clz, action);
         return getThis();
     }
 
     @Override
-    public <A> T addList(Class<A> clz, IPathMsgAction<List<A>> action) {
-        parseApi().addList(clz, action);
-        return getThis();
-    }
-
-    @Override
-    public <A> T add(Class<A> clz, IPathMsgAction<A> action) {
-        parseApi().add(clz, action);
-        return getThis();
-    }
-
-    @Override
-    public T clearAddParseMap() {
-        parseApi().clearPutParseMap();
+    public <A, B> T add(TypeToken<A> root, TypeToken<B> token, IPathMsgAction<B> action) {
+        parseApi().add(root, token, action);
         return getThis();
     }
 

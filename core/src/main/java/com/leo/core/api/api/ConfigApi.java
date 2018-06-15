@@ -49,7 +49,7 @@ public class ConfigApi<T extends ConfigApi> extends ThisApi<T> implements IConfi
 
     @Override
     public <R> T executeConfig(String key, ITAction<R> action) {
-        if(!TextUtils.isEmits(key, action)){
+        if(TextUtils.isEmits(key, action)){
             if(hasConfig(key)){
                 action.action(getConfig(key));
             }
@@ -59,7 +59,7 @@ public class ConfigApi<T extends ConfigApi> extends ThisApi<T> implements IConfi
 
     @Override
     public <R> T executeConfig(String key, R compare, IAction action) {
-        if(!TextUtils.isEmits(key, compare, action)){
+        if(TextUtils.isEmits(key, compare, action)){
             if(hasConfig(key) && TextUtils.equals(getConfig(key), compare)){
                 action.execute();
             }

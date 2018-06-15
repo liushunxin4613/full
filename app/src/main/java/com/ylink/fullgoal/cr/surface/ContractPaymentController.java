@@ -6,6 +6,9 @@ import com.ylink.fullgoal.fg.ContractPaymentFg;
 import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 
+/**
+ * 合同付款申请单
+ */
 public class ContractPaymentController<T extends ContractPaymentController> extends BaseStringController<T, ContractPaymentFg> {
 
     @Override
@@ -16,6 +19,11 @@ public class ContractPaymentController<T extends ContractPaymentController> exte
     @Override
     public ContractPaymentFg getDB() {
         return super.getDB();
+    }
+
+    @Override
+    protected Class<ContractPaymentFg> getUBClz() {
+        return ContractPaymentFg.class;
     }
 
     @Override

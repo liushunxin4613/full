@@ -24,11 +24,20 @@ public class TextUtils {
 
     public static boolean isEmits(Object... args) {
         for (Object obj : args) {
-            if(count(obj) <= 0){
-                return true;
+            if (count(obj) >= 0) {
+                return false;
             }
         }
-        return false;
+        return true;
+    }
+
+    public static boolean check(Object... args) {
+        for (Object obj : args) {
+            if (count(obj) <= 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean isEmpty(List data) {
@@ -59,18 +68,18 @@ public class TextUtils {
         return isEmpty(text) || isEmpty(text.toString().trim());
     }
 
-    public static int count(Object obj){
-        if(obj == null){
+    public static int count(Object obj) {
+        if (obj == null) {
             return -1;
-        } else if(obj instanceof CharSequence){
+        } else if (obj instanceof CharSequence) {
             return ((CharSequence) obj).length();
-        } else if(obj.getClass().isArray()){
-            return ((Object[])obj).length;
-        } else if(obj instanceof Collection){
+        } else if (obj.getClass().isArray()) {
+            return ((Object[]) obj).length;
+        } else if (obj instanceof Collection) {
             return ((Collection) obj).size();
-        } else if(obj instanceof Map){
+        } else if (obj instanceof Map) {
             return ((Map) obj).size();
-        } else if(obj instanceof SparseArray){
+        } else if (obj instanceof SparseArray) {
             return ((SparseArray) obj).size();
         }
         return 1;
@@ -286,13 +295,13 @@ public class TextUtils {
         return separate;
     }
 
-    public static String getIntFormat(int num, boolean enable){
-        if(num == 0){
+    public static String getIntFormat(int num, boolean enable) {
+        if (num == 0) {
             return enable ? "零" : "0";
         } else {
             StringBuilder rn = new StringBuilder();
             int test = num;
-            if(test < 0){
+            if (test < 0) {
                 rn.append("负");
                 test = -test;
             }
@@ -302,32 +311,32 @@ public class TextUtils {
             String ss = String.valueOf(test);
             boolean lin = false;
             int length = ss.length();
-            for (int i = 0; i < length; i++){
+            for (int i = 0; i < length; i++) {
                 int c = ss.charAt(i) - '0';
                 int cl = length - i - 1;
                 int chu = cl / xtrim.length;
                 int yu = cl % xtrim.length;
-                if(c == 0){
+                if (c == 0) {
                     lin = true;
                 } else {
-                    if(lin){
+                    if (lin) {
                         rn.append("零");
                         lin = false;
                     }
                     rn.append(enable ? root[c - 1] : c).append(xtrim[yu]);
                 }
-                if(yu == 0 && chu < ytrim.length){
+                if (yu == 0 && chu < ytrim.length) {
                     rn.append(ytrim[chu]);
                 }
             }
-            if(rn.toString().startsWith("一十")){
+            if (rn.toString().startsWith("一十")) {
                 return rn.substring(1);
             }
             return rn.toString();
         }
     }
 
-    public static String getRandom(){
+    public static String getRandom() {
         String time = String.valueOf(System.currentTimeMillis());
         String random = String.valueOf(Math.random());
         return time + random.substring(2, random.length());

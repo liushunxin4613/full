@@ -9,25 +9,21 @@ public interface IParseApi<T extends IParseApi> extends IPathMsgApi<T> {
 
     T copy();
 
-    T addRootType(Class... args);
+    <A> T add(Class<A> root, IPathMsgAction<A> action);
 
-    T addRootType(TypeToken... args);
+    <A> T add(TypeToken<A> root, IPathMsgAction<A> action);
 
-    T clearRootData();
+    <A, B> T add(Class<A> root, Class<B> clz, IPathMsgAction<B> action);
 
-    <A> T put(String key, TypeToken<A> token);
+    <A, B> T addList(Class<A> root, Class<B> clz, IPathMsgAction<List<B>> action);
 
-    <A> T put(String key, Class<A> clz);
+    <A, B> T add(Class<A> root, TypeToken<B> token, IPathMsgAction<B> action);
 
-    T clearPutParseMap();
+    <A, B> T add(TypeToken<A> root, Class<B> clz, IPathMsgAction<B> action);
 
-    <A> T add(TypeToken<A> token, IPathMsgAction<A> action);
+    <A, B> T addList(TypeToken<A> root, Class<B> clz, IPathMsgAction<List<B>> action);
 
-    <A> T add(Class<A> clz, IPathMsgAction<A> action);
-
-    <A> T addList(Class<A> clz, IPathMsgAction<List<A>> action);
-
-    T clearAddParseMap();
+    <A, B> T add(TypeToken<A> root, TypeToken<B> token, IPathMsgAction<B> action);
 
     T clearParse();
 

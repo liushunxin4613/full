@@ -8,7 +8,7 @@ public class DataTypeApi<T extends DataTypeApi> extends ThisApi<T> implements ID
 
     @Override
     public String formatString(String format, Object... args) {
-        if(!TextUtils.isEmits(format, args)){
+        if(TextUtils.isEmits(format, args)){
             return String.format(format, args);
         }
         return format;

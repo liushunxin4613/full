@@ -23,6 +23,12 @@ public class ContractPaymentFg {
     private String name;
     private String status;
 
+    /**
+     * 此处不可取消
+     */
+    public ContractPaymentFg() {
+    }
+
     public String getApplicationDate() {
         return applicationDate;
     }
