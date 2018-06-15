@@ -1,4 +1,4 @@
-package com.ylink.fullgoal.vo1;
+package com.ylink.fullgoal.vo;
 
 import com.google.gson.reflect.TypeToken;
 import com.ylink.fullgoal.fg.SerialVersionTag;

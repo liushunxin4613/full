@@ -36,6 +36,11 @@ import java.util.Map;
 
 import butterknife.Bind;
 
+import static com.leo.core.util.DateUtil.getDDate;
+import static com.leo.core.util.DateUtil.getDateString;
+import static com.leo.core.util.DateUtil.getMDate;
+import static com.leo.core.util.DateUtil.getNowDate;
+import static com.leo.core.util.DateUtil.getYDate;
 import static com.leo.core.util.TextUtils.getListData;
 import static com.ylink.fullgoal.config.Config.APPROVAL_STATUS;
 import static com.ylink.fullgoal.config.Config.BILL_TYPES;
@@ -103,6 +108,22 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     }
 
     private String getDateText() {
+        if (!TextUtils.isEmpty(dateText)) {
+            switch (dateText) {
+                case "当天":
+                    return getDateString(getNowDate());
+                case "七天":
+                    return getDateString(getDDate(-7));
+                case "一个月":
+                    return getDateString(getMDate(-1));
+                case "三个月":
+                    return getDateString(getMDate(-3));
+                case "六个月":
+                    return getDateString(getMDate(-6));
+                case "一年":
+                    return getDateString(getYDate(-1));
+            }
+        }
         return "";
     }
 

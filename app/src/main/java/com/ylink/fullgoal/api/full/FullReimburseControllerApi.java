@@ -137,9 +137,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setRightTv("提交", v -> submit());
                     break;
                 case QR:
-                    setRightTv("确认", v -> {
-
-                    });
+                    setRightTv("确认", v -> submit());
                     break;
                 case XG:
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
@@ -231,7 +229,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         //携程机票
         executeSearch(CtripTicketsFg.class, fg -> iso(DVo::getCtrip, obj -> obj.initDB(fg)));
         //票据修改金额
-        /*executeNon(getFinish(BillVo.class), (BillVo vo) -> execute((BillVo billVo) -> {
+        /*executeNon(getFinish(BillVos.class), (BillVos vo) -> execute((BillVos billVo) -> {
                     if (TextUtils.equals(vo.getId(), billVo.getId())) {
                         billVo.setMoney(vo.getMoney());
                         getVo().initTotalAmountLower();

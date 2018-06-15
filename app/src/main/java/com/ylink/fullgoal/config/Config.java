@@ -14,7 +14,7 @@ import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY_BILL_TYPE_YB;
 public class Config {
 
     //配置
-    public final static boolean DEBUG = true;//debug模式是否开启
+    public final static boolean DEBUG = false;//debug模式是否开启5
     final static boolean LOCAL = false;//本地模式是否开启
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间

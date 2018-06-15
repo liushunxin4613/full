@@ -231,4 +231,72 @@ public class DateUtil {
         return null;
     }
 
+    //新增 2018-06-15
+
+    /**
+     * 修改天数
+     * @param day 新增天数
+     * @return 时间
+     */
+    public static Date getDDate(int day){
+        return getDate(new Date(), 0, 0, day, 0, 0, 0);
+    }
+
+    /**
+     * 修改月数
+     * @param month 新增月数
+     * @return 时间
+     */
+    public static Date getMDate(int month){
+        return getDate(new Date(), 0, month, 0, 0, 0, 0);
+    }
+
+    /**
+     * 修改年数
+     * @param year 新增年数
+     * @return 时间
+     */
+    public static Date getYDate(int year){
+        return getDate(new Date(), year, 0, 0, 0, 0, 0);
+    }
+
+    /**
+     * 修改时间
+     * @param date 时间
+     * @param year 新增年数
+     * @param month 新增月数
+     * @param day 新增天数
+     * @param hour 新增小时数
+     * @param minute 新增分钟数
+     * @param second 新增秒数
+     * @return 时间
+     */
+    public static Date getDate(Date date, int year, int month, int day, int hour,
+                        int minute, int second) {
+        if (date != null) {
+            Calendar theCa = Calendar.getInstance();
+            theCa.setTime(date);
+            if (year != 0) {
+                theCa.add(Calendar.YEAR, year);
+            }
+            if (month != 0) {
+                theCa.add(Calendar.MONTH, month);
+            }
+            if (day != 0) {
+                theCa.add(Calendar.DATE, day);
+            }
+            if (hour != 0) {
+                theCa.add(Calendar.HOUR, hour);
+            }
+            if (minute != 0) {
+                theCa.add(Calendar.MINUTE, minute);
+            }
+            if (second != 0) {
+                theCa.add(Calendar.SECOND, second);
+            }
+            return theCa.getTime();
+        }
+        return null;
+    }
+
 }

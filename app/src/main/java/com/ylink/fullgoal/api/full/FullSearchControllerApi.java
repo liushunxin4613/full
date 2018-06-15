@@ -33,23 +33,23 @@ import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
-import com.ylink.fullgoal.vo1.SearchVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 
-import static com.ylink.fullgoal.vo1.SearchVo.BUDGET_DEPARTMENT;
-import static com.ylink.fullgoal.vo1.SearchVo.BUSINESS;
-import static com.ylink.fullgoal.vo1.SearchVo.CONTRACT_BILL;
-import static com.ylink.fullgoal.vo1.SearchVo.COST_INDEX;
-import static com.ylink.fullgoal.vo1.SearchVo.PROJECT;
-import static com.ylink.fullgoal.vo1.SearchVo.REIMBURSEMENT;
-import static com.ylink.fullgoal.vo1.SearchVo.REPORT;
-import static com.ylink.fullgoal.vo1.SearchVo.SEARCHS;
-import static com.ylink.fullgoal.vo1.SearchVo.SERVE_BILL;
-import static com.ylink.fullgoal.vo1.SearchVo.XC_AIR;
+import static com.ylink.fullgoal.vo.SearchVo.BUDGET_DEPARTMENT;
+import static com.ylink.fullgoal.vo.SearchVo.BUSINESS;
+import static com.ylink.fullgoal.vo.SearchVo.CONTRACT_BILL;
+import static com.ylink.fullgoal.vo.SearchVo.COST_INDEX;
+import static com.ylink.fullgoal.vo.SearchVo.PROJECT;
+import static com.ylink.fullgoal.vo.SearchVo.REIMBURSEMENT;
+import static com.ylink.fullgoal.vo.SearchVo.REPORT;
+import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
+import static com.ylink.fullgoal.vo.SearchVo.SERVE_BILL;
+import static com.ylink.fullgoal.vo.SearchVo.XC_AIR;
 
 public class FullSearchControllerApi<T extends FullSearchControllerApi, C> extends RecycleControllerApi<T, C> {
 

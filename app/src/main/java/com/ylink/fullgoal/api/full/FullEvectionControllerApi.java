@@ -23,7 +23,7 @@ import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.RuleFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.vo.ImageVo;
-import com.ylink.fullgoal.vo1.SearchVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                     (bean, view) -> startSearch(SearchVo.PROJECT)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
-                checkAdd(data, gtv(DVo::getMoney), new TvH2MoreBean("金额", gtv(DVo::getMoney)));
+                checkAdd(data, gtv(DVo::getMoney), new TvH2Bean("金额", gtv(DVo::getMoney)));
             }
             checkAdd(data, gtv(DVo::getCause), new TvHEt3Bean("事由", gtv(DVo::getCause),
                     "请输入事由", text -> iso(DVo::getCause, obj -> obj.initDB(text))));

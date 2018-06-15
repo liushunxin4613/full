@@ -1,4 +1,4 @@
-package com.ylink.fullgoal.vo1;
+package com.ylink.fullgoal.vo;
 
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IReturnAction;

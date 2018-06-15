@@ -38,7 +38,7 @@ import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseItemControllerApi;
-import com.ylink.fullgoal.vo1.BillVo;
+import com.ylink.fullgoal.vo.ImageVo;
 
 public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemControllerApi<T, C> {
 
@@ -95,10 +95,10 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindBeanApi(GridPhotoBean.class, (api, bean)
                 -> api.setImage(iconIv, bean.getRes())
                 .execute(() -> {
-                    if (bean.getObj() instanceof BillVo) {
-                        BillVo vo = (BillVo) bean.getObj();
-                        setText(nameTv, String.format("金额: %s", TextUtils.isEmpty(vo.getMoney())
-                                ? "0" : vo.getMoney()));
+                    if (bean.getObj() instanceof ImageVo) {
+                        ImageVo vo = (ImageVo) bean.getObj();
+                        setText(nameTv, String.format("金额: %s", TextUtils.isEmpty(vo.getAmount())
+                                ? "0" : vo.getAmount()));
                     }
                 })
                 .setLayoutParams(iconIv, new LinearLayout.LayoutParams(-1, bean.getUnit()))

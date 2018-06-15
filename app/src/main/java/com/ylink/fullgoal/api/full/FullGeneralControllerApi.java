@@ -10,7 +10,7 @@ import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.UserController;
 import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.fg.RuleFg;
-import com.ylink.fullgoal.vo1.SearchVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
                             (bean, view) -> startSearch(SearchVo.COST_INDEX)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
-                checkAdd(data, gtv(DVo::getMoney), new TvH2MoreBean("金额", gtv(DVo::getMoney)));
+                checkAdd(data, gtv(DVo::getMoney), new TvH2Bean("金额", gtv(DVo::getMoney)));
             }
             checkAdd(data, gtv(DVo::getCause), new TvHEt3Bean("事由", gtv(DVo::getCause),
                     "请输入事由", text -> iso(DVo::getCause, obj -> obj.initDB(text))));

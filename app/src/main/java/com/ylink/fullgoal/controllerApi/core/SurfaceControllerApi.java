@@ -24,7 +24,7 @@ import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.main.SurfaceActivity;
-import com.ylink.fullgoal.vo1.SearchVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -13,7 +13,6 @@ import com.leo.core.util.NetUtils;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.ylink.fullgoal.util.CameraUtil;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
 
@@ -34,7 +33,6 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
         LogUtil.openLog();//log
         NetUtils.init(getApplication());
         RetrofitFactory.show(false);
-        CameraUtil.init(getContext());//相机初始化
         //友盟初始化
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> new MaterialHeader(context));
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> new ClassicsFooter(context));

@@ -2,9 +2,11 @@ package com.ylink.fullgoal.bean;
 
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.vo1.InhibitionRuleVo;
 
 public class InhibitionRuleBean extends ApiBean<InhibitionRuleBean> {
+
+    public static final String STATE_RED = "退回";
+    public static final String STATE_YELLOW = "需特批";
 
     public InhibitionRuleBean(String state, String name, String detail) {
         super(name, detail);
@@ -14,9 +16,9 @@ public class InhibitionRuleBean extends ApiBean<InhibitionRuleBean> {
     private Integer getResId(String state){
         if(!TextUtils.isEmpty(state)){
             switch (state){
-                case InhibitionRuleVo.STATE_RED:
+                case STATE_RED:
                     return R.mipmap.icon_red;
-                case InhibitionRuleVo.STATE_YELLOW:
+                case STATE_YELLOW:
                     return R.mipmap.icon_yellow;
             }
         }

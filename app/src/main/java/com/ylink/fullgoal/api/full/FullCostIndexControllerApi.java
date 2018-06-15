@@ -13,8 +13,7 @@ import com.ylink.fullgoal.bean.MoneyBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.view.MViewPager;
-import com.ylink.fullgoal.vo1.CastTargetVo;
-import com.ylink.fullgoal.vo1.SearchVo;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,6 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private boolean isOpen;
     private int miniSpeed = 0;
     private int miniWidth = 120;
-    private CastTargetVo targetVo;
     private BasePagerAdapter adapter;
 
     public FullCostIndexControllerApi(C controller) {
@@ -92,15 +90,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     @Override
     public void initData() {
         super.initData();
-        testCastTargetVo();
-        initCastTargetVo();
     }
 
-    private void testCastTargetVo() {
-        targetVo = new CastTargetVo("会议费", "20000.00", "需要分摊", "3500.00", "16500.00", "34.50%");
-    }
-
-    private void initCastTargetVo() {
+    /*private void initCastTargetVo() {
+        //"会议费", "20000.00", "需要分摊", "3500.00", "16500.00", "34.50%"
         executeNon(targetVo, vo
                 -> setText(nameTv, vo.getCastTarget())
                 .setText(detailTv, vo.getMoney())
@@ -108,7 +101,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                 .setText(taxTv, vo.getTaxMoney())
                 .setText(noneTaxMoneyTv, vo.getHasCastMoney())
                 .setText(yetCompleteTv, vo.getYetApportionPercent()));
-    }
+    }*/
 
     private View getCurrentItemView() {
         return viewPager.getChildAt(viewPager.getCurrentItem());
@@ -156,14 +149,8 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             adapter.notifyDataSetChanged();
         });
         addVgBean(api, data -> {
-            data.add(new MoneyBean("金额", "13100.00", "请输入金额", text -> {
-                ee("金额", text);
-            }));
-            data.add(new MoneyBean("分摊比例", "65.50", "请输入分摊比例", text -> {
-                ee("分摊比例", text);
-            }));
-            /*data.add(new TvH2MoreBean("合同付款申请单", , "请选择合同付款申请单",
-                    (bean, view) -> startSearch(SearchVo.CONTRACT_BILL)));*/
+            data.add(new MoneyBean("金额", "13100.00", "请输入金额", text -> ee("金额", text)));
+            data.add(new MoneyBean("分摊比例", "65.50", "请输入分摊比例", text -> ee("分摊比例", text)));
         });
         return api;
     }
