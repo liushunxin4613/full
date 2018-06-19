@@ -25,6 +25,12 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends T
         return getThis();
     }
 
+    @Override
+    public T clear() {
+        this.db = null;
+        return getThis();
+    }
+
     protected <A> A toUB(IReturnAction<DB, A> action) {
         return getExecute(getDB(), action);
     }

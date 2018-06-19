@@ -231,8 +231,8 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private void onExceptions(Exceptions exception) {
-        //executeNon(exception.getE(), Throwable::printStackTrace);
-        LogUtil.ii(this, "本次异常: " + exception.getMessage());
+        executeNon(exception.getE(), Throwable::printStackTrace);
+//        LogUtil.ii(this, "本次异常: " + exception.getMessage());
         onObj(exception);
     }
 

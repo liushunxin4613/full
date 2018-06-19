@@ -77,7 +77,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
         //禁止规则
         if (isAlterEnable()) {
             List<RuleFg> data = gt(DVo::getRuleList, RuleController::getViewBean);
-            execute(data, item -> add(new InhibitionRuleBean(null, item.getRuleName(),
+            execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(), item.getRuleName(),
                     item.getRuleRemark())));
         }
         //VgBean 出差申请单

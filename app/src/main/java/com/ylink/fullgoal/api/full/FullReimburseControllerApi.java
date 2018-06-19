@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.bean.Bol;
+import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.DisneyUtil;
@@ -19,11 +20,15 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.ItemControllerApi;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
+import com.ylink.fullgoal.bean.HintDialogBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.cr.core.AddController;
+import com.ylink.fullgoal.cr.surface.SbumitFlagController;
+import com.ylink.fullgoal.cr.surface.SerialNoController;
 import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
 import com.ylink.fullgoal.fg.CostFg;
@@ -48,6 +53,7 @@ import static com.leo.core.util.TextUtils.getSetData;
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.TP;
+import static com.ylink.fullgoal.config.ComConfig.UPDATE_MONEY;
 import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.ComConfig.XQ;
 import static com.ylink.fullgoal.config.Config.BILL_TYPE_TITLES;
@@ -157,6 +163,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
         });
         //test
+        iso(DVo::getImageList, obj -> obj.setOnCom(this));
         iso(DVo::getAgent, obj -> obj.initDB(getUser()));
         iso(DVo::getReimbursement, obj -> obj.initDB(getUser()));
         iso(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
@@ -170,6 +177,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         add(ImageFg.class, (path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(msg)) {
                 iso(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
+                iso(DVo::getSbumitFlag, SbumitFlagController::open);
                 iso(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
             }
         });
@@ -181,16 +189,18 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                             switch (getState()) {
                                 case FQ://经办人发起
                                     show("报销成功");
+                                    again();
                                     break;
                                 case QR://经办人确认
                                     show("报销确认成功");
+                                    getActivity().finish();
                                     break;
                                 case XG://经办人修改
                                     show("报销修改成功");
+                                    getActivity().finish();
                                     break;
                             }
                         }
-                        getActivity().finish();
                         break;
                 }
             }
@@ -198,11 +208,31 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         add(RVo.class, (path, what, msg, bean) -> {
             switch (path) {
                 case FULL_REIMBURSE_QUERY://报销获取
-                    setVo(bean.get());
-                    iso(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
+                    bean.get(getVo());
                     notifyDataChanged();
-//                    ee("core", getVo().toCheckString());
                     break;
+            }
+        });
+    }
+
+    private void again() {
+        FullDialogControllerApi api = getDialogControllerApi(FullDialogControllerApi.class);
+        api.dialogShow().onBindViewHolder(new HintDialogBean("温馨提示", "是否需要再次报销", "确认", "取消", (bean, view) -> {
+            api.dismiss();
+            iso(DVo::getImageList, AddController::clear);
+            iso(DVo::getSerialNo, SerialNoController::clear);
+            notifyDataChanged();
+        }, (bean, view) -> {
+            api.dismiss();
+            getActivity().finish();
+        }), 0).execute(() -> {
+            Window window = api.getDialog().getWindow();
+            if (window != null) {
+                window.setGravity(Gravity.CENTER);
+                WindowManager.LayoutParams lp = window.getAttributes();
+                IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
+                lp.width = (int) (display.getX() * 0.8);
+                window.setAttributes(lp);
             }
         });
     }
@@ -229,14 +259,21 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         //携程机票
         executeSearch(CtripTicketsFg.class, fg -> iso(DVo::getCtrip, obj -> obj.initDB(fg)));
         //票据修改金额
-        /*executeNon(getFinish(BillVos.class), (BillVos vo) -> execute((BillVos billVo) -> {
-                    if (TextUtils.equals(vo.getId(), billVo.getId())) {
-                        billVo.setMoney(vo.getMoney());
-                        getVo().initTotalAmountLower();
-                    }
-                }, getVo().getBillData(), getVo().getStayBillData(), getVo().getTrafficBillData(),
-                getExecute(getVo().getAirDataVo(), AirDataVo::getAirBillData)));*/
+        execute(getFinish(), ImageVo.class, fg -> iso(DVo::getImageList, obj
+                -> obj.updateMoney(fg)));
         notifyDataChanged();
+    }
+
+    @Override
+    public void onCom(int what, String com, String msg, Object... args) {
+        super.onCom(what, com, msg, args);
+        executeNon(com, key -> {
+            switch (key) {
+                case UPDATE_MONEY:
+                    iso(DVo::getMoney, obj -> obj.initDB(msg));
+                    break;
+            }
+        });
     }
 
     @Override

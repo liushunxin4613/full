@@ -470,11 +470,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected T setVo(DVo vo){
-        this.vo = vo;
-        return getThis();
-    }
-
     protected DVo getVo() {
         if (vo == null) {
             vo = new DVo();

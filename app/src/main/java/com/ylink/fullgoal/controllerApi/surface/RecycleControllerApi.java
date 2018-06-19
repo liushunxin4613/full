@@ -163,6 +163,29 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         getRecycleAdapter().setCallback(this);
     }
 
+    protected void initDataAction(IObjAction<List<BaseApiBean>> action) {
+        clear();
+        if (action != null) {
+            List<BaseApiBean> data;
+            action.execute(data = new ArrayList<>());
+            execute(getLineData(data), this::add);
+        }
+        notifyDataSetChanged();
+    }
+
+    protected List<BaseApiBean> getLineData(List<BaseApiBean> data) {
+        if (!TextUtils.isEmpty(data)) {
+            List<BaseApiBean> dat = new ArrayList<>();
+            int count = TextUtils.count(data);
+            for (int i = 0; i < count; i++) {
+                dat.add(data.get(i));
+                dat.add(new LineBean());
+            }
+            return dat;
+        }
+        return null;
+    }
+
     public T clear() {
         adapterDataApi().removeAll();
         return getThis();

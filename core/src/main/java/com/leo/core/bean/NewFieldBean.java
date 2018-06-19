@@ -1,5 +1,7 @@
 package com.leo.core.bean;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.config.PatternConfig;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IObjAction;
@@ -10,6 +12,7 @@ import com.leo.core.util.TextUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -22,6 +25,15 @@ public class NewFieldBean {
             if (obj instanceof IController) {
                 IController c = (IController) obj;
                 return new Entry(c.getUBKey(args), c.getUB(args));
+            }
+            return null;
+        });
+    }
+
+    public Map<String, Object> getFilterMap(String... args){
+        return getFieldMap((key, obj) -> {
+            if(Arrays.asList(args).contains(key)){
+                return new Entry<>(key, obj);
             }
             return null;
         });
@@ -107,12 +119,15 @@ public class NewFieldBean {
     private boolean checkField(Field field) {
         if (field != null) {
             int m = field.getModifiers();
-            return field != null && !Modifier.isStatic(m)
+            return field != null && !Modifier.isStatic(m) && isOther(field)
                     && !Modifier.isAbstract(m) && !Modifier.isFinal(m) && !Modifier.isTransient(m)
-                    && IController.class.isAssignableFrom(field.getType())
                     && !Modifier.isInterface(field.getType().getModifiers());
         }
         return false;
+    }
+
+    protected boolean isOther(@NonNull Field field){
+        return true;
     }
 
 }

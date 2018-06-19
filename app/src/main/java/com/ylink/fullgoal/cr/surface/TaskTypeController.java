@@ -29,9 +29,9 @@ public class TaskTypeController<T extends TaskTypeController> extends StringCont
             case FQ:
                 return "1";
             case QR:
-                return "2";
-            case XG:
                 return "3";
+            case XG:
+                return "6";
         }
         return super.getOnUB(key);
     }

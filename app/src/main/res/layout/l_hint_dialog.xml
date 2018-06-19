@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingBottom="@dimen/y20"
+        android:paddingLeft="@dimen/x48"
+        android:paddingRight="@dimen/x48"
+        android:paddingTop="@dimen/y30"
+        android:textColor="@color/tv"
+        android:textSize="@dimen/tv"
+        tools:ignore="InefficientWeight,RtlHardcoded"
+        tools:text="温馨提示" />
+
+    <TextView
+        android:id="@+id/detail_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingBottom="@dimen/y30"
+        android:paddingLeft="@dimen/x48"
+        android:paddingRight="@dimen/x48"
+        android:paddingTop="@dimen/y20"
+        android:textColor="@color/cc3"
+        android:textSize="@dimen/tv1"
+        tools:ignore="InefficientWeight,RtlHardcoded"
+        tools:text="是否需要再次报销" />
+
+    <LinearLayout
+        style="@style/padding_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/x48"
+        android:paddingRight="@dimen/x48">
+
+        <TextView
+            android:id="@+id/confirm_tv"
+            style="@style/padding"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/EE4433"
+            android:textSize="@dimen/tv"
+            tools:ignore="InefficientWeight,RtlHardcoded"
+            tools:text="确认" />
+
+        <TextView
+            android:id="@+id/cancel_tv"
+            style="@style/padding"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/blue_light"
+            android:textSize="@dimen/tv"
+            tools:ignore="InefficientWeight,RtlHardcoded"
+            tools:text="取消" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -13,6 +13,8 @@ public class UserFg {
     private String userCode;
     private String userName;
 
+    private transient String bank;
+
     /**
      * 此处不可去除
      */
@@ -40,4 +42,11 @@ public class UserFg {
         this.userName = userName;
     }
 
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank;
+    }
 }

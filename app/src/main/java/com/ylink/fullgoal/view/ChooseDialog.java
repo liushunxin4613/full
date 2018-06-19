@@ -1,9 +1,9 @@
 package com.ylink.fullgoal.view;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,7 +19,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ChooseDialog extends Dialog {
+public class ChooseDialog extends AlertDialog {
 
     @Bind(R.id.name_tv)
     TextView nameTv;

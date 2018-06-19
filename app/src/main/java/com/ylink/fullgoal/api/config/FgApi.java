@@ -103,6 +103,13 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
     }
 
     /**
+     * 报销确认请求数据
+     */
+    public void queryBank() {
+        api().post(ROOT_URL, "Bank_mess.action");
+    }
+
+    /**
      * 获取报销列表
      */
     public void queryApplicationForm(String status, String time, String billType, String type) {

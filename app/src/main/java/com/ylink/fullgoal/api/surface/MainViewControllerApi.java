@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.api.full.FullBankControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
@@ -37,7 +38,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 new IconTvMoreBean(R.mipmap.test_icon2, "出差费用报销", (bean, view)
                         -> evection(FQ)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view)
-                        -> startSurfaceActivity(FullReimburseDataControllerApi.class)))
+                                -> startSurfaceActivity(FullReimburseDataControllerApi.class)),
+                        new IconTvMoreBean(R.mipmap.test_icon2, "选择银行卡号", (bean, view)
+                                -> startSurfaceActivity(FullBankControllerApi.class)))
                 .notifyDataSetChanged();
         if (DEBUG) {
             addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般报销确认", (bean, view) -> {

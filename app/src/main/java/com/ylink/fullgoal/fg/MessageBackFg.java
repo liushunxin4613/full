@@ -35,6 +35,8 @@ public class MessageBackFg extends StatusCodeFg {
     private List<TravelFormFg> travel;
     //金额
     private String totalAmountLower;
+    //规则信息列表
+    private List<RuleFg> ruleList;
 
     public UserFg getAgent() {
         return agent;
@@ -138,6 +140,14 @@ public class MessageBackFg extends StatusCodeFg {
 
     public void setTotalAmountLower(String totalAmountLower) {
         this.totalAmountLower = totalAmountLower;
+    }
+
+    public List<RuleFg> getRuleList() {
+        return ruleList;
+    }
+
+    public void setRuleList(List<RuleFg> ruleList) {
+        this.ruleList = ruleList;
     }
 
 }

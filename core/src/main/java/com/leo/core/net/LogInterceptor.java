@@ -57,22 +57,24 @@ public class LogInterceptor implements Interceptor {
         BufferedSource source = response.body().source();
         source.request(Long.MAX_VALUE);
         Buffer res = source.buffer().clone();
-        print("url", url);
-        print("request size", FileSizeUtil.getFormetFileSize(request.body().contentLength()));
-        print("response size", FileSizeUtil.getFormetFileSize(response.body().contentLength()));
-        print("code", String.format("%d", response.code()));
-        print("method", request.method());
-        print("time", String.format("%.1fms", (System.nanoTime() - t1) / 1e6d));
-        print("head", response.headers().toString());
-        printParams(request.body(), req);
-        LogUtil.ii(this, "response: " + decode(res.readUtf8()));
+        InterceptorBean bean = new InterceptorBean();
+        bean.setUrl(url);
+        bean.setRequestSize(FileSizeUtil.getFormetFileSize(request.body().contentLength()));
+        bean.setResponseSize(FileSizeUtil.getFormetFileSize(response.body().contentLength()));
+        bean.setCode(String.format("%d", response.code()));
+        bean.setMethod(request.method());
+        bean.setTime(String.format("%.1fms", (System.nanoTime() - t1) / 1e6d));
+        bean.setHead(response.headers().toString());
+        bean.setParams(printParams(request.body(), req));
+        bean.setResponse(decode(res.readUtf8()));
+        bean.completed();
         req.close();
         res.close();
+        print(bean);
         return response;
     }
 
-    private void printParams(RequestBody body, Buffer req) {
-        String params;
+    private String printParams(RequestBody body, Buffer req) {
         if (body instanceof FormBody) {
             FormBody formBody = (FormBody) body;
             StringBuilder builder = new StringBuilder();
@@ -82,11 +84,10 @@ public class LogInterceptor implements Interceptor {
                         .append("=")
                         .append(getParams(decode(formBody.encodedValue(i)), null));
             }
-            params = builder.toString().replaceAll(RX, RX_TO);
+            return builder.toString().replaceAll(RX, RX_TO);
         } else {
-            params = req == null ? null : decode(req.readUtf8());
+            return req == null ? null : decode(req.readUtf8());
         }
-        LogUtil.ii(this, "params: " + params);
     }
 
     private String getParams(String params, Object obj) {
@@ -140,6 +141,20 @@ public class LogInterceptor implements Interceptor {
         if (!TextUtils.isEmpty(key)) {
             LogUtil.ii(this, key + ": " + value);
         }
+    }
+
+    private void print(InterceptorBean bean) {
+        if (bean != null && bean.check()) {
+            print("url", bean.getUrl());
+            print("request size", bean.getRequestSize());
+            print("response size", bean.getResponseSize());
+            print("code", bean.getCode());
+            print("method", bean.getMethod());
+            print("time", bean.getTime());
+            print("head", bean.getHead());
+            print("params", bean.getParams());
+        }
+        print("response", bean.getResponse());
     }
 
 }

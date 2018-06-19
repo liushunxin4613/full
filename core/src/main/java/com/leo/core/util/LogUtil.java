@@ -29,23 +29,31 @@ public class LogUtil {
         return getApi().getLog(obj);
     }
 
-    public static String getLog(Object... obj) {
-        return getApi().getLog(obj);
+    public static String getLog(boolean json, Object obj) {
+        return getApi().getLog(json, obj);
+    }
+
+    public static String getLog(Object... args) {
+        return getApi().getLog(args);
+    }
+
+    public static String getLog(boolean json, Object... args) {
+        return getApi().getLog(json, args);
     }
 
     public static void ii(Object in, Object param) {
         getApi().ii(in, param);
     }
 
-    public static void ii(Object in, Object... param) {
-        getApi().ii(in, param);
+    public static void ii(Object in, Object... args) {
+        getApi().ii(in, args);
     }
 
     public static void ee(Object in, Object param) {
         getApi().ee(in, param);
     }
 
-    public static void ee(Object in, Object... param) {
-        getApi().ee(in, param);
+    public static void ee(Object in, Object... args) {
+        getApi().ee(in, args);
     }
 }

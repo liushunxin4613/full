@@ -7,7 +7,7 @@ import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.config.Api;
+import com.leo.core.net.Api;
 import com.ylink.fullgoal.config.UrlConfig;
 
 import java.io.File;
@@ -319,7 +319,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
             if (!TextUtils.isEmpty(actionMap)) {
                 for (Map.Entry<String, Object> entry : actionMap.entrySet()) {
                     if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
-                        map.put(entry.getKey(), controllerApi().getLog(entry.getValue()));
+                        map.put(entry.getKey(), LogUtil.getLog(false, entry.getValue()));
                     }
                 }
 //                LogUtil.ii(this, "map -> " + LogUtil.getLog(map));

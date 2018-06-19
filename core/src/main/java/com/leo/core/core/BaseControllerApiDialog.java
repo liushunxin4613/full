@@ -1,9 +1,9 @@
 package com.leo.core.core;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 
 import com.leo.core.R;
 import com.leo.core.iapi.inter.IObjAction;
@@ -12,7 +12,7 @@ import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
-public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extends IControllerApi> extends Dialog implements IAFVApi<T, C> {
+public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extends IControllerApi> extends AlertDialog implements IAFVApi<T, C> {
 
     private IControllerApi controllerApi;
     private Class<? extends IControllerApi> apiClz;

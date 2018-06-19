@@ -26,6 +26,8 @@ public class DataFg extends StatusCodeFg {
     private List<CtripTicketsFg> ctriptList;
     //报销查询列表
     private List<ApplicationtFg> applicationtList;
+    //银行卡查询列表
+    private List<BankFg> bank;
 
     public List<UserFg> getUserList() {
         return userList;
@@ -113,6 +115,14 @@ public class DataFg extends StatusCodeFg {
 
     public void setApplicationtList(List<ApplicationtFg> applicationtList) {
         this.applicationtList = applicationtList;
+    }
+
+    public List<BankFg> getBank() {
+        return bank;
+    }
+
+    public void setBank(List<BankFg> bank) {
+        this.bank = bank;
     }
 
 }

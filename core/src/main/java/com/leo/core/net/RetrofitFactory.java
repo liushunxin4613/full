@@ -9,7 +9,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.leo.core.config.Config;
-import com.leo.core.util.LogUtil;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -133,11 +132,6 @@ public class RetrofitFactory {
                     int.class, Integer.class, INT));
             OkHttpClient.Builder client = new OkHttpClient.Builder();
             client.addInterceptor(new LogInterceptor());
-            /*try {
-                client.addInterceptor(new LogInterceptor());
-            } catch (Exception ignored) {
-                LogUtil.ee(this, "连接异常: " + ignored.getMessage());
-            }*/
             client.connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
                     .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
                     .writeTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS);

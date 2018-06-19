@@ -46,7 +46,15 @@ public interface ILogApi<T extends ILogApi, I, P> extends IApi {
      * @param obj 类
      * @return 非空log
      */
-    String getLog(P obj);
+    String getLog(boolean json, P obj);
+
+    /**
+     * 获取非空log
+     *
+     * @param args 类
+     * @return 非空log
+     */
+    String getLog(boolean json, P... args);
 
     /**
      * 获取非空log
@@ -54,7 +62,15 @@ public interface ILogApi<T extends ILogApi, I, P> extends IApi {
      * @param obj 类
      * @return 非空log
      */
-    String getLog(P... obj);
+    String getLog(P obj);
+
+    /**
+     * 获取非空log
+     *
+     * @param args 类
+     * @return 非空log
+     */
+    String getLog(P... args);
 
     /**
      * I 级输出
@@ -69,27 +85,27 @@ public interface ILogApi<T extends ILogApi, I, P> extends IApi {
      * I 级输出
      *
      * @param in    输入数据
-     * @param param 输入参数
+     * @param args 输入参数
      * @return 本身
      */
-    T ii(I in, P... param);
+    T ii(I in, P... args);
 
     /**
      * E 级输出
      *
      * @param in    输入数据
-     * @param param 输入参数
+     * @param args 输入参数
      * @return 本身
      */
-    T ee(I in, P param);
+    T ee(I in, P args);
 
     /**
      * E 级输出
      *
      * @param in    输入数据
-     * @param param 输入参数
+     * @param args 输入参数
      * @return 本身
      */
-    T ee(I in, P... param);
+    T ee(I in, P... args);
 
 }

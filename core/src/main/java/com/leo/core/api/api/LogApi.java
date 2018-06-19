@@ -52,15 +52,19 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public String getLog(Object obj) {
+    public String getLog(boolean json, Object obj) {
         if (obj instanceof String) {
             return (String) obj;
         } else if (obj instanceof Comparable) {
             return String.valueOf(obj);
         } else if (obj != null) {
             try {
-                String json = gson.toJson(obj);
-                return JsonShowUtil.getShowJson("\n" + json);
+                String text = gson.toJson(obj);
+                if (json) {
+                    return JsonShowUtil.getShowJson("\n" + text);
+                } else {
+                    return text;
+                }
             } catch (Exception e) {
                 return obj.toString();
             }
@@ -69,17 +73,27 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public String getLog(Object... obj) {
+    public String getLog(boolean json, Object... args) {
         StringBuilder log = new StringBuilder(DEFAULT);
-        if (obj != null) {
-            for (int j = 0; j < obj.length; j++) {
+        if (args != null) {
+            for (int j = 0; j < args.length; j++) {
                 if (j != 0) {
                     log.append(INTERVAL);
                 }
-                log.append(getLog(obj[j]));
+                log.append(getLog(json, args[j]));
             }
         }
         return log.toString();
+    }
+
+    @Override
+    public String getLog(Object obj) {
+        return getLog(true, obj);
+    }
+
+    @Override
+    public String getLog(Object... args) {
+        return getLog(true, args);
     }
 
     @Override
@@ -91,9 +105,9 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public LogApi ii(Object obj, Object... param) {
-        if (check(obj, param) && i) {
-            log(true, name, getLog(param));
+    public LogApi ii(Object obj, Object... args) {
+        if (check(obj, args) && i) {
+            log(true, name, getLog(args));
         }
         return this;
     }
@@ -107,9 +121,9 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     }
 
     @Override
-    public LogApi ee(Object obj, Object... param) {
-        if (check(obj, param) && e) {
-            log(false, name, getLog(param));
+    public LogApi ee(Object obj, Object... args) {
+        if (check(obj, args) && e) {
+            log(false, name, getLog(args));
         }
         return this;
     }

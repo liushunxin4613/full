@@ -30,6 +30,12 @@ public interface IController<T extends IController, DB, UB> extends IApi {
     T initDB(DB db);
 
     /**
+     * 清理数据
+     * @return 本身
+     */
+    T clear();
+
+    /**
      * filed
      * @param action action
      * @return 本身

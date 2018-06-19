@@ -1,6 +1,9 @@
 package com.ylink.fullgoal.vo;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.bean.NewFieldBean;
+import com.leo.core.iapi.inter.IController;
 import com.ylink.fullgoal.cr.surface.BillTypeController;
 import com.ylink.fullgoal.cr.surface.CauseController;
 import com.ylink.fullgoal.cr.surface.ContractPaymentController;
@@ -21,6 +24,8 @@ import com.ylink.fullgoal.cr.surface.SerialNoController;
 import com.ylink.fullgoal.cr.surface.TaskTypeController;
 import com.ylink.fullgoal.cr.surface.TravelFormController;
 import com.ylink.fullgoal.cr.surface.UserController;
+
+import java.lang.reflect.Field;
 
 /**
  * 提交数据核心
@@ -71,6 +76,11 @@ public class DVo extends NewFieldBean {
     private ImageListController imageList;
     //评审结果集
     private RuleController ruleList;
+
+    @Override
+    protected boolean isOther(@NonNull Field field) {
+        return IController.class.isAssignableFrom(field.getType());
+    }
 
     public DVo() {
         initNewFields();

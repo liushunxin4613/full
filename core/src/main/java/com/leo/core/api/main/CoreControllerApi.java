@@ -800,23 +800,27 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public <B> B getFinish(Type... args) {
-        if (!TextUtils.isEmpty(finish) && !TextUtils.isEmpty(args)) {
-            int emptyCount = getEmptyLength(finish);
-            for (Type type : args) {
-                if (type != null) {
-                    if (TextUtils.equals(type, String.class)) {
-                        return (B) finish;
-                    } else {
-                        Object obj = decode(finish, type);
-                        if (obj != null && emptyCount == getEmptyLength(encode(obj))) {
-                            return (B) obj;
+        if(!TextUtils.isEmpty(finish)){
+            final String txt = finish.replaceAll(RX, "/");
+            if (!TextUtils.isEmpty(args)) {
+                int emptyCount = getEmptyLength(txt);
+                for (Type type : args) {
+                    if (type != null) {
+                        if (TextUtils.equals(type, String.class)) {
+                            return (B) txt;
+                        } else {
+                            Object obj = decode(txt, type);
+                            if (obj != null && emptyCount == getEmptyLength(encode(obj))) {
+                                return (B) obj;
+                            }
                         }
                     }
                 }
+                return null;
             }
-            return null;
+            return (B) txt;
         }
-        return (B) finish;
+        return null;
     }
 
     @Override

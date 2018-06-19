@@ -7,6 +7,7 @@ public class ComConfig {
 
     public final static String SHOW = "提示";
     public final static String UPDATE = "更新";
+    public final static String UPDATE_MONEY = "更新金额";
     public final static String YB = "一般";
     public final static String CC = "出差";
     public final static String TP = "图片";

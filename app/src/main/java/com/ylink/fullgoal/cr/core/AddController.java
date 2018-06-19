@@ -25,9 +25,8 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
 
     @Override
     public T initDB(DB db) {
-        if (db != null) {
-            getData().add(db);
-        }
+        add(db);
+        notifyDataChanged();
         return super.initDB(db);
     }
 
@@ -38,13 +37,32 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
      * @return 本身
      */
     public T initDB(List<DB> data) {
-        this.data.clear();
-        execute(data, item -> executeNon(onAddDB(item), db -> this.data.add(db)));
+        clear();
+        addAll(data);
+        notifyDataChanged();
         return getThis();
     }
 
     protected DB onAddDB(DB db) {
         return db;
+    }
+
+    @Override
+    public T clear() {
+        getData().clear();
+        return super.clear();
+    }
+
+    protected void add(DB db) {
+        executeNon(onAddDB(db), obj -> getData().add(obj));
+    }
+
+    protected void addAll(List<DB> data) {
+        execute(data, this::add);
+    }
+
+    protected void notifyDataChanged(){
+
     }
 
     @NonNull

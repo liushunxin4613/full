@@ -8,7 +8,7 @@ import com.ylink.fullgoal.api.config.FgApi;
 import com.ylink.fullgoal.api.config.ParseApi;
 import com.ylink.fullgoal.api.config.UrlApi;
 import com.ylink.fullgoal.api.func.UserApi;
-import com.ylink.fullgoal.config.Api;
+import com.leo.core.net.Api;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.UserFg;
 

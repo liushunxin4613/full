@@ -1,12 +1,9 @@
 package com.ylink.fullgoal.cr.surface;
 
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.core.StringController;
 
 import static com.ylink.fullgoal.config.ComConfig.CC;
-import static com.ylink.fullgoal.config.ComConfig.FQ;
-import static com.ylink.fullgoal.config.ComConfig.QR;
-import static com.ylink.fullgoal.config.ComConfig.XG;
-import static com.ylink.fullgoal.config.ComConfig.XQ;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 
 /**
@@ -25,16 +22,15 @@ public class SbumitFlagController<T extends SbumitFlagController> extends String
     }
 
     @Override
-    protected String getOnUB(String key) {
-        switch (key) {
-            case FQ:
-                return "1";//新增影响修改
-            case QR:
-            case XG:
-            case XQ:
-                return "2";//正常修改提交
+    public String getUB(String... args) {
+        if(!TextUtils.isEmpty(getDB())){
+            return "3";
         }
-        return super.getOnUB(key);
+        return super.getUB(args);
+    }
+
+    public void open(){
+        initDB("1");
     }
 
 }

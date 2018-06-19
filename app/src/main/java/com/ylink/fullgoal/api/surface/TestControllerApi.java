@@ -11,7 +11,6 @@ public class TestControllerApi<T extends TestControllerApi, C> extends SurfaceCo
     @Override
     public void initView() {
         super.initView();
-
     }
 
 }

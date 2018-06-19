@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.leo.core.util.TextUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,9 @@ public class WheelView extends ScrollView {
             items = new ArrayList<>();
         }
         items.clear();
-        items.addAll(list);
+        if(!TextUtils.isEmpty(list)){
+            items.addAll(list);
+        }
         // 前面和后面补全
         for (int i = 0; i < offset; i++) {
             items.add(0, "");
