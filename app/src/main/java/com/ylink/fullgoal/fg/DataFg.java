@@ -2,6 +2,9 @@ package com.ylink.fullgoal.fg;
 
 import java.util.List;
 
+/**
+ * 查询列表
+ */
 public class DataFg extends StatusCodeFg {
 
     //消息
@@ -28,6 +31,10 @@ public class DataFg extends StatusCodeFg {
     private List<ApplicationtFg> applicationtList;
     //银行卡查询列表
     private List<BankFg> bank;
+    //银行卡查询列表
+    private List<DimenFg> dimen;
+    //银行卡查询列表
+    private List<DimenListFg> dimenList;
 
     public List<UserFg> getUserList() {
         return userList;
@@ -123,6 +130,22 @@ public class DataFg extends StatusCodeFg {
 
     public void setBank(List<BankFg> bank) {
         this.bank = bank;
+    }
+
+    public List<DimenFg> getDimen() {
+        return dimen;
+    }
+
+    public void setDimen(List<DimenFg> dimen) {
+        this.dimen = dimen;
+    }
+
+    public List<DimenListFg> getDimenList() {
+        return dimenList;
+    }
+
+    public void setDimenList(List<DimenListFg> dimenList) {
+        this.dimenList = dimenList;
     }
 
 }

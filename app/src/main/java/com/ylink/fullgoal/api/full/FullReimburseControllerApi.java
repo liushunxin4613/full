@@ -13,8 +13,8 @@ import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.DisneyUtil;
+import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
-import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.ItemControllerApi;
@@ -82,6 +82,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private String state;
     private String title;
+    private DVo vo;
 
     protected FullReimburseControllerApi(C controller) {
         super(controller);
@@ -116,9 +117,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     protected abstract void onData();
 
     @Override
-    protected void startSearch(String search, ArrayList<String> filterData) {
-        SoftInputUtil.hidSoftInput(getRootView());
-        super.startSearch(search, filterData);
+    protected DVo getVo() {
+        if (vo == null) {
+            vo = new DVo();
+        }
+        return vo;
     }
 
     @Override
@@ -270,7 +273,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         executeNon(com, key -> {
             switch (key) {
                 case UPDATE_MONEY:
-                    iso(DVo::getMoney, obj -> obj.initDB(msg));
+                    iso(DVo::getMoney, obj -> obj.initDB(JavaTypeUtil.getdouble(msg, 0)));
                     break;
             }
         });

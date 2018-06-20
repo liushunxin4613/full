@@ -1,9 +1,12 @@
 package com.leo.core.util;
 
+import android.annotation.SuppressLint;
 import android.util.SparseArray;
 
 import com.leo.core.iapi.inter.IObjAction;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -348,6 +351,22 @@ public class TextUtils {
             return text.length();
         }
         return 0;
+    }
+
+    public static String getMoneyString(double money) {
+        DecimalFormat f = new DecimalFormat("######0.00");
+        f.setRoundingMode(RoundingMode.HALF_UP);//保留两位四舍五入
+        return f.format(money);
+    }
+
+    public static String getMoneyString(Double money) {
+        return money == null ? null : getMoneyString((double) money);
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String getPercentage(double a, double b) {
+        float f = (float) (a < b ? a / b : b / a) * 100;
+        return String.format("%.2f%%", f);
     }
 
 }

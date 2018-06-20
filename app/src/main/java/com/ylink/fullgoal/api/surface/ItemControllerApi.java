@@ -223,7 +223,10 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //双文字
         putBindBeanApi(TvH2Bean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
-                .setText(detailTv, bean.getDetail()));
+                .setText(detailTv, bean.getDetail())
+                .execute(() -> {
+                    bean.setTextView(detailTv);
+                }));
         //图标文字点击
         putBindBeanApi(IconTvMoreBean.class, (api, bean)
                 -> api.setImage(iconIv, bean.getIconResId())
@@ -241,9 +244,16 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //金额监听
         putBindBeanApi(MoneyBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
-                .execute(() -> bean.setTextView(detailEt))
+                .execute(() -> {
+                    if(detailEt != null){
+                        bean.setTextView(detailEt);
+                    } else {
+                        bean.setTextView(detailTv);
+                    }
+                })
                 .setTextHint(detailEt, bean.getHint())
-                .setText(detailEt, bean.getDetail()));
+                .setText(detailEt, bean.getDetail())
+                .setText(detailTv, bean.getDetail()));
         //双文字点击
         putBindBeanApi(TvH2MoreBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())

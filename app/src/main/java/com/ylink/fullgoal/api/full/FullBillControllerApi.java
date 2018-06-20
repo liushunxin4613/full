@@ -44,7 +44,13 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
                 vo.getImageID(), vo.getAmount())));
         setVisibility(getRightTv(), bol ? View.VISIBLE : View.INVISIBLE);
         initViewPager();
-        add(ImageFg.class, (path, what, msg, bean) -> finishActivity(vo));
+        add(ImageFg.class, (path, what, msg, bean) -> {
+            if(bean.isSuccess()){
+                finishActivity(vo);
+            } else {
+                show(bean.getMessage());
+            }
+        });
     }
 
     @Override
@@ -61,8 +67,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
         executeNon(data, list -> {
             for (int i = 0; i < list.size(); i++) {
                 ImageVo itemVo = list.get(i);
-                getPagerAdapter().add(getFullPhotoControllerApi(itemVo, i)
-                        .getRootView());
+                getPagerAdapter().add(getFullPhotoControllerApi(itemVo, i));
                 if (TextUtils.equals(encode(vo), encode(itemVo))) {
                     vo = itemVo;
                     getViewPager().setCurrentItem(i);

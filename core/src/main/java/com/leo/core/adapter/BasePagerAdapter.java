@@ -6,9 +6,10 @@ import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
 import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 
-public class BasePagerAdapter<T extends View> extends PagerAdapter {
+public class BasePagerAdapter<T extends IControllerApi> extends PagerAdapter {
 
     private DataApi<DataApi, T> api;
 
@@ -20,16 +21,16 @@ public class BasePagerAdapter<T extends View> extends PagerAdapter {
         return api;
     }
 
-    public BasePagerAdapter add(T view) {
-        if (view != null) {
-            getApi().add(view);
+    public BasePagerAdapter add(T api) {
+        if (api != null) {
+            getApi().add(api);
         }
         return this;
     }
 
-    public BasePagerAdapter remove(T view) {
-        if (view != null) {
-            getApi().remove(view);
+    public BasePagerAdapter remove(T api) {
+        if (api != null) {
+            getApi().remove(api);
         }
         return this;
     }
@@ -38,6 +39,14 @@ public class BasePagerAdapter<T extends View> extends PagerAdapter {
         if (action != null && TextUtils.isEmits(args)) {
             action.execute();
         }
+    }
+
+    public T getItemApi(int position) {
+        return getApi().getItem(position);
+    }
+
+    public View getItemView(int position) {
+        return getItemApi(position).getRootView();
     }
 
     @Override
@@ -52,9 +61,9 @@ public class BasePagerAdapter<T extends View> extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        T obj = getApi().getItem(position);
-        container.addView(obj);
-        return obj;
+        View view = getItemView(position);
+        container.addView(view);
+        return view;
     }
 
     @Override

@@ -3,16 +3,13 @@ package com.ylink.fullgoal.cr.surface;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.main.IOnCom;
 import com.leo.core.util.JavaTypeUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.fg.ImageFg;
 import com.ylink.fullgoal.vo.ImageVo;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.List;
 
+import static com.leo.core.util.TextUtils.getMoneyString;
 import static com.ylink.fullgoal.config.ComConfig.SHOW;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE_MONEY;
@@ -50,24 +47,18 @@ public class ImageListController<T extends ImageListController> extends AddContr
     @Override
     protected void notifyDataChanged() {
         super.notifyDataChanged();
-        executeNon(onCom, api -> api.onCom(0, UPDATE_MONEY, getSum()));
+        executeNon(onCom, api -> api.onCom(0, UPDATE_MONEY, getMoneyString(sum())));
     }
 
     public void updateMoney(ImageVo imageVo) {
         executeNon(imageVo, vo -> executeBol(getData(), item -> {
             if (TextUtils.equals(item.getImageID(), vo.getImageID())) {
-                item.setAmount(item.getAmount());
+                item.setAmount(imageVo.getAmount());
                 notifyDataChanged();
                 return true;
             }
             return false;
         }));
-    }
-
-    public String getSum() {
-        DecimalFormat f = new DecimalFormat("######0.00");
-        f.setRoundingMode(RoundingMode.HALF_UP);//保留两位四舍五入
-        return f.format(sum());
     }
 
     private double sum() {

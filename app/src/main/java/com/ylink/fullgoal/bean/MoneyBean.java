@@ -7,10 +7,15 @@ public class MoneyBean extends ApiBean<MoneyBean> {
 
     private transient IObjAction<String> action;
 
+    public MoneyBean(String name, String detail) {
+        super(name, detail);
+        setEtEnable(true);
+    }
+
     public MoneyBean(String name, String detail, String hint, IObjAction<String> action) {
         super(name, detail, hint);
+        setEtEnable(false);
         this.action = action;
-        setMoneyInputType(true);
     }
 
     @Override
@@ -23,7 +28,7 @@ public class MoneyBean extends ApiBean<MoneyBean> {
 
     @Override
     public Integer getApiType() {
-        return getEnableLayoutResId(R.layout.l_h_money);
+        return getEnableLayoutResId(isEtEnable() ? R.layout.l_h_tv_money : R.layout.l_h_money);
     }
 
 }

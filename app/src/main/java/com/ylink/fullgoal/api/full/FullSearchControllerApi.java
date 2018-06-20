@@ -26,6 +26,8 @@ import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DepartmentFg;
+import com.ylink.fullgoal.fg.DimenFg;
+import com.ylink.fullgoal.fg.DimenListFg;
 import com.ylink.fullgoal.fg.ProcessFg;
 import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
@@ -41,6 +43,7 @@ import static com.ylink.fullgoal.vo.SearchVo.BUDGET_DEPARTMENT;
 import static com.ylink.fullgoal.vo.SearchVo.BUSINESS;
 import static com.ylink.fullgoal.vo.SearchVo.CONTRACT_BILL;
 import static com.ylink.fullgoal.vo.SearchVo.COST_INDEX;
+import static com.ylink.fullgoal.vo.SearchVo.COST_INDEX_DIMEN;
 import static com.ylink.fullgoal.vo.SearchVo.PROJECT;
 import static com.ylink.fullgoal.vo.SearchVo.REIMBURSEMENT;
 import static com.ylink.fullgoal.vo.SearchVo.REPORT;
@@ -62,6 +65,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     LinearLayout nullVg;
     private String search;
     private String keyword;
+    private DimenFg dimenFg;
     private List<String> filterData;
 
     public FullSearchControllerApi(C controller) {
@@ -96,6 +100,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         setNullView(nullVg);
         executeBundle(bundle -> {
             executeNon(bundle.getString(Config.SEARCH), search -> this.search = search);
+            executeNon(bundle.getString(Config.VALUE), search -> this.dimenFg = decode(search, DimenFg.class));
             executeNon(bundle.getStringArrayList(Config.FILTERS), data -> this.filterData = data);
         });
         nameEt.addTextChangedListener(new TextWatcher() {
@@ -158,6 +163,10 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         addList(CostFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getCostIndex(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
+        //费用指标维度列表
+        addList(DimenListFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
+                -> data.add(new TvBean(item.getName(), (bean, view)
+                -> finishActivity(new SearchVo<>(search, getExecute(dimenFg, DimenFg::getCode), item)))))));
         //出差申请单
         addList(TravelFormFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new CCSQDBean(item.getCode(), String.format("%s天", item.getDates()),
@@ -203,6 +212,11 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     break;
                 case COST_INDEX://费用指标
                     uApi().queryCostIndexData();
+                    break;
+                case COST_INDEX_DIMEN://费用指标维度
+                    if (TextUtils.check(dimenFg)) {
+                        uApi().queryDimensionInformation(dimenFg.getCode());
+                    }
                     break;
                 case BUSINESS://出差申请单
                     uApi().queryTravelFormData();

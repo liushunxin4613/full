@@ -27,8 +27,9 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
     private String name;
     private String detail;
     private String hint;
+    private transient boolean etEnable;
     private transient boolean isMoneyInputType;
-    private transient boolean b5;
+    private transient Double max;
 
     public ApiBean(String name) {
         this(null, name, null, null, null);
@@ -78,16 +79,21 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
         setOnBVClickListener(listener);
     }
 
-    public boolean isMoneyInputType() {
-        return isMoneyInputType;
+    public boolean isEtEnable() {
+        return etEnable;
     }
 
-    public void setMoneyInputType(boolean moneyInputType) {
-        isMoneyInputType = moneyInputType;
+    public void setEtEnable(boolean etEnable) {
+        this.etEnable = etEnable;
     }
 
     public void setB5(boolean b5) {
-        this.b5 = b5;
+        this.max = b5 ? 100d : null;
+    }
+
+    public T setMax(Double max) {
+        this.max = max;
+        return (T) this;
     }
 
     public String getName() {
@@ -136,7 +142,7 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
 
     public void setTextView(TextView textView) {
         this.textView = textView;
-        if (this.textView != null) {
+        if (this.textView != null && !isEtEnable()) {
             this.textView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence text, int start, int count, int after) {
@@ -170,9 +176,9 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
         } else if (posDot == 0) {
             text.insert(0, "0");
         }
-        if (b5) {
+        if (max != null) {
             float f = JavaTypeUtil.getfloat(temp, 0);
-            if (f > 100) {
+            if (f > max) {
                 text.delete(temp.length() - 1, temp.length());
                 return;
             }

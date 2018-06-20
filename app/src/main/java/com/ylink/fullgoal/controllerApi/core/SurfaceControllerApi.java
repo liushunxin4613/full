@@ -17,12 +17,12 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullSearchControllerApi;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.fg.DataFg;
-import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.main.SurfaceActivity;
 import com.ylink.fullgoal.vo.SearchVo;
 
@@ -44,8 +44,6 @@ import static com.ylink.fullgoal.config.Config.FIELDS;
 @SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
 
-    private DVo vo;
-
     public SurfaceControllerApi(C controller) {
         super(controller);
     }
@@ -54,7 +52,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     public void onCom(int what, String com, String msg, Object... args) {
         super.onCom(what, com, msg, args);
         executeNon(com, c -> {
-            switch (c){
+            switch (c) {
                 case UPDATE:
                     notifyDataChanged();
                     break;
@@ -148,23 +146,34 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     /**
      * 查询基础类
-     * @param clz clz
+     *
+     * @param clz    clz
      * @param action action
-     * @param <B> B
+     * @param <B>    B
      */
-    protected <B> void addList(Class<B> clz, IPathMsgAction<List<B>> action){
+    protected <B> void addList(Class<B> clz, IPathMsgAction<List<B>> action) {
         addList(DataFg.class, clz, action);
     }
 
-    protected void startSearch(String search, ArrayList<String> filterData) {
+    protected void startSearch(String search, String value, ArrayList<String> filterData) {
+        SoftInputUtil.hidSoftInput(getRootView());
         Bundle bundle = new Bundle();
         bundle.putString(Config.SEARCH, search);
+        bundle.putString(Config.VALUE, value);
         bundle.putStringArrayList(Config.FILTERS, filterData);
         startSurfaceActivity(bundle, FullSearchControllerApi.class);
     }
 
+    protected void startSearch(String search, ArrayList<String> filterData) {
+        startSearch(search, null, filterData);
+    }
+
+    protected void startSearch(String search, String value) {
+        startSearch(search, value, null);
+    }
+
     protected void startSearch(String search) {
-        startSearch(search, null);
+        startSearch(search, null, null);
     }
 
     protected int getResTvColor(CharSequence text) {
@@ -224,7 +233,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         if (!TextUtils.isEmpty(map) && !TextUtils.isEmpty(must)) {
             Set<String> keys = map.keySet();
             for (String key : must) {
-                if(!TextUtils.isEmpty(key) && !keys.contains(getKey(key))){
+                if (!TextUtils.isEmpty(key) && !keys.contains(getKey(key))) {
                     show(String.format("%s(%s)不能为空", key, getKey(key)));
                     return null;
                 }
@@ -413,102 +422,129 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return false;
     }
 
-    protected <D> D get(List<D> data){
-        if(!TextUtils.isEmpty(data)){
+    protected <D> D get(List<D> data) {
+        if (!TextUtils.isEmpty(data)) {
             return data.get(0);
         }
         return null;
     }
 
-    protected String getNull(String text){
+    protected String getNull(String text) {
         return TextUtils.isEmpty(text) ? null : text;
     }
 
     //有关于数据处理的
 
-    protected <B> B no(IReturnAction<DVo, B> action) {
+    protected <S, B> B no(IReturnAction<S, B> action) {
         return no(getVo(), action);
     }
 
-    protected <A extends IController, B> B gt(Class<B> clz, IReturnAction<DVo, A> action){
-        if(clz != null && action != null){
+    protected <S, A extends IController, B> B gt(Class<B> clz, IReturnAction<S, A> action) {
+        if (clz != null && action != null) {
             A obj = no(action);
-            if(obj != null && clz.isInstance(obj)){
+            if (obj != null && clz.isInstance(obj)) {
                 return (B) obj;
             }
         }
         return null;
     }
 
-    protected <A extends IController, B> B gt(IReturnAction<DVo, A> action, IReturnAction<A, B> an){
-        if(action != null && an != null){
+    protected <S, A extends IController, B> B gt(IReturnAction<S, A> action, IReturnAction<A, B> an) {
+        if (action != null && an != null) {
             A obj = no(action);
-            if(obj != null){
+            if (obj != null) {
                 return an.execute(obj);
             }
         }
         return null;
     }
 
-    protected <A extends IController, B> B gtv(IReturnAction<DVo, A> action){
-        if(action != null){
+    protected <S, A extends IController, B, E> E gt(IReturnAction<S, A> action, IReturnAction<A, B> an,
+                                                 IReturnAction<B, E> ac) {
+        if (action != null && an != null) {
             A obj = no(action);
-            if(obj != null){
+            if (obj != null) {
+                B b = an.execute(obj);
+                if(b != null){
+                    return ac.execute(b);
+                }
+            }
+        }
+        return null;
+    }
+
+    protected <S, A extends IController, B> B gtv(IReturnAction<S, A> action) {
+        if (action != null) {
+            A obj = no(action);
+            if (obj != null) {
                 return (B) obj.getViewBean();
             }
         }
         return null;
     }
 
-    protected <A extends IController, B> B gtd(IReturnAction<DVo, A> action){
-        if(action != null){
+    protected <S, A extends IController, B> B gtd(IReturnAction<S, A> action) {
+        if (action != null) {
             A obj = no(action);
-            if(obj != null){
+            if (obj != null) {
                 return (B) obj.getDB();
             }
         }
         return null;
     }
 
-    protected DVo getVo() {
-        if (vo == null) {
-            vo = new DVo();
-        }
-        return vo;
+    protected <A> A getVo() {
+        return null;
     }
 
-    protected T ioo(IObjAction<DVo> action) {
+    protected <S> T ioo(IObjAction<S> action) {
         executeNon(getVo(), action);
         return getThis();
     }
 
-    protected <B> T iso(IReturnAction<DVo, B> action, IObjAction<B> ac){
-        if(action != null && ac != null){
+    protected <A, B> T iso(IReturnAction<A, B> action, IObjAction<B> ac) {
+        if (action != null && ac != null) {
             B obj = no(action);
-            if(obj != null){
+            if (obj != null) {
                 ac.execute(obj);
             }
         }
         return getThis();
     }
 
-    protected <B, D> T ioo(IReturnAction<DVo, B> action, IReturnAction<B, D> an){
-        if(action != null && an != null){
+    protected <S, B, D> T ioo(IReturnAction<S, B> action, IReturnAction<B, D> an) {
+        if (action != null && an != null) {
             B obj = no(action);
-            if(obj != null){
+            if (obj != null) {
                 an.execute(obj);
             }
         }
         return getThis();
     }
 
-    protected <B, D> T iso(IReturnAction<DVo, B> action, IReturnAction<B, D> an, IObjAction<D> ac){
-        if(action != null && an != null && ac != null){
+    protected <S, B, D> T iso(IReturnAction<S, B> action, IReturnAction<B, D> an, IObjAction<D> ac) {
+        if (action != null && an != null && ac != null) {
             B obj = no(action);
-            if(obj != null){
+            if (obj != null) {
                 D item = an.execute(obj);
-                if(item != null){
+                if (item != null) {
                     ac.execute(item);
+                }
+            }
+        }
+        return getThis();
+    }
+
+    protected <S, A, B, D> T iso(IReturnAction<S, A> action, IReturnAction<A, B> an, IReturnAction<B, D> am, IObjAction<D> ac) {
+        if (action != null && an != null && ac != null) {
+            A obj = no(action);
+            if (obj != null) {
+                B item = an.execute(obj);
+                if (item != null) {
+                    D d = am.execute(item);
+                    if(d != null){
+                        ac.execute(d);
+                    }
                 }
             }
         }

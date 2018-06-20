@@ -41,6 +41,11 @@ public class SearchVo<D> extends SerialVersionTag {
     public final static String COST_INDEX = "费用指标";
 
     /**
+     * 费用指标维度
+     */
+    public final static String COST_INDEX_DIMEN = "费用指标维度";
+
+    /**
      * 投研报告
      */
     public final static String REPORT = "投研报告";
@@ -73,13 +78,19 @@ public class SearchVo<D> extends SerialVersionTag {
     };
 
     private String search;
+    private String value;
     private D obj;
 
-    public SearchVo(String search, D obj) {
+    public SearchVo(String search, String value, D obj) {
         this.search = search;
+        this.value = value;
         this.obj = obj;
         setSerialVersionTag(obj == null ? null : TypeToken.getParameterized(SearchVo.class,
                 obj.getClass()).getType().toString());
+    }
+
+    public SearchVo(String search, D obj) {
+        this(search, null, obj);
     }
 
     public String getSearch() {
@@ -98,4 +109,11 @@ public class SearchVo<D> extends SerialVersionTag {
         this.obj = obj;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

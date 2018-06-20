@@ -5,16 +5,19 @@ import android.os.Bundle;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullBankControllerApi;
+import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.fg.CostFg;
 
 import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.YB;
+import static com.ylink.fullgoal.config.Config.COST;
 import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
@@ -54,8 +57,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 bundle.putString(SERIAL_NO, "201806150026000390");
                 startSurfaceActivity(bundle, FullEvectionControllerApi.class);
             }));
-//            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "费用指标", (bean, view)
-//                    -> startSurfaceActivity(FullCostIndexControllerApi.class)));
+            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "费用指标", (bean, view)
+                    -> execute(this::cost)));
+            cost();
         }
 
     }
@@ -74,6 +78,24 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
      */
     private void evection(String state) {
         startSurfaceActivity(FullEvectionControllerApi.class, CC, state);
+    }
+
+    /**
+     * 费用指标
+     */
+    private void cost() {
+        Bundle bundle = new Bundle();
+        bundle.putString(SERIAL_NO, "201806150026000388");
+        CostFg fg = new CostFg();
+        fg.setCostCode("002");
+        fg.setCostIndex("指标2");
+        fg.setAmount("1898.00");
+        fg.setTaxAmount("1500.00");
+        fg.setExTaxAmount("398.00");
+        fg.setShare("需要分摊");
+        fg.setExplain("分摊");
+        bundle.putString(COST, encode(fg));
+        startSurfaceActivity(bundle, FullCostIndexControllerApi.class);
     }
 
     private void startSurfaceActivity(Class<? extends IControllerApi> clz,

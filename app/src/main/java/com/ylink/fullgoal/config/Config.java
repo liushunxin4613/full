@@ -83,7 +83,9 @@ public class Config {
     //固定键值
     public final static String STATE = "state";
     public final static String SERIAL_NO = "serialNo";
+    public final static String COST = "cost";
     public final static String SEARCH = "search";
     public final static String FILTERS = "filters";
+    public final static String VALUE = "value";
 
 }

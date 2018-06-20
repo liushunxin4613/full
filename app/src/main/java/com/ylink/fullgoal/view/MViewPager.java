@@ -9,7 +9,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IReturnAction;
+import com.leo.core.iapi.inter.IReturnoAction;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.SoftInputUtil;
 
@@ -18,9 +20,8 @@ public class MViewPager extends ViewPager {
     private int miniSpeed = 0;
     private int miniWidth = 120;
     private GestureDetector detector;
-    private IObjAction<Boolean> verticalApi;
-    private IObjAction<Boolean> verticalBeyondApi;
-    private IObjAction<Boolean> horizontalApi;
+    private IReturnoAction<Boolean> horizontalAction;
+    private IReturnAction<Boolean, Boolean> horizontalBeyondAction;
 
     public MViewPager(Context context) {
         super(context);
@@ -61,12 +62,16 @@ public class MViewPager extends ViewPager {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 if (velocityX > miniWidth && Math.abs(velocityX) > miniSpeed) {
                     onToLeft();
+                    return true;
                 } else if (-velocityX > miniWidth && Math.abs(velocityX) > miniSpeed) {
                     onToRight();
+                    return true;
                 } else if (velocityY > miniWidth && Math.abs(velocityY) > miniSpeed) {
                     onToUp();
+                    return true;
                 } else if (-velocityY > miniWidth && Math.abs(velocityY) > miniSpeed) {
                     onToDown();
+                    return true;
                 }
                 return false;
             }
@@ -92,45 +97,67 @@ public class MViewPager extends ViewPager {
         });
     }
 
-    public void setVerticalApi(IObjAction<Boolean> api) {
-        this.verticalApi = api;
+    public MViewPager setHorizontalBeyondApi(IReturnAction<Boolean, Boolean> action) {
+        this.horizontalBeyondAction = action;
+        return this;
     }
 
-    public void setVerticalBeyondApi(IObjAction<Boolean> api) {
-        this.verticalBeyondApi = api;
-    }
-
-    public void setHorizontalApi(IObjAction<Boolean> api) {
-        this.horizontalApi = api;
+    public MViewPager setHorizontalApi(IReturnoAction<Boolean> action) {
+        this.horizontalAction = action;
+        return this;
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        detector.onTouchEvent(ev);
-        return super.onTouchEvent(ev);
+        return false;
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return !detector.onTouchEvent(ev) && super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 手势向左
+     */
     protected void onToLeft() {
         if (getCurrentItem() == 0) {
-            RunUtil.executeNon(verticalBeyondApi, obj -> obj.execute(true));
+            RunUtil.getExecute(horizontalBeyondAction, false, obj -> obj.execute(true));
+        } else if (!RunUtil.getExecute(horizontalAction, true, IReturnoAction::execute)) {
+            setCurrentItem(getCurrentItem() - 1);
         }
-        RunUtil.executeNon(verticalApi, obj -> obj.execute(true));
     }
 
+    /**
+     * 手势向右
+     */
     protected void onToRight() {
         if (getCurrentItem() == RunUtil.getExecute(getAdapter(), 0, PagerAdapter::getCount) - 1) {
-            RunUtil.executeNon(verticalBeyondApi, obj -> obj.execute(false));
+            if (!RunUtil.getExecute(horizontalAction, true, IReturnoAction::execute)
+                    && RunUtil.getExecute(horizontalBeyondAction, false, obj -> obj.execute(false))) {
+                setCurrentItem(getCurrentItem() + 1);
+            }
+        } else if (!RunUtil.getExecute(horizontalAction, true, IReturnoAction::execute)) {
+            setCurrentItem(getCurrentItem() + 1);
         }
-        RunUtil.executeNon(verticalApi, obj -> obj.execute(false));
     }
 
+    /**
+     * 手势向上
+     */
     protected void onToUp() {
-        RunUtil.executeNon(horizontalApi, obj -> obj.execute(true));
     }
 
+    /**
+     * 手势向下
+     */
     protected void onToDown() {
-        RunUtil.executeNon(horizontalApi, obj -> obj.execute(false));
     }
 
 }

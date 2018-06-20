@@ -122,6 +122,20 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
     }
 
     /**
+     * 分摊维度列表
+     */
+    public void queryDimensionList(String costIndex) {
+        api().post(ROOT_URL, "Dimension_list.action", get(map -> map.put("costIndex", costIndex)));
+    }
+
+    /**
+     * 分摊维度信息列表
+     */
+    public void queryDimensionInformation(String dimensionCode) {
+        api().post(ROOT_URL, "Dimension_information.action", get(map -> map.put("dimensionCode", dimensionCode)));
+    }
+
+    /**
      * 上传图片
      *
      * @param first     是否第一次上传:1.首次;2.确认;3.修改;
