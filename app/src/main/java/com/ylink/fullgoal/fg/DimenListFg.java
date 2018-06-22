@@ -12,6 +12,8 @@ public class DimenListFg {
 
     private String code;
     private String name;
+    private String dimen;
+    private String dimenCode;
 
     public String getCode() {
         return code;
@@ -29,4 +31,19 @@ public class DimenListFg {
         this.name = name;
     }
 
+    public String getDimen() {
+        return dimen;
+    }
+
+    public void setDimen(String dimen) {
+        this.dimen = dimen;
+    }
+
+    public String getDimenCode() {
+        return dimenCode;
+    }
+
+    public void setDimenCode(String dimenCode) {
+        this.dimenCode = dimenCode;
+    }
 }

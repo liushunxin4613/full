@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 
 import com.leo.core.R;
+import com.leo.core.api.api.ActivityLifecycleCallbacksApi;
 import com.leo.core.api.api.CameraApi;
 import com.leo.core.api.api.ConfigApi;
 import com.leo.core.api.api.DataApi;
@@ -24,7 +25,7 @@ import com.leo.core.api.main.HttpApi;
 import com.leo.core.api.main.ShowApi;
 import com.leo.core.config.Config;
 import com.leo.core.factory.ActionApiFactory;
-import com.leo.core.iapi.api.ICameraApi;
+import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.net.RetrofitSubscriber;
 import com.leo.core.other.Transformer;
 
@@ -214,6 +215,11 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     @Override
     public <B> MsgSubscriber<T, B> newSubscriber() {
         return new RetrofitSubscriber(parseApi().copy());
+    }
+
+    @Override
+    public IActivityLifecycleCallbacksApi newActivityLifecycleApi() {
+        return new ActivityLifecycleCallbacksApi();
     }
 
     @Override

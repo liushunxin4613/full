@@ -84,6 +84,10 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return (a == null || action == null) ? null : action.execute(a);
     }
 
+    protected <A> A no(A a, A def) {
+        return a == null ? def : a;
+    }
+
     protected <A> ParamType<A> get(Class<A> clz, Type... args) {
         return new ParamType<>(clz, args);
     }

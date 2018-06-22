@@ -30,6 +30,7 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MainManage.init(getApplication());//主
+        getApplication().registerActivityLifecycleCallbacks(activityLifecycleApi());
         LogUtil.openLog();//log
         NetUtils.init(getApplication());
         RetrofitFactory.show(false);

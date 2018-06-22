@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.ComConfig.SHOW;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
@@ -275,7 +276,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     protected String getValue(String[][] argss, String key, String def) {
         if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(argss)) {
             for (String[] args : argss) {
-                if (count(args) == 2 && TextUtils.equals(args[0], key)) {
+                if (TextUtils.count(args) == 2 && TextUtils.equals(args[0], key)) {
                     return args[1];
                 }
             }
@@ -460,12 +461,12 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     protected <S, A extends IController, B, E> E gt(IReturnAction<S, A> action, IReturnAction<A, B> an,
-                                                 IReturnAction<B, E> ac) {
+                                                    IReturnAction<B, E> ac) {
         if (action != null && an != null) {
             A obj = no(action);
             if (obj != null) {
                 B b = an.execute(obj);
-                if(b != null){
+                if (b != null) {
                     return ac.execute(b);
                 }
             }
@@ -542,9 +543,39 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 B item = an.execute(obj);
                 if (item != null) {
                     D d = am.execute(item);
-                    if(d != null){
+                    if (d != null) {
                         ac.execute(d);
                     }
+                }
+            }
+        }
+        return getThis();
+    }
+
+    protected <A> T iss(A a, IObjAction<A> action){
+        if(check(a, action)){
+            action.execute(a);
+        }
+        return getThis();
+    }
+
+    protected <A, B> T iss(A a, IReturnAction<A, B> ab, IObjAction<B> action){
+        if(check(a, ab)){
+            B b = ab.execute(a);
+            if(check(b)){
+                action.execute(b);
+            }
+        }
+        return getThis();
+    }
+
+    protected <A, B, D> T iss(A a, IReturnAction<A, B> ab, IReturnAction<B, D> bd, IObjAction<D> action){
+        if(check(a, ab)){
+            B b = ab.execute(a);
+            if(check(b)){
+                D d = bd.execute(b);
+                if(check(d)){
+                    action.execute(d);
                 }
             }
         }

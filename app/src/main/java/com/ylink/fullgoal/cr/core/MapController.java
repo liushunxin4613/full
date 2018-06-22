@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
 
-public abstract class MapController<T extends MapController, K, DB> extends BaseController<T, DB, DB> {
+public abstract class MapController<T extends MapController, K, DB, UB> extends BaseController<T, DB, UB> {
 
     private Map<K, DB> map;
 
@@ -33,6 +33,11 @@ public abstract class MapController<T extends MapController, K, DB> extends Base
 
     public Map<K, DB> getMap() {
         return map;
+    }
+
+    public T clear(){
+        getMap().clear();
+        return getThis();
     }
 
     public T put(K key, DB db){

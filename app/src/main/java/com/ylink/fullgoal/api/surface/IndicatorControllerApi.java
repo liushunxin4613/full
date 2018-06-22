@@ -94,6 +94,16 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
         return getDataApi().getCount();
     }
 
+    public String getCurrentItemName(){
+        if(viewPager != null){
+            IndicatorBean bean = getDataApi().getItem(viewPager.getCurrentItem());
+            if(bean != null){
+                return bean.getName();
+            }
+        }
+        return null;
+    }
+
     public void notifyDataSetChanged() {
         int count = getCount();
         if (sum > 0 && count > 0) {
@@ -109,7 +119,7 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
                 IndicatorBean bean = getDataApi().getItem(i);
                 if (bean != null && bean.getApiType() != null) {
                     if (adapter != null && bean.getApi() != null) {
-                        adapter.getApi().add(bean.getApi().getRootView());
+                        adapter.getApi().add(bean.getApi());
                     }
                     View rootView = View.inflate(getContext(), bean.getApiType(), null);
                     vg.addView(rootView);

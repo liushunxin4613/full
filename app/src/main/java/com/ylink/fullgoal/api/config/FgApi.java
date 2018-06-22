@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_DIMENSION_LIST;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
@@ -112,20 +113,17 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
     /**
      * 获取报销列表
      */
-    public void queryApplicationForm(String status, String time, String billType, String type) {
-        api().post(ROOT_URL, "Application_form.action", get(map -> {
-            map.put("status", status);
-            map.put("agent", api().getUId());
-            map.put("time", time);
-            map.put("billType", billType);
-        }), type);
+    public void queryApplicationForm(Map<String, Object> map, String msg) {
+        if(!TextUtils.isEmpty(map)){
+            api().post(ROOT_URL, "Application_form.action", get(mp -> mp.putAll(map)), msg);
+        }
     }
 
     /**
      * 分摊维度列表
      */
     public void queryDimensionList(String costIndex) {
-        api().post(ROOT_URL, "Dimension_list.action", get(map -> map.put("costIndex", costIndex)));
+        api().post(ROOT_URL, FULL_DIMENSION_LIST, get(map -> map.put("costIndex", costIndex)));
     }
 
     /**
@@ -197,7 +195,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
     }
 
     /**
-     * 提交报销任务
+     * 提交报销、修改、确认任务
      */
     public void submitReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {

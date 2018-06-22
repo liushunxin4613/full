@@ -4,6 +4,8 @@ import android.view.View;
 
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.util.RunUtil;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 
 import java.util.ArrayList;
@@ -25,6 +27,10 @@ public class DateArrayBean extends BaseApiBean {
         this.name = name;
         this.action = action;
         setData(data);
+    }
+
+    public void update(String selected) {
+        RunUtil.execute(getData(), obj -> obj.updateSelected(TextUtils.equals(obj.getName(), selected)));
     }
 
     public String getName() {
@@ -55,7 +61,7 @@ public class DateArrayBean extends BaseApiBean {
     }
 
     public void clean() {
-        if(selectedView != null){
+        if (selectedView != null) {
             selectedView.setSelected(false);
             selectedView = null;
         }

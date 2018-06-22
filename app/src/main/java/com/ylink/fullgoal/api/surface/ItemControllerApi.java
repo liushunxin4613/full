@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.api.surface;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtBean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.TvHTv3Bean;
+import com.ylink.fullgoal.bean.TvHTvIconMoreBean;
 import com.ylink.fullgoal.bean.TvSBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
@@ -81,6 +83,7 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
     }
 
     //监听相关对象
+    @SuppressLint("ResourceAsColor")
     private void initCallback() {
         //文字
         putBindBeanApi(TvBean.class, (api, bean)
@@ -90,6 +93,11 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         putBindBeanApi(TvH2SBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
+                .execute(() -> {
+                    int resId = bean.isSelected() ? R.color.EE4433 : R.color.tv;
+                    setTextColor(nameTv, resId);
+                    setTextColor(detailTv, resId);
+                })
                 .setOnClickListener(bean.getOnClickListener()));
         //图片处理
         putBindBeanApi(GridPhotoBean.class, (api, bean)
@@ -128,30 +136,41 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
         //文字
         putBindBeanApi(SelectedTvBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
+                .execute(() -> bean.setTextView(nameTv))
                 .setOnClickListener(v -> {
                     ViewGroup vg = (ViewGroup) v.getParent();
-                    if (!TextUtils.equals(vg.getTag(), v) || !v.isSelected()) {
+                    if (TextUtils.equals(vg.getTag(), v)) {
+                        v.setSelected(!v.isSelected());
+                    } else {
                         if (vg.getTag() instanceof View) {
                             ((View) vg.getTag()).setSelected(false);
                         }
                         v.setSelected(true);
                         vg.setTag(v);
                     }
-                    bean.execute(v, bean.getName());
+                    bean.execute(v, v.isSelected() ? bean.getName() : null);
                 }));
         //筛选
         putBindBeanApi(ReimburseTypeBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
+                .execute(() -> {
+                    bean.setNameTv(nameTv);
+                    bean.setDetailTv(detailTv);
+                })
                 .setOnClickListener(nameTv, v -> {
-                    api.setSelected(nameTv, true);
+                    executeNon(nameTv, tv -> {
+                        api.setSelected(tv, !tv.isSelected());
+                        bean.execute(v, tv.isSelected() ? bean.getName() : null);
+                    });
                     api.setSelected(detailTv, false);
-                    bean.execute(v, bean.getName());
                 })
                 .setOnClickListener(detailTv, v -> {
-                    api.setSelected(detailTv, true);
+                    executeNon(detailTv, tv -> {
+                        api.setSelected(tv, !tv.isSelected());
+                        bean.execute(v, tv.isSelected() ? bean.getDetail() : null);
+                    });
                     api.setSelected(nameTv, false);
-                    bean.execute(v, bean.getDetail());
                 }));
         //禁止规则
         putBindBeanApi(InhibitionRuleBean.class, (api, bean)
@@ -241,11 +260,18 @@ public class ItemControllerApi<T extends ItemControllerApi, C> extends BaseItemC
                 .setOnClickListener(iconIv, bean.getOnClickListener())
                 .setTextHint(detailEt, bean.getHint())
                 .setText(detailEt, bean.getDetail()));
+        //图标文字文字图标监听
+        putBindBeanApi(TvHTvIconMoreBean.class, (api, bean)
+                -> api.setText(nameTv, bean.getName())
+                .setImage(iconIv, bean.getIconResId())
+                .setIcon(iconIv, !TextUtils.isEmpty(bean.getIconResId()))
+                .setOnClickListener(bean.getOnClickListener())
+                .setText(detailTv, bean.getDetail()));
         //金额监听
         putBindBeanApi(MoneyBean.class, (api, bean)
                 -> api.setText(nameTv, bean.getName())
                 .execute(() -> {
-                    if(detailEt != null){
+                    if (detailEt != null) {
                         bean.setTextView(detailEt);
                     } else {
                         bean.setTextView(detailTv);

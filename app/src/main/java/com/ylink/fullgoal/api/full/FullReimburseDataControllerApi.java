@@ -29,6 +29,8 @@ import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.fg.ApplicationtFg;
 import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.vo.DDVo;
+import com.ylink.fullgoal.vo.DItemVo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,14 +38,20 @@ import java.util.Map;
 
 import butterknife.Bind;
 
-import static com.leo.core.util.DateUtil.getDDate;
-import static com.leo.core.util.DateUtil.getDateString;
-import static com.leo.core.util.DateUtil.getMDate;
-import static com.leo.core.util.DateUtil.getNowDate;
-import static com.leo.core.util.DateUtil.getYDate;
+import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.getListData;
-import static com.ylink.fullgoal.config.Config.APPROVAL_STATUS;
-import static com.ylink.fullgoal.config.Config.BILL_TYPES;
+import static com.ylink.fullgoal.config.Config.D1;
+import static com.ylink.fullgoal.config.Config.D2;
+import static com.ylink.fullgoal.config.Config.D3;
+import static com.ylink.fullgoal.config.Config.D4;
+import static com.ylink.fullgoal.config.Config.D_BT1;
+import static com.ylink.fullgoal.config.Config.D_BT2;
+import static com.ylink.fullgoal.config.Config.D_DATE1;
+import static com.ylink.fullgoal.config.Config.D_DATE2;
+import static com.ylink.fullgoal.config.Config.D_DATE3;
+import static com.ylink.fullgoal.config.Config.D_DATE4;
+import static com.ylink.fullgoal.config.Config.D_DATE5;
+import static com.ylink.fullgoal.config.Config.D_DATE6;
 import static com.ylink.fullgoal.config.Config.FULL_STATUS;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
@@ -59,10 +67,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     ViewPager viewPager;
     @Bind(R.id.drawerLayout)
     DrawerLayout drawerLayout;
-
-    private String type;
-    private String dateText;
-    private String typeText;
+    private DDVo vo;
     private IndicatorControllerApi api;
     private int gravity = Gravity.RIGHT;
     private Map<String, RecycleControllerApi> map;
@@ -70,6 +75,14 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     public FullReimburseDataControllerApi(C controller) {
         super(controller);
         map = new HashMap<>();
+    }
+
+    @Override
+    protected DDVo getVo() {
+        if (vo == null) {
+            vo = new DDVo();
+        }
+        return vo;
     }
 
     @Override
@@ -90,55 +103,41 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         super.initData();
         add(DataFg.class, (path, what, msg, bean) -> execute(!TextUtils.isEmpty(msg), () ->
                 initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList())));
-        getReiRecycleControllerApi("待处理");
-        getReiRecycleControllerApi("审核中");
-        getReiRecycleControllerApi("已完成");
-        getReiRecycleControllerApi("已取消");
+        getReiRecycleControllerApi(D1);
+        getReiRecycleControllerApi(D2);
+        getReiRecycleControllerApi(D3);
+        getReiRecycleControllerApi(D4);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        query(type);
+        query();
     }
 
-    private void query(String type) {
-        uApi().queryApplicationForm(getValue(APPROVAL_STATUS, type), getDateText(),
-                getValue(BILL_TYPES, typeText, ""), type);
+    private void query() {
+        uApi().queryApplicationForm(getUBMap(), getType());
     }
 
-    private String getDateText() {
-        if (!TextUtils.isEmpty(dateText)) {
-            switch (dateText) {
-                case "当天":
-                    return getDateString(getNowDate());
-                case "七天":
-                    return getDateString(getDDate(-7));
-                case "一个月":
-                    return getDateString(getMDate(-1));
-                case "三个月":
-                    return getDateString(getMDate(-3));
-                case "六个月":
-                    return getDateString(getMDate(-6));
-                case "一年":
-                    return getDateString(getYDate(-1));
-            }
-        }
-        return "";
+    private String getType() {
+        return no(api, IndicatorControllerApi::getCurrentItemName);
     }
 
-    private boolean checkTitle(String type) {
-        return !TextUtils.isEmpty(type) && TextUtils.getSetData("待处理", "审核中", "已完成", "已取消")
-                .contains(type);
+    private DItemVo getItemValue() {
+        return getVo().getItemValue(getType());
+    }
+
+    private Map<String, Object> getUBMap() {
+        return no(getItemValue(), v -> v.getCheckMap(getType()));
     }
 
     private RecycleControllerApi getReiRecycleControllerApi(String type) {
-        if (checkTitle(type)) {
+        if (check(type)) {
             RecycleControllerApi api = map.get(type);
             if (api == null) {
                 api = getRecycleControllerApi(type);
                 map.put(type, api);
-                query(type);
+                query();
             }
             return api;
         }
@@ -152,8 +151,8 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 execute(applicationtData, obj -> addVgBean(api, data -> {
                     data.add(new CCSQDBean(obj.getSerialNo(), obj.getBillType(),
                             "报销批次号", "报销类型"));
-                    data.add(new CCSQDBean(obj.getFillDate(), obj.getAmount(),
-                            "时间", "金额"));
+                    data.add(new CCSQDBean(obj.getFillDate(), obj.getStatus(),
+                            "时间", "状态"));
                     data.add(new TvHTv3Bean("事由", obj.getCause()));
                 }, vg -> vg.setOnClickListener(v -> {
                     //暂不使用
@@ -191,18 +190,33 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 R.layout.l_content_recycle);
         controllerApi.setText(controllerApi.findViewById(R.id.null_tv), "您还没有相关的报销");
         controllerApi.setNullView(controllerApi.findViewById(R.id.null_vg));
-        api.add(new IndicatorBean(name, controllerApi)).notifyDataSetChanged();
+        add(name, controllerApi);
         return controllerApi;
     }
+
+    private void add(String name, RecycleControllerApi controllerApi) {
+        if (check(api, name, controllerApi)) {
+            api.add(new IndicatorBean(name, controllerApi))
+                    .notifyDataSetChanged();
+            DItemVo vo = new DItemVo();
+            vo.getAgent().initDB(getUId());
+            vo.getStatus().initDB(name);
+            iso(DDVo::getItem, obj -> obj.initDB(name, vo));
+        }
+    }
+
+    private DateArrayBean dateArrayBean;
+    private ReimburseTypeBean typeBean;
 
     //私有的
 
     @SuppressLint("RtlHardcoded")
     private void initDrawerLayout() {
-        DateArrayBean dateArrayBean = new DateArrayBean("查询时间", getListData("当天", "七天",
-                "一个月", "三个月", "六个月", "一年"), text -> dateText = text);
-        ReimburseTypeBean typeBean = new ReimburseTypeBean("一般费用报销", "出差费用报销",
-                text -> typeText = text);
+        dateArrayBean = new DateArrayBean("查询时间", getListData(D_DATE1, D_DATE2,
+                D_DATE3, D_DATE4, D_DATE5, D_DATE6), text -> iss(getItemValue(), DItemVo::getDate,
+                obj -> obj.initDB(text)));
+        typeBean = new ReimburseTypeBean(D_BT1, D_BT2, text ->
+                iss(getItemValue(), DItemVo::getBillType, obj -> obj.initDB(text)));
         RecycleControllerApi api = getViewControllerApi(RecycleControllerApi.class, R.layout.l_sx);
         api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         setOnClickListener(api.findViewById(R.id.reset_tv), v -> {
@@ -210,7 +224,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             typeBean.clean();
         }).setOnClickListener(api.findViewById(R.id.confirm_tv), v -> {
             drawerLayout.closeDrawer(gravity);
-            query(type);
+            query();
         });
         DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(-1, -1);
         lp.gravity = gravity;
@@ -249,15 +263,22 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             Drawable drawable = ResUtil.getDrawable(R.mipmap.icon_sx);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             getRightTv().setCompoundDrawables(null, null, drawable, null);
-            setRightTv("筛选", v -> drawerLayout.openDrawer(gravity));
+            setRightTv("筛选", v -> {
+                if (check(dateArrayBean)) {
+                    dateArrayBean.update(no(getItemValue(), value -> value.getDate().getDB()));
+                }
+                if (check(typeBean)) {
+                    typeBean.updateSelected(no(getItemValue(), value -> value.getBillType().getDB()));
+                }
+                drawerLayout.openDrawer(gravity);
+            });
         }
     }
 
     private void initIndicatorControllerApi() {
         api = ((IndicatorControllerApi) apiView.controllerApi())
                 .setViewPager(viewPager)
-                .setAdapter(new BasePagerAdapter())
-                .setAction(text -> type = text);
+                .setAdapter(new BasePagerAdapter());
     }
 
     private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseApiBean>> api,

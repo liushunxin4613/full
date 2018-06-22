@@ -11,6 +11,7 @@ import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
+import com.ylink.fullgoal.bean.TvHTvIconMoreBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.cr.surface.CtripTicketsController;
@@ -58,7 +59,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean(gtv(DVo::getAgent), gtv(DVo::getDepartment)));
-            checkAdd(data, gtv(DVo::getReimbursement), new TvHEtIconMoreBean(R.mipmap.test_icon_user,
+            checkAdd(data, gtv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", gtv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> startSearch(SearchVo.REIMBURSEMENT), text
                     -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
@@ -67,6 +68,9 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                     (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
             checkAdd(data, gtv(DVo::getProject), new TvH2MoreBean("项目", gtv(DVo::getProject), "请选择项目",
                     (bean, view) -> startSearch(SearchVo.PROJECT)));
+            checkAdd(data, gtv(DVo::getCostIndex),
+                    new TvH2MoreBean("费用指标", gtv(DVo::getCostIndex), "请选择费用指标",
+                            (bean, view) -> startSearch(SearchVo.COST_INDEX)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, gtv(DVo::getMoney), new TvH2Bean("金额", gtv(DVo::getMoney)));

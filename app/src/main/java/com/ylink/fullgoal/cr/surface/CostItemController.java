@@ -2,10 +2,17 @@ package com.ylink.fullgoal.cr.surface;
 
 import com.ylink.fullgoal.cr.core.MapController;
 import com.ylink.fullgoal.fg.DimenListFg;
+import com.ylink.fullgoal.fg.ShareDimensionItemFg;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class CostItemController<T extends CostItemController> extends MapController<T, String, DimenListFg>{
+import static com.leo.core.util.TextUtils.check;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+
+public class CostItemController<T extends CostItemController> extends MapController<T, String,
+        DimenListFg, List<ShareDimensionItemFg>>{
 
     @Override
     public T initDB(String key, DimenListFg dimenListFg) {
@@ -33,11 +40,6 @@ public class CostItemController<T extends CostItemController> extends MapControl
     }
 
     @Override
-    protected Class<DimenListFg> getUBClz() {
-        return null;
-    }
-
-    @Override
     public Map<String, DimenListFg> getMap() {
         return super.getMap();
     }
@@ -45,6 +47,40 @@ public class CostItemController<T extends CostItemController> extends MapControl
     @Override
     public Map<String, DimenListFg> getViewBean() {
         return super.getViewBean();
+    }
+
+    @Override
+    public List<ShareDimensionItemFg> getUB(String... args) {
+        return super.getUB(args);
+    }
+
+    @Override
+    protected Class<List<ShareDimensionItemFg>> getUBClz() {
+        return null;
+    }
+
+    @Override
+    protected String getOnUBKey(String key) {
+        switch (key){
+            case QR:
+                return "dimenList";
+        }
+        return super.getOnUBKey(key);
+    }
+
+    @Override
+    protected List<ShareDimensionItemFg> getOnUB(String key) {
+        switch (key){
+            case QR:
+                List<ShareDimensionItemFg> data = new ArrayList<>();
+                execute(getMap(), (kk, vv) -> {
+                    if(check(kk, vv)){
+                        data.add(new ShareDimensionItemFg(kk, vv.getCode(), vv.getName()));
+                    }
+                });
+                return data;
+        }
+        return super.getOnUB(key);
     }
 
 }

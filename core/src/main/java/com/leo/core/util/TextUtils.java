@@ -5,15 +5,24 @@ import android.util.SparseArray;
 
 import com.leo.core.iapi.inter.IObjAction;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import static com.leo.core.config.Config.EMPTY;
 
@@ -77,7 +86,25 @@ public class TextUtils {
         } else if (obj instanceof CharSequence) {
             return ((CharSequence) obj).length();
         } else if (obj.getClass().isArray()) {
-            return ((Object[]) obj).length;
+            if (obj instanceof byte[]) {
+                return ((byte[]) obj).length;
+            } else if (obj instanceof short[]) {
+                return ((short[]) obj).length;
+            } else if (obj instanceof int[]) {
+                return ((int[]) obj).length;
+            } else if (obj instanceof long[]) {
+                return ((long[]) obj).length;
+            } else if (obj instanceof float[]) {
+                return ((float[]) obj).length;
+            } else if (obj instanceof double[]) {
+                return ((double[]) obj).length;
+            } else if (obj instanceof char[]) {
+                return ((char[]) obj).length;
+            } else if (obj instanceof boolean[]) {
+                return ((boolean[]) obj).length;
+            } else {
+                return ((Object[]) obj).length;
+            }
         } else if (obj instanceof Collection) {
             return ((Collection) obj).size();
         } else if (obj instanceof Map) {
@@ -367,6 +394,46 @@ public class TextUtils {
     public static String getPercentage(double a, double b) {
         float f = (float) (a < b ? a / b : b / a) * 100;
         return String.format("%.2f%%", f);
+    }
+
+    public static Map<String, Object> toJSONMap(String text) {
+        Object obj = toJSONMap(text, null);
+        if (obj instanceof Map) {
+            return (Map<String, Object>) obj;
+        }
+        return null;
+    }
+
+    private static Object toJSONMap(String text, Object obj) {
+        try {
+            if (!TextUtils.isEmpty(text)) {
+                obj = new JSONTokener(text).nextValue();
+            }
+            if (obj instanceof JSONObject) {
+                Map<String, Object> map = new TreeMap<>();
+                for (Iterator<String> it = ((JSONObject) obj).keys(); it.hasNext(); ) {
+                    String key = it.next();
+                    Object item = ((JSONObject) obj).get(key);
+                    if (!TextUtils.isEmpty(key)) {
+                        map.put(key, toJSONMap(null, item));
+                    }
+                }
+                return map;
+            } else if (obj instanceof JSONArray) {
+                List<Object> data = new ArrayList<>();
+                for (int i = 0; i < ((JSONArray) obj).length(); i++) {
+                    Object item = ((JSONArray) obj).get(i);
+                    data.add(toJSONMap(null, item));
+                }
+                return data;
+            } else if (obj != null) {
+                return obj;
+            }
+            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

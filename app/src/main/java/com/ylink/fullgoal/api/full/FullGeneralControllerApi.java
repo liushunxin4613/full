@@ -5,7 +5,7 @@ import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
-import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
+import com.ylink.fullgoal.bean.TvHTvIconMoreBean;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.UserController;
 import com.ylink.fullgoal.vo.DVo;
@@ -42,7 +42,7 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean(gtv(DVo::getAgent), gtv(DVo::getDepartment)));
-            checkAdd(data, gtv(DVo::getReimbursement), new TvHEtIconMoreBean(R.mipmap.test_icon_user,
+            checkAdd(data, gtv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", gtv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> startSearch(SearchVo.REIMBURSEMENT), text
                     -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
@@ -58,7 +58,7 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
                     gtv(DVo::getProcess), "请选择招待申请单",
                     (bean, view) -> startSearch(SearchVo.SERVE_BILL)));
             checkAdd(data, gtv(DVo::getCostIndex),
-                    new TvH2MoreBean("费用指标", gtv(DVo::getCostIndex), "请选择费                                                                   8用指标",
+                    new TvH2MoreBean("费用指标", gtv(DVo::getCostIndex), "请选择费用指标",
                             (bean, view) -> startSearch(SearchVo.COST_INDEX)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {

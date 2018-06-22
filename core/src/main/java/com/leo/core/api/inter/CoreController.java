@@ -145,7 +145,7 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends T
             for (String key : args) {
                 if (!TextUtils.isEmpty(key)) {
                     A value = action.execute(key);
-                    if (TextUtils.count(value) > 0) {
+                    if (value != null) {
                         return value;
                     }
                 }

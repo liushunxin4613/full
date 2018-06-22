@@ -1,11 +1,15 @@
 package com.ylink.fullgoal.bean;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.RunUtil;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+
+import static com.leo.core.util.TextUtils.check;
 
 public class SelectedTvBean extends BaseApiBean {
 
@@ -15,6 +19,7 @@ public class SelectedTvBean extends BaseApiBean {
     }
 
     private String name;
+    private transient TextView textView;
     private transient IObjAction<String> action;
     private transient IObjAction<View> selectedAction;
 
@@ -34,7 +39,23 @@ public class SelectedTvBean extends BaseApiBean {
 
     public void execute(View selected, String text) {
         RunUtil.executeNon(selected, selectedAction);
-        RunUtil.executeNon(text, action);
+        if(action != null){
+            action.execute(text);
+        }
+    }
+
+    public TextView getTextView() {
+        return textView;
+    }
+
+    public void setTextView(TextView textView) {
+        this.textView = textView;
+    }
+
+    public void updateSelected(boolean selected) {
+        if(check(getTextView())){
+            getTextView().setSelected(selected);
+        }
     }
 
 }

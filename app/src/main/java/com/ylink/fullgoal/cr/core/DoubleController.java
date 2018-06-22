@@ -14,6 +14,10 @@ public abstract class DoubleController<T extends DoubleController> extends BaseC
         return super.initDB(s);
     }
 
+    public String getDBMoney(){
+        return TextUtils.getMoneyString(getDB());
+    }
+
     @Override
     public Double getDB() {
         return super.getDB();
@@ -43,7 +47,7 @@ public abstract class DoubleController<T extends DoubleController> extends BaseC
         switch (key) {
             case YB:
             case CC:
-                return TextUtils.getMoneyString(getDB());
+                return getDBMoney();
         }
         return super.getOnUB(key);
     }

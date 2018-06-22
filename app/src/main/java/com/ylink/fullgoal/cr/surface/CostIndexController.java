@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.ylink.fullgoal.cr.core.BaseController;
 import com.ylink.fullgoal.fg.CostFg;
 
+import static com.leo.core.util.TextUtils.check;
+import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 
 /**
@@ -31,6 +33,9 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
 
     @Override
     public String getViewBean() {
+        /*if(!check(getDB())){
+            initDB(new CostFg("009", "差旅费"));
+        }*/
         return no(CostFg::getCostIndex);
     }
 
@@ -50,10 +55,31 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
         return CostFg.class;
     }
 
+    public T update(boolean share) {
+        if (check(getDB())) {
+            getDB().setShare(share ? "需要分摊" : "无需分摊");
+        }
+        return getThis();
+    }
+
+    public T update(CostFg fg) {
+        if (check(fg)) {
+            if(check(getDB())){
+                getDB().setCostIndex(fg.getCostIndex());
+                getDB().setCostCode(fg.getCostCode());
+                getDB().setExplain(fg.getExplain());
+            } else {
+                initDB(fg);
+            }
+        }
+        return getThis();
+    }
+
     @Override
     protected String getOnUBKey(String key) {
         switch (key) {
             case YB:
+            case QR:
                 return "cost";
         }
         return super.getOnUBKey(key);
@@ -64,6 +90,7 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
         return toUB(db -> {
             switch (key) {
                 case YB:
+                case QR:
                     return getDB();
             }
             return super.getOnUB(key);

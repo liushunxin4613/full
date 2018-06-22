@@ -30,7 +30,9 @@ import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
 import com.leo.core.config.Config;
+import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.ICameraApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IActionApi;
@@ -62,6 +64,7 @@ import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.iapi.main.IHttpApi;
+import com.leo.core.iapi.main.INewApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.ObjectUtil;
@@ -120,6 +123,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IParseApi parseApi;
     private IHelperApi helperApi;
     private ICameraApi cameraApi;
+    private IActivityLifecycleCallbacksApi activityLifecycleApi;
 
     //other
     private Integer rootViewResId;
@@ -510,6 +514,31 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public IActivityLifecycleCallbacksApi activityLifecycleApi() {
+        if (activityLifecycleApi == null) {
+            if(isApplication()){
+                activityLifecycleApi = newActivityLifecycleApi();
+            } else {
+                if(getApplication() instanceof BaseControllerApiApp){
+                    IControllerApi api = ((BaseControllerApiApp) getApplication()).controllerApi();
+                    if(api instanceof INewApi){
+                        activityLifecycleApi = api.activityLifecycleApi();
+                    }
+                }
+            }
+            if (activityLifecycleApi == null) {
+                throw new NullPointerException("newActivityLifecycleApi 不能为空");
+            }
+        }
+        return activityLifecycleApi;
+    }
+
+    @Override
+    public IActivityLifecycleCallbacksApi newActivityLifecycleApi() {
+        return null;
+    }
+
+    @Override
     public ICameraApi cameraApi() {
         if (cameraApi == null) {
             cameraApi = newCameraApi();
@@ -538,6 +567,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public Application getApplication() {
         return application;
+    }
+
+    @Override
+    public boolean isApplication() {
+        return getController() instanceof Application;
     }
 
     @Override

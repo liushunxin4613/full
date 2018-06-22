@@ -67,7 +67,7 @@ public class NewFieldBean {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }, true);
     }
 
     protected Map<String, Object> getFieldMap(IReturnEntryAction<Object, String, Entry<String, Object>> action) {
@@ -90,22 +90,22 @@ public class NewFieldBean {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        });
+        }, false);
         return map;
     }
 
-    protected void initFields(IObjAction<Field> action) {
-        RunUtil.execute(getFields(this), action);
+    protected void initFields(IObjAction<Field> action, boolean nw) {
+        RunUtil.execute(getFields(this, nw), action);
     }
 
-    protected Set<Field> getFields(Object obj) {
+    protected Set<Field> getFields(Object obj, boolean nw) {
         if (obj != null) {
             Set<Field> set = new LinkedHashSet<>();
             Class clz = obj.getClass();
             while (clz != Object.class) {
                 Field[] fields = clz.getDeclaredFields();
                 for (Field field : fields) {
-                    if (checkField(field)) {
+                    if (checkField(field, nw)) {
                         set.add(field);
                     }
                 }
@@ -116,11 +116,12 @@ public class NewFieldBean {
         return null;
     }
 
-    private boolean checkField(Field field) {
+    private boolean checkField(Field field, boolean nw) {
         if (field != null) {
             int m = field.getModifiers();
             return field != null && !Modifier.isStatic(m) && isOther(field)
-                    && !Modifier.isAbstract(m) && !Modifier.isFinal(m) && !Modifier.isTransient(m)
+                    && !Modifier.isAbstract(m) && !Modifier.isFinal(m)
+                    && (!Modifier.isTransient(m) || nw)
                     && !Modifier.isInterface(field.getType().getModifiers());
         }
         return false;

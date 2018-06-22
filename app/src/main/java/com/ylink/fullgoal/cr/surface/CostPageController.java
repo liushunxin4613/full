@@ -1,19 +1,32 @@
 package com.ylink.fullgoal.cr.surface;
 
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.core.MapController;
 import com.ylink.fullgoal.vo.CostIndexVo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
-public class CostPageController<T extends CostPageController> extends MapController<T, IControllerApi, CostIndexVo>{
+import static com.leo.core.util.TextUtils.check;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+
+public class CostPageController<T extends CostPageController> extends MapController<T, IControllerApi,
+        CostIndexVo, List<Map<String, Object>>> {
 
     private double otherSum;
 
     @Override
-    public T initDB(IControllerApi key, CostIndexVo dimenListFg) {
-        return super.initDB(key, dimenListFg);
+    public T initDB(IControllerApi key, CostIndexVo vo) {
+        return super.initDB(key, vo);
+    }
+
+    public T update(IControllerApi key, double money) {
+        if (check(getValue(key))) {
+            getValue(key).getMoney().initDB(money);
+        }
+        return getThis();
     }
 
     @Override
@@ -42,7 +55,7 @@ public class CostPageController<T extends CostPageController> extends MapControl
     }
 
     @Override
-    protected Class<CostIndexVo> getUBClz() {
+    protected Class<List<Map<String, Object>>> getUBClz() {
         return null;
     }
 
@@ -52,19 +65,41 @@ public class CostPageController<T extends CostPageController> extends MapControl
     }
 
     /**
-     * 计算其他项目金额
+     * 计算已过虑项目金额
      */
-    public double getOtherMoney(IControllerApi api){
-        if(api != null){
-            otherSum = 0;
-            execute(getMap(), (key, value) -> {
-                if(!TextUtils.equals(key, api)){
-                    otherSum += value.getMoney().getdouble();
-                }
-            });
-            return otherSum;
+    public double getFilterMoney(IControllerApi... args) {
+        otherSum = 0;
+        List<IControllerApi> data = Arrays.asList(args);
+        execute(getMap(), (api, value) -> {
+            if (!data.contains(api)) {
+                otherSum += value.getMoney().getdouble();
+            }
+        });
+        return otherSum;
+    }
+
+    @Override
+    protected String getOnUBKey(String key) {
+        switch (key) {
+            case QR:
+                return "share";
         }
-        return 0;
+        return super.getOnUBKey(key);
+    }
+
+    @Override
+    protected List<Map<String, Object>> getOnUB(String key) {
+        switch (key) {
+            case QR:
+                List<Map<String, Object>> data = new ArrayList<>();
+                execute(getMap(), (kk, vv) -> {
+                    if (check(kk, vv)) {
+                        data.add(vv.getCheckMap(key));
+                    }
+                });
+                return data;
+        }
+        return super.getOnUB(key);
     }
 
 }

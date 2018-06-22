@@ -77,6 +77,26 @@ public class Config {
             {REIMBURSE_LIST_QUERY_RETURN_STATUS_XG, XG},
     };
 
+    public final static String XG1 = "申请特批";
+    public final static String XG2 = "我不要了";
+    public final static String XG3 = "修改提交";
+    public final static String XG4 = "取消报销";
+
+    public final static String D1 = "待处理";
+    public final static String D2 = "审核中";
+    public final static String D3 = "已完成";
+    public final static String D4 = "已取消";
+
+    public final static String D_DATE1 = "当天";
+    public final static String D_DATE2 = "七天";
+    public final static String D_DATE3 = "一个月";
+    public final static String D_DATE4 = "三个月";
+    public final static String D_DATE5 = "六个月";
+    public final static String D_DATE6 = "一年";
+
+    public final static String D_BT1 = "一般费用报销";
+    public final static String D_BT2 = "出差费用报销";
+
     //记录参数
     public static int MAIN_FRAGMENT_INDEX = 0;//主页面默认Fragment
 
@@ -87,5 +107,7 @@ public class Config {
     public final static String SEARCH = "search";
     public final static String FILTERS = "filters";
     public final static String VALUE = "value";
+    public final static String DATA_QR = "dataQR";
+    public final static String MONEY = "totalAmountLower";
 
 }

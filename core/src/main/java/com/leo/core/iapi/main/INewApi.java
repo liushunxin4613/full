@@ -350,4 +350,20 @@ public interface INewApi {
      */
     <B> B newCameraApi();
 
+    /**
+     * activityLifecycleApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B activityLifecycleApi();
+
+    /**
+     * new activityLifecycleApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newActivityLifecycleApi();
+
 }

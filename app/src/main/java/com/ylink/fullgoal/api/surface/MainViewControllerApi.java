@@ -40,7 +40,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                         -> general(FQ)),
                 new IconTvMoreBean(R.mipmap.test_icon2, "出差费用报销", (bean, view)
                         -> evection(FQ)))
-                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "报销列表查询", (bean, view)
+                .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "报销列表查询", (bean, view)
                                 -> startSurfaceActivity(FullReimburseDataControllerApi.class)),
                         new IconTvMoreBean(R.mipmap.test_icon2, "选择银行卡号", (bean, view)
                                 -> startSurfaceActivity(FullBankControllerApi.class)))
@@ -49,17 +49,17 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
             addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般报销确认", (bean, view) -> {
                 Bundle bundle = new Bundle();
                 bundle.putString(STATE, QR);
-                bundle.putString(SERIAL_NO, "201806150026000388");
+                bundle.putString(SERIAL_NO, "2018062136000447");
                 startSurfaceActivity(bundle, FullGeneralControllerApi.class);
-            }), new IconTvMoreBean(R.mipmap.test_icon1, "出差报销确认", (bean, view) -> {
+            }), new IconTvMoreBean(R.mipmap.test_icon2, "出差报销确认", (bean, view) -> {
                 Bundle bundle = new Bundle();
                 bundle.putString(STATE, QR);
-                bundle.putString(SERIAL_NO, "201806150026000390");
+                bundle.putString(SERIAL_NO, "2018062136000449");
                 startSurfaceActivity(bundle, FullEvectionControllerApi.class);
             }));
-            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "费用指标", (bean, view)
-                    -> execute(this::cost)));
-            cost();
+//            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "费用指标", (bean, view)
+//                    -> execute(this::cost)));
+//            cost();
         }
 
     }

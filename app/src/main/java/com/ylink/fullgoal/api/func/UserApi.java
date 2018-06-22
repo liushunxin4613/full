@@ -54,17 +54,17 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
     @Override
     public String getUId() {
 //        return "12001324";
-        return "003";
+        return "3";
     }
 
     @Override
     public String getUserName() {
-        return "张三";
+        return "张3";
     }
 
     @Override
     public DepartmentFg getDepartment() {
-        return new DepartmentFg("20180507001", "信息技术部");
+        return new DepartmentFg("3", "3部门");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.api.full;
 
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -46,6 +47,7 @@ import com.ylink.fullgoal.vo.RVo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 
@@ -57,8 +59,13 @@ import static com.ylink.fullgoal.config.ComConfig.UPDATE_MONEY;
 import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.ComConfig.XQ;
 import static com.ylink.fullgoal.config.Config.BILL_TYPE_TITLES;
+import static com.ylink.fullgoal.config.Config.DATA_QR;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
+import static com.ylink.fullgoal.config.Config.XG1;
+import static com.ylink.fullgoal.config.Config.XG2;
+import static com.ylink.fullgoal.config.Config.XG3;
+import static com.ylink.fullgoal.config.Config.XG4;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
 
@@ -146,21 +153,32 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setRightTv("提交", v -> submit());
                     break;
                 case QR:
-                    setRightTv("确认", v -> submit());
+                    setRightTv("确认", v -> {
+                        Map<String, Object> map = getSubmitMap();
+                        if (!TextUtils.isEmpty(map)) {
+                            Bundle os = new Bundle();
+                            os.putString(DATA_QR, encode(map));
+                            startSurfaceActivity(os, FullCostIndexControllerApi.class);
+                        }
+                    });
                     break;
                 case XG:
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
                         //申请特批
-                        show("申请特批");
+                        iso(DVo::getLogo, obj -> obj.initDB(XG1));
+                        submit();
                     }).setOnClickListener(wbylIv, v -> {
                         //我不要了
-                        show("我不要了");
+                        iso(DVo::getLogo, obj -> obj.initDB(XG2));
+                        submit();
                     }).setOnClickListener(xgtjIv, v -> {
                         //修改提交
+                        iso(DVo::getLogo, obj -> obj.initDB(XG3));
                         submit();
                     }).setOnClickListener(qxbxIv, v -> {
                         //取消报销
-                        show("取消报销");
+                        iso(DVo::getLogo, obj -> obj.initDB(XG4));
+                        submit();
                     });
                     break;
             }
@@ -309,8 +327,15 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 提交数据
      */
     protected void submit() {
-        uApi().submitReimburse(getCheckMap(getVo().getCheckMap(getBType(), getState()),
-                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由")));
+        Map<String, Object> map = getSubmitMap();
+        if (!TextUtils.isEmpty(map)) {
+            uApi().submitReimburse(map);
+        }
+    }
+
+    private Map<String, Object> getSubmitMap() {
+        return getCheckMap(getVo().getCheckMap(getBType(), getState()),
+                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由"));
     }
 
     @Override

@@ -40,6 +40,8 @@ public class UrlConfig {
     public final static String FULL_REIMBURSE_QUERY = "Message_back.action";
     //报销列表获取
     public final static String FULL_REIMBURSE_QUERY_LIST = "Application_form.action";
+    //分摊维度列表
+    public final static String FULL_DIMENSION_LIST = "Dimension_list.action";
 
     //参数
 
