@@ -6,6 +6,7 @@ import com.ylink.fullgoal.cr.core.BaseController;
 import com.ylink.fullgoal.fg.CostFg;
 
 import static com.leo.core.util.TextUtils.check;
+import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 
@@ -79,6 +80,7 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
     protected String getOnUBKey(String key) {
         switch (key) {
             case YB:
+            case CC:
             case QR:
                 return "cost";
         }
@@ -90,6 +92,7 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
         return toUB(db -> {
             switch (key) {
                 case YB:
+                case CC:
                 case QR:
                     return getDB();
             }

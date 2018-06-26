@@ -42,6 +42,7 @@ public class Config {
             {"reportName", "投研报告编号集合"},
             {"ticketList", "携程机票编号集合"},
             {"imageList", "影像集合"},
+            {"cost", "费用指标"},
             {"first", "是否是第一次提交"},
             {"taskType", "任务类型"},
             {"costList", "费用指标集合"},

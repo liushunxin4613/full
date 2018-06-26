@@ -2,20 +2,22 @@ package com.ylink.fullgoal.bean;
 
 import android.view.View;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.DateArrayBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DateArrayBean extends BaseApiBean {
+public class DateArrayBean extends SurfaceBiBean<DateArrayBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_date_array;
+    protected IBindControllerApi<SurfaceControllerApi, DateArrayBean> newDefApi() {
+        return new DateArrayBi();
     }
 
     private String name;

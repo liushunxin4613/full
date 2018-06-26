@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.full;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -8,7 +7,6 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
@@ -18,9 +16,9 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.MoneyBean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.MapController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
@@ -31,7 +29,6 @@ import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DimenFg;
 import com.ylink.fullgoal.fg.DimenListFg;
-import com.ylink.fullgoal.main.MainActivity;
 import com.ylink.fullgoal.main.SurfaceActivity;
 import com.ylink.fullgoal.view.MViewPager;
 import com.ylink.fullgoal.vo.CostIndexVo;
@@ -40,7 +37,6 @@ import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import butterknife.Bind;
 
@@ -300,7 +296,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         return true;
     }
 
-    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseApiBean>> api) {
+    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api) {
         if (controllerApi != null && api != null) {
             controllerApi.addVgBean(api);
             controllerApi.notifyDataSetChanged();

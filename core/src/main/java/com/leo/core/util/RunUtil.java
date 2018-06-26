@@ -3,8 +3,10 @@ package com.leo.core.util;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
+import com.leo.core.iapi.inter.IPositionAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.ITextAction;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,8 @@ public class RunUtil {
         return getExecute(a, null, api);
     }
 
-    public static void execute(IAction action){
-        if(action != null){
+    public static void execute(IAction action) {
+        if (action != null) {
             action.execute();
         }
     }
@@ -40,6 +42,12 @@ public class RunUtil {
         }
     }
 
+    public static void executeNon(String text, ITextAction r) {
+        if (text != null && r != null) {
+            r.execute(text);
+        }
+    }
+
     public static <T> boolean execute(List<T> data, IObjAction<T> action) {
         if (action == null || data == null) {
             return false;
@@ -47,6 +55,19 @@ public class RunUtil {
         for (T obj : data) {
             if (obj != null) {
                 action.execute(obj);
+            }
+        }
+        return true;
+    }
+
+    public static <T> boolean executePos(List<T> data, IPositionAction<T> action) {
+        if (action == null || data == null) {
+            return false;
+        }
+        for (int i = 0; i < data.size(); i++) {
+            T item = data.get(i);
+            if(item != null){
+                action.execute(item, i);
             }
         }
         return true;

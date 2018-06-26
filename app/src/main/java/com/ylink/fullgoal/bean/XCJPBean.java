@@ -2,21 +2,23 @@ package com.ylink.fullgoal.bean;
 
 import android.view.View;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.OnBVClickListener;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.XCJPBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
 /**
  * 携程机票
  */
-public class XCJPBean extends BaseApiBean<XCJPBean> {
-
-    private transient View.OnClickListener onClickListener;
+public class XCJPBean extends SurfaceBiBean<XCJPBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_xcjp;
+    protected IBindControllerApi<SurfaceControllerApi, XCJPBean> newDefApi() {
+        return new XCJPBi();
     }
+
+    private transient View.OnClickListener onClickListener;
 
     @Override
     protected String getDefaultKeyword() {

@@ -1,30 +1,36 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.bean.BaseApiBean;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.api.surface.GridRecycleControllerApi;
+import com.ylink.fullgoal.bi.GridBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.BaseBiBean;
 
 import java.util.List;
 
-public class GridBean extends BaseApiBean {
-
-    public final static int API_TYPE = R.layout.l_grid;
+public class GridBean extends BaseBiBean<GridBean, GridRecycleControllerApi> {
 
     @Override
-    public Integer getApiType() {
-        return API_TYPE;
+    public GridRecycleControllerApi getControllerApi(SurfaceControllerApi api) {
+        return new GridRecycleControllerApi(api.getController());
     }
 
-    private List<? extends BaseApiBean> data;
+    @Override
+    protected IBindControllerApi<GridRecycleControllerApi, GridBean> newDefApi() {
+        return new GridBi();
+    }
 
-    public GridBean(List<? extends BaseApiBean> data) {
+    private List<? extends BaseBiBean> data;
+
+    public GridBean(List<? extends BaseBiBean> data) {
         this.data = data;
     }
 
-    public void setData(List<? extends BaseApiBean> data) {
+    public void setData(List<? extends BaseBiBean> data) {
         this.data = data;
     }
 
-    public List<? extends BaseApiBean> getData() {
+    public List<? extends BaseBiBean> getData() {
         return data;
     }
 

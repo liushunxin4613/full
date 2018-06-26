@@ -3,15 +3,17 @@ package com.ylink.fullgoal.bean;
 import android.app.Dialog;
 import android.view.View;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.OnBVDialogClickListener;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.TvV2DialogBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class TvV2DialogBean extends BaseApiBean {
+public class TvV2DialogBean extends SurfaceBiBean<TvV2DialogBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_dialog_photo;
+    protected IBindControllerApi<SurfaceControllerApi, TvV2DialogBean> newDefApi() {
+        return new TvV2DialogBi();
     }
 
     private String name;

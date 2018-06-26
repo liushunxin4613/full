@@ -1,7 +1,8 @@
-package com.leo.core.bean;
+package com.leo.core.core.bean;
 
 import android.view.View;
 
+import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.api.IKeywordApi;
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IApiBean;
@@ -11,13 +12,17 @@ import com.leo.core.util.TextUtils;
 /**
  * 基础ApiBean
  */
-public abstract class BaseApiBean<T extends BaseApiBean> implements IApiBean, IKeywordApi {
+public abstract class CoreApiBean<T extends CoreApiBean, A extends IControllerApi,
+        AA extends IControllerApi> extends ThisApi<T> implements IApiBean<A, AA>, IKeywordApi {
 
     private transient Object apiId = TextUtils.getRandom();
     private transient IControllerApi api;
     private transient boolean enable = true;
     private transient String keyword;
     private transient String filter;
+
+    @Override
+    public abstract A getControllerApi(AA api);
 
     @Override
     public abstract Integer getApiType();
@@ -54,13 +59,6 @@ public abstract class BaseApiBean<T extends BaseApiBean> implements IApiBean, IK
         return (T) this;
     }
 
-    public BaseApiBean() {
-    }
-
-    public BaseApiBean(IControllerApi api) {
-        this.api = api;
-    }
-
     public IControllerApi getApi() {
         return api;
     }
@@ -73,7 +71,7 @@ public abstract class BaseApiBean<T extends BaseApiBean> implements IApiBean, IK
         return enable;
     }
 
-    public BaseApiBean setEnable(boolean enable) {
+    public CoreApiBean setEnable(boolean enable) {
         this.enable = enable;
         return this;
     }

@@ -1,13 +1,15 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.bean.BaseApiBean;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.ImageBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class ImageBean extends BaseApiBean {
+public class ImageBean extends SurfaceBiBean<ImageBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_ps_image;
+    protected IBindControllerApi<SurfaceControllerApi, ImageBean> newDefApi() {
+        return new ImageBi();
     }
 
     private Object path;

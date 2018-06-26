@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
 import com.leo.core.iapi.main.Adapter;
-import com.leo.core.iapi.main.CreateControllerApiCallback;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
@@ -18,28 +17,27 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         implements Adapter<T>, IAFVApi<T, C> {
 
     private Context context;
+    private IControllerApi superControllerApi;
     private IControllerApi controllerApi;
     private DataApi<DataApi, IApiBean> dataApi;
-    private CreateControllerApiCallback callback;
 
-    public BaseRecycleControllerApiAdapter() {
+    public BaseRecycleControllerApiAdapter(IControllerApi superControllerApi) {
+        if (superControllerApi == null) {
+            throw new NullPointerException("superControllerApi 不能为空");
+        }
+        this.superControllerApi = superControllerApi;
         dataApi = new DataApi<>();
         dataApi.setApi(obj -> {
-            if(obj.getApiType() == null){
+            if (obj.getApiType() == null) {
                 return true;
             }
             for (IApiBean bean : dataApi.getData()) {
-                if(bean != null && TextUtils.equals(bean.getApiId(), obj.getApiId())){
+                if (bean != null && TextUtils.equals(bean.getApiId(), obj.getApiId())) {
                     return true;
                 }
             }
             return false;
         });
-    }
-
-    public T setCallback(CreateControllerApiCallback callback) {
-        this.callback = callback;
-        return (T)this;
     }
 
     @Override
@@ -72,27 +70,30 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         return dataApi().getCount();
     }
 
-    public IApiBean getItem(int position){
+    public IApiBean getItem(int position) {
         return dataApi().getItem(position);
     }
 
     @Override
     public int getItemViewType(int position) {
-        IApiBean bean = getItem(position);
-        return bean == null ? 0 : bean.getApiType() == null ? 0 : bean.getApiType();
+        return position;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
         context = parent.getContext();
-        if(callback == null){
-            throw new NullPointerException("callback不能为空");
+        IApiBean bean = getItem(position);
+        if (bean == null) {
+            throw new NullPointerException("bean不能为空");
         }
-        IControllerApi api = callback.createControllerApi(parent, viewType);
-        if(api == null){
+        if (bean.getApiType() == null) {
+            throw new NullPointerException("bean.getApiType()不能为空");
+        }
+        IControllerApi api = bean.getControllerApi(superControllerApi);
+        if (api == null) {
             throw new NullPointerException("api不能为空");
         }
-        api.setRootViewResId(viewType);
+        api.setRootViewResId(bean.getApiType());
         api.initController(this);
         api.onCreateView(LayoutInflater.from(getContext()), parent, null);
         api.onViewCreated(api.getRootView(), null);
@@ -102,7 +103,7 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         IControllerApi controllerApi = holder.controllerApi();
-        if(controllerApi != null){
+        if (controllerApi != null) {
             controllerApi.onBindViewHolder(getItem(position), position);
         }
     }

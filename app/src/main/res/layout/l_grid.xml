@@ -8,9 +8,9 @@
     <include
         layout="@layout/l_recycle"
         android:layout_width="match_parent"
-        android:layout_marginLeft="6dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="@dimen/y20"/>
+        android:layout_marginBottom="@dimen/y30"
+        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp" />
 
 </LinearLayout>

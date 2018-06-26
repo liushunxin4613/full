@@ -2,15 +2,17 @@ package com.ylink.fullgoal.bean;
 
 import android.view.View;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.OnBVClickListener;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.HintDialogBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class HintDialogBean extends BaseApiBean<HintDialogBean> {
+public class HintDialogBean extends SurfaceBiBean<HintDialogBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_hint_dialog;
+    protected IBindControllerApi<SurfaceControllerApi, HintDialogBean> newDefApi() {
+        return new HintDialogBi();
     }
 
     private String title;

@@ -2,21 +2,23 @@ package com.ylink.fullgoal.bean;
 
 import android.view.View;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.OnBVClickListener;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.CCSQDBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
 /**
  * 出差申请单
  */
-public class CCSQDBean extends BaseApiBean<CCSQDBean> {
-
-    private transient View.OnClickListener onClickListener;
+public class CCSQDBean extends SurfaceBiBean<CCSQDBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_ccsqd;
+    protected IBindControllerApi<SurfaceControllerApi, CCSQDBean> newDefApi() {
+        return new CCSQDBi();
     }
+
+    private transient View.OnClickListener onClickListener;
 
     @Override
     protected String getDefaultKeyword() {

@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.bean;
 
 import com.leo.core.iapi.inter.IObjAction;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.TvHEt3Bi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvHEt3Bean extends ApiBean<TvHEt3Bean> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, TvHEt3Bean> newDefApi() {
+        return new TvHEt3Bi();
+    }
 
     private transient IObjAction<String> action;
 
@@ -18,11 +25,6 @@ public class TvHEt3Bean extends ApiBean<TvHEt3Bean> {
         if (action != null) {
             action.execute(getDetail());
         }
-    }
-
-    @Override
-    public Integer getApiType() {
-        return getEnable(R.layout.l_tv_et3, R.layout.l_tv_tv3_s);
     }
 
 }

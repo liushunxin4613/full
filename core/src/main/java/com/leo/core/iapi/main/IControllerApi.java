@@ -23,14 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
-import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.inter.IAction;
-import com.leo.core.iapi.api.IBindBeanApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IAttachApi;
 
 import java.lang.reflect.Type;
-import java.util.Stack;
 
 /**
  * 控制器
@@ -479,11 +476,6 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void attachBaseContext(Context base);
 
     /**
-     * findViewById 查看view
-     */
-    void onFindViewByIds();
-
-    /**
      * 执行单个holder
      *
      * @param bean     bean
@@ -556,20 +548,6 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * 执行
      */
     T executeBundle(IObjAction<Bundle> api);
-
-    /**
-     * 加入BindBeanApi
-     *
-     * @param api api
-     * @param <B> B
-     * @return 本身
-     */
-    <B> T putBindBeanApi(Class<B> clz, IBindBeanApi<T, B> api);
-
-    /**
-     * 清理BindBeanApi
-     */
-    T clearBindBeanApi();
 
     /**
      * 设置状态栏颜色深浅

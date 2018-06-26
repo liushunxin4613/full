@@ -3,16 +3,17 @@ package com.ylink.fullgoal.bean;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.RunUtil;
+import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
+public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
 
     @Override
     protected String getDefaultKeyword() {
@@ -71,7 +72,8 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
         this(iconResId, null, null, null, listener);
     }
 
-    public ApiBean(Integer iconResId, String name, String detail, String hint, OnBVClickListener<T> listener) {
+    public ApiBean(Integer iconResId, String name, String detail, String hint,
+                   OnBVClickListener<T> listener) {
         this.iconResId = iconResId;
         this.name = name;
         this.detail = detail;
@@ -186,10 +188,6 @@ public abstract class ApiBean<T extends ApiBean> extends BaseApiBean<T> {
         if (!TextUtils.equals(temp, getHint())) {
             setDetail(temp);
         }
-    }
-
-    protected Integer getEnableLayoutResId(Integer resId) {
-        return isEnable() ? resId : R.layout.l_h_tv2_more_s;
     }
 
     public View.OnClickListener getOnClickListener() {

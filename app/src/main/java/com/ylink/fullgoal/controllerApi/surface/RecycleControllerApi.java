@@ -5,22 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.api.IRecycleApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IShowDataApi;
-import com.leo.core.iapi.main.CreateControllerApiCallback;
 import com.leo.core.iapi.main.IApiBean;
-import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.api.surface.GridRecycleControllerApi;
-import com.ylink.fullgoal.api.surface.ItemControllerApi;
-import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
+import com.ylink.fullgoal.core.BaseBiBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +27,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 
 public class RecycleControllerApi<T extends RecycleControllerApi, C> extends ContentControllerApi<T, C>
-        implements IRecycleApi<T, RecycleControllerApiAdapter>, IShowDataApi, CreateControllerApiCallback {
+        implements IRecycleApi<T, RecycleControllerApiAdapter>, IShowDataApi {
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -43,16 +38,6 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     public RecycleControllerApi(C controller) {
         super(controller);
-    }
-
-    @Override
-    public IControllerApi createControllerApi(ViewGroup container, int resId) {
-        switch (resId) {
-            default:
-                return new ItemControllerApi(null);
-            case GridBean.API_TYPE:
-                return new GridRecycleControllerApi(null);
-        }
     }
 
     @Override
@@ -94,7 +79,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     @Override
     public RecycleControllerApiAdapter newRecycleAdapter() {
-        return new RecycleControllerApiAdapter();
+        return new RecycleControllerApiAdapter(getThis());
     }
 
     @Override
@@ -124,22 +109,6 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getRecyclerView();
     }
 
-    protected boolean isRecycleOnResumeFocus() {
-        return true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getRootView() instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup) getRootView();
-            if (vg.getChildCount() > 0) {
-                vg.getChildAt(0).setFocusableInTouchMode(true);
-                vg.getChildAt(0).requestFocus();
-            }
-        }
-    }
-
     @Override
     public void initView() {
         super.initView();
@@ -160,22 +129,21 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
                 }
             }
         });
-        getRecycleAdapter().setCallback(this);
     }
 
-    protected void initDataAction(IObjAction<List<BaseApiBean>> action) {
+    protected void initDataAction(IObjAction<List<IApiBean>> action) {
         clear();
         if (action != null) {
-            List<BaseApiBean> data;
+            List<IApiBean> data;
             action.execute(data = new ArrayList<>());
             execute(getLineData(data), this::add);
         }
         notifyDataSetChanged();
     }
 
-    protected List<BaseApiBean> getLineData(List<BaseApiBean> data) {
+    protected List<IApiBean> getLineData(List<IApiBean> data) {
         if (!TextUtils.isEmpty(data)) {
-            List<BaseApiBean> dat = new ArrayList<>();
+            List<IApiBean> dat = new ArrayList<>();
             int count = TextUtils.count(data);
             for (int i = 0; i < count; i++) {
                 dat.add(data.get(i));
@@ -250,22 +218,22 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     //私有的
 
-    public T addSmallVgBean(BaseApiBean... args) {
+    public T addSmallVgBean(BaseBiBean... args) {
         if (!TextUtils.isEmpty(args)) {
             add(new VgBean(TextUtils.getListData(args), LineBean.SMALL));
         }
         return getThis();
     }
 
-    protected void addVgBean(BaseApiBean... args) {
+    protected void addVgBean(BaseBiBean... args) {
         if (!TextUtils.isEmpty(args)) {
             add(new VgBean(TextUtils.getListData(args)));
         }
     }
 
-    public VgBean addVgBean(IObjAction<List<BaseApiBean>> api) {
+    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api) {
         if (api != null) {
-            List<BaseApiBean> data = new ArrayList<>();
+            List<BaseBiBean> data = new ArrayList<>();
             api.execute(data);
             if (!TextUtils.isEmpty(data)) {
                 VgBean vb = new VgBean(data);

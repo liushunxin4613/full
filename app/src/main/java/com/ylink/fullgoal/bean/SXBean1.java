@@ -2,10 +2,17 @@ package com.ylink.fullgoal.bean;
 
 import android.widget.TextView;
 
-import com.leo.core.bean.BaseApiBean;
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class SXBean1 extends BaseApiBean {
+public class SXBean1 extends SurfaceBiBean<SXBean1> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, SXBean1> newDefApi() {
+        return null;
+    }
 
     @Override
     public Integer getApiType() {

@@ -1,8 +1,9 @@
 package com.ylink.fullgoal.vo;
 
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class ImageVo {
+public class ImageVo extends SurfaceBiBean<ImageVo> {
 
     public final static int FILTER_YB = 0;
     public final static int FILTER_JTF = 1;

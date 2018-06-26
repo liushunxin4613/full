@@ -7,61 +7,61 @@
 
     <include layout="@layout/l_top_bar" />
 
-    <include layout="@layout/l_recycle"
+    <include
+        layout="@layout/l_recycle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-    
+        android:layout_weight="1" />
+
     <LinearLayout
         android:id="@+id/alter_vg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x148"
         android:background="#F5F4F9"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:visibility="gone"
-        tools:visibility="visible"
-        >
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/sqtp_iv"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/x130"
-            android:src="@mipmap/icon_sqtp"
-            tools:ignore="ContentDescription"
             android:layout_marginLeft="@dimen/x30"
-            android:layout_marginRight="@dimen/x30"/>
+            android:layout_marginRight="@dimen/x30"
+            android:layout_weight="1"
+            android:src="@mipmap/icon_sqtp"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/wbyl_iv"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/x130"
-            android:src="@mipmap/icon_wbyl"
-            tools:ignore="ContentDescription"
             android:layout_marginLeft="@dimen/x30"
-            android:layout_marginRight="@dimen/x30"/>
+            android:layout_marginRight="@dimen/x30"
+            android:layout_weight="1"
+            android:src="@mipmap/icon_wbyl"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/xgtj_iv"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/x130"
-            android:src="@mipmap/icon_xgtj"
-            tools:ignore="ContentDescription"
             android:layout_marginLeft="@dimen/x30"
-            android:layout_marginRight="@dimen/x30"/>
+            android:layout_marginRight="@dimen/x30"
+            android:layout_weight="1"
+            android:src="@mipmap/icon_xgtj"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/qxbx_iv"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/x130"
-            android:src="@mipmap/icon_qxbx"
-            tools:ignore="ContentDescription"
             android:layout_marginLeft="@dimen/x30"
-            android:layout_marginRight="@dimen/x30"/>
+            android:layout_marginRight="@dimen/x30"
+            android:layout_weight="1"
+            android:src="@mipmap/icon_qxbx"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 

@@ -1,9 +1,17 @@
 package com.ylink.fullgoal.bean;
 
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.InhibitionRuleBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class InhibitionRuleBean extends ApiBean<InhibitionRuleBean> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, InhibitionRuleBean> newDefApi() {
+        return new InhibitionRuleBi();
+    }
 
     public static final String STATE_RED = "红灯";
     public static final String STATE_YELLOW = "黄灯";
@@ -23,11 +31,6 @@ public class InhibitionRuleBean extends ApiBean<InhibitionRuleBean> {
             }
         }
         return null;
-    }
-
-    @Override
-    public Integer getApiType() {
-        return R.layout.l_inhibition_rule;
     }
 
 }

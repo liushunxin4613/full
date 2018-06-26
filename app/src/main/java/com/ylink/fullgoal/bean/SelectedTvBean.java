@@ -3,19 +3,20 @@ package com.ylink.fullgoal.bean;
 import android.view.View;
 import android.widget.TextView;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.RunUtil;
-import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.SelectedTvBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
 import static com.leo.core.util.TextUtils.check;
 
-public class SelectedTvBean extends BaseApiBean {
+public class SelectedTvBean extends SurfaceBiBean<SelectedTvBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_selected_tv;
+    protected IBindControllerApi<SurfaceControllerApi, SelectedTvBean> newDefApi() {
+        return new SelectedTvBi();
     }
 
     private String name;

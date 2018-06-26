@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.bean.Bol;
 import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
@@ -18,15 +17,16 @@ import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.api.surface.ItemControllerApi;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.HintDialogBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.bean.VgBean;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
@@ -237,7 +237,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     private void again() {
-        FullDialogControllerApi api = getDialogControllerApi(FullDialogControllerApi.class);
+        SurfaceControllerApi api = getDialogControllerApi(SurfaceControllerApi.class);
         api.dialogShow().onBindViewHolder(new HintDialogBean("温馨提示", "是否需要再次报销", "确认", "取消", (bean, view) -> {
             api.dismiss();
             iso(DVo::getImageList, AddController::clear);
@@ -298,7 +298,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     @Override
-    public VgBean addVgBean(IObjAction<List<BaseApiBean>> api) {
+    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api) {
         return super.addVgBean(data -> {
             api.execute(data);
             execute(data, item -> item.setEnable(isEnable()));
@@ -330,12 +330,14 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
             uApi().submitReimburse(map);
+            getContentView().invalidate();
         }
     }
 
     private Map<String, Object> getSubmitMap() {
         return getCheckMap(getVo().getCheckMap(getBType(), getState()),
-                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由"));
+                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由",
+                        "费用指标"));
     }
 
     @Override
@@ -426,7 +428,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
             notifyDataChanged();
         });
-        ItemControllerApi api = getDialogControllerApi(ItemControllerApi.class, db.getApiType());
+        SurfaceControllerApi api = getDialogControllerApi(SurfaceControllerApi.class, db.getApiType());
         api.dialogShow().onBindViewHolder(db, 0);
         Window window = api.getDialog().getWindow();
         if (window != null) {

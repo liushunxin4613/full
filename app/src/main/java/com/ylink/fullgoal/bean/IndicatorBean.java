@@ -1,21 +1,23 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.bean.BaseApiBean;
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.iapi.main.IControllerApi;
-import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.IndicatorBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class IndicatorBean extends BaseApiBean{
+public class IndicatorBean extends SurfaceBiBean<IndicatorBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_indicator_item;
+    protected IBindControllerApi<SurfaceControllerApi, IndicatorBean> newDefApi() {
+        return new IndicatorBi();
     }
 
     private String name;
 
     public IndicatorBean(String name, IControllerApi api) {
-        super(api);
         this.name = name;
+        setApi(api);
     }
 
     public String getName() {

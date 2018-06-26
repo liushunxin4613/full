@@ -1,4 +1,4 @@
-package com.ylink.fullgoal.api.full;
+package com.ylink.fullgoal.bi;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +8,13 @@ import android.widget.TextView;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBi;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import butterknife.Bind;
 import uk.co.senab.photoview.PhotoView;
 
-public class FullPhotoControllerApi<T extends FullPhotoControllerApi, C> extends SurfaceControllerApi<T, C> {
+public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
 
     @Bind(R.id.name_tv)
     TextView nameTv;
@@ -24,25 +25,19 @@ public class FullPhotoControllerApi<T extends FullPhotoControllerApi, C> extends
     @Bind(R.id.vg)
     ViewGroup vg;
 
-    public FullPhotoControllerApi(C controller) {
-        super(controller);
-    }
-
     @Override
-    public Integer getDefRootViewResId() {
+    public Integer getDefLayoutResId() {
         return R.layout.l_photo;
     }
 
     @Override
-    public void initView() {
-        super.initView();
-        putBindBeanApi(ImageVo.class, (api, bean)
-                -> setVisibility(bean.isShow() ? View.VISIBLE : View.GONE, vg)
+    public void onBindApi(SurfaceControllerApi api, ImageVo bean) {
+        super.onBindApi(api, bean);
+        api.setVisibility(bean.isShow() ? View.VISIBLE : View.GONE, vg)
                 .setVisibility(TextUtils.isEmpty(bean.getPhoto()) ? View.INVISIBLE : View.VISIBLE, photoIv)
                 .setText(nameTv, "金额")
                 .setText(detailEt, bean.getAmount())
                 .setImage(photoIv, bean.getPhoto())
-                .execute(() -> detailEt.addTextChangedListener(getMoneyTextWatcher(bean::setAmount))));
+                .execute(() -> detailEt.addTextChangedListener(api.getMoneyTextWatcher(bean::setAmount)));
     }
-
 }

@@ -16,6 +16,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.LineBean;
+import com.ylink.fullgoal.bean.ProjectBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.XCJPBean;
@@ -141,16 +142,20 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         add(DataFg.class, (path, what, msg, bean) -> showView(bean.isSuccess()));
         //员工列表
         addList(UserFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new TvBean(item.getUserName(), (bean, view)
+                -> data.add(new TvH2SBean(item.getUserName(), item.getUserDepartment(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //部门列表
         addList(DepartmentFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getDepartmentName(), (bean, view)
                 -> finishActivity(new SearchVo<>(search, item)))))));
         //项目列表
-        addList(ProjectFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
+        /*addList(ProjectFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getProjectName(), (bean, view)
-                -> finishActivity(new SearchVo<>(search, item)))))));
+                -> finishActivity(new SearchVo<>(search, item)))))));*/
+        addList(ProjectFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
+                -> data.add(new ProjectBean(item.getProjectName(), item.getApplicationDate(),
+                item.getLeader(), item.getLeadDepartment(), item.getAmount(), item.getJudtification(),
+                (bean, view) -> finishActivity(new SearchVo<>(search, item)))))));
         //合同付款申请单列表
         addList(ContractPaymentFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new TvBean(item.getName(), (bean, view)

@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.bean;
 
 import com.leo.core.iapi.inter.IObjAction;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.MoneyBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class MoneyBean extends ApiBean<MoneyBean> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, MoneyBean> newDefApi() {
+        return new MoneyBi();
+    }
 
     private transient IObjAction<String> action;
 
@@ -24,11 +31,6 @@ public class MoneyBean extends ApiBean<MoneyBean> {
         if (action != null) {
             action.execute(getDetail());
         }
-    }
-
-    @Override
-    public Integer getApiType() {
-        return getEnableLayoutResId(isEtEnable() ? R.layout.l_h_tv_money : R.layout.l_h_money);
     }
 
 }

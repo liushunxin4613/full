@@ -3,9 +3,11 @@ package com.leo.core.api.core;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
+import com.leo.core.iapi.inter.IPositionAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IThisApi;
+import com.leo.core.iapi.inter.ITextAction;
 import com.leo.core.other.ParamType;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
@@ -22,8 +24,13 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return (T) this;
     }
 
-    protected <B> T executeNon(B obj, IObjAction<B> api) {
-        RunUtil.executeNon(obj, api);
+    protected T execute(String text, ITextAction action) {
+        RunUtil.executeNon(text, action);
+        return getThis();
+    }
+
+    protected <B> T executeNon(B obj, IObjAction<B> action) {
+        RunUtil.executeNon(obj, action);
         return getThis();
     }
 
@@ -37,6 +44,11 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
 
     protected <B> T execute(List<B> data, IObjAction<B> action) {
         RunUtil.execute(data, action);
+        return getThis();
+    }
+
+    protected <B> T executePos(List<B> data, IPositionAction<B> action) {
+        RunUtil.executePos(data, action);
         return getThis();
     }
 

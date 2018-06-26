@@ -36,7 +36,6 @@ import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.ICameraApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IActionApi;
-import com.leo.core.iapi.api.IBindBeanApi;
 import com.leo.core.iapi.api.ICallbackApi;
 import com.leo.core.iapi.api.IConfigApi;
 import com.leo.core.iapi.api.IDataApi;
@@ -67,13 +66,13 @@ import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.iapi.main.INewApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.iapi.main.IViewApi;
+import com.leo.core.iapi.main.IViewApiBean;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.StatusBarUtil;
 import com.leo.core.util.TextUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,7 +130,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private Observable.Transformer transformer;
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
-    private Map<Class, IBindBeanApi> apiMap;
     private String finish;
 
     private List<OnAddListener> addListeners;
@@ -139,7 +137,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public CoreControllerApi(C controller) {
         super(controller);
         initController(controller);
-        apiMap = new HashMap<>();
     }
 
     @Override
@@ -516,12 +513,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public IActivityLifecycleCallbacksApi activityLifecycleApi() {
         if (activityLifecycleApi == null) {
-            if(isApplication()){
+            if (isApplication()) {
                 activityLifecycleApi = newActivityLifecycleApi();
             } else {
-                if(getApplication() instanceof BaseControllerApiApp){
+                if (getApplication() instanceof BaseControllerApiApp) {
                     IControllerApi api = ((BaseControllerApiApp) getApplication()).controllerApi();
-                    if(api instanceof INewApi){
+                    if (api instanceof INewApi) {
                         activityLifecycleApi = api.activityLifecycleApi();
                     }
                 }
@@ -795,15 +792,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public void onFindViewByIds() {
-    }
-
-    @Override
     public synchronized <B> T onBindViewHolder(B bean, int position) {
-        executeNon(bean, obj -> executeNon(apiMap.get(bean.getClass()), api -> {
-            onFindViewByIds();
-            api.onItem(getThis(), bean);
-        }));
+        if (bean instanceof IViewApiBean) {
+            ((IViewApiBean) bean).onBindApi(getThis());
+        }
         return getThis();
     }
 
@@ -834,7 +826,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public <B> B getFinish(Type... args) {
-        if(!TextUtils.isEmpty(finish)){
+        if (!TextUtils.isEmpty(finish)) {
             final String txt = finish.replaceAll(RX, "/");
             if (!TextUtils.isEmpty(args)) {
                 int emptyCount = getEmptyLength(txt);
@@ -879,20 +871,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 executeNon(getFragment().getArguments(), api);
             }
         }
-        return getThis();
-    }
-
-    @Override
-    public <B> T putBindBeanApi(Class<B> clz, IBindBeanApi<T, B> api) {
-        if (clz != null) {
-            apiMap.put(clz, api);
-        }
-        return getThis();
-    }
-
-    @Override
-    public T clearBindBeanApi() {
-        apiMap.clear();
         return getThis();
     }
 
@@ -989,7 +967,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public void initView() {
         if (getRootView() != null)
             ButterKnife.bind(this, getRootView());
-        onFindViewByIds();
     }
 
     @Override
@@ -1009,11 +986,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public void onResume() {
         executeViewControllerApi(IControllerApi::onResume);
-        String key = getString(Config.LAST_FINISH_CONTROLLER_API);
-        if (!TextUtils.isEmpty(key)) {
-            finish = getString(key);
-            remove(key);
-        }
+        finish = getString(getString(Config.LAST_FINISH_CONTROLLER_API));
     }
 
     @Override
@@ -1028,6 +1001,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onStop() {
+        remove(getString(Config.LAST_FINISH_CONTROLLER_API));
         executeViewControllerApi(IControllerApi::onStop);
     }
 
@@ -1893,8 +1867,23 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     private void executeViewControllerApi(IObjAction<IControllerApi> api) {
-        executeNon(getViewControllerApi(), api);
+        executeViewControllerApi(getRootView(), api);
     }
+
+    private void executeViewControllerApi(View view, IObjAction<IControllerApi> api) {
+        if (view instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup) view;
+            for (int i = 0; i < vg.getChildCount(); i++) {
+                View child = vg.getChildAt(i);
+                if (child instanceof BaseControllerApiView) {
+                    executeNon(((BaseControllerApiView) child).controllerApi(), api);
+                } else {
+                    executeViewControllerApi(child, api);
+                }
+            }
+        }
+    }
+
 
     @Override
     public T copy() {

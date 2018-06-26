@@ -1,16 +1,18 @@
 package com.ylink.fullgoal.bean;
 
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.TvHEtBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvHEtBean extends ApiBean<TvHEtBean> {
 
-    public TvHEtBean(String name, String detail, String hint) {
-        super(name, detail, hint);
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, TvHEtBean> newDefApi() {
+        return new TvHEtBi();
     }
 
-    @Override
-    public Integer getApiType() {
-        return R.layout.l_tv_h_et;
+    public TvHEtBean(String name, String detail, String hint) {
+        super(name, detail, hint);
     }
 
 }

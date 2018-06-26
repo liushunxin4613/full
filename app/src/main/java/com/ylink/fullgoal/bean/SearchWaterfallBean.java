@@ -9,30 +9,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leo.core.iapi.api.IBindBeanApi;
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.SearchWaterfallBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchWaterfall extends ApiBean<SearchWaterfall> {
+public class SearchWaterfallBean extends ApiBean<SearchWaterfallBean> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, SearchWaterfallBean> newDefApi() {
+        return new SearchWaterfallBi();
+    }
 
     private List<String> data;
     private List<TvSBean> beanData;
     private transient ImageView closeIv;
     private transient IBindBeanApi<RecycleControllerApi, String> textApi;
 
-    public SearchWaterfall(String name, List<String> data, IBindBeanApi<RecycleControllerApi, String> textApi) {
+    public SearchWaterfallBean(String name, List<String> data,
+                               IBindBeanApi<RecycleControllerApi, String> textApi) {
         super(name);
         setData(data);
         setTextApi(textApi);
-    }
-
-    @Override
-    public Integer getApiType() {
-        return R.layout.l_search_waterfall;
     }
 
     public List<String> getData() {
@@ -59,7 +62,7 @@ public class SearchWaterfall extends ApiBean<SearchWaterfall> {
         return closeIv;
     }
 
-    public SearchWaterfall setCloseIv(ImageView closeIv) {
+    public SearchWaterfallBean setCloseIv(ImageView closeIv) {
         this.closeIv = closeIv;
         if (closeIv != null) {
             closeIv.setOnClickListener(v -> {
@@ -75,7 +78,7 @@ public class SearchWaterfall extends ApiBean<SearchWaterfall> {
         return textApi;
     }
 
-    public SearchWaterfall setTextApi(IBindBeanApi<RecycleControllerApi, String> textApi) {
+    public SearchWaterfallBean setTextApi(IBindBeanApi<RecycleControllerApi, String> textApi) {
         this.textApi = textApi;
         return this;
     }

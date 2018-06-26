@@ -6,6 +6,10 @@ import com.leo.core.iapi.main.IControllerApi;
 public class RecycleControllerApiAdapter<T extends RecycleControllerApiAdapter,
         C extends IControllerApi> extends BaseRecycleControllerApiAdapter<T, C> {
 
+    public RecycleControllerApiAdapter(IControllerApi superControllerApi) {
+        super(superControllerApi);
+    }
+
     @Override
     public IControllerApi<C, T> newControllerApi() {
         return new SurfaceControllerApi(this);

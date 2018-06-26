@@ -15,6 +15,7 @@ import com.leo.core.R;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
@@ -73,9 +74,15 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
 
     private void init(View rootView, Integer layoutResId) {
         if (controllerApi() != null) {
-            Bundle savedInstanceState = new Bundle();
             controllerApi().setRootView(rootView);
             controllerApi().setRootViewResId(layoutResId);
+            initControllerApi();
+        }
+    }
+
+    private void initControllerApi(){
+        if (controllerApi() != null) {
+            Bundle savedInstanceState = new Bundle();
             controllerApi().onCreateView(LayoutInflater.from(getContext()), this, savedInstanceState);
             if (attrs != null && controllerApi().getStyleableRes() != null) {
                 TypedArray a = getContext().obtainStyledAttributes(attrs, controllerApi().getStyleableRes());
@@ -110,6 +117,16 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
     public T init(Class<? extends IControllerApi> clz, View rootView) {
         this.apiClz = clz;
         init(rootView, null);
+        return (T) this;
+    }
+
+    public T init(IControllerApi controllerApi, Integer layoutResId){
+        this.controllerApi = controllerApi;
+        if(controllerApi() != null){
+            controllerApi().setRootViewResId(layoutResId);
+            controllerApi().initController((T) this);
+        }
+        initControllerApi();
         return (T) this;
     }
 

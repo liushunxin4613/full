@@ -2,16 +2,18 @@ package com.ylink.fullgoal.bean;
 
 import android.view.View;
 
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.inter.OnBVLongClickListener;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.GridPhotoBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class GridPhotoBean extends BaseApiBean<GridPhotoBean> {
+public class GridPhotoBean extends SurfaceBiBean<GridPhotoBean> {
 
     @Override
-    public Integer getApiType() {
-        return R.layout.l_grid_photo;
+    protected IBindControllerApi<SurfaceControllerApi, GridPhotoBean> newDefApi() {
+        return new GridPhotoBi();
     }
 
     private transient int unit;

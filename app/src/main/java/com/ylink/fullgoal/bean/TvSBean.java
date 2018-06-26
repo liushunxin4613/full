@@ -1,17 +1,19 @@
 package com.ylink.fullgoal.bean;
 
 import com.leo.core.iapi.inter.IObjAction;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.TvSBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvSBean extends ApiBean<TvSBean> {
 
-    public TvSBean(String name) {
-        super(name);
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, TvSBean> newDefApi() {
+        return new TvSBi();
     }
 
-    @Override
-    public Integer getApiType() {
-        return R.layout.l_tv_s;
+    public TvSBean(String name) {
+        super(name);
     }
 
     private transient IObjAction<String> textApi;

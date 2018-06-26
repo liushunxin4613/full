@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.leo.core.adapter.BasePagerAdapter;
-import com.leo.core.bean.BaseApiBean;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
@@ -27,6 +26,7 @@ import com.ylink.fullgoal.bean.TvHTv3Bean;
 import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.fg.ApplicationtFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.vo.DDVo;
@@ -67,8 +67,11 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     ViewPager viewPager;
     @Bind(R.id.drawerLayout)
     DrawerLayout drawerLayout;
+
     private DDVo vo;
     private IndicatorControllerApi api;
+    private ReimburseTypeBean typeBean;
+    private DateArrayBean dateArrayBean;
     private int gravity = Gravity.RIGHT;
     private Map<String, RecycleControllerApi> map;
 
@@ -196,17 +199,13 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
 
     private void add(String name, RecycleControllerApi controllerApi) {
         if (check(api, name, controllerApi)) {
-            api.add(new IndicatorBean(name, controllerApi))
-                    .notifyDataSetChanged();
+            api.add(new IndicatorBean(name, controllerApi)).notifyDataSetChanged();
             DItemVo vo = new DItemVo();
             vo.getAgent().initDB(getUId());
             vo.getStatus().initDB(name);
             iso(DDVo::getItem, obj -> obj.initDB(name, vo));
         }
     }
-
-    private DateArrayBean dateArrayBean;
-    private ReimburseTypeBean typeBean;
 
     //私有的
 
@@ -281,7 +280,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 .setAdapter(new BasePagerAdapter());
     }
 
-    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseApiBean>> api,
+    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api,
                            IObjAction<VgBean> vgAction) {
         if (controllerApi != null && api != null) {
             executeNon(controllerApi.addVgBean(api), vgAction);

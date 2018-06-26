@@ -2,9 +2,17 @@ package com.ylink.fullgoal.bean;
 
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.OnBVClickListener;
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.TvHTvIconMoreBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvHTvIconMoreBean extends ApiBean<TvHTvIconMoreBean> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, TvHTvIconMoreBean> newDefApi() {
+        return new TvHTvIconMoreBi();
+    }
 
     private transient IObjAction<String> action;
 
@@ -25,11 +33,6 @@ public class TvHTvIconMoreBean extends ApiBean<TvHTvIconMoreBean> {
         if (action != null) {
             action.execute(getDetail());
         }
-    }
-
-    @Override
-    public Integer getApiType() {
-        return getEnableLayoutResId(R.layout.l_h_tv_tv_more);
     }
 
 }

@@ -16,6 +16,7 @@ import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
+import com.leo.core.iapi.inter.ITextAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -67,57 +68,65 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     //自定义
 
     @SafeVarargs
-    protected final T startSurfaceActivity(Class<? extends IControllerApi>... args) {
+    public final T startSurfaceActivity(Class<? extends IControllerApi>... args) {
         startActivity(SurfaceActivity.class, args);
         return getThis();
     }
 
     @SafeVarargs
-    protected final T startFinishSurfaceActivity(Class<? extends IControllerApi>... args) {
+    public final T startFinishSurfaceActivity(Class<? extends IControllerApi>... args) {
         startFinishActivity(SurfaceActivity.class, args);
         return getThis();
     }
 
 
     @SafeVarargs
-    protected final T startSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
+    public final T startSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
         startActivity(SurfaceActivity.class, bundle, args);
         return getThis();
     }
 
     @SafeVarargs
-    protected final T startFinishSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
+    public final T startFinishSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
         startFinishActivity(SurfaceActivity.class, bundle, args);
         return getThis();
     }
 
     @SafeVarargs
-    protected final BaseControllerApiFragment getFragment(Class<? extends IControllerApi>... args) {
+    public final BaseControllerApiFragment getFragment(Class<? extends IControllerApi>... args) {
         return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, args);
     }
 
     @SafeVarargs
-    protected final BaseControllerApiFragment getFragment(Bundle bundle, Class<? extends IControllerApi>... args) {
+    public final BaseControllerApiFragment getFragment(Bundle bundle, Class<? extends IControllerApi>... args) {
         return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, bundle, args);
     }
 
-    protected <B extends IControllerApi> B getViewControllerApi(Class<B> clz, Integer layoutResId) {
-        return clz == null ? null : (B) new BaseControllerApiView(getContext()).init(clz, layoutResId).controllerApi();
+    public <B extends IControllerApi> B getViewControllerApi(Class<B> clz, Integer layoutResId) {
+        return clz == null ? null : (B) new BaseControllerApiView(getContext()).init(clz, layoutResId)
+                .controllerApi();
     }
 
-    protected <B extends IControllerApi> B getViewControllerApi(Class<B> clz, View rootView) {
-        return clz == null ? null : (B) new BaseControllerApiView(getContext()).init(clz, rootView).controllerApi();
+    public <B extends IControllerApi> B getViewControllerApi(Class<B> clz, View rootView) {
+        return clz == null ? null : (B) new BaseControllerApiView(getContext()).init(clz, rootView)
+                .controllerApi();
     }
 
-    protected <B extends IControllerApi> B getViewControllerApi(Class<B> clz) {
+    public <B extends IControllerApi> B getViewControllerApi(Class<B> clz) {
         return getViewControllerApi(clz, (Integer) null);
     }
 
-    protected <B extends IControllerApi> B getDialogControllerApi(Class<B> clz, Integer layoutResId) {
-        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(clz, layoutResId).controllerApi();
+    public <B extends IControllerApi> B getViewControllerApi(IControllerApi api, Integer layoutResId) {
+        return api == null ? null : (B) new BaseControllerApiView(getContext()).init(api, layoutResId)
+                .controllerApi();
     }
 
-    protected <B extends IControllerApi> B getDialogControllerApi(Class<B> clz) {
+    public <B extends IControllerApi> B getDialogControllerApi(Class<B> clz, Integer layoutResId) {
+        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(clz, layoutResId)
+                .controllerApi();
+    }
+
+    public <B extends IControllerApi> B getDialogControllerApi(Class<B> clz) {
         return getDialogControllerApi(clz, null);
     }
 
@@ -177,7 +186,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         startSearch(search, null, null);
     }
 
-    protected int getResTvColor(CharSequence text) {
+    public int getResTvColor(CharSequence text) {
         return !TextUtils.isEmpty(text) ? R.color.tv : R.color.tv1;
     }
 
@@ -305,7 +314,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    protected TextWatcher getMoneyTextWatcher(IObjAction<String> action) {
+    public TextWatcher getMoneyTextWatcher(ITextAction action) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -322,7 +331,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         };
     }
 
-    protected void onAfterTextChanged(Editable text, IObjAction<String> action) {
+    protected void onAfterTextChanged(Editable text, ITextAction action) {
         String temp = text.toString();
         int posDot = temp.indexOf(".");
         int endPosDot = temp.lastIndexOf(".");
@@ -337,7 +346,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         } else if (posDot == 0) {
             text.insert(0, "0");
         }
-        executeNon(temp, action);
+        execute(temp, action);
     }
 
     protected Type getObjectType(Object obj) {

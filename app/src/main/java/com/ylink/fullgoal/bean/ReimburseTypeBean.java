@@ -4,14 +4,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.util.RunUtil;
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.ReimburseTypeBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 import static com.leo.core.util.TextUtils.check;
-import static com.leo.core.util.TextUtils.getListData;
 
 public class ReimburseTypeBean extends ApiBean<ReimburseTypeBean> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, ReimburseTypeBean> newDefApi() {
+        return new ReimburseTypeBi();
+    }
 
     private transient TextView nameTv;
     private transient TextView detailTv;
@@ -21,11 +26,6 @@ public class ReimburseTypeBean extends ApiBean<ReimburseTypeBean> {
     public ReimburseTypeBean(String name, String detail, IObjAction<String> action) {
         super(name, detail);
         this.action = action;
-    }
-
-    @Override
-    public Integer getApiType() {
-        return R.layout.l_sx_bottom;
     }
 
     public TextView getNameTv() {

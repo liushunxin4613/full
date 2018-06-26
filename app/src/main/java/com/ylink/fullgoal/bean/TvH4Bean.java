@@ -1,13 +1,15 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.bean.BaseApiBean;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.TvH4Bi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class TvH4Bean extends BaseApiBean {
+public class TvH4Bean extends SurfaceBiBean<TvH4Bean> {
 
     @Override
-    public Integer getApiType() {
-        return isTitle ? R.layout.l_process_title : R.layout.l_process;
+    protected IBindControllerApi<SurfaceControllerApi, TvH4Bean> newDefApi() {
+        return new TvH4Bi();
     }
 
     private String name;
@@ -15,6 +17,10 @@ public class TvH4Bean extends BaseApiBean {
     private String type;
     private String time;
     private transient boolean isTitle;
+
+    public boolean isTitle() {
+        return isTitle;
+    }
 
     public TvH4Bean() {
         this.isTitle = true;

@@ -12,6 +12,7 @@ public class UserFg {
 
     private String userCode;
     private String userName;
+    private String userDepartment;
 
     private transient String bank;
 
@@ -42,6 +43,14 @@ public class UserFg {
         this.userName = userName;
     }
 
+    public String getUserDepartment() {
+        return userDepartment;
+    }
+
+    public void setUserDepartment(String userDepartment) {
+        this.userDepartment = userDepartment;
+    }
+
     public String getBank() {
         return bank;
     }
@@ -49,4 +58,5 @@ public class UserFg {
     public void setBank(String bank) {
         this.bank = bank;
     }
+
 }

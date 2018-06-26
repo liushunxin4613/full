@@ -1,17 +1,19 @@
 package com.ylink.fullgoal.bean;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
-import com.ylink.fullgoal.R;
+import com.leo.core.iapi.main.IBindControllerApi;
+import com.ylink.fullgoal.bi.IconTvMoreBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class IconTvMoreBean extends ApiBean<IconTvMoreBean> {
 
-    public IconTvMoreBean(Integer iconResId, String name, OnBVClickListener<IconTvMoreBean> listener) {
-        super(iconResId, name, listener);
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, IconTvMoreBean> newDefApi() {
+        return new IconTvMoreBi();
     }
 
-    @Override
-    public Integer getApiType() {
-        return R.layout.l_icon_tv_more;
+    public IconTvMoreBean(Integer iconResId, String name, OnBVClickListener<IconTvMoreBean> listener) {
+        super(iconResId, name, listener);
     }
 
     @Override

@@ -45,7 +45,9 @@ public class TextUtils {
 
     public static boolean check(Object... args) {
         for (Object obj : args) {
-            if (count(obj) <= 0) {
+            if (obj instanceof Boolean && !(Boolean) obj) {
+                return false;
+            } else if (count(obj) <= 0) {
                 return false;
             }
         }

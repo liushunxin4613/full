@@ -5,6 +5,7 @@ import android.view.View;
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.bean.Bol;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.BarViewPagerControllerApi;
 import com.ylink.fullgoal.fg.ImageFg;
 import com.ylink.fullgoal.vo.ImageVo;
@@ -45,7 +46,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
         setVisibility(getRightTv(), bol ? View.VISIBLE : View.INVISIBLE);
         initViewPager();
         add(ImageFg.class, (path, what, msg, bean) -> {
-            if(bean.isSuccess()){
+            if (bean.isSuccess()) {
                 finishActivity(vo);
             } else {
                 show(bean.getMessage());
@@ -67,7 +68,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
         executeNon(data, list -> {
             for (int i = 0; i < list.size(); i++) {
                 ImageVo itemVo = list.get(i);
-                getPagerAdapter().add(getFullPhotoControllerApi(itemVo, i));
+                getPagerAdapter().add(getSurfaceControllerApi(itemVo, i));
                 if (TextUtils.equals(encode(vo), encode(itemVo))) {
                     vo = itemVo;
                     getViewPager().setCurrentItem(i);
@@ -77,8 +78,8 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
         });
     }
 
-    private FullPhotoControllerApi getFullPhotoControllerApi(ImageVo vo, int position) {
-        return (FullPhotoControllerApi) getViewControllerApi(FullPhotoControllerApi.class)
+    private SurfaceControllerApi getSurfaceControllerApi(ImageVo vo, int position) {
+        return (SurfaceControllerApi) getViewControllerApi(SurfaceControllerApi.class)
                 .onBindViewHolder(vo.setShow(bol), position);
     }
 

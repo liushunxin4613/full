@@ -1,9 +1,9 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.bean.BaseApiBean;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class LineBean extends BaseApiBean {
+public class LineBean extends SurfaceBiBean<LineBean> {
 
     public final static int NORMAL = R.layout.v_line;
     public final static int SMALL = R.layout.v_line2;
