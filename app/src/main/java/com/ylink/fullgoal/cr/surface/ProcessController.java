@@ -32,12 +32,12 @@ public class ProcessController<T extends ProcessController> extends BaseStringCo
 
     @Override
     public String getViewBean() {
-        return no(ProcessFg::getCode);
+        return no(ProcessFg::getCause);
     }
 
     @Override
     protected String getOnUBKey(String key) {
-        switch (key){
+        switch (key) {
             case YB:
                 return "entertainrequest";
         }

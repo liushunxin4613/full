@@ -2,15 +2,13 @@ package com.ylink.fullgoal.api.full;
 
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
+import com.ylink.fullgoal.bean.ProjectBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
-import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
-import com.ylink.fullgoal.bean.TvHEtIconMoreBean;
 import com.ylink.fullgoal.bean.TvHTvIconMoreBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.vo.DVo;
@@ -92,8 +90,10 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             }
             ArrayList<String> filterData = new ArrayList<>();
             execute(list, fg -> {
-                data.add(getExecute(fg, item -> new CCSQDBean(item.getCode(), String.format("%s天",
-                        item.getDates()), item.getStartDate(), String.format("至%s", item.getEndDate()),
+                data.add(getExecute(fg, item -> new XCJPBean(item.getAmount(),
+                        String.format("%s天", item.getDates()),
+                        item.getWorkName(), String.format("%s 开", item.getStartDate()),
+                        String.format("%s 到", item.getEndDate()), item.getDestination(),
                         (bean, view) -> initVgApiBean("出差申请单",
                                 () -> iso(DVo::getTrave, obj -> obj.remove(item, this))))));
                 filterData.add(fg.getAmount());
@@ -112,7 +112,8 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             ArrayList<String> filterData = new ArrayList<>();
             execute(list, fg -> {
                 filterData.add(fg.getProjectCode());
-                data.add(getExecute(fg, item -> (new TvH2SBean(item.getReportInfo(), item.getStockName(),
+                data.add(getExecute(fg, item -> (new ProjectBean(item.getStockName(), item.getEndTime(),
+                        item.getStockCode(), item.getStatus(), item.getType(), item.getReportInfo(),
                         (bean, view) -> initVgApiBean("调研报告",
                                 () -> iso(DVo::getReport, obj -> obj.remove(item, this)))))));
             });
