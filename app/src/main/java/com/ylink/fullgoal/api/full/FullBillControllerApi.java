@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.api.full;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.leo.core.adapter.BasePagerAdapter;
@@ -12,6 +13,9 @@ import com.ylink.fullgoal.vo.ImageVo;
 
 import java.util.List;
 
+import static com.leo.core.util.TextUtils.count;
+
+@SuppressLint("DefaultLocale")
 public class FullBillControllerApi<T extends FullBillControllerApi, C> extends BarViewPagerControllerApi<T, C> {
 
     private List<ImageVo> data;
@@ -40,7 +44,6 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
             executeNon(getBundle(bundle, ImageVo.class), vo -> this.vo = vo);
             executeNon(getBundle(bundle, Bol.class), bol -> this.bol = bol.isBol());
         });
-        setTitle("票据");
         setRightTv("修改金额", v -> executeNon(vo, vo -> uApi().imageUpdateAmount(vo.getSerialNo(),
                 vo.getImageID(), vo.getAmount())));
         setVisibility(getRightTv(), bol ? View.VISIBLE : View.INVISIBLE);
@@ -60,6 +63,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
         executeNon(data, list -> {
             if (position < list.size()) {
                 vo = data.get(position);
+                initTitle(position);
             }
         });
     }
@@ -72,6 +76,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
                 if (TextUtils.equals(encode(vo), encode(itemVo))) {
                     vo = itemVo;
                     getViewPager().setCurrentItem(i);
+                    initTitle(i);
                 }
             }
             getPagerAdapter().notifyDataSetChanged();
@@ -79,8 +84,12 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
     }
 
     private SurfaceControllerApi getSurfaceControllerApi(ImageVo vo, int position) {
-        return (SurfaceControllerApi) getViewControllerApi(SurfaceControllerApi.class)
+        return (SurfaceControllerApi) getViewControllerApi(SurfaceControllerApi.class, vo.getApiType())
                 .onBindViewHolder(vo.setShow(bol), position);
+    }
+
+    private void initTitle(int position){
+        setTitle(String.format("票据(%d/%d)", position + 1, count(data)));
     }
 
 }

@@ -27,6 +27,7 @@ import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.BaseBiBean;
+import com.ylink.fullgoal.cr.surface.BooleanController;
 import com.ylink.fullgoal.fg.ApplicationtFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.vo.DDVo;
@@ -112,14 +113,10 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         getReiRecycleControllerApi(D4);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        query();
-    }
-
     private void query() {
-        uApi().queryApplicationForm(getUBMap(), getType());
+        if(!getExecute(getItemValue().getOnce(), false, BooleanController::is)){
+            uApi().queryApplicationForm(getUBMap(), getType());
+        }
     }
 
     private String getType() {
@@ -140,7 +137,6 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             if (api == null) {
                 api = getRecycleControllerApi(type);
                 map.put(type, api);
-                query();
             }
             return api;
         }
@@ -149,6 +145,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
 
     private void initReimburseVoData(RecycleControllerApi api, List<ApplicationtFg> applicationtData) {
         if (api != null) {
+            iss(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(true));
             if (!TextUtils.isEmpty(applicationtData)) {
                 api.clear().showContentView();
                 execute(applicationtData, obj -> addVgBean(api, data -> {
@@ -277,7 +274,8 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     private void initIndicatorControllerApi() {
         api = ((IndicatorControllerApi) apiView.controllerApi())
                 .setViewPager(viewPager)
-                .setAdapter(new BasePagerAdapter());
+                .setAdapter(new BasePagerAdapter())
+                .setAction((what, msg, bean, args) -> query());
     }
 
     private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api,

@@ -2,12 +2,14 @@ package com.ylink.fullgoal.controllerApi.core;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.bean.Completed;
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
@@ -18,10 +20,12 @@ import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.ITextAction;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.net.Exceptions;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullSearchControllerApi;
+import com.ylink.fullgoal.api.surface.LoadingDialogControllerApi;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.main.SurfaceActivity;
@@ -36,6 +40,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.count;
@@ -46,8 +51,49 @@ import static com.ylink.fullgoal.config.Config.FIELDS;
 @SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
 
+    private AlertDialog loadingDialog;
+
     public SurfaceControllerApi(C controller) {
         super(controller);
+    }
+
+    public void showLoading() {
+        AtomicBoolean isNew = new AtomicBoolean(true);
+        executeNon(getLoadingDialog(), dialog -> {
+            if (dialog.isShowing()) {
+                isNew.set(false);
+            }
+        });
+        if (isNew.get()) {
+            loadingDialog = (AlertDialog) getDialogControllerApi(LoadingDialogControllerApi.class)
+                    .dialogShow()
+                    .getDialog();
+        }
+    }
+
+    public T dismissLoading() {
+        executeNon(getLoadingDialog(), dialog -> {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        });
+        return getThis();
+    }
+
+    private AlertDialog getLoadingDialog() {
+        return loadingDialog;
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
+        add(Completed.class, (path, what, msg, bean) -> dismissLoading());
+        add(Exceptions.class, (path, what, msg, bean) -> dismissLoading());
+        add(Exceptions.class, (path, what, msg, bean) -> {
+            if (!TextUtils.isEmpty(bean.getMessage())) {
+                show(bean.getMessage());
+            }
+        });
     }
 
     @Override
@@ -66,6 +112,11 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     //自定义
+
+    @Override
+    public BaseControllerApiDialog getDialog() {
+        return super.getDialog();
+    }
 
     @SafeVarargs
     public final T startSurfaceActivity(Class<? extends IControllerApi>... args) {
@@ -127,7 +178,8 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     public <B extends IControllerApi> B getDialogControllerApi(Class<B> clz) {
-        return getDialogControllerApi(clz, null);
+        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(clz, null)
+                .controllerApi();
     }
 
     protected <B> B getBundle(Bundle bundle, Class<B> clz) {
@@ -561,29 +613,29 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getThis();
     }
 
-    protected <A> T iss(A a, IObjAction<A> action){
-        if(check(a, action)){
+    protected <A> T iss(A a, IObjAction<A> action) {
+        if (check(a, action)) {
             action.execute(a);
         }
         return getThis();
     }
 
-    protected <A, B> T iss(A a, IReturnAction<A, B> ab, IObjAction<B> action){
-        if(check(a, ab)){
+    protected <A, B> T iss(A a, IReturnAction<A, B> ab, IObjAction<B> action) {
+        if (check(a, ab)) {
             B b = ab.execute(a);
-            if(check(b)){
+            if (check(b)) {
                 action.execute(b);
             }
         }
         return getThis();
     }
 
-    protected <A, B, D> T iss(A a, IReturnAction<A, B> ab, IReturnAction<B, D> bd, IObjAction<D> action){
-        if(check(a, ab)){
+    protected <A, B, D> T iss(A a, IReturnAction<A, B> ab, IReturnAction<B, D> bd, IObjAction<D> action) {
+        if (check(a, ab)) {
             B b = ab.execute(a);
-            if(check(b)){
+            if (check(b)) {
                 D d = bd.execute(b);
-                if(check(d)){
+                if (check(d)) {
                     action.execute(d);
                 }
             }

@@ -1,14 +1,14 @@
 package com.ylink.fullgoal.bean;
 
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
-import com.leo.core.iapi.inter.OnBVClickListener;
+import com.leo.core.iapi.inter.OnBVDialogClickListener;
 import com.leo.core.iapi.main.IBindControllerApi;
 import com.ylink.fullgoal.bi.HintDialogBi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class HintDialogBean extends SurfaceBiBean<HintDialogBean> {
+public class HintDialogBean extends BaseDialogBean<HintDialogBean> {
 
     @Override
     protected IBindControllerApi<SurfaceControllerApi, HintDialogBean> newDefApi() {
@@ -21,16 +21,32 @@ public class HintDialogBean extends SurfaceBiBean<HintDialogBean> {
     private String cancel;
     private transient View.OnClickListener confirmOnClickListener;
     private transient View.OnClickListener cancelOnClickListener;
+    private transient OnBVDialogClickListener<HintDialogBean> confirmListener;
+    private transient OnBVDialogClickListener<HintDialogBean> cancelListener;
 
     public HintDialogBean(String title, String detail, String confirm, String cancel,
-                          OnBVClickListener<HintDialogBean> confirmListener,
-                          OnBVClickListener<HintDialogBean> cancelListener) {
+                          OnBVDialogClickListener<HintDialogBean> confirmListener,
+                          OnBVDialogClickListener<HintDialogBean> cancelListener) {
         this.title = title;
         this.detail = detail;
         this.confirm = confirm;
         this.cancel = cancel;
-        setConfirmOnClickListener(confirmListener);
-        setCancelOnClickListener(cancelListener);
+        this.confirmListener = confirmListener;
+        this.cancelListener = cancelListener;
+        init();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        setConfirmOnClickListener(getOnClickListener(confirmListener));
+        setCancelOnClickListener(getOnClickListener(cancelListener));
+    }
+
+    @Override
+    public void setDialog(AlertDialog dialog) {
+        super.setDialog(dialog);
+        executeNon(getDialog(), obj -> obj.setCancelable(false));
     }
 
     public String getTitle() {
@@ -65,20 +81,20 @@ public class HintDialogBean extends SurfaceBiBean<HintDialogBean> {
         this.cancel = cancel;
     }
 
+    public void setConfirmOnClickListener(View.OnClickListener confirmOnClickListener) {
+        this.confirmOnClickListener = confirmOnClickListener;
+    }
+
+    public void setCancelOnClickListener(View.OnClickListener cancelOnClickListener) {
+        this.cancelOnClickListener = cancelOnClickListener;
+    }
+
     public View.OnClickListener getConfirmOnClickListener() {
         return confirmOnClickListener;
     }
 
-    public void setConfirmOnClickListener(OnBVClickListener<HintDialogBean> listener) {
-        this.confirmOnClickListener = getOnBVClickListener(listener);
-    }
-
     public View.OnClickListener getCancelOnClickListener() {
         return cancelOnClickListener;
-    }
-
-    public void setCancelOnClickListener(OnBVClickListener<HintDialogBean> listener) {
-        this.cancelOnClickListener = getOnBVClickListener(listener);
     }
 
 }

@@ -88,4 +88,40 @@ public class UrlConfig {
     //车船机票
     public final static String MESSAGE_BACK_IMAGE_INVOICE_USE_CCJP = "车船机票费";
 
+    //api
+
+    public final static String PATH_QUERY_USER_DATA = "Reimburse_ment.action";//获取员工信息
+    public final static String PATH_QUERY_DEPARTMENT_DATA = "Budget_department.action";//获取部门信息
+    public final static String PATH_QUERY_PROJECT_DATA = "Project_list.action";//获取项目信息
+    public final static String PATH_QUERY_CONTRACT_PAYMENT_DATA = "Contract_payment.action";//获取合同申请单
+    public final static String PATH_QUERY_PROCESS_DATA = "Process_query.action";//获取招待申请单
+    public final static String PATH_QUERY_COST_INDEX_DATA = "Cost_index.action";//获取费用指标
+    public final static String PATH_QUERY_TRAVEL_FORM_DATA = "Travel_form.action";//获取出差申请单
+    public final static String PATH_QUERY_RESEARCH_REPORT_DATA = "Research_report.action";//获取投研报告
+    public final static String PATH_QUERY_CTRIP_TICKETS_DATA = "Ctrip_tickets.action";//获取携程机票
+    public final static String PATH_QUERY_MESSAGE_BACK_DATA = FULL_REIMBURSE_QUERY;//获取报销确认信息
+    public final static String PATH_QUERY_BANK_DATA = "Bank_mess.action";//获取银行卡报销信息
+    public final static String PATH_QUERY_APPLICATION_FORM_DATA = "Application_form.action";//获取报销列表
+    public final static String PATH_QUERY_DIMENSION_DATA = FULL_DIMENSION_LIST;//获取分摊维度列表
+    public final static String PATH_QUERY_DIMENSION_INFORMATION_DATA = "Dimension_information.action";//获取分摊维度信息列表
+//    public final static String PATH_QUERY__DATA = "";//
+
+    public final static String[] LOADING_DIALOGS = {
+            PATH_QUERY_USER_DATA,
+            PATH_QUERY_DEPARTMENT_DATA,
+            PATH_QUERY_PROJECT_DATA,
+            PATH_QUERY_CONTRACT_PAYMENT_DATA,
+            PATH_QUERY_PROCESS_DATA,
+            PATH_QUERY_COST_INDEX_DATA,
+            PATH_QUERY_TRAVEL_FORM_DATA,
+            PATH_QUERY_RESEARCH_REPORT_DATA,
+            PATH_QUERY_CTRIP_TICKETS_DATA,
+            PATH_QUERY_MESSAGE_BACK_DATA,
+            PATH_QUERY_BANK_DATA,
+            PATH_QUERY_APPLICATION_FORM_DATA,
+            PATH_QUERY_DIMENSION_DATA,
+            PATH_QUERY_DIMENSION_INFORMATION_DATA,
+            FULL_REIMBURSE_SUBMIT,
+    };
+
 }

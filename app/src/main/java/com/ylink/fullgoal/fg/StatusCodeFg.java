@@ -12,7 +12,7 @@ public class StatusCodeFg implements IIsSuccessApi {
 
     private String statusCode;
 
-    String getStatusCode() {
+    public String getStatusCode() {
         return statusCode;
     }
 

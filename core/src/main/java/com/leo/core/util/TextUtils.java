@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.lang.reflect.Field;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -434,6 +435,31 @@ public class TextUtils {
             return null;
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static <K, V> Map<K, V> copy(Map<K, V> map, boolean filter, K... args) {
+        if (map != null) {
+            try {
+                Map<K, V> copy = map.getClass().newInstance();
+                if(map.size() > 0){
+                    if (TextUtils.isEmpty(args)) {
+                        if (filter) {
+                            copy.putAll(map);
+                        }
+                    } else { 
+                        List<K> data = Arrays.asList((K[]) args);
+                        for (Map.Entry<K, V> entry : map.entrySet()) {
+                            if (data.contains(entry.getKey()) == !filter) {
+                                copy.put(entry.getKey(), entry.getValue());
+                            }
+                        }
+                    }
+                }
+                return copy;
+            } catch (Exception ignored) {
+            }
         }
         return null;
     }

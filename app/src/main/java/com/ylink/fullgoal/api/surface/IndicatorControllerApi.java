@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.api.main.DataApi;
-import com.leo.core.iapi.inter.ITextAction;
+import com.leo.core.iapi.inter.IMsgAction;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IndicatorBean;
@@ -31,7 +31,7 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
     private View selected;
     private ViewPager viewPager;
     private BasePagerAdapter adapter;
-    private ITextAction action;
+    private IMsgAction action;
     private DataApi<DataApi, IndicatorBean> dataApi;
 
     public IndicatorControllerApi(C controller) {
@@ -55,7 +55,7 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
         return dataApi;
     }
 
-    public T setAction(ITextAction action) {
+    public T setAction(IMsgAction action) {
         this.action = action;
         return getThis();
     }
@@ -94,10 +94,10 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
         return getDataApi().getCount();
     }
 
-    public String getCurrentItemName(){
-        if(viewPager != null){
+    public String getCurrentItemName() {
+        if (viewPager != null) {
             IndicatorBean bean = getDataApi().getItem(viewPager.getCurrentItem());
-            if(bean != null){
+            if (bean != null) {
                 return bean.getName();
             }
         }
@@ -200,8 +200,8 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
                 scrollCenter(position);
                 //处理数据
                 if (action != null) {
-                    action.execute(getExecute(getDataApi().getItem(position),
-                            IndicatorBean::getName));
+                    action.execute(position, getExecute(getDataApi().getItem(position),
+                            IndicatorBean::getName), null);
                 }
             }
         }

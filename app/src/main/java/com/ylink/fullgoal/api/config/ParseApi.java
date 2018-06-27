@@ -10,7 +10,6 @@ import com.leo.core.iapi.api.IGsonDecodeApi;
 import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.net.Exceptions;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.io.IOException;
@@ -221,19 +220,17 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         try {
             onString(body.string());
         } catch (IOException e) {
-            e.printStackTrace();
+            onExceptions(new Exceptions("body.string()异常", 102, e));
         }
     }
 
     private void onCompleted(Completed completed) {
-        LogUtil.ii(this, "*********************** 本次请求结束!!! ***********************");
         onObj(completed);
     }
 
     private void onExceptions(Exceptions exception) {
-        executeNon(exception.getE(), Throwable::printStackTrace);
-//        LogUtil.ii(this, "本次异常: " + exception.getMessage());
         onObj(exception);
+        executeNon(exception.getE(), Throwable::printStackTrace);
     }
 
     //以下为私有方法

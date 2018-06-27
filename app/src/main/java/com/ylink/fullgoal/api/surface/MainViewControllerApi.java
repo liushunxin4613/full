@@ -1,7 +1,9 @@
 package com.ylink.fullgoal.api.surface;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullBankControllerApi;
@@ -35,6 +37,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     @Override
     public void initView() {
         super.initView();
+        onAppData();
         hideBackIv().setTitle("我的报销");
         clear().addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销", (bean, view)
                         -> general(FQ)),
@@ -61,7 +64,23 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
 //                    -> execute(this::cost)));
 //            cost();
         }
+        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试", (bean, view) -> {
+            showLoading();
+            addUI(3000, (IAction) this::dismissLoading);
+            start();
+        }));
+        showContentView();
+    }
 
+    //被调用
+    private void onAppData() {
+        Intent intent = getActivity().getIntent();
+        String taskId = intent.getStringExtra("taskId");
+        String userId = intent.getStringExtra("userId");
+        String cookieStr = intent.getStringExtra("cookieStr");
+        ee("taskId", taskId);
+        ee("userId", userId);
+        ee("cookieStr", cookieStr);
     }
 
     //私有的

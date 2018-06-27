@@ -20,6 +20,6 @@ public interface IShowApi<T extends IBindContextApi, I, P> extends IBindContextA
      * @param param 输入参数
      * @return 本身
      */
-    T show(@NonNull I in, @NonNull P param);
+    T show(Object thisObj, @NonNull I in, @NonNull P param);
 
 }

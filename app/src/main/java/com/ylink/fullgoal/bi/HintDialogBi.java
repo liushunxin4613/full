@@ -32,6 +32,7 @@ public class HintDialogBi extends SurfaceBi<HintDialogBi, HintDialogBean> {
                 .setText(detailTv, bean.getDetail())
                 .setText(confirmTv, bean.getConfirm())
                 .setText(cancelTv, bean.getCancel())
+                .execute(() -> bean.setDialog(api.getDialog()))
                 .setOnClickListener(confirmTv, bean.getConfirmOnClickListener())
                 .setOnClickListener(cancelTv, bean.getCancelOnClickListener());
     }

@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.cr.surface;
 
-import com.leo.core.util.LogUtil;
 import com.ylink.fullgoal.cr.core.StringController;
 
 import static com.leo.core.util.DateUtil.getDDate;

@@ -2,6 +2,7 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
@@ -105,7 +106,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     }
 
     @Override
-    public RecyclerView getContentView() {
+    public View getContentView() {
         return getRecyclerView();
     }
 

@@ -22,9 +22,9 @@ public class ShowApi<T extends ShowApi> extends ThisApi<T> implements IShowApi<T
 
     @Override
     public IDecodeApi<IDecodeApi, Object, String, Object, Object> decodeApi() {
-        if (decodeApi == null){
+        if (decodeApi == null) {
             decodeApi = newDecodeApi();
-            if(decodeApi == null){
+            if (decodeApi == null) {
                 throw new NullPointerException("newDecodeApi 不能为空");
             }
         }
@@ -48,7 +48,7 @@ public class ShowApi<T extends ShowApi> extends ThisApi<T> implements IShowApi<T
 
     @Override
     public T show(@NonNull CharSequence text) {
-        ToastUtil.show(text);
+        ToastUtil.show(thisObj, text);
         return getThis();
     }
 
@@ -66,13 +66,13 @@ public class ShowApi<T extends ShowApi> extends ThisApi<T> implements IShowApi<T
     @Override
     public T ii(CharSequence title, Object obj) {
         String text = LogUtil.getLog(obj);
-        if (!TextUtils.isTrimEmpty(title)){
-            if (!TextUtils.isTrimEmpty(text)){
+        if (!TextUtils.isTrimEmpty(title)) {
+            if (!TextUtils.isTrimEmpty(text)) {
                 return ii(title + ": " + text);
-            }else {
+            } else {
                 return ii(title);
             }
-        }else if (!TextUtils.isTrimEmpty(text)){
+        } else if (!TextUtils.isTrimEmpty(text)) {
             return ii(text);
         }
         return getThis();
@@ -87,13 +87,13 @@ public class ShowApi<T extends ShowApi> extends ThisApi<T> implements IShowApi<T
     @Override
     public T ee(CharSequence title, Object obj) {
         String text = LogUtil.getLog(obj);
-        if (!TextUtils.isTrimEmpty(title)){
-            if (!TextUtils.isTrimEmpty(text)){
+        if (!TextUtils.isTrimEmpty(title)) {
+            if (!TextUtils.isTrimEmpty(text)) {
                 return ee(title + ": " + text);
-            }else {
+            } else {
                 return ee(title);
             }
-        }else if (!TextUtils.isTrimEmpty(text)){
+        } else if (!TextUtils.isTrimEmpty(text)) {
             return ee(text);
         }
         return getThis();

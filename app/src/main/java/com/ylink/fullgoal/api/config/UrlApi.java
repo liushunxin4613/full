@@ -9,9 +9,12 @@ import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.leo.core.net.Api;
 import com.ylink.fullgoal.config.UrlConfig;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -32,8 +35,16 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
     //图片上传类型
     private final static String UPLOAD_IMAGE_TYPE = "image/*";
 
+    private List<String> loadingData;
+
     public UrlApi(CoreControllerApi controllerApi) {
         super(controllerApi);
+    }
+
+    private void showLoading() {
+        if (controllerApi() instanceof SurfaceControllerApi) {
+            ((SurfaceControllerApi) controllerApi()).showLoading();
+        }
     }
 
     //通用
@@ -165,6 +176,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
     public T post(String path, IObjAction<Map<String, Object>> action, int what, String tag) {
         if (!TextUtils.isEmpty(path)) {
             observable(path, what, tag, getApi().post(path, getCleanMapAction(action)));
+            onHttp(ROOT_URL, path, what, tag);
         }
         return getThis();
     }
@@ -259,6 +271,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
     public T post(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
         if (!TextUtils.isEmpty(path)) {
             observable(path, what, tag, getApi(url).post(path, getCleanMapAction(action)));
+            onHttp(url, path, what, tag);
         }
         return getThis();
     }
@@ -327,6 +340,19 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
             }
         }
         return new HashMap<>();
+    }
+
+    private void onHttp(String url, String path, int what, String tag) {
+        if (getLoadingData().contains(path)) {
+            showLoading();
+        }
+    }
+
+    private List<String> getLoadingData() {
+        if (loadingData == null) {
+            loadingData = Arrays.asList(UrlConfig.LOADING_DIALOGS);
+        }
+        return loadingData;
     }
 
 }

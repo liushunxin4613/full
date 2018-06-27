@@ -5,6 +5,7 @@ import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import java.io.File;
@@ -12,10 +13,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
-import static com.ylink.fullgoal.config.UrlConfig.FULL_DIMENSION_LIST;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
-import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLICATION_FORM_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_BANK_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_CONTRACT_PAYMENT_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_COST_INDEX_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_CTRIP_TICKETS_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_DEPARTMENT_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_DIMENSION_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_DIMENSION_INFORMATION_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_MESSAGE_BACK_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_PROCESS_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_PROJECT_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_RESEARCH_REPORT_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_TRAVEL_FORM_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_USER_DATA;
 
 public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
 
@@ -34,21 +47,21 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * 获取员工信息
      */
     public void queryUserData() {
-        api().post(ROOT_URL, "Reimburse_ment.action");
+        api().post(ROOT_URL, PATH_QUERY_USER_DATA);
     }
 
     /**
      * 获取部门信息
      */
     public void queryDepartmentData() {
-        api().post(ROOT_URL, "Budget_department.action");
+        api().post(ROOT_URL, PATH_QUERY_DEPARTMENT_DATA);
     }
 
     /**
      * 获取项目信息
      */
     public void queryProjectData(String departmentCode) {
-        api().post(ROOT_URL, "Project_list.action", get(map
+        api().post(ROOT_URL, PATH_QUERY_PROJECT_DATA, get(map
                 -> map.put("departmentCode", departmentCode)));
     }
 
@@ -56,42 +69,42 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * 获取合同申请单
      */
     public void queryContractPaymentData() {
-        api().post(ROOT_URL, "Contract_payment.action");
+        api().post(ROOT_URL, PATH_QUERY_CONTRACT_PAYMENT_DATA);
     }
 
     /**
      * 获取招待申请单
      */
     public void queryProcessData() {
-        api().post(ROOT_URL, "Process_query.action");
+        api().post(ROOT_URL, PATH_QUERY_PROCESS_DATA);
     }
 
     /**
      * 获取费用指标
      */
     public void queryCostIndexData() {
-        api().post(ROOT_URL, "Cost_index.action");
+        api().post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA);
     }
 
     /**
      * 获取出差申请单
      */
     public void queryTravelFormData() {
-        api().post(ROOT_URL, "Travel_form.action");
+        api().post(ROOT_URL, PATH_QUERY_TRAVEL_FORM_DATA);
     }
 
     /**
      * 获取投研报告
      */
     public void queryResearchReportData() {
-        api().post(ROOT_URL, "Research_report.action");
+        api().post(ROOT_URL, PATH_QUERY_RESEARCH_REPORT_DATA);
     }
 
     /**
      * 获取携程机票
      */
     public void queryCtripTicketsData() {
-        api().post(ROOT_URL, "Ctrip_tickets.action");
+        api().post(ROOT_URL, PATH_QUERY_CTRIP_TICKETS_DATA);
     }
 
     /**
@@ -100,22 +113,22 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * @param serialNo 报销批次号
      */
     public void queryMessageBack(String serialNo) {
-        api().post(ROOT_URL, FULL_REIMBURSE_QUERY, get(map -> map.put("serialNo", serialNo)));
+        api().post(ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, get(map -> map.put("serialNo", serialNo)));
     }
 
     /**
-     * 报销确认请求数据
+     * 银行卡请求数据
      */
     public void queryBank() {
-        api().post(ROOT_URL, "Bank_mess.action");
+        api().post(ROOT_URL, PATH_QUERY_BANK_DATA);
     }
 
     /**
      * 获取报销列表
      */
     public void queryApplicationForm(Map<String, Object> map, String msg) {
-        if(!TextUtils.isEmpty(map)){
-            api().post(ROOT_URL, "Application_form.action", get(mp -> mp.putAll(map)), msg);
+        if (!TextUtils.isEmpty(map)) {
+            api().post(ROOT_URL, PATH_QUERY_APPLICATION_FORM_DATA, get(mp -> mp.putAll(map)), msg);
         }
     }
 
@@ -123,14 +136,15 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * 分摊维度列表
      */
     public void queryDimensionList(String costIndex) {
-        api().post(ROOT_URL, FULL_DIMENSION_LIST, get(map -> map.put("costIndex", costIndex)));
+        api().post(ROOT_URL, PATH_QUERY_DIMENSION_DATA, get(map -> map.put("costIndex", costIndex)));
     }
 
     /**
      * 分摊维度信息列表
      */
     public void queryDimensionInformation(String dimensionCode) {
-        api().post(ROOT_URL, "Dimension_information.action", get(map -> map.put("dimensionCode", dimensionCode)));
+        api().post(ROOT_URL, PATH_QUERY_DIMENSION_INFORMATION_DATA, get(map -> map.put("dimensionCode",
+                dimensionCode)));
     }
 
     /**
@@ -210,6 +224,8 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
         Map<String, Object> mp;
         executeNon(mp = new HashMap<>(), action);
         if (!TextUtils.isEmpty(mp)) {
+            Map<String, Object> m = TextUtils.copy(mp, true, "stream");
+            api().ii(m);
             return map -> map.put("REQINFO", api().encode(mp));
         }
         return null;

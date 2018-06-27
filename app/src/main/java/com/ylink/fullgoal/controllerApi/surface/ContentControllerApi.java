@@ -32,7 +32,7 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
     }
 
     @Override
-    public <R extends View> R getContentView() {
+    public View getContentView() {
         return null;
     }
 
@@ -53,6 +53,23 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
 
     @Override
     public T stopLoad(boolean refresh) {
+        return getThis();
+    }
+
+    protected boolean isContentViewShow() {
+        return getContentView() != null && getContentView().isShown();
+    }
+
+    protected boolean isNullViewShow() {
+        return getNullView() != null && getNullView().isShown();
+    }
+
+    protected boolean isErrorViewShow() {
+        return getErrorView() != null && getErrorView().isShown();
+    }
+
+    protected T hideContentView() {
+        setVisibility(getContentView(), View.INVISIBLE);
         return getThis();
     }
 

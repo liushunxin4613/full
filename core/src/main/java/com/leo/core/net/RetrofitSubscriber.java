@@ -4,6 +4,7 @@ import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.HttpError;
 import com.leo.core.iapi.api.IParseApi;
+import com.leo.core.util.LogUtil;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;

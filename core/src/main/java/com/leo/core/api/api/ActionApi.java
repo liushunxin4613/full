@@ -1,5 +1,6 @@
 package com.leo.core.api.api;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -44,6 +45,7 @@ public class ActionApi<T extends ActionApi, A extends IApi> extends ThisApi<T> i
         return map;
     }
 
+    @SuppressLint("UseSparseArrays")
     @Override
     public Map<Long, List<A>> newActionMap() {
         return new HashMap<>();
@@ -60,6 +62,7 @@ public class ActionApi<T extends ActionApi, A extends IApi> extends ThisApi<T> i
         return uiMap;
     }
 
+    @SuppressLint("UseSparseArrays")
     @Override
     public Map<Long, List<A>> newUIActionMap() {
         return new HashMap<>();

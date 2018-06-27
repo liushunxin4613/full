@@ -3,6 +3,7 @@ package com.ylink.fullgoal.api.full;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -30,19 +31,19 @@ import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
-import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.ImageFg;
-import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.fg.ProcessFg;
 import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
+import com.ylink.fullgoal.vo.DVo;
+import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.vo.RVo;
 
 import java.util.ArrayList;
@@ -86,6 +87,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     ImageView qxbxIv;
     @Bind(R.id.alter_vg)
     LinearLayout alterVg;
+    @Bind(R.id.content_vg)
+    ViewGroup contentVg;
 
     private String state;
     private String title;
@@ -106,6 +109,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     @Override
     public Integer getDefRootViewResId() {
         return R.layout.l_reimburse;
+    }
+
+    @Override
+    public View getContentView() {
+        return contentVg;
     }
 
     /**
@@ -144,6 +152,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             } else {
                 title = getKey(BILL_TYPE_TITLES, state);
                 if (!TextUtils.isEmpty(serialNo)) {
+                    hideContentView();
                     uApi().queryMessageBack(serialNo);
                 }
             }
@@ -230,6 +239,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             switch (path) {
                 case FULL_REIMBURSE_QUERY://报销获取
                     bean.get(getVo());
+                    showContentView();
                     notifyDataChanged();
                     break;
             }
@@ -237,16 +247,19 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     private void again() {
-        SurfaceControllerApi api = getDialogControllerApi(SurfaceControllerApi.class);
-        api.dialogShow().onBindViewHolder(new HintDialogBean("温馨提示", "是否需要再次报销", "确认", "取消", (bean, view) -> {
-            api.dismiss();
+        HintDialogBean dialogBean = new HintDialogBean("温馨提示", "是否需要添加新的报销", "是",
+                "否", (bean, v, dialog) -> {
+            dialog.dismiss();
             iso(DVo::getImageList, AddController::clear);
             iso(DVo::getSerialNo, SerialNoController::clear);
             notifyDataChanged();
-        }, (bean, view) -> {
-            api.dismiss();
+        }, (bean, v, dialog) -> {
+            dialog.dismiss();
             getActivity().finish();
-        }), 0).execute(() -> {
+        });
+        SurfaceControllerApi api = getDialogControllerApi(SurfaceControllerApi.class,
+                dialogBean.getApiType());
+        api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
             Window window = api.getDialog().getWindow();
             if (window != null) {
                 window.setGravity(Gravity.CENTER);
@@ -313,7 +326,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 .setVisible(isNoneInitiateEnable())));
         if (isEnable()) {
             gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) ->
-                    cameraApi().openCamera(type, (what, msg, file) -> {
+                    cameraApi().openCamera(type, (what, msg, file, args) -> {
                         //打开图片
                         addPhoto(file.getPath(), what);
                         uApi().imageUpload(gt(DVo::getFirst, obj -> obj.getUB(TP)),

@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.vo;
 
 import com.leo.core.bean.NewFieldBean;
+import com.ylink.fullgoal.cr.surface.BooleanController;
 import com.ylink.fullgoal.cr.surface.DAgentController;
 import com.ylink.fullgoal.cr.surface.DBillTypeController;
 import com.ylink.fullgoal.cr.surface.DDateController;
@@ -15,6 +16,7 @@ public class DItemVo extends NewFieldBean {
     private DAgentController agent;
     private DStatusController status;
     private DBillTypeController billType;
+    private transient BooleanController once;
 
     public DItemVo() {
         initNewFields();
@@ -50,6 +52,14 @@ public class DItemVo extends NewFieldBean {
 
     public void setBillType(DBillTypeController billType) {
         this.billType = billType;
+    }
+
+    public BooleanController getOnce() {
+        return once;
+    }
+
+    public void setOnce(BooleanController once) {
+        this.once = once;
     }
 
 }

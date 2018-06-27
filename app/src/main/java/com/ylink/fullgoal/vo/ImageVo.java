@@ -1,9 +1,17 @@
 package com.ylink.fullgoal.vo;
 
+import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.bi.ImageVoBi;
+import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBiBean;
 
 public class ImageVo extends SurfaceBiBean<ImageVo> {
+
+    @Override
+    protected IBindControllerApi<SurfaceControllerApi, ImageVo> newDefApi() {
+        return new ImageVoBi();
+    }
 
     public final static int FILTER_YB = 0;
     public final static int FILTER_JTF = 1;

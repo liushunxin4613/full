@@ -40,4 +40,5 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
                 .setImage(photoIv, bean.getPhoto())
                 .execute(() -> detailEt.addTextChangedListener(api.getMoneyTextWatcher(bean::setAmount)));
     }
+
 }

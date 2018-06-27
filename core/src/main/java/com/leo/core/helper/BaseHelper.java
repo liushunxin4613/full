@@ -19,7 +19,7 @@ public class BaseHelper<T extends BaseHelper> extends ThisApi<T> {
     }
 
     public T show(String text){
-        ToastUtil.show(text);
+        ToastUtil.show(this, text);
         return getThis();
     }
 
