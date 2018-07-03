@@ -23,12 +23,18 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     private static final String LIST_END = ".list";//list数据标志
     private SharedPreferences preferences;
     private int mode = MODE_DEFAULT;
+    private String table;
     private Gson gson;
 
     @Override
     public T bind(@NonNull Context context) {
         gson = new GsonBuilder().disableHtmlEscaping().create();
         return super.bind(context);
+    }
+
+    @Override
+    public String getTable() {
+        return table;
     }
 
     @Override
@@ -48,14 +54,19 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
         if (!TextUtils.isEmpty(key)) {
             this.mode = mode;
             preferences = getContext().getSharedPreferences(key, mode);
+            this.table = key;
         }
         return getThis();
     }
 
     @Override
     public <V> T saveData(String key, V value) {
-        if (!TextUtils.isEmpty(key) && value != null) {
-            preferences.edit().putString(key, gson.toJson(value)).apply();
+        if (!TextUtils.isEmpty(key)) {
+            if (value == null) {
+                preferences.edit().remove(key).apply();
+            } else {
+                preferences.edit().putString(key, gson.toJson(value)).apply();
+            }
         }
         return getThis();
     }
@@ -70,8 +81,12 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
 
     @Override
     public <V> T saveData(String key, List<V> value) {
-        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
-            preferences.edit().putString(key + LIST_END, gson.toJson(value)).apply();
+        if (!TextUtils.isEmpty(key)) {
+            if (value == null) {
+                preferences.edit().remove(key + LIST_END).apply();
+            } else {
+                preferences.edit().putString(key + LIST_END, gson.toJson(value)).apply();
+            }
         }
         return getThis();
     }
@@ -121,7 +136,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
     @Override
     public <C> List<C> getBeanData(String key, Class<? extends List> lClz, Class<C> clz) {
         try {
-            if(!TextUtils.isEmpty(key) && lClz != null && clz != null){
+            if (!TextUtils.isEmpty(key) && lClz != null && clz != null) {
                 return gson.fromJson(TextUtils.removeF1(preferences.getString(key + LIST_END, null)),
                         ParameterizedTypeImpl.get(lClz, clz));
             }
@@ -166,7 +181,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
 
     @Override
     public T remove(Class clz) {
-        if(clz != null){
+        if (clz != null) {
             remove(clz.getName());
         }
         return getThis();
@@ -174,7 +189,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
 
     @Override
     public T removeData(String key) {
-        if(!TextUtils.isEmpty(key)){
+        if (!TextUtils.isEmpty(key)) {
             remove(key + LIST_END);
         }
         return getThis();
@@ -182,7 +197,7 @@ public class DataApi<T extends DataApi> extends BindContextApi<T> implements IDa
 
     @Override
     public T removeData(Class clz) {
-        if(!TextUtils.isEmpty(clz)){
+        if (!TextUtils.isEmpty(clz)) {
             remove(clz.getName() + LIST_END);
         }
         return getThis();

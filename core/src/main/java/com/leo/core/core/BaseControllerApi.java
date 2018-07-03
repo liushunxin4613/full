@@ -26,7 +26,9 @@ import com.leo.core.api.main.ShowApi;
 import com.leo.core.config.Config;
 import com.leo.core.factory.ActionApiFactory;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
+import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.net.RetrofitSubscriber;
+import com.leo.core.net.UrlApi;
 import com.leo.core.other.Transformer;
 
 import rx.Observable;
@@ -74,7 +76,7 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
 
     @Override
     public HttpApi newHttpApi() {
-        return new HttpApi(newTransformer());
+        return new HttpApi(getThis(), newTransformer());
     }
 
     @Override
@@ -208,6 +210,11 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
+    public IUrlApi newApi() {
+        return new UrlApi(getThis());
+    }
+
+    @Override
     public <B, M> Observable.Transformer<B, M> newTransformer() {
         return new Transformer();
     }
@@ -239,7 +246,8 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         galleryApi().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }

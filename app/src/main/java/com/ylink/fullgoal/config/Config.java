@@ -15,7 +15,8 @@ public class Config {
 
     //配置
     public final static boolean DEBUG = false;//debug模式是否开启5
-    final static boolean LOCAL = false;//本地模式是否开启
+    public final static boolean LOCAL = false;//本地模式是否开启
+    public final static boolean SIMULATE_HTTP = false;//模拟模式是否开启
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间
     public final static int TIME_SPLASH = 1;//引导页时间
@@ -110,5 +111,12 @@ public class Config {
     public final static String VALUE = "value";
     public final static String DATA_QR = "dataQR";
     public final static String MONEY = "totalAmountLower";
+    public final static String COOKIE = "cookie";
+    public final static String USER_ID = "userId";
+    public final static String USERNAME = "username";
+    public final static String NAME = "name";
+    public final static String COOKIE_STR = "cookieStr";
+    public final static String PORTAL_PAC = "portalPac";
+    public final static String CASTGC = "CASTGC";
 
 }

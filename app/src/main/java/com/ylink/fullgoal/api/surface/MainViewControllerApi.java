@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullBankControllerApi;
 import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
@@ -12,6 +13,7 @@ import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
+import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.fg.CostFg;
 
@@ -19,10 +21,16 @@ import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.YB;
+import static com.ylink.fullgoal.config.Config.COOKIE;
+import static com.ylink.fullgoal.config.Config.COOKIE_STR;
 import static com.ylink.fullgoal.config.Config.COST;
 import static com.ylink.fullgoal.config.Config.DEBUG;
+import static com.ylink.fullgoal.config.Config.NAME;
+import static com.ylink.fullgoal.config.Config.PORTAL_PAC;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
+import static com.ylink.fullgoal.config.Config.USERNAME;
+import static com.ylink.fullgoal.config.Config.USER_ID;
 
 /**
  * 主View视图
@@ -39,7 +47,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         super.initView();
         onAppData();
         hideBackIv().setTitle("我的报销");
-        clear().addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销", (bean, view)
+//        clear().
+        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销", (bean, view)
                         -> general(FQ)),
                 new IconTvMoreBean(R.mipmap.test_icon2, "出差费用报销", (bean, view)
                         -> evection(FQ)))
@@ -60,27 +69,43 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 bundle.putString(SERIAL_NO, "2018062136000449");
                 startSurfaceActivity(bundle, FullEvectionControllerApi.class);
             }));
-//            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "费用指标", (bean, view)
-//                    -> execute(this::cost)));
-//            cost();
+            addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试", (bean, view) -> {
+                showLoading();
+                addUI(3000, (IAction) this::dismissLoading);
+                start();
+            }));
         }
-        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试", (bean, view) -> {
-            showLoading();
-            addUI(3000, (IAction) this::dismissLoading);
-            start();
-        }));
         showContentView();
     }
 
     //被调用
     private void onAppData() {
         Intent intent = getActivity().getIntent();
-        String taskId = intent.getStringExtra("taskId");
+        String cookie = intent.getStringExtra("cookie");
         String userId = intent.getStringExtra("userId");
+        String username = intent.getStringExtra("username");
+        String name = intent.getStringExtra("name");
         String cookieStr = intent.getStringExtra("cookieStr");
-        ee("taskId", taskId);
+        String portalPac = intent.getStringExtra("portalPac");
+        if (intent.getExtras() != null) {//TODO 测试用
+            saveData(COOKIE, cookie);
+            saveData(USER_ID, userId);
+            saveData(USERNAME, username);
+            saveData(NAME, name);
+            saveData(COOKIE_STR, cookieStr);
+            saveData(PORTAL_PAC, portalPac);
+        }
+        ee("cookie", cookie);
         ee("userId", userId);
+        ee("username", username);
+        ee("name", name);
         ee("cookieStr", cookieStr);
+        ee("portalPac", portalPac);
+        String castgc = getCastgc();
+        ee("castgc", castgc);
+        if (!TextUtils.isEmpty(castgc)) {
+//            api().SSO(castgc);
+        }
     }
 
     //私有的

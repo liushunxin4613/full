@@ -1,18 +1,20 @@
 package com.leo.core.api.main;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.api.inter.MsgSubscriber;
-import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.net.RetrofitFactory;
 import com.leo.core.util.TextUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
 
-public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T> {
+public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implements IHttpApi<T> {
 
     private IParseApi api;
     private RetrofitFactory factory;
@@ -21,7 +23,8 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
     private Observable.Transformer transformer;
     private Observable.Transformer newTransformer;
 
-    public HttpApi(Observable.Transformer newTransformer) {
+    public HttpApi(CoreControllerApi controllerApi, Observable.Transformer newTransformer) {
+        super(controllerApi);
         this.map = new HashMap<>();
         this.newTransformer = newTransformer;
         this.factory = RetrofitFactory.getInstance();
@@ -43,11 +46,6 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
 
     @Override
     public <B> B getApi(String url) {
-        throw new NullPointerException("getApi 不能为空");
-    }
-
-    @Override
-    public <B> B getApi() {
         throw new NullPointerException("getApi 不能为空");
     }
 
@@ -89,18 +87,29 @@ public class HttpApi<T extends HttpApi> extends ThisApi<T> implements IHttpApi<T
 
     @Override
     public <B> T observable(Observable<B> observable) {
-        observable(observable, null, -1, null);
+        observable(observable, null, null, null, -1, null);
         return getThis();
     }
 
     @Override
-    public <B> T observable(Observable<B> observable, String path, int what, String tag) {
-        if (observable != null) {
-            MsgSubscriber<T, B> subscriber = subscriber();
-            subscriber.init(path, what, tag);
-            observable.compose(transformer()).subscribe((Subscriber) subscriber);
+    public <B> T observable(Observable<B> observable, String startUrl, String path, Map<String,
+            String> map, int what, String tag) {
+        if (observable != null && checkObservable(observable, startUrl, path, map, what, tag)) {
+            onObservable(observable, startUrl, path, map, what, tag);
         }
         return getThis();
+    }
+
+    protected <B> boolean checkObservable(@NonNull Observable<B> observable, String startUrl, String path,
+                                          Map<String, String> map, int what, String tag) {
+        return true;
+    }
+
+    protected <B> void onObservable(@NonNull Observable<B> observable, String startUrl, String path,
+                                       Map<String, String> map, int what, String tag) {
+        MsgSubscriber<T, B> subscriber = subscriber();
+        subscriber.init(path, what, tag);
+        observable.compose(transformer()).subscribe((Subscriber) subscriber);
     }
 
 }

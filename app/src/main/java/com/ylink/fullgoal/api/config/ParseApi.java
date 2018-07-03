@@ -147,6 +147,12 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         return getThis();
     }
 
+    private boolean checkRootType(Type type) {
+        return type != null && !TextUtils.equals(type, ResponseBody.class)
+                && !TextUtils.equals(type, Completed.class)
+                && !TextUtils.equals(type, Exceptions.class);
+    }
+
     /**
      * 核心解析对象数据
      *
@@ -165,7 +171,13 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      * @param text text
      */
     private void onString(String text) {
-        execute(map, (type, map) -> onData(api.decode(text, type), type, map));
+        execute(map, (type, map) -> {
+            if (TextUtils.equals(String.class, type)) {
+                onData(text, type, map);
+            } else if (checkRootType(type)) {
+                onData(api.decode(text, type), type, map);
+            }
+        });
     }
 
     /**
@@ -200,18 +212,21 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                     }
                 }
             } else if (checkClz(clz)) {
-                execute(clz.getDeclaredFields(), field -> execute(!Modifier.isStatic(
-                        field.getModifiers()) && checkClz(field.getType()), () -> {
-                    try {
-                        field.setAccessible(true);
-                        Object item = field.get(obj);
-                        if (item != null) {
-                            onData(item, item.getClass(), map);
+                execute(clz.getDeclaredFields(), field -> {
+                    if (!Modifier.isStatic(field.getModifiers())
+                            && !Modifier.isFinal(field.getModifiers())
+                            && checkClz(field.getType())) {
+                        try {
+                            field.setAccessible(true);
+                            Object item = field.get(obj);
+                            if (item != null) {
+                                onData(item, item.getClass(), map);
+                            }
+                        } catch (IllegalAccessException e) {
+                            onExceptions(new Exceptions("解析异常", 101, e));
                         }
-                    } catch (IllegalAccessException e) {
-                        onExceptions(new Exceptions("解析异常", 101, e));
                     }
-                }));
+                });
             }
         }
     }

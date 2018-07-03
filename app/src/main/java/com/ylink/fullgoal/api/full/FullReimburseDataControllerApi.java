@@ -105,8 +105,11 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     @Override
     public void initData() {
         super.initData();
-        add(DataFg.class, (path, what, msg, bean) -> execute(!TextUtils.isEmpty(msg), () ->
-                initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList())));
+        add(DataFg.class, (path, what, msg, bean) -> {
+            if (!TextUtils.isEmpty(msg)) {
+                initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList());
+            }
+        });
         getReiRecycleControllerApi(D1);
         getReiRecycleControllerApi(D2);
         getReiRecycleControllerApi(D3);
@@ -114,8 +117,8 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     }
 
     private void query() {
-        if(!getExecute(getItemValue().getOnce(), false, BooleanController::is)){
-            uApi().queryApplicationForm(getUBMap(), getType());
+        if (!getExecute(getItemValue().getOnce(), false, BooleanController::is)) {
+            api().queryApplicationForm(getUBMap(), getType());
         }
     }
 

@@ -34,11 +34,13 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
     public void onBindApi(SurfaceControllerApi api, ImageVo bean) {
         super.onBindApi(api, bean);
         api.setVisibility(bean.isShow() ? View.VISIBLE : View.GONE, vg)
-                .setVisibility(TextUtils.isEmpty(bean.getPhoto()) ? View.INVISIBLE : View.VISIBLE, photoIv)
+                .setVisibility(TextUtils.isEmpty(bean.getPhoto()) ?
+                        View.INVISIBLE : View.VISIBLE, photoIv)
                 .setText(nameTv, "金额")
                 .setText(detailEt, bean.getAmount())
                 .setImage(photoIv, bean.getPhoto())
-                .execute(() -> detailEt.addTextChangedListener(api.getMoneyTextWatcher(bean::setAmount)));
+                .execute(() -> detailEt.addTextChangedListener(
+                        api.getMoneyTextWatcher(bean::setAmount)));
     }
 
 }

@@ -15,7 +15,6 @@ import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.CCSQDBean;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.bean.ProjectBean;
 import com.ylink.fullgoal.bean.TvBean;
@@ -203,36 +202,36 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         if (!TextUtils.isEmpty(search)) {
             switch (search) {
                 case REIMBURSEMENT://员工
-                    uApi().queryUserData();
+                    api().queryUserData();
                     break;
                 case BUDGET_DEPARTMENT://预算归属部门
-                    uApi().queryDepartmentData();
+                    api().queryDepartmentData();
                     break;
                 case PROJECT://项目
-                    uApi().queryProjectData(getDepartmentCode());
+                    api().queryProjectData(getDepartmentCode());
                     break;
                 case CONTRACT_BILL://合同付款申请单
-                    uApi().queryContractPaymentData();
+                    api().queryContractPaymentData();
                     break;
                 case SERVE_BILL://招待申请单
-                    uApi().queryProcessData();
+                    api().queryProcessData();
                     break;
                 case COST_INDEX://费用指标
-                    uApi().queryCostIndexData();
+                    api().queryCostIndexData();
                     break;
                 case COST_INDEX_DIMEN://费用指标维度
                     if (TextUtils.check(dimenFg)) {
-                        uApi().queryDimensionInformation(dimenFg.getCode());
+                        api().queryDimensionInformation(dimenFg.getCode());
                     }
                     break;
                 case BUSINESS://出差申请单
-                    uApi().queryTravelFormData();
+                    api().queryTravelFormData();
                     break;
                 case REPORT://投研报告
-                    uApi().queryResearchReportData();
+                    api().queryResearchReportData();
                     break;
                 case XC_AIR://携程机票
-                    uApi().queryCtripTicketsData();
+                    api().queryCtripTicketsData();
                     break;
             }
         }

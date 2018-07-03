@@ -9,7 +9,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.ylink.fullgoal"
+        applicationId "cn.com.fullgoal.pt0001"
         minSdkVersion 16
         targetSdkVersion 18
         versionCode 1

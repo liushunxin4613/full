@@ -68,7 +68,14 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
         return getErrorView() != null && getErrorView().isShown();
     }
 
-    protected T hideContentView() {
+    @Override
+    public T hideViews() {
+        setVisibility(View.INVISIBLE, getContentView(), getNullView(), getErrorView());
+        return getThis();
+    }
+
+    @Override
+    public T hideContentView() {
         setVisibility(getContentView(), View.INVISIBLE);
         return getThis();
     }
@@ -76,21 +83,21 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
     @Override
     public T showContentView() {
         setVisibility(getContentView(), View.VISIBLE);
-        setVisibility(View.GONE, getNullView(), getErrorView());
+        setVisibility(View.INVISIBLE, getNullView(), getErrorView());
         return getThis();
     }
 
     @Override
     public T showNullView(boolean refresh) {
         setVisibility(getNullView(), View.VISIBLE);
-        setVisibility(View.GONE, getContentView(), getErrorView());
+        setVisibility(View.INVISIBLE, getContentView(), getErrorView());
         return getThis();
     }
 
     @Override
     public T showErrorView() {
         setVisibility(getErrorView(), View.VISIBLE);
-        setVisibility(View.GONE, getContentView(), getNullView());
+        setVisibility(View.INVISIBLE, getContentView(), getNullView());
         return getThis();
     }
 

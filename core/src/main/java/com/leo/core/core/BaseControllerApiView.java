@@ -143,8 +143,8 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        execute(controllerApi(), api -> api.onMeasure(widthMeasureSpec, heightMeasureSpec));
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        execute(controllerApi(), api -> api.onMeasure(widthMeasureSpec, heightMeasureSpec));
     }
 
     @Override

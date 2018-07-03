@@ -44,6 +44,16 @@ public interface IContentApi<T extends IContentApi> extends IApi{
     T stopLoad(boolean refresh);
 
     /**
+     * 隐藏所有视图
+     */
+    T hideViews();
+
+    /**
+     * 隐藏主视图
+     */
+    T hideContentView();
+
+    /**
      * 显示内容视图
      * @return 本身
      */

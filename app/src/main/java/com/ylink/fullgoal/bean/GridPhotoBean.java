@@ -1,7 +1,9 @@
 package com.ylink.fullgoal.bean;
 
 import android.view.View;
+import android.widget.ProgressBar;
 
+import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.inter.OnBVLongClickListener;
 import com.leo.core.iapi.main.IBindControllerApi;
@@ -87,4 +89,5 @@ public class GridPhotoBean extends SurfaceBiBean<GridPhotoBean> {
         this.visible = visible;
         return this;
     }
+
 }

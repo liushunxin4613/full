@@ -8,27 +8,15 @@ import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
-import retrofit2.http.Url;
 import rx.Observable;
 
 public interface Api {
 
     //Android通用
-
-    /**
-     * 下载文件
-     */
-    @GET
-    Observable<ResponseBody> downloadFile(@Url String url);
-
-    /**
-     * 上传图片
-     */
-    @POST
-    <B> Observable<ResponseBody> upload(@Url String url, @Body RequestBody body);
 
     /**
      * GET
@@ -42,5 +30,18 @@ public interface Api {
     @FormUrlEncoded
     @POST("{path}")
     Observable<ResponseBody> post(@Path("path") String path, @FieldMap Map<String, String> map);
+
+    /**
+     * jsonPost
+     */
+    @Headers({"Accept: application/json", "Content-Type: application/json"})//需要添加头
+    @POST("{path}")
+    Observable<ResponseBody> jsonPost(@Path("path") String path, @Body RequestBody body);
+
+    /**
+     * bodyPost
+     */
+    @POST("{path}")
+    <B> Observable<ResponseBody> bodyPost(@Path("path") String path, @Body RequestBody body);
 
 }

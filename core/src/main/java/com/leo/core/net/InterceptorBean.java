@@ -1,47 +1,53 @@
 package com.leo.core.net;
 
+import android.support.annotation.NonNull;
+
 import com.alibaba.fastjson.JSON;
 import com.leo.core.bean.NewFieldBean;
 import com.leo.core.util.TextUtils;
+
+import java.lang.reflect.Field;
 
 /**
  * 拦截器
  */
 public class InterceptorBean extends NewFieldBean {
 
-    private final static transient boolean OPEN = true;
-    private final static transient String ROOT_URL = "http://192.168.8.102/app/api/";
-    private final static transient String PATH = "uploadHttp";
+    private final static transient boolean OPEN = false;
 
+    private boolean update;
     private String url;
     private String code;
     private String time;
-    private String head;
+    private String requestHead;
+    private String responseHead;
     private String method;
+    private String contentType;
     private String params;
     private String requestSize;
     private String responseSize;
     private Object response;
 
-    private transient HttpHelper helper;
+    private transient AuxiliaryFactory instance;
 
     public InterceptorBean() {
-        try {
-            helper = new HttpHelper(ROOT_URL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        instance = AuxiliaryFactory.getInstance();
     }
 
     public void completed() {
         if (check()) {
-            helper.post(PATH, getFilterMap("url", "params", "response"));
+            instance.postUpLoadHttp(getFilterMap(true));
         }
     }
 
     public boolean check() {
-        return OPEN && helper != null && !TextUtils.isEmpty(url) &&
-                !url.startsWith(helper.getRootUrl());
+        return OPEN && instance != null && !TextUtils.isEmpty(url) &&
+                !url.startsWith(instance.getRootUrl());
+    }
+
+    @Override
+    protected boolean isOther(@NonNull Field field) {
+        return true;
     }
 
     public String getUrl() {
@@ -68,12 +74,20 @@ public class InterceptorBean extends NewFieldBean {
         this.time = time;
     }
 
-    public String getHead() {
-        return head;
+    public String getRequestHead() {
+        return requestHead;
     }
 
-    public void setHead(String head) {
-        this.head = head;
+    public void setRequestHead(String requestHead) {
+        this.requestHead = requestHead;
+    }
+
+    public String getResponseHead() {
+        return responseHead;
+    }
+
+    public void setResponseHead(String responseHead) {
+        this.responseHead = responseHead;
     }
 
     public String getMethod() {
@@ -93,11 +107,18 @@ public class InterceptorBean extends NewFieldBean {
     }
 
     public String getResponse() {
+        if (response instanceof String) {
+            return "\n" + response;
+        }
         return JSON.toJSONString(response);
     }
 
     public void setResponse(String response) {
-        this.response = JSON.parse(response);
+        try {
+            this.response = JSON.parse(response);
+        } catch (Exception ignored) {
+            this.response = response;
+        }
     }
 
     public String getRequestSize() {
@@ -114,6 +135,22 @@ public class InterceptorBean extends NewFieldBean {
 
     public void setResponseSize(String responseSize) {
         this.responseSize = responseSize;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
 }

@@ -14,6 +14,11 @@ import java.util.Map;
 public interface IDataApi<T extends IDataApi> extends IApi {
 
     /**
+     * 获取表名称
+     */
+    String getTable();
+
+    /**
      * 切换默认表结构
      * @return 本身
      */

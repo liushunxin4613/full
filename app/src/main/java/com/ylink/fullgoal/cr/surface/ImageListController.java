@@ -10,7 +10,6 @@ import com.ylink.fullgoal.vo.ImageVo;
 import java.util.List;
 
 import static com.leo.core.util.TextUtils.getMoneyString;
-import static com.ylink.fullgoal.config.ComConfig.SHOW;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE_MONEY;
 
@@ -24,6 +23,11 @@ public class ImageListController<T extends ImageListController> extends AddContr
 
     public void setOnCom(IOnCom onCom) {
         this.onCom = onCom;
+    }
+
+    @Override
+    public List<ImageVo> getData() {
+        return super.getData();
     }
 
     @Override
@@ -80,9 +84,6 @@ public class ImageListController<T extends ImageListController> extends AddContr
                     if (TextUtils.equals(msg, item.getPhoto())) {
                         item.setImageID(fg.getImageId());
                         item.setSerialNo(fg.getSerialNo());
-                        if (action != null) {
-                            action.onCom(0, SHOW, "图片上传成功");
-                        }
                         return true;
                     }
                     return false;
@@ -101,6 +102,16 @@ public class ImageListController<T extends ImageListController> extends AddContr
             }
         }
         return getThis();
+    }
+
+    public void onError(String msg){
+        if(!TextUtils.isEmpty(msg)){
+            execute(getData(), obj -> {
+                if(TextUtils.equals(obj.getPhoto(), msg)){
+                    obj.onError(true);
+                }
+            });
+        }
     }
 
     @Override

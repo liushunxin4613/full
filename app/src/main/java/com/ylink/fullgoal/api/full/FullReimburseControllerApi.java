@@ -13,6 +13,7 @@ import com.leo.core.bean.Bol;
 import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.net.Exceptions;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
@@ -46,6 +47,7 @@ import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.vo.RVo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -153,7 +155,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 title = getKey(BILL_TYPE_TITLES, state);
                 if (!TextUtils.isEmpty(serialNo)) {
                     hideContentView();
-                    uApi().queryMessageBack(serialNo);
+                    api().queryMessageBack(serialNo);
                 }
             }
             setTitle(title);
@@ -204,6 +206,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     @Override
     public void initData() {
         super.initData();
+        add(Exceptions.class, (path, what, msg, bean) -> iso(DVo::getImageList, obj
+                -> obj.onError(msg)));
         add(ImageFg.class, (path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(msg)) {
                 iso(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
@@ -326,11 +330,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 .setVisible(isNoneInitiateEnable())));
         if (isEnable()) {
             gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) ->
+                    //打开图片
                     cameraApi().openCamera(type, (what, msg, file, args) -> {
-                        //打开图片
-                        addPhoto(file.getPath(), what);
-                        uApi().imageUpload(gt(DVo::getFirst, obj -> obj.getUB(TP)),
-                                what, gtd(DVo::getSerialNo), file, file.getPath());
+                        ImageVo vo = addPhoto(file.getPath(), what);
+                        api().imageUpload(gt(DVo::getFirst, obj -> obj.getUB(TP)),
+                                what, gtd(DVo::getSerialNo), file, file.getPath(), vo);
                     }), null));
         }
         return gridData;
@@ -342,7 +346,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     protected void submit() {
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
-            uApi().submitReimburse(map);
+            api().submitReimburse(map);
             getContentView().invalidate();
         }
     }
@@ -407,7 +411,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     private GridPhotoBean newGridPhotoBean(List<ImageVo> data, ImageVo vo) {
         return getExecute(vo, obj -> new GridPhotoBean(obj.getPhoto(), obj,
                 (bean, view) -> onGridPhotoClick(data, vo),
-                (bean, view) -> onGridPhotoLongClick(data, bean, view)));
+                this::onGridPhotoLongClick));
     }
 
     /**
@@ -428,16 +432,23 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * @param view view
      * @return 是否同时响应点击
      */
-    private boolean onGridPhotoLongClick(List<ImageVo> data, GridPhotoBean bean, View view) {
-        TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", (item, v, dialog) -> {
+    private boolean onGridPhotoLongClick(GridPhotoBean bean, View view) {
+        TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", bean.getObj() instanceof ImageVo
+                && ((ImageVo) bean.getObj()).isError(), (item, v, dialog) -> {
             dialog.dismiss();
-            show(item.getName());
+            if (bean.getObj() instanceof ImageVo) {
+                ImageVo vo = (ImageVo) bean.getObj();
+                vo.onError(false);
+                api().imageUpload(gt(DVo::getFirst, obj -> obj.getUB(TP)),
+                        vo.getInvoiceUseType(), gtd(DVo::getSerialNo), new File(vo.getPath()),
+                        vo.getPath(), vo);
+            }
         }, (item, v, dialog) -> {
             dialog.dismiss();
             if (bean.getObj() instanceof ImageVo) {
-                ImageVo fg = (ImageVo) bean.getObj();
-                uApi().imageDelete(gtd(DVo::getSerialNo), fg.getImageID(), fg.getAmount(),
-                        fg.getKey(), fg.getImageID());
+                ImageVo vo = (ImageVo) bean.getObj();
+                api().imageDelete(gtd(DVo::getSerialNo), vo.getImageID(), vo.getAmount(),
+                        vo.getKey(), vo.getImageID());
             }
             notifyDataChanged();
         });
@@ -485,11 +496,14 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         return isNoneInitiateEnable() ? a : null;
     }
 
-    private void addPhoto(String path, int type) {
+    private ImageVo addPhoto(String path, int type) {
         if (!TextUtils.isEmpty(path)) {
-            iso(DVo::getImageList, obj -> obj.initDB(new ImageVo(path, type)));
+            ImageVo vo = new ImageVo(path, type);
+            iso(DVo::getImageList, obj -> obj.initDB(vo));
             notifyDataChanged();
+            return vo;
         }
+        return null;
     }
 
     protected <D> void checkAdd(List<D> data, String text, D obj) {

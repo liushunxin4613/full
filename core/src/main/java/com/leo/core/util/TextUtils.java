@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.lang.reflect.Field;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -244,6 +243,15 @@ public class TextUtils {
         return set;
     }
 
+    public static <K, V> Map<K, V> getHashMap(IObjAction<Map<K, V>> action) {
+        if (action != null) {
+            Map<K, V> map;
+            action.execute(map = new HashMap<>());
+            return map;
+        }
+        return null;
+    }
+
     /**
      * 检测http地址
      */
@@ -443,12 +451,12 @@ public class TextUtils {
         if (map != null) {
             try {
                 Map<K, V> copy = map.getClass().newInstance();
-                if(map.size() > 0){
+                if (map.size() > 0) {
                     if (TextUtils.isEmpty(args)) {
                         if (filter) {
                             copy.putAll(map);
                         }
-                    } else { 
+                    } else {
                         List<K> data = Arrays.asList((K[]) args);
                         for (Map.Entry<K, V> entry : map.entrySet()) {
                             if (data.contains(entry.getKey()) == !filter) {
@@ -460,6 +468,42 @@ public class TextUtils {
                 return copy;
             } catch (Exception ignored) {
             }
+        }
+        return null;
+    }
+
+    public static Map<String, String> parse(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            boolean isKey = true;
+            StringBuilder key = new StringBuilder();
+            StringBuilder value = new StringBuilder();
+            Map<String, String> map = new TreeMap<>();
+            for (char c : text.toCharArray()) {
+                switch (c) {
+                    default:
+                        if (isKey) {
+                            key.append(c);
+                        } else {
+                            value.append(c);
+                        }
+                        break;
+                    case '=':
+                        isKey = false;
+                        value = new StringBuilder();
+                        break;
+                    case ';':
+                        isKey = true;
+                        if(key.length() > 0 && value.length() > 0){
+                            map.put(key.toString(), value.toString());
+                        }
+                        key = new StringBuilder();
+                        break;
+                }
+            }
+            if(key.length() > 0 && value.length() > 0){
+                map.put(key.toString(), value.toString());
+            }
+            return map;
         }
         return null;
     }

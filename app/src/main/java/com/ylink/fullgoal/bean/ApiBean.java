@@ -3,13 +3,11 @@ package com.ylink.fullgoal.bean;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.RunUtil;
-import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.core.SurfaceBiBean;
 
@@ -31,6 +29,7 @@ public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
     private transient boolean etEnable;
     private transient boolean isMoneyInputType;
     private transient Double max;
+    private transient boolean moneyEnable;
 
     public ApiBean(String name) {
         this(null, name, null, null, null);
@@ -89,6 +88,14 @@ public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
         this.etEnable = etEnable;
     }
 
+    public boolean isMoneyEnable() {
+        return moneyEnable;
+    }
+
+    public void setMoneyEnable(boolean moneyEnable) {
+        this.moneyEnable = moneyEnable;
+    }
+
     public void setB5(boolean b5) {
         this.max = b5 ? 100d : null;
     }
@@ -144,7 +151,7 @@ public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
 
     public void setTextView(TextView textView) {
         this.textView = textView;
-        if (this.textView != null && !isEtEnable()) {
+        if (this.textView != null && !isEtEnable() && isMoneyEnable()) {
             this.textView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence text, int start, int count, int after) {

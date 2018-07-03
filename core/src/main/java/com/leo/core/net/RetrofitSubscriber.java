@@ -4,9 +4,9 @@ import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.HttpError;
 import com.leo.core.iapi.api.IParseApi;
-import com.leo.core.util.LogUtil;
 
 import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 
 import retrofit2.adapter.rxjava.HttpException;
@@ -22,7 +22,7 @@ public class RetrofitSubscriber<T extends RetrofitSubscriber, B> extends MsgSubs
 
     @Override
     public T init(String msg, int what, String tag) {
-        if(api != null){
+        if (api != null) {
             api.init(msg, what, tag);
         }
         return (T) this;
@@ -35,7 +35,7 @@ public class RetrofitSubscriber<T extends RetrofitSubscriber, B> extends MsgSubs
 
     @Override
     public void onError(Throwable e) {
-        if (e instanceof ConnectException) {
+        if (e instanceof ConnectException || e instanceof NoRouteToHostException) {
             execute("网络异常", HttpError.ERROR_CONNECT, e);
         } else if (e instanceof HttpException) {
             execute("服务器异常", HttpError.ERROR_HTTP, e);

@@ -6,9 +6,9 @@ import android.widget.TextView;
 import com.leo.core.iapi.inter.IAction;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.ylink.fullgoal.main.MainActivity;
 
 import butterknife.Bind;
+import cn.com.fullgoal.pt0001.MainActivity;
 
 import static com.ylink.fullgoal.config.Config.TIME_SPLASH;
 

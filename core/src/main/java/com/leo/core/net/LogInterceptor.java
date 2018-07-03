@@ -22,6 +22,7 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSource;
 
@@ -58,13 +59,15 @@ public class LogInterceptor implements Interceptor {
         source.request(Long.MAX_VALUE);
         Buffer res = source.buffer().clone();
         InterceptorBean bean = new InterceptorBean();
-        bean.setUrl(url);
-        bean.setRequestSize(FileSizeUtil.getFormetFileSize(request.body().contentLength()));
-        bean.setResponseSize(FileSizeUtil.getFormetFileSize(response.body().contentLength()));
+        bean.setUrl(decode(url));
+        bean.setRequestSize(FileSizeUtil.getFormetFileSize(getLength(request.body())));
+        bean.setResponseSize(FileSizeUtil.getFormetFileSize(getLength(response.body())));
         bean.setCode(String.format("%d", response.code()));
         bean.setMethod(request.method());
         bean.setTime(String.format("%.1fms", (System.nanoTime() - t1) / 1e6d));
-        bean.setHead(response.headers().toString());
+        bean.setRequestHead(request.headers().toString());
+        bean.setResponseHead(response.headers().toString());
+        bean.setContentType(getContentType(request.body()));
         bean.setParams(printParams(request.body(), req));
         bean.setResponse(decode(res.readUtf8()));
         bean.completed();
@@ -139,22 +142,39 @@ public class LogInterceptor implements Interceptor {
 
     private void print(String key, String value) {
         if (!TextUtils.isEmpty(key)) {
+            if(value.length() > 200){
+                value = value.substring(0, 200);
+            }
             LogUtil.ii(this, key + ": " + value);
         }
     }
 
     private void print(InterceptorBean bean) {
-        if (bean != null && bean.check()) {
+        if (bean != null && !bean.check()) {
             print("url", bean.getUrl());
-            print("request size", bean.getRequestSize());
-            print("response size", bean.getResponseSize());
             print("code", bean.getCode());
             print("method", bean.getMethod());
             print("time", bean.getTime());
-            print("head", bean.getHead());
+            print("contentType", bean.getContentType());
+            print("request size", bean.getRequestSize());
+            print("response size", bean.getResponseSize());
+            print("request head", bean.getRequestHead());
+            print("response head", bean.getResponseHead());
             print("params", bean.getParams());
         }
         print("response", bean.getResponse());
+    }
+
+    private long getLength(RequestBody body) throws IOException {
+        return body == null ? 0 : body.contentLength();
+    }
+
+    private long getLength(ResponseBody body) {
+        return body == null ? 0 : body.contentLength();
+    }
+
+    private String getContentType(RequestBody body) {
+        return body != null && body.contentType() != null ? body.contentType().toString() : null;
     }
 
 }

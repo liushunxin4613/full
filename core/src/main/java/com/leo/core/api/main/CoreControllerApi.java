@@ -54,6 +54,7 @@ import com.leo.core.iapi.api.ISerialVersionTagApi;
 import com.leo.core.iapi.api.IStartApi;
 import com.leo.core.iapi.api.ISubjoinApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
+import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.ITAction;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.api.IUserApi;
@@ -506,11 +507,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> B uApi() {
-        return null;
-    }
-
-    @Override
     public IActivityLifecycleCallbacksApi activityLifecycleApi() {
         if (activityLifecycleApi == null) {
             if (isApplication()) {
@@ -598,24 +594,28 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public Intent getIntent(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
+    public Intent getIntent(Class<? extends Activity> clz, Bundle bundle,
+                            Class<? extends IControllerApi>... args) {
         return startApi().getIntent(clz, bundle, args);
     }
 
     @Override
-    public T startActivity(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
+    public T startActivity(Class<? extends Activity> clz, Bundle bundle,
+                           Class<? extends IControllerApi>... args) {
         startApi().startActivity(clz, bundle, args);
         return getThis();
     }
 
     @Override
-    public T startFinishActivity(Class<? extends Activity> clz, Class<? extends IControllerApi>... args) {
+    public T startFinishActivity(Class<? extends Activity> clz,
+                                 Class<? extends IControllerApi>... args) {
         startApi().startFinishActivity(clz, args);
         return getThis();
     }
 
     @Override
-    public T startFinishActivity(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
+    public T startFinishActivity(Class<? extends Activity> clz, Bundle bundle,
+                                 Class<? extends IControllerApi>... args) {
         startApi().startFinishActivity(clz, bundle, args);
         return getThis();
     }
@@ -626,7 +626,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public Fragment getFragment(Class<? extends Fragment> clz, Class<? extends IControllerApi>... args) {
+    public Fragment getFragment(Class<? extends Fragment> clz,
+                                Class<? extends IControllerApi>... args) {
         return startApi().getFragment(clz, args);
     }
 
@@ -636,7 +637,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public Fragment getFragment(Class<? extends Fragment> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
+    public Fragment getFragment(Class<? extends Fragment> clz, Bundle bundle,
+                                Class<? extends IControllerApi>... args) {
         return startApi().getFragment(clz, bundle, args);
     }
 
@@ -937,7 +939,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         if (isFragment()) {
             if (getRootViewClz() != null && getRootViewClzApi() != null) {
                 if (rootView == null) {
@@ -1001,7 +1004,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onStop() {
-        remove(getString(Config.LAST_FINISH_CONTROLLER_API));
         executeViewControllerApi(IControllerApi::onStop);
     }
 
@@ -1344,11 +1346,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> B getApi() {
-        return (B) httpApi().getApi();
-    }
-
-    @Override
     public <B, M> Observable.Transformer<B, M> transformer() {
         if (transformer == null) {
             transformer = newTransformer();
@@ -1394,9 +1391,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> T observable(Observable<B> observable, String path, int what, String tag) {
+    public <B> T observable(Observable<B> observable, String startUrl, String path,
+                            Map<String, String> map, int what, String tag) {
         httpApi().setNewSubscriber(newSubscriber());
-        httpApi().observable(observable, path, what, tag);
+        httpApi().observable(observable, startUrl, path, map, what, tag);
         return getThis();
     }
 
@@ -1408,6 +1406,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public String mmd5(String text) {
         return md5Api().mmd5(text);
+    }
+
+    @Override
+    public String getTable() {
+        return dataApi().getTable();
     }
 
     @Override
@@ -1478,7 +1481,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> List<B> getBeanData(@NonNull String key, @NonNull Class<? extends List> lCls, @NonNull Class<B> cls) {
+    public <B> List<B> getBeanData(@NonNull String key, @NonNull Class<? extends List> lCls,
+                                   @NonNull Class<B> cls) {
         return dataApi().getBeanData(key, lCls, cls);
     }
 
@@ -1959,128 +1963,36 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T get(String path) {
-        api().get(path);
-        return getThis();
-    }
-
-    @Override
-    public T get(String path, IObjAction<Map<String, Object>> action) {
-        api().get(path, action);
-        return getThis();
-    }
-
-    @Override
-    public T get(String path, IObjAction<Map<String, Object>> action, int what) {
-        api().get(path, action, what);
-        return getThis();
-    }
-
-    @Override
-    public T get(String path, IObjAction<Map<String, Object>> action, String tag) {
-        api().get(path, action, tag);
-        return getThis();
-    }
-
-    @Override
-    public T get(String path, IObjAction<Map<String, Object>> action, int what, String tag) {
-        api().get(path, action, what, tag);
-        return getThis();
-    }
-
-    @Override
-    public T post(String path) {
-        api().post(path);
-        return getThis();
-    }
-
-    @Override
-    public T post(String path, IObjAction<Map<String, Object>> action) {
-        api().post(path, action);
-        return getThis();
-    }
-
-    @Override
-    public T post(String path, IObjAction<Map<String, Object>> action, int what) {
-        api().post(path, action, what);
-        return getThis();
-    }
-
-    @Override
-    public T post(String path, IObjAction<Map<String, Object>> action, String tag) {
-        api().post(path, action, tag);
-        return getThis();
-    }
-
-    @Override
-    public T post(String path, IObjAction<Map<String, Object>> action, int what, String tag) {
-        api().post(path, action, what, tag);
-        return getThis();
-    }
-
-    @Override
-    public T get(String url, String path) {
-        api().get(url, path);
-        return getThis();
-    }
-
-    @Override
-    public T get(String url, String path, IObjAction<Map<String, Object>> action) {
-        api().get(url, path, action);
-        return getThis();
-    }
-
-    @Override
-    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what) {
-        api().get(url, path, action, what);
-        return getThis();
-    }
-
-    @Override
-    public T get(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
-        api().get(url, path, action, tag);
-        return getThis();
-    }
-
-    @Override
-    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
+    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                 String tag) {
         api().get(url, path, action, what, tag);
         return getThis();
     }
 
     @Override
-    public T post(String url, String path) {
-        api().post(url, path);
-        return getThis();
-    }
-
-    @Override
-    public T post(String url, String path, IObjAction<Map<String, Object>> action) {
-        api().post(url, path, action);
-        return getThis();
-    }
-
-    @Override
-    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what) {
-        api().post(url, path, action, what);
-        return getThis();
-    }
-
-    @Override
-    public T post(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
-        api().post(url, path, action, tag);
-        return getThis();
-    }
-
-    @Override
-    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
+    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                  String tag) {
         api().post(url, path, action, what, tag);
         return getThis();
     }
 
     @Override
-    public Map<String, String> getCleanMapAction(IObjAction<Map<String, Object>> action) {
-        return api().getCleanMapAction(action);
+    public T jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                      String tag) {
+        api().jsonPost(url, path, action, what, tag);
+        return getThis();
+    }
+
+    @Override
+    public T bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                      String tag, IProgressListener listener) {
+        api().bodyPost(url, path, action, what, tag, listener);
+        return getThis();
+    }
+
+    @Override
+    public Map<String, String> getActionMap(IObjAction<Map<String, Object>> action) {
+        return api().getActionMap(action);
     }
 
 }

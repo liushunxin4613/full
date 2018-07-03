@@ -1,6 +1,5 @@
 package com.leo.core.api.core;
 
-import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IPositionAction;
@@ -36,10 +35,6 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
 
     protected static <A> void executeBol(List<A> data, IBolAction<A> action) {
         RunUtil.executeBol(data, action);
-    }
-
-    protected boolean execute(boolean is, IAction action) {
-        return RunUtil.execute(is, action);
     }
 
     protected <B> T execute(List<B> data, IObjAction<B> action) {

@@ -44,7 +44,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
             executeNon(getBundle(bundle, ImageVo.class), vo -> this.vo = vo);
             executeNon(getBundle(bundle, Bol.class), bol -> this.bol = bol.isBol());
         });
-        setRightTv("修改金额", v -> executeNon(vo, vo -> uApi().imageUpdateAmount(vo.getSerialNo(),
+        setRightTv("修改金额", v -> executeNon(vo, vo -> api().imageUpdateAmount(vo.getSerialNo(),
                 vo.getImageID(), vo.getAmount())));
         setVisibility(getRightTv(), bol ? View.VISIBLE : View.INVISIBLE);
         initViewPager();

@@ -46,6 +46,8 @@ import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.ComConfig.SHOW;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
+import static com.ylink.fullgoal.config.Config.CASTGC;
+import static com.ylink.fullgoal.config.Config.COOKIE_STR;
 import static com.ylink.fullgoal.config.Config.FIELDS;
 
 @SuppressWarnings("ReturnInsideFinallyBlock")
@@ -71,13 +73,12 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    public T dismissLoading() {
+    public void dismissLoading() {
         executeNon(getLoadingDialog(), dialog -> {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
         });
-        return getThis();
     }
 
     private AlertDialog getLoadingDialog() {
@@ -641,6 +642,17 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             }
         }
         return getThis();
+    }
+
+    protected String getCastgc(){
+        String cookieStr = getString(COOKIE_STR);
+        if(!TextUtils.isEmpty(cookieStr)){
+            Map<String, String> map = TextUtils.parse(cookieStr);
+            if(!TextUtils.isEmpty(map)){
+                return map.get(CASTGC);
+            }
+        }
+        return null;
     }
 
 }

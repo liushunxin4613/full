@@ -22,6 +22,7 @@ import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
 import static android.app.Activity.RESULT_OK;
+import static com.leo.core.util.LogUtil.ii;
 
 /**
  * 拍照
@@ -104,8 +105,8 @@ public class CameraApi extends HasCoreControllerApi<CameraApi> implements ICamer
                                 @Override
                                 public void onSuccess(File lubanFile) {
                                     photoFile.delete();
-                                    ee("lubanFile.getPath()", lubanFile.getPath());
-                                    ee("lubanFile", FileSizeUtil.getFormetFileSize(lubanFile));
+                                    ii("lubanFile.getPath()", lubanFile.getPath());
+                                    ii("lubanFile", FileSizeUtil.getFormetFileSize(lubanFile));
                                     if (action != null) {
                                         action.execute(photoType, null, lubanFile);
                                     }

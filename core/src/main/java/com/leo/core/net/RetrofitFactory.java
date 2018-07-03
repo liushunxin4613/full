@@ -57,7 +57,6 @@ public class RetrofitFactory {
         }
         if (builder == null) {
             builder = new Retrofit.Builder();
-            GsonBuilder gsonBuilder = new GsonBuilder();
             // Gson double类型转换, 避免空字符串解析出错
             final TypeAdapter<Number> DOUBLE = new TypeAdapter<Number>() {
                 @Override
@@ -124,25 +123,27 @@ public class RetrofitFactory {
                     out.value(value);
                 }
             };
+            GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(
                     double.class, Double.class, DOUBLE));
             gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(
                     long.class, Long.class, LONG));
             gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(
                     int.class, Integer.class, INT));
-            OkHttpClient.Builder client = new OkHttpClient.Builder();
-            client.addInterceptor(new LogInterceptor());
-            client.connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
-                    .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
-                    .writeTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS);
             builder.baseUrl(url)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(NullOnEmptyConverterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
-                    .client(client.build());
+                    .client(new OkHttpClient.Builder()
+                            .addInterceptor(new LogInterceptor())
+                            .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                            .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                            .writeTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                            .sslSocketFactory(SSLUtil.getSSLSocketFactory())
+                            .build());
         }
-        return builder.baseUrl(url).build();
+        return builder.build();
     }
 
 }

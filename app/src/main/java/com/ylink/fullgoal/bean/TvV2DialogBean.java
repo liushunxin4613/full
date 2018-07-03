@@ -16,15 +16,17 @@ public class TvV2DialogBean extends BaseDialogBean<TvV2DialogBean> {
 
     private String name;
     private String detail;
+    private boolean show;
     private transient View.OnClickListener onNameClickListener;
     private transient View.OnClickListener onDetailClickListener;
     private transient OnBVDialogClickListener<TvV2DialogBean> onNameBVDialogClickListener;
     private transient OnBVDialogClickListener<TvV2DialogBean> onDetailBVDialogClickListener;
 
-    public TvV2DialogBean(String name, String detail, OnBVDialogClickListener<TvV2DialogBean> onNameBVDialogClickListener,
+    public TvV2DialogBean(String name, String detail, boolean show, OnBVDialogClickListener<TvV2DialogBean> onNameBVDialogClickListener,
                           OnBVDialogClickListener<TvV2DialogBean> onDetailBVDialogClickListener) {
         this.name = name;
         this.detail = detail;
+        this.show = show;
         this.onNameBVDialogClickListener = onNameBVDialogClickListener;
         this.onDetailBVDialogClickListener = onDetailBVDialogClickListener;
         init();
@@ -51,6 +53,10 @@ public class TvV2DialogBean extends BaseDialogBean<TvV2DialogBean> {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public boolean isShow() {
+        return show;
     }
 
     public View.OnClickListener getOnNameClickListener() {

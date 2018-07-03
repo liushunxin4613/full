@@ -1,11 +1,11 @@
 package com.ylink.fullgoal.api.config;
 
 import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IProgressListener;
+import com.leo.core.net.UrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import java.io.File;
@@ -30,7 +30,7 @@ import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_RESEARCH_REPORT_DAT
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_TRAVEL_FORM_DATA;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_USER_DATA;
 
-public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
+public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     private final static String ROOT_URL = FG_ROOT_URL;
     private final static String DEBUG_URL = "http://192.168.8.108:8088/ssca/";
@@ -47,64 +47,64 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * 获取员工信息
      */
     public void queryUserData() {
-        api().post(ROOT_URL, PATH_QUERY_USER_DATA);
+        post(ROOT_URL, PATH_QUERY_USER_DATA);
     }
 
     /**
      * 获取部门信息
      */
     public void queryDepartmentData() {
-        api().post(ROOT_URL, PATH_QUERY_DEPARTMENT_DATA);
+        post(ROOT_URL, PATH_QUERY_DEPARTMENT_DATA);
     }
 
     /**
      * 获取项目信息
      */
     public void queryProjectData(String departmentCode) {
-        api().post(ROOT_URL, PATH_QUERY_PROJECT_DATA, get(map
-                -> map.put("departmentCode", departmentCode)));
+        post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g(map ->
+                map.put("departmentCode", departmentCode)));
     }
 
     /**
      * 获取合同申请单
      */
     public void queryContractPaymentData() {
-        api().post(ROOT_URL, PATH_QUERY_CONTRACT_PAYMENT_DATA);
+        post(ROOT_URL, PATH_QUERY_CONTRACT_PAYMENT_DATA);
     }
 
     /**
      * 获取招待申请单
      */
     public void queryProcessData() {
-        api().post(ROOT_URL, PATH_QUERY_PROCESS_DATA);
+        post(ROOT_URL, PATH_QUERY_PROCESS_DATA);
     }
 
     /**
      * 获取费用指标
      */
     public void queryCostIndexData() {
-        api().post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA);
+        post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA);
     }
 
     /**
      * 获取出差申请单
      */
     public void queryTravelFormData() {
-        api().post(ROOT_URL, PATH_QUERY_TRAVEL_FORM_DATA);
+        post(ROOT_URL, PATH_QUERY_TRAVEL_FORM_DATA);
     }
 
     /**
      * 获取投研报告
      */
     public void queryResearchReportData() {
-        api().post(ROOT_URL, PATH_QUERY_RESEARCH_REPORT_DATA);
+        post(ROOT_URL, PATH_QUERY_RESEARCH_REPORT_DATA);
     }
 
     /**
      * 获取携程机票
      */
     public void queryCtripTicketsData() {
-        api().post(ROOT_URL, PATH_QUERY_CTRIP_TICKETS_DATA);
+        post(ROOT_URL, PATH_QUERY_CTRIP_TICKETS_DATA);
     }
 
     /**
@@ -113,14 +113,14 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * @param serialNo 报销批次号
      */
     public void queryMessageBack(String serialNo) {
-        api().post(ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, get(map -> map.put("serialNo", serialNo)));
+        post(ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)));
     }
 
     /**
      * 银行卡请求数据
      */
     public void queryBank() {
-        api().post(ROOT_URL, PATH_QUERY_BANK_DATA);
+        post(ROOT_URL, PATH_QUERY_BANK_DATA);
     }
 
     /**
@@ -128,7 +128,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      */
     public void queryApplicationForm(Map<String, Object> map, String msg) {
         if (!TextUtils.isEmpty(map)) {
-            api().post(ROOT_URL, PATH_QUERY_APPLICATION_FORM_DATA, get(mp -> mp.putAll(map)), msg);
+            post(ROOT_URL, PATH_QUERY_APPLICATION_FORM_DATA, g(mp -> mp.putAll(map)), msg);
         }
     }
 
@@ -136,14 +136,14 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * 分摊维度列表
      */
     public void queryDimensionList(String costIndex) {
-        api().post(ROOT_URL, PATH_QUERY_DIMENSION_DATA, get(map -> map.put("costIndex", costIndex)));
+        post(ROOT_URL, PATH_QUERY_DIMENSION_DATA, g(map -> map.put("costIndex", costIndex)));
     }
 
     /**
      * 分摊维度信息列表
      */
     public void queryDimensionInformation(String dimensionCode) {
-        api().post(ROOT_URL, PATH_QUERY_DIMENSION_INFORMATION_DATA, get(map -> map.put("dimensionCode",
+        post(ROOT_URL, PATH_QUERY_DIMENSION_INFORMATION_DATA, g(map -> map.put("dimensionCode",
                 dimensionCode)));
     }
 
@@ -156,13 +156,14 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * @param photoType 图片类型
      * @param tag       标志:文件地址;
      */
-    public void imageUpload(String first, int photoType, String serialNo, File file, String tag) {
+    public void imageUpload(String first, int photoType, String serialNo, File file, String tag,
+                            IProgressListener listener) {
         if (file != null) {
             String base64 = Base64Util.getFileToBase64(file);
             String invoiceUse = ImageVo.getValue(photoType);
             final String fst = (TextUtils.equals("1", first) &&
                     !TextUtils.isEmpty(serialNo)) ? "6" : first;
-            api().post(ROOT_URL, FULL_IMAGE_UPLOAD, get(map -> {
+            bodyPost(ROOT_URL, FULL_IMAGE_UPLOAD, g(map -> {
                 map.put("first", fst);
                 map.put("agent", api().getUId());
                 map.put("stream", base64);
@@ -171,7 +172,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
                 map.put("status", "上传");
                 map.put("invoiceUse", invoiceUse);
                 map.put("invoiceAmount", "");
-            }), photoType, tag);
+            }), photoType, tag, listener);
         }
     }
 
@@ -182,7 +183,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * @param imageId  图片id
      */
     public void imageDelete(String serialNo, String imageId, String invoiceAmount, int type, String tag) {
-        api().post(ROOT_URL, FULL_IMAGE_UPLOAD, get(map -> {
+        post(ROOT_URL, FULL_IMAGE_UPLOAD, g(map -> {
             map.put("agent", api().getUId());
             map.put("serialNo", serialNo);
             map.put("status", "删除");
@@ -199,7 +200,7 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
      * @param amount   修改金额
      */
     public void imageUpdateAmount(String serialNo, String imageId, String amount) {
-        api().post(DEBUG_URL, FULL_IMAGE_UPLOAD, get(map -> {
+        post(DEBUG_URL, FULL_IMAGE_UPLOAD, g(map -> {
             map.put("agent", api().getUId());
             map.put("serialNo", serialNo);
             map.put("status", "修改金额");
@@ -214,13 +215,23 @@ public class FgApi<T extends FgApi> extends HasCoreControllerApi<T> {
     public void submitReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {
             ee("map", map);
-            api().post(ROOT_URL, FULL_REIMBURSE_SUBMIT, get(mp -> mp.putAll(map)));
+            post(ROOT_URL, FULL_REIMBURSE_SUBMIT, g(mp -> mp.putAll(map)));
         }
+    }
+
+    /**
+     * SSO 模拟登入
+     */
+    public void SSO(String tid) {
+        get("http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
+            map.put("ticketGrantingTicketId", tid);
+            map.put("type", "validateTGT");
+        });
     }
 
     //私有的
 
-    private IObjAction<Map<String, String>> get(IObjAction<Map<String, Object>> action) {
+    private IObjAction<Map<String, Object>> g(IObjAction<Map<String, Object>> action) {
         Map<String, Object> mp;
         executeNon(mp = new HashMap<>(), action);
         if (!TextUtils.isEmpty(mp)) {

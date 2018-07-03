@@ -17,11 +17,13 @@ public class MoneyBean extends ApiBean<MoneyBean> {
     public MoneyBean(String name, String detail) {
         super(name, detail);
         setEtEnable(true);
+        setMoneyEnable(false);
     }
 
     public MoneyBean(String name, String detail, String hint, IObjAction<String> action) {
         super(name, detail, hint);
         setEtEnable(false);
+        setMoneyEnable(true);
         this.action = action;
     }
 

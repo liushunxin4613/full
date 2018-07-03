@@ -63,7 +63,7 @@ public class FullBankControllerApi<T extends FullBankControllerApi, C> extends R
                 showNullView(true);
             }
         });
-        uApi().queryBank();
+        api().queryBank();
     }
 
     private List<BankFg> find(List<BankFg> data) {

@@ -30,9 +30,9 @@ public class NewFieldBean {
         });
     }
 
-    public Map<String, Object> getFilterMap(String... args) {
+    public Map<String, Object> getFilterMap(boolean filter, String... args) {
         return getFieldMap((key, obj) -> {
-            if (Arrays.asList(args).contains(key)) {
+            if (Arrays.asList(args).contains(key) == !filter) {
                 return new Entry<>(key, obj);
             }
             return null;
@@ -121,14 +121,14 @@ public class NewFieldBean {
             int m = field.getModifiers();
             return field != null && !Modifier.isStatic(m) && isOther(field)
                     && !Modifier.isAbstract(m) && !Modifier.isFinal(m)
-                    && (!Modifier.isTransient(m) || nw) && !field.getType().isPrimitive()
+                    && (!Modifier.isTransient(m) || nw)
                     && !Modifier.isInterface(field.getType().getModifiers());
         }
         return false;
     }
 
     protected boolean isOther(@NonNull Field field) {
-        return true;
+        return !field.getType().isPrimitive();
     }
 
 }

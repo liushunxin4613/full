@@ -1,12 +1,16 @@
 package com.ylink.fullgoal.vo;
 
+import com.leo.core.iapi.inter.IProgressListener;
+import com.leo.core.iapi.inter.IbooleanAction;
 import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.bi.ImageVoBi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBiBean;
 
-public class ImageVo extends SurfaceBiBean<ImageVo> {
+import java.io.File;
+
+public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener {
 
     @Override
     protected IBindControllerApi<SurfaceControllerApi, ImageVo> newDefApi() {
@@ -25,10 +29,10 @@ public class ImageVo extends SurfaceBiBean<ImageVo> {
             "车船机票费",
     };
 
-    public static int getKey(String value){
-        if(!TextUtils.isEmpty(FILTERS)){
+    public static int getKey(String value) {
+        if (!TextUtils.isEmpty(FILTERS)) {
             for (int i = 0; i < FILTERS.length; i++) {
-                if(TextUtils.equals(FILTERS[i], value)){
+                if (TextUtils.equals(FILTERS[i], value)) {
                     return i;
                 }
             }
@@ -36,14 +40,14 @@ public class ImageVo extends SurfaceBiBean<ImageVo> {
         return -1;
     }
 
-    public static String getValue(int key){
-        if(key > -1 && key < FILTERS.length){
+    public static String getValue(int key) {
+        if (key > -1 && key < FILTERS.length) {
             return FILTERS[key];
         }
         return null;
     }
 
-    public int getKey(){
+    public int getKey() {
         return getKey(getInvoiceUse());
     }
 
@@ -60,20 +64,55 @@ public class ImageVo extends SurfaceBiBean<ImageVo> {
     private String invoiceUse;
     private String serialNo;
     private Object photo;
+    private transient String path;
     private transient boolean show;
+    private transient boolean error;
+    private transient int invoiceUseType;
+    private transient IProgressListener listener;
+    private transient IbooleanAction errorAction;
 
     public ImageVo(Object photo, String invoiceUse) {
         this.photo = photo;
         this.invoiceUse = invoiceUse;
     }
 
-    public ImageVo(Object photo, int invoiceUseType) {
-        this.photo = photo;
+    public ImageVo(String path, int invoiceUseType) {
+        this.path = path;
+        this.photo = path;
+        this.invoiceUseType = invoiceUseType;
         this.invoiceUse = getValue(invoiceUseType);
+    }
+
+    public ImageVo setProgressListener(IProgressListener listener) {
+        this.listener = listener;
+        return this;
+    }
+
+    public void setErrorAction(IbooleanAction errorAction) {
+        this.errorAction = errorAction;
+    }
+
+    public void onError(boolean error) {
+        this.error = error;
+        if (errorAction != null) {
+            errorAction.execute(error);
+        }
+    }
+
+    public int getInvoiceUseType() {
+        return invoiceUseType;
+    }
+
+    public boolean isError() {
+        return error;
     }
 
     public String getAmount() {
         return amount;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public void setAmount(String amount) {
@@ -110,7 +149,7 @@ public class ImageVo extends SurfaceBiBean<ImageVo> {
         if (photo instanceof Double) {
             photo = ((Double) photo).intValue();
         }
-        if(photo == null){
+        if (photo == null) {
             return getImageURL();
         }
         return photo;
@@ -135,6 +174,13 @@ public class ImageVo extends SurfaceBiBean<ImageVo> {
     public ImageVo setShow(boolean show) {
         this.show = show;
         return this;
+    }
+
+    @Override
+    public void onLoading(long progress, long total) {
+        if (listener != null) {
+            listener.onLoading(progress, total);
+        }
     }
 
 }

@@ -22,6 +22,7 @@
         tools:text="重新上传" />
 
     <View
+        android:id="@+id/line_view"
         android:layout_width="match_parent"
         android:layout_height="1.0px"
         android:background="#e3e6e8" />

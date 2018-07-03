@@ -189,7 +189,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             Map<String, Object> map = getVo().getCheckMap(QR);
             if (check(map, dataMap)) {
                 dataMap.putAll(map);
-                uApi().submitReimburse(dataMap);
+                api().submitReimburse(dataMap);
             }
         }
     }
@@ -201,7 +201,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             getVo().initAllMoney(JavaTypeUtil.getdouble(gt(CostVo::getCost, CostIndexController::getDB,
                     CostFg::getAmount), 0));
             initCast();
-            uApi().queryDimensionList(gt(CostVo::getCost, CostIndexController::getDB, CostFg::getCostCode));
+            api().queryDimensionList(gt(CostVo::getCost, CostIndexController::getDB, CostFg::getCostCode));
         }
     }
 

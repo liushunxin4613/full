@@ -28,14 +28,6 @@ public class RunUtil {
         }
     }
 
-    public static boolean execute(boolean is, IAction action) {
-        if (is && action != null) {
-            action.execute();
-            return true;
-        }
-        return false;
-    }
-
     public static <T> void executeNon(T obj, IObjAction<T> r) {
         if (obj != null && r != null) {
             r.execute(obj);

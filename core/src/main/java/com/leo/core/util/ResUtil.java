@@ -1,5 +1,6 @@
 package com.leo.core.util;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import com.leo.core.api.api.ResApi;
@@ -9,6 +10,10 @@ public class ResUtil {
 
     private static IResApi getApi() {
         return ClassBindUtil.getApi(ResApi.class);
+    }
+
+    public static Resources getResources() {
+        return getApi().getResources();
     }
 
     public static int getColor(int color) {

@@ -6,13 +6,42 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/icon_iv"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@mipmap/posting_add"
-        tools:ignore="ContentDescription" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@mipmap/posting_add"
+            tools:ignore="ContentDescription" />
+
+        <android.support.v4.widget.ContentLoadingProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/y20"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginRight="@dimen/x20"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_bar_layer"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/error_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/error"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/name_tv"
@@ -26,7 +55,6 @@
         android:visibility="gone"
         tools:ignore="RtlHardcoded"
         tools:text="金额: 2743.00"
-        tools:visibility="visible"
-        />
+        tools:visibility="visible" />
 
 </LinearLayout>

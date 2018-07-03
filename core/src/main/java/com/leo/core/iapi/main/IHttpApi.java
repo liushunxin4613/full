@@ -2,12 +2,15 @@ package com.leo.core.iapi.main;
 
 import com.leo.core.api.inter.MsgSubscriber;
 
+import java.util.Map;
+
 import rx.Observable;
 
 public interface IHttpApi<T extends IHttpApi> {
 
     /**
      * 创建api
+     *
      * @param url root url
      * @param clz clz
      * @param <B> <B>
@@ -16,6 +19,7 @@ public interface IHttpApi<T extends IHttpApi> {
 
     /**
      * 获取驱动器
+     *
      * @param url url
      * @param <B> B
      * @return R
@@ -23,14 +27,8 @@ public interface IHttpApi<T extends IHttpApi> {
     <B> B getApi(String url);
 
     /**
-     * 获取驱动器
-     * @param <B> B
-     * @return R
-     */
-    <B> B getApi();
-
-    /**
      * Observable.Transformer
+     *
      * @param <B> B
      * @param <M> M
      * @return Observable.Transformer
@@ -39,6 +37,7 @@ public interface IHttpApi<T extends IHttpApi> {
 
     /**
      * new Observable.Transformer
+     *
      * @param <B> B
      * @param <M> M
      * @return Observable.Transformer
@@ -47,6 +46,7 @@ public interface IHttpApi<T extends IHttpApi> {
 
     /**
      * Subscriber
+     *
      * @param <B> B
      * @return Subscriber
      */
@@ -54,6 +54,7 @@ public interface IHttpApi<T extends IHttpApi> {
 
     /**
      * new Subscriber
+     *
      * @param <B> B
      * @return Subscriber
      */
@@ -61,26 +62,35 @@ public interface IHttpApi<T extends IHttpApi> {
 
     /**
      * 设置setSubscriber
+     *
      * @param newSubscriber newSubscriber
-     * @param <B> <B>
+     * @param <B>           <B>
      * @return 本身
      */
     <B> T setNewSubscriber(MsgSubscriber<T, B> newSubscriber);
 
     /**
      * 观察
+     *
      * @param observable observable
-     * @param <B> B
+     * @param <B>        B
      * @return 本身
      */
     <B> T observable(Observable<B> observable);
 
     /**
      * 观察
+     *
      * @param observable observable
-     * @param <B> B
+     * @param startUrl   startUrl
+     * @param path       path
+     * @param map        map
+     * @param what       what
+     * @param tag        tag
+     * @param <B>        <B>
      * @return 本身
      */
-    <B> T observable(Observable<B> observable, String path, int what, String tag);
+    <B> T observable(Observable<B> observable, String startUrl, String path, Map<String, String> map,
+                     int what, String tag);
 
 }
