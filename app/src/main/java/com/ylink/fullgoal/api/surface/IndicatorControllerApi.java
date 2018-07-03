@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.api.surface;
 
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -108,11 +109,12 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
         int count = getCount();
         if (sum > 0 && count > 0) {
             int width = sum / count;
-            vg.removeAllViews();
             if (adapter != null) {
                 adapter.getApi().removeAll();
             }
             int viewSum = 0;
+            vg.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(getContext());
             List<View> data = new ArrayList<>();
             for (int i = 0; i < getCount(); i++) {
                 int finalI = i;
@@ -121,10 +123,12 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
                     if (adapter != null && bean.getApi() != null) {
                         adapter.getApi().add(bean.getApi());
                     }
-                    View rootView = View.inflate(getContext(), bean.getApiType(), null);
+                    View rootView = inflater.inflate(bean.getApiType(), null);
                     vg.addView(rootView);
                     setOnClickListener(rootView, v -> setCurrentItem(finalI))
                             .setText(findViewById(rootView, R.id.name_tv), bean.getName());
+                    rootView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                     rootView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                     int viewWidth = rootView.getMeasuredWidth();
@@ -134,12 +138,13 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
                     viewSum += viewWidth;
                 }
             }
-            if (viewSum < sum) {
-                int viewCount = TextUtils.count(data);
-                int offset = (sum - viewSum) / viewCount;
+            if (viewSum < sum && !TextUtils.isEmpty(data)) {
+                int offset = (sum - viewSum) / TextUtils.count(data);
                 for (View item : data) {
-                    item.setLayoutParams(new LinearLayout.LayoutParams(item.getMeasuredWidth() + offset, -1));
+                    item.getLayoutParams().width = item.getMeasuredWidth() + offset;
                 }
+                vg.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             }
             if (getCurrentItem() < 0) {
                 currentItem = 0;
