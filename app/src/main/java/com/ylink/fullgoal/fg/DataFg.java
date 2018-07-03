@@ -30,7 +30,7 @@ public class DataFg extends StatusCodeFg {
     //报销查询列表
     private List<ApplicationtFg> applicationtList;
     //银行卡查询列表
-    private List<BankFg> bank;
+    private List<BankFg> bankCardtList2;
     //银行卡查询列表
     private List<DimenFg> dimen;
     //银行卡查询列表
@@ -124,12 +124,12 @@ public class DataFg extends StatusCodeFg {
         this.applicationtList = applicationtList;
     }
 
-    public List<BankFg> getBank() {
-        return bank;
+    public List<BankFg> getBankCardtList2() {
+        return bankCardtList2;
     }
 
-    public void setBank(List<BankFg> bank) {
-        this.bank = bank;
+    public void setBankCardtList2(List<BankFg> bankCardtList2) {
+        this.bankCardtList2 = bankCardtList2;
     }
 
     public List<DimenFg> getDimen() {

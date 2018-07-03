@@ -9,8 +9,10 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.leo.core.adapter.BasePagerAdapter;
+import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
@@ -105,11 +107,6 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     @Override
     public void initData() {
         super.initData();
-        add(DataFg.class, (path, what, msg, bean) -> {
-            if (!TextUtils.isEmpty(msg)) {
-                initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList());
-            }
-        });
         getReiRecycleControllerApi(D1);
         getReiRecycleControllerApi(D2);
         getReiRecycleControllerApi(D3);
@@ -118,7 +115,11 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
 
     private void query() {
         if (!getExecute(getItemValue().getOnce(), false, BooleanController::is)) {
-            api().queryApplicationForm(getUBMap(), getType());
+            String type = getType();
+            if (check(type)) {
+                executeNon(getReiRecycleControllerApi(type), api
+                        -> api.api().queryApplicationForm(getUBMap(), type));
+            }
         }
     }
 
@@ -194,7 +195,16 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         controllerApi.setText(controllerApi.findViewById(R.id.null_tv), "您还没有相关的报销");
         controllerApi.setNullView(controllerApi.findViewById(R.id.null_vg));
         add(name, controllerApi);
+        add(controllerApi, DataFg.class, (path, what, msg, bean)
+                -> initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList()));
+        controllerApi.hideViews();
         return controllerApi;
+    }
+
+    private <A> void add(CoreControllerApi api, Class<A> root, IPathMsgAction<A> action) {
+        if (check(api, root, action)) {
+            api.add(root, action);
+        }
     }
 
     private void add(String name, RecycleControllerApi controllerApi) {
@@ -223,6 +233,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             typeBean.clean();
         }).setOnClickListener(api.findViewById(R.id.confirm_tv), v -> {
             drawerLayout.closeDrawer(gravity);
+            iss(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(false));
             query();
         });
         DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(-1, -1);

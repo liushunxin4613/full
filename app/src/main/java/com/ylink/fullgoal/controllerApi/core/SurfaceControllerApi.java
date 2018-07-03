@@ -70,6 +70,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             loadingDialog = (AlertDialog) getDialogControllerApi(LoadingDialogControllerApi.class)
                     .dialogShow()
                     .getDialog();
+            ee("+++++++++++++X");
         }
     }
 

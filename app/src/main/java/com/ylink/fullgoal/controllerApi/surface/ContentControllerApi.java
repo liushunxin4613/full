@@ -16,6 +16,13 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
     }
 
     @Override
+    public void showLoading() {
+        super.showLoading();
+        hideViews();
+        ee("---------- showLoading hideViews ----------");
+    }
+
+    @Override
     public T init() {
         showContentView();
         return getThis();
