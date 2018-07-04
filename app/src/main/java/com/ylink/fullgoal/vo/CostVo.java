@@ -2,11 +2,13 @@ package com.ylink.fullgoal.vo;
 
 import com.leo.core.bean.NewFieldBean;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.JavaTypeUtil;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.CostPageController;
 import com.ylink.fullgoal.cr.surface.DimenListController;
 import com.ylink.fullgoal.cr.surface.MoneyController;
 import com.ylink.fullgoal.cr.surface.RatioController;
+import com.ylink.fullgoal.fg.CostFg;
 
 import static com.leo.core.util.TextUtils.getPercentage;
 
@@ -23,7 +25,16 @@ public class CostVo extends NewFieldBean {
         initNewFields();
     }
 
-    public void initAllMoney(double allMoney){
+    public void setAllMoney(String money) {
+        getCost().updateAmount(money);
+        updateAllMoney();
+    }
+
+    public void updateAllMoney() {
+        initAllMoney(JavaTypeUtil.getdouble(vr(getCost().getDB(), CostFg::getAmount), 0));
+    }
+
+    public void initAllMoney(double allMoney) {
         getAllMoney().initDB(allMoney);
     }
 
@@ -33,15 +44,15 @@ public class CostVo extends NewFieldBean {
         getRatio().initDB(getPercentage(money, allMoney));
     }
 
-    public double getRestMoney(IControllerApi... args){
+    public double getRestMoney(IControllerApi... args) {
         return getAllMoney().getdouble() - getPager().getFilterMoney(args);
     }
 
-    public String getOtherRatio(){
+    public String getOtherRatio() {
         return getPercentage(getPager().getFilterMoney(), getAllMoney().getdouble());
     }
 
-    public String getRatio(double money){
+    public String getRatio(double money) {
         return getPercentage(money, getAllMoney().getdouble());
     }
 

@@ -28,7 +28,7 @@ public class ContractPaymentController<T extends ContractPaymentController> exte
 
     @Override
     public String getViewBean() {
-        return no(ContractPaymentFg::getName);
+        return vor(ContractPaymentFg::getName);
     }
 
     @Override

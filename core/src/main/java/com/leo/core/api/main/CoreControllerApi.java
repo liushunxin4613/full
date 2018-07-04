@@ -34,6 +34,8 @@ import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.ICameraApi;
+import com.leo.core.iapi.api.IVosApi;
+import com.leo.core.iapi.api.IVsApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IActionApi;
 import com.leo.core.iapi.api.ICallbackApi;
@@ -55,6 +57,7 @@ import com.leo.core.iapi.api.IStartApi;
 import com.leo.core.iapi.api.ISubjoinApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IProgressListener;
+import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.ITAction;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.api.IUserApi;
@@ -89,7 +92,8 @@ import static com.leo.core.util.TextUtils.getEmptyLength;
 public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi<T, C> implements
         IControllerApi<T, C>, IViewApi<T>, IShowApi<T>, IHttpApi<T>, IMD5Api, IDataApi<T>, IObjectApi<T>,
         IActionApi<T, IApi>, IStartApi<T>, IUserApi<T>, ILoadImageApi<T>, IConfigApi<T>, IDataTypeApi<T>,
-        IMergeApi<T>, IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi<T> {
+        IMergeApi<T>, IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi<T>, IVsApi<T>,
+        IVosApi<T> {
 
     private C controller;
     private Handler mainHandler;
@@ -124,6 +128,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IHelperApi helperApi;
     private ICameraApi cameraApi;
     private IActivityLifecycleCallbacksApi activityLifecycleApi;
+    private IVsApi vsApi;
+    private IVosApi vosApi;
 
     //other
     private Integer rootViewResId;
@@ -544,6 +550,38 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public ICameraApi newCameraApi() {
+        return null;
+    }
+
+    @Override
+    public IVsApi vsApi() {
+        if (vsApi == null) {
+            vsApi = newVsApi();
+            if (vsApi == null) {
+                throw new NullPointerException("newVsApi 不能为空");
+            }
+        }
+        return vsApi;
+    }
+
+    @Override
+    public IVsApi newVsApi() {
+        return null;
+    }
+
+    @Override
+    public IVosApi vosApi() {
+        if (vosApi == null) {
+            vosApi = newVosApi();
+            if (vosApi == null) {
+                throw new NullPointerException("newVosApi 不能为空");
+            }
+        }
+        return vosApi;
+    }
+
+    @Override
+    public IVosApi newVosApi() {
         return null;
     }
 
@@ -1993,6 +2031,121 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public Map<String, String> getActionMap(IObjAction<Map<String, Object>> action) {
         return api().getActionMap(action);
+    }
+
+    @Override
+    public <AA> T vs(AA aa, IObjAction<AA> action) {
+        vsApi().vs(aa, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB> BB vr(AA aa, IReturnAction<AA, BB> ab) {
+        return (BB) vsApi().vr(aa, ab);
+    }
+
+    @Override
+    public <AA, BB> T vs(AA aa, IReturnAction<AA, BB> ab, IObjAction<BB> action) {
+        vsApi().vs(aa, ab, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC> CC vr(AA aa, IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc) {
+        return (CC) vsApi().vr(aa, ab, bc);
+    }
+
+    @Override
+    public <AA, BB, CC> T vs(AA aa, IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IObjAction<CC> action) {
+        vsApi().vs(aa, ab, bc, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC, DD> DD vr(AA aa, IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd) {
+        return (DD) vsApi().vr(aa, ab, bc, cd);
+    }
+
+    @Override
+    public <AA, BB, CC, DD> T vs(AA aa, IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IObjAction<DD> action) {
+        vsApi().vs(aa, ab, bc, cd, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC, DD, EE> EE vr(AA aa, IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de) {
+        return (EE) vsApi().vr(aa, ab, bc, cd, de);
+    }
+
+    @Override
+    public <AA, BB, CC, DD, EE> T vs(AA aa, IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de, IObjAction<EE> action) {
+        vsApi().vs(aa, ab, bc, cd, de, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC, DD, EE, FF> FF vr(AA aa, IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de, IReturnAction<EE, FF> ef) {
+        return (FF) vsApi().vr(aa, ab, bc, cd, de, ef);
+    }
+
+    @Override
+    public <AA> AA getVo() {
+        return null;
+    }
+
+    @Override
+    public <AA> T vos(IObjAction<AA> action) {
+        vosApi().vos(action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB> BB vor(IReturnAction<AA, BB> ab) {
+        return (BB) vosApi().vor(ab);
+    }
+
+    @Override
+    public <AA, BB> T vos(IReturnAction<AA, BB> ab, IObjAction<BB> action) {
+        vosApi().vos(ab, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC> CC vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc) {
+        return (CC) vosApi().vor(ab, bc);
+    }
+
+    @Override
+    public <AA, BB, CC> T vos(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IObjAction<CC> action) {
+        vosApi().vos(ab, bc, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC, DD> DD vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd) {
+        return (DD) vosApi().vor(ab, bc, cd);
+    }
+
+    @Override
+    public <AA, BB, CC, DD> T vos(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IObjAction<DD> action) {
+        vosApi().vos(ab, bc, cd, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC, DD, EE> EE vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de) {
+        return (EE) vosApi().vor(ab, bc, cd, de);
+    }
+
+    @Override
+    public <AA, BB, CC, DD, EE> T vos(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de, IObjAction<EE> action) {
+        vosApi().vos(ab, bc, cd, de, action);
+        return getThis();
+    }
+
+    @Override
+    public <AA, BB, CC, DD, EE, FF> FF vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc, IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de, IReturnAction<EE, FF> ef) {
+        return (FF) vosApi().vor(ab, bc, cd, de, ef);
     }
 
 }

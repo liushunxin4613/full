@@ -2,6 +2,7 @@ package com.leo.core.bean;
 
 import android.support.annotation.NonNull;
 
+import com.leo.core.api.api.VsApi;
 import com.leo.core.config.PatternConfig;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IObjAction;
@@ -18,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class NewFieldBean {
+public class NewFieldBean extends VsApi<NewFieldBean> {
 
     public Map<String, Object> getCheckMap(String... args) {
         return getFieldMap((key, obj) -> {

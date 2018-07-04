@@ -3,9 +3,11 @@ package com.ylink.fullgoal.bean;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
+import com.leo.core.util.HelperUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
@@ -151,49 +153,12 @@ public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
 
     public void setTextView(TextView textView) {
         this.textView = textView;
-        if (this.textView != null && !isEtEnable() && isMoneyEnable()) {
-            this.textView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence text, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence text, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable text) {
-                    onAfterTextChanged(text);
+        if (textView instanceof EditText && !isEtEnable() && isMoneyEnable()) {
+            HelperUtil.addMoneyTextChangedListener((EditText) textView, max, text -> {
+                if (!TextUtils.equals(text, getHint())) {
+                    setDetail(text);
                 }
             });
-        }
-    }
-
-    private void onAfterTextChanged(Editable text) {
-        String temp = text.toString();
-        int posDot = temp.indexOf(".");
-        int endPosDot = temp.lastIndexOf(".");
-        if (posDot >= 0 && endPosDot != posDot) {
-            text.delete(endPosDot, endPosDot + 1);
-            return;
-        }
-        if (posDot > 0) {
-            if (temp.length() - posDot - 1 > 2) {
-                text.delete(posDot + 3, posDot + 4);
-                return;
-            }
-        } else if (posDot == 0) {
-            text.insert(0, "0");
-        }
-        if (max != null) {
-            float f = JavaTypeUtil.getfloat(temp, 0);
-            if (f > max) {
-                text.delete(temp.length() - 1, temp.length());
-                return;
-            }
-        }
-        if (!TextUtils.equals(temp, getHint())) {
-            setDetail(temp);
         }
     }
 

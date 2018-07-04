@@ -11,6 +11,8 @@
         style="@style/padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal"
         android:weightSum="3">
 
@@ -25,16 +27,18 @@
             tools:ignore="RtlHardcoded"
             tools:text="会议费" />
 
-        <TextView
-            android:id="@+id/detail_tv"
+        <EditText
+            android:id="@+id/detail_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@null"
             android:gravity="center"
+            android:inputType="numberDecimal"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
-            tools:ignore="RtlHardcoded"
+            tools:ignore="LabelFor,RtlHardcoded"
             tools:text="20000.00" />
 
         <TextView
@@ -99,30 +103,36 @@
         style="@style/padding_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal"
         android:weightSum="3">
 
-        <TextView
-            android:id="@+id/tax_tv"
+        <EditText
+            android:id="@+id/tax_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@null"
+            android:inputType="numberDecimal"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
-            tools:ignore="RtlHardcoded"
+            tools:ignore="LabelFor,RtlHardcoded"
             tools:text="3500.00" />
 
-        <TextView
-            android:id="@+id/none_tax_money_tv"
+        <EditText
+            android:id="@+id/none_tax_money_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@null"
             android:gravity="center"
+            android:inputType="numberDecimal"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
-            tools:ignore="RtlHardcoded"
+            tools:ignore="LabelFor,RtlHardcoded"
             tools:text="16500.00" />
 
         <TextView

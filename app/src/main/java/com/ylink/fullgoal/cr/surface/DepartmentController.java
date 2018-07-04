@@ -41,7 +41,7 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
 
     @Override
     public String getViewBean() {
-        return no(DepartmentFg::getDepartmentName);
+        return vor(DepartmentFg::getDepartmentName);
     }
 
 }

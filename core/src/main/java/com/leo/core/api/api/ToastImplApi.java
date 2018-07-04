@@ -12,20 +12,24 @@ import com.leo.core.util.TextUtils;
  */
 public class ToastImplApi extends BindContextApi<ToastImplApi> implements IShowApi<ToastImplApi, Object, Integer> {
 
-    private final static int interval = 5000;//间隔时间
+    private final static int interval = 1000;//间隔时间
 
     private long time;
     private Object text;
     private Object thisObj;
 
     private boolean check(Object thisObj, Object text) {
-        long time = System.currentTimeMillis();
-        boolean check = !(TextUtils.equals(thisObj, this.thisObj) && TextUtils.equals(text, this.text)
-                && time - this.time <= interval);
-        this.text = text;
-        this.thisObj = thisObj;
-        this.time = time;
-        return check;
+        if(thisObj != null){
+            long time = System.currentTimeMillis();
+            boolean check = !(TextUtils.equals(thisObj, this.thisObj)
+                    && TextUtils.equals(text, this.text)
+                    && time - this.time <= interval);
+            this.text = text;
+            this.thisObj = thisObj;
+            this.time = time;
+            return check;
+        }
+        return true;
     }
 
     /**

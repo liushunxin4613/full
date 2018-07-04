@@ -3,8 +3,6 @@ package com.ylink.fullgoal.controllerApi.core;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,11 +16,11 @@ import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
-import com.leo.core.iapi.inter.ITextAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
+import com.leo.core.util.ToastUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullSearchControllerApi;
 import com.ylink.fullgoal.api.surface.LoadingDialogControllerApi;
@@ -70,7 +68,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             loadingDialog = (AlertDialog) getDialogControllerApi(LoadingDialogControllerApi.class)
                     .dialogShow()
                     .getDialog();
-            ee("+++++++++++++X");
         }
     }
 
@@ -93,7 +90,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         add(Exceptions.class, (path, what, msg, bean) -> dismissLoading());
         add(Exceptions.class, (path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(bean.getMessage())) {
-                show(bean.getMessage());
+                ToastUtil.show(this, bean.getMessage());
             }
         });
     }
@@ -368,41 +365,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    public TextWatcher getMoneyTextWatcher(ITextAction action) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                onAfterTextChanged(s, action);
-            }
-        };
-    }
-
-    protected void onAfterTextChanged(Editable text, ITextAction action) {
-        String temp = text.toString();
-        int posDot = temp.indexOf(".");
-        int endPosDot = temp.lastIndexOf(".");
-        if (posDot >= 0 && endPosDot != posDot) {
-            text.delete(endPosDot, endPosDot + 1);
-            return;
-        }
-        if (posDot > 0) {
-            if (temp.length() - posDot - 1 > 2) {
-                text.delete(posDot + 3, posDot + 4);
-            }
-        } else if (posDot == 0) {
-            text.insert(0, "0");
-        }
-        execute(temp, action);
-    }
-
     protected Type getObjectType(Object obj) {
         if (obj instanceof List) {
             List data = (List) obj;
@@ -499,150 +461,20 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     //有关于数据处理的
 
-    protected <S, B> B no(IReturnAction<S, B> action) {
-        return no(getVo(), action);
-    }
-
-    protected <S, A extends IController, B> B gt(Class<B> clz, IReturnAction<S, A> action) {
-        if (clz != null && action != null) {
-            A obj = no(action);
-            if (obj != null && clz.isInstance(obj)) {
-                return (B) obj;
-            }
+    protected <S, A extends IController, B> B vorv(IReturnAction<S, A> action) {
+        A obj = vor(action);
+        if(check(obj)){
+            return (B) obj.getViewBean();
         }
         return null;
     }
 
-    protected <S, A extends IController, B> B gt(IReturnAction<S, A> action, IReturnAction<A, B> an) {
-        if (action != null && an != null) {
-            A obj = no(action);
-            if (obj != null) {
-                return an.execute(obj);
-            }
+    protected <S, A extends IController, B> B vord(IReturnAction<S, A> action) {
+        A obj = vor(action);
+        if(check(obj)){
+            return (B) obj.getDB();
         }
         return null;
-    }
-
-    protected <S, A extends IController, B, E> E gt(IReturnAction<S, A> action, IReturnAction<A, B> an,
-                                                    IReturnAction<B, E> ac) {
-        if (action != null && an != null) {
-            A obj = no(action);
-            if (obj != null) {
-                B b = an.execute(obj);
-                if (b != null) {
-                    return ac.execute(b);
-                }
-            }
-        }
-        return null;
-    }
-
-    protected <S, A extends IController, B> B gtv(IReturnAction<S, A> action) {
-        if (action != null) {
-            A obj = no(action);
-            if (obj != null) {
-                return (B) obj.getViewBean();
-            }
-        }
-        return null;
-    }
-
-    protected <S, A extends IController, B> B gtd(IReturnAction<S, A> action) {
-        if (action != null) {
-            A obj = no(action);
-            if (obj != null) {
-                return (B) obj.getDB();
-            }
-        }
-        return null;
-    }
-
-    protected <A> A getVo() {
-        return null;
-    }
-
-    protected <S> T ioo(IObjAction<S> action) {
-        executeNon(getVo(), action);
-        return getThis();
-    }
-
-    protected <A, B> T iso(IReturnAction<A, B> action, IObjAction<B> ac) {
-        if (action != null && ac != null) {
-            B obj = no(action);
-            if (obj != null) {
-                ac.execute(obj);
-            }
-        }
-        return getThis();
-    }
-
-    protected <S, B, D> T ioo(IReturnAction<S, B> action, IReturnAction<B, D> an) {
-        if (action != null && an != null) {
-            B obj = no(action);
-            if (obj != null) {
-                an.execute(obj);
-            }
-        }
-        return getThis();
-    }
-
-    protected <S, B, D> T iso(IReturnAction<S, B> action, IReturnAction<B, D> an, IObjAction<D> ac) {
-        if (action != null && an != null && ac != null) {
-            B obj = no(action);
-            if (obj != null) {
-                D item = an.execute(obj);
-                if (item != null) {
-                    ac.execute(item);
-                }
-            }
-        }
-        return getThis();
-    }
-
-    protected <S, A, B, D> T iso(IReturnAction<S, A> action, IReturnAction<A, B> an, IReturnAction<B, D> am, IObjAction<D> ac) {
-        if (action != null && an != null && ac != null) {
-            A obj = no(action);
-            if (obj != null) {
-                B item = an.execute(obj);
-                if (item != null) {
-                    D d = am.execute(item);
-                    if (d != null) {
-                        ac.execute(d);
-                    }
-                }
-            }
-        }
-        return getThis();
-    }
-
-    protected <A> T iss(A a, IObjAction<A> action) {
-        if (check(a, action)) {
-            action.execute(a);
-        }
-        return getThis();
-    }
-
-    protected <A, B> T iss(A a, IReturnAction<A, B> ab, IObjAction<B> action) {
-        if (check(a, ab)) {
-            B b = ab.execute(a);
-            if (check(b)) {
-                action.execute(b);
-            }
-        }
-        return getThis();
-    }
-
-    protected <A, B, D> T iss(A a, IReturnAction<A, B> ab, IReturnAction<B, D> bd, IObjAction<D> action) {
-        if (check(a, ab)) {
-            B b = ab.execute(a);
-            if (check(b)) {
-                D d = bd.execute(b);
-                if (check(d)) {
-                    action.execute(d);
-                }
-            }
-        }
-        return getThis();
     }
 
     protected String getCastgc(){

@@ -30,7 +30,7 @@ public class DItemController<T extends DItemController> extends MapController<T,
 
     @Override
     protected Map<String, Object> getOnUB(String key) {
-        return no(getMap().get(key), vo -> vo.getCheckMap());
+        return vr(getMap().get(key), vo -> vo.getCheckMap());
     }
 
 }

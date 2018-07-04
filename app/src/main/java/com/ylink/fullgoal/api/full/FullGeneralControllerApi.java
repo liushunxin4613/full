@@ -41,35 +41,35 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
         //VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
-            data.add(new TvH2Bean(gtv(DVo::getAgent), gtv(DVo::getDepartment)));
-            checkAdd(data, gtv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
-                    "报销人", gtv(DVo::getReimbursement), "请输入报销人", (bean, view)
+            data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
+            checkAdd(data, vorv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
+                    "报销人", vorv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> startSearch(SearchVo.REIMBURSEMENT), text
-                    -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
-            checkAdd(data, gtv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
-                    gtv(DVo::getBudgetDepartment), "请选择预算归属部门",
+                    -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
+            checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
+                    vorv(DVo::getBudgetDepartment), "请选择预算归属部门",
                     (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
-            checkAdd(data, gtv(DVo::getProject), new TvH2MoreBean("项目", gtv(DVo::getProject), "请选择项目",
+            checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject), "请选择项目",
                     (bean, view) -> startSearch(SearchVo.PROJECT)));
-            checkAdd(data, gtv(DVo::getContractPayment), new TvH2MoreBean("合同付款申请单",
-                    gtv(DVo::getContractPayment), "请选择合同付款申请单",
+            checkAdd(data, vorv(DVo::getContractPayment), new TvH2MoreBean("合同付款申请单",
+                    vorv(DVo::getContractPayment), "请选择合同付款申请单",
                     (bean, view) -> startSearch(SearchVo.CONTRACT_BILL)));
-            checkAdd(data, gtv(DVo::getProcess), new TvH2MoreBean("招待申请单",
-                    gtv(DVo::getProcess), "请选择招待申请单",
+            checkAdd(data, vorv(DVo::getProcess), new TvH2MoreBean("招待申请单",
+                    vorv(DVo::getProcess), "请选择招待申请单",
                     (bean, view) -> startSearch(SearchVo.SERVE_BILL)));
-            checkAdd(data, gtv(DVo::getCostIndex),
-                    new TvH2MoreBean("费用指标", gtv(DVo::getCostIndex), "请选择费用指标",
+            checkAdd(data, vorv(DVo::getCostIndex),
+                    new TvH2MoreBean("费用指标", vorv(DVo::getCostIndex), "请选择费用指标",
                             (bean, view) -> startSearch(SearchVo.COST_INDEX)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
-                checkAdd(data, gtv(DVo::getMoney), new TvH2Bean("金额", gtv(DVo::getMoney)));
+                checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));
             }
-            checkAdd(data, gtv(DVo::getCause), new TvHEt3Bean("事由", gtv(DVo::getCause),
-                    "请输入事由", text -> iso(DVo::getCause, obj -> obj.initDB(text))));
+            checkAdd(data, vorv(DVo::getCause), new TvHEt3Bean("事由", vorv(DVo::getCause),
+                    "请输入事由", text -> vos(DVo::getCause, obj -> obj.initDB(text))));
         });
         //禁止规则
         if (isAlterEnable()) {
-            List<RuleFg> data = gt(DVo::getRuleList, RuleController::getViewBean);
+            List<RuleFg> data = vor(DVo::getRuleList, RuleController::getViewBean);
             execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(), item.getRuleName(),
                     item.getRuleRemark())));
         }

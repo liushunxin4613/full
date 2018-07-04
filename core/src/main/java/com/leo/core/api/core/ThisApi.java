@@ -42,9 +42,8 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getThis();
     }
 
-    protected <B> T executePos(List<B> data, IPositionAction<B> action) {
+    protected <B> void executePos(List<B> data, IPositionAction<B> action) {
         RunUtil.executePos(data, action);
-        return getThis();
     }
 
     protected <B> T execute(IObjAction<B> action, List<B>... args) {
@@ -87,12 +86,12 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getExecute(in, null, api);
     }
 
-    protected <A, B> B no(A a, IReturnAction<A, B> action) {
-        return (a == null || action == null) ? null : action.execute(a);
-    }
-
     protected <A> A no(A a, A def) {
         return a == null ? def : a;
+    }
+
+    protected String no(String text) {
+        return no(text, "");
     }
 
     protected <A> ParamType<A> get(Class<A> clz, Type... args) {

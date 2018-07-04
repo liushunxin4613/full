@@ -19,4 +19,12 @@ public class ToastUtil {
         MainManage.getContextApi(ToastImplApi.class).show(thisObj, resId);
     }
 
+    public static void show(@NonNull CharSequence text) {
+        MainManage.getContextApi(ToastImplApi.class).show(null, text);
+    }
+
+    public static void show(@StringRes int resId) {
+        MainManage.getContextApi(ToastImplApi.class).show(null, resId);
+    }
+
 }

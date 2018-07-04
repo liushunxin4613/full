@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.cr.surface;
 
-import com.leo.core.util.LogUtil;
 import com.ylink.fullgoal.cr.core.BaseStringController;
 import com.ylink.fullgoal.fg.ProjectFg;
 
@@ -14,7 +13,6 @@ public class ProjectController<T extends ProjectController> extends BaseStringCo
 
     @Override
     public T initDB(ProjectFg departmentFg) {
-        LogUtil.ee(this, "departmentFg: " + LogUtil.getLog(departmentFg));
         return super.initDB(departmentFg);
     }
 
@@ -35,7 +33,7 @@ public class ProjectController<T extends ProjectController> extends BaseStringCo
 
     @Override
     public String getViewBean() {
-        return no(ProjectFg::getProjectName);
+        return vor(ProjectFg::getProjectName);
     }
 
     @Override

@@ -24,6 +24,7 @@ import static com.ylink.fullgoal.config.ComConfig.YB;
 import static com.ylink.fullgoal.config.Config.COOKIE;
 import static com.ylink.fullgoal.config.Config.COOKIE_STR;
 import static com.ylink.fullgoal.config.Config.COST;
+import static com.ylink.fullgoal.config.Config.DATA_QR;
 import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.config.Config.NAME;
 import static com.ylink.fullgoal.config.Config.PORTAL_PAC;
@@ -75,7 +76,16 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 start();
             }));
         }
+        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用分摊", (bean, view) -> test()));
+        test();
         showContentView();
+    }
+
+    private void test(){
+        String json = "{\"statusCode\":\"SUCCESS\",\"paymentRequest\":{\"applicationDate\":\"2018-05-24\",\"leadDepartment\":\"部门3\",\"status\":\"已完成\",\"leader\":\"李磊\",\"fileNumber\":\"9993\",\"name\":\"xxxx合同\",\"code\":\"0003\"},\"imageList\":[{\"amount\":\"200.300\",\"imageURL\":\"http://192.168.8.108:8088/ssca/public/20180629\\\\3\\\\1530252663192344.jpg\",\"invoiceUse\":\"一般\",\"imageID\":\"402894816449939d01644a2a99a4000a\"}],\"agent\":{\"userCode\":\"3\",\"userName\":\"张3\"},\"process\":{\"advAmount\":\"20000\",\"applyDepartment\":\"1部门\",\"applicant\":\"李强\",\"date\":\"2018-05-24\",\"cause\":\"事由是\",\"code\":\"001\"},\"budgetDepartment\":{\"departmentCode\":\"3\",\"departmentName\":\"3部门\"},\"reimbursement\":{\"userCode\":\"3\",\"userName\":\"张3\"},\"project\":{\"projectName\":\"3项目\",\"applicationDate\":\"2018-06-04\",\"amount\":\"3000\",\"leadDepartment\":\"部门\",\"judtification\":\"测试用\",\"projectCode\":\"3\",\"leader\":\"丁杰\"},\"costList\":{\"amount\":\"200.00\",\"costCode\":\"002\",\"share\":\"需要分摊\",\"taxAmount\":\"0.00\",\"costIndex\":\"指标2\",\"exTaxAmount\":\"0.00\"},\"ruleList\":[],\"cause\":\"招待费\"}";
+        Bundle os = new Bundle();
+        os.putString(DATA_QR, json);
+        startSurfaceActivity(os, FullCostIndexControllerApi.class);
     }
 
     //被调用

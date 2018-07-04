@@ -20,7 +20,7 @@ public class DimenIndexController<T extends DimenIndexController> extends BaseSt
 
     @Override
     public String getViewBean() {
-        return no(DimenListFg::getName);
+        return vor(DimenListFg::getName);
     }
 
     @Override

@@ -19,7 +19,6 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
     public void showLoading() {
         super.showLoading();
         hideViews();
-        ee("---------- showLoading hideViews ----------");
     }
 
     @Override

@@ -43,7 +43,7 @@ public class UserController<T extends UserController> extends BaseStringControll
 
     @Override
     public String getViewBean() {
-        return no(UserFg::getUserName);
+        return vor(UserFg::getUserName);
     }
 
 }

@@ -56,35 +56,35 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
         //VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
-            data.add(new TvH2Bean(gtv(DVo::getAgent), gtv(DVo::getDepartment)));
-            checkAdd(data, gtv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
-                    "报销人", gtv(DVo::getReimbursement), "请输入报销人", (bean, view)
+            data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
+            checkAdd(data, vorv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
+                    "报销人", vorv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> startSearch(SearchVo.REIMBURSEMENT), text
-                    -> iso(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
-            checkAdd(data, gtv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
-                    gtv(DVo::getBudgetDepartment), "请选择预算归属部门",
+                    -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
+            checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
+                    vorv(DVo::getBudgetDepartment), "请选择预算归属部门",
                     (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
-            checkAdd(data, gtv(DVo::getProject), new TvH2MoreBean("项目", gtv(DVo::getProject), "请选择项目",
+            checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject), "请选择项目",
                     (bean, view) -> startSearch(SearchVo.PROJECT)));
-            checkAdd(data, gtv(DVo::getCostIndex),
-                    new TvH2MoreBean("费用指标", gtv(DVo::getCostIndex), "请选择费用指标",
+            checkAdd(data, vorv(DVo::getCostIndex),
+                    new TvH2MoreBean("费用指标", vorv(DVo::getCostIndex), "请选择费用指标",
                             (bean, view) -> startSearch(SearchVo.COST_INDEX)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
-                checkAdd(data, gtv(DVo::getMoney), new TvH2Bean("金额", gtv(DVo::getMoney)));
+                checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));
             }
-            checkAdd(data, gtv(DVo::getCause), new TvHEt3Bean("事由", gtv(DVo::getCause),
-                    "请输入事由", text -> iso(DVo::getCause, obj -> obj.initDB(text))));
+            checkAdd(data, vorv(DVo::getCause), new TvHEt3Bean("事由", vorv(DVo::getCause),
+                    "请输入事由", text -> vos(DVo::getCause, obj -> obj.initDB(text))));
         });
         //禁止规则
         if (isAlterEnable()) {
-            List<RuleFg> data = gt(DVo::getRuleList, RuleController::getViewBean);
+            List<RuleFg> data = vor(DVo::getRuleList, RuleController::getViewBean);
             execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(), item.getRuleName(),
                     item.getRuleRemark())));
         }
         //VgBean 出差申请单
         addVgBean(data -> {
-            List<TravelFormFg> list = gt(DVo::getTrave, TravelFormController::getViewBean);
+            List<TravelFormFg> list = vor(DVo::getTrave, TravelFormController::getViewBean);
             if (!(!isEnable() && TextUtils.isEmpty(list))) {
                 data.add(new TvBean("出差申请单添加"));
             }
@@ -95,7 +95,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                         item.getWorkName(), String.format("%s 开", item.getStartDate()),
                         String.format("%s 到", item.getEndDate()), item.getDestination(),
                         (bean, view) -> initVgApiBean("出差申请单",
-                                () -> iso(DVo::getTrave, obj -> obj.remove(item, this))))));
+                                () -> vos(DVo::getTrave, obj -> obj.remove(item, this))))));
                 filterData.add(fg.getAmount());
             });
             if (isEnable()) {
@@ -105,7 +105,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
         });
         //VgBean 投研报告
         addVgBean(data -> {
-            List<ResearchReportFg> list = gt(DVo::getReport, ResearchReportController::getViewBean);
+            List<ResearchReportFg> list = vor(DVo::getReport, ResearchReportController::getViewBean);
             if (!(!isEnable() && TextUtils.isEmpty(list))) {
                 data.add(new TvBean("投研报告添加"));
             }
@@ -115,7 +115,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                 data.add(getExecute(fg, item -> (new ProjectBean(item.getStockName(), item.getEndTime(),
                         item.getStockCode(), item.getStatus(), item.getType(), item.getReportInfo(),
                         (bean, view) -> initVgApiBean("调研报告",
-                                () -> iso(DVo::getReport, obj -> obj.remove(item, this)))))));
+                                () -> vos(DVo::getReport, obj -> obj.remove(item, this)))))));
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加投研报告", (bean, view) -> startSearch(SearchVo.REPORT,
@@ -128,8 +128,8 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
         addVgBean("住宿费报销", newGridBean(FILTER_ZSF));
         //GridBean 车船机票费报销
         addVgBean(data -> {
-            List<CtripTicketsFg> ctripData = gt(DVo::getCtrip, CtripTicketsController::getViewBean);
-            List<ImageVo> imageData = gt(DVo::getImageList, obj -> obj.getFilterDBData(FILTER_CCJPF));
+            List<CtripTicketsFg> ctripData = vor(DVo::getCtrip, CtripTicketsController::getViewBean);
+            List<ImageVo> imageData = vor(DVo::getImageList, obj -> obj.getFilterDBData(FILTER_CCJPF));
             if (!(!isEnable() && TextUtils.isEmpty(ctripData) && TextUtils.isEmpty(imageData))) {
                 data.add(new TvBean("车船机票费报销"));
             }
@@ -141,7 +141,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                         String.format("%s 到", item.getArrivelTime()),
                         String.format("%s - %s", item.getDeparture(), item.getDestination()),
                         (bean, view) -> initVgApiBean("携程机票",
-                                () -> iso(DVo::getCtrip, obj -> obj.remove(item, this))))));
+                                () -> vos(DVo::getCtrip, obj -> obj.remove(item, this))))));
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加携程机票", (bean, view) -> startSearch(SearchVo.XC_AIR,

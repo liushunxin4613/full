@@ -2,8 +2,12 @@ package com.ylink.fullgoal.cr.surface;
 
 import android.support.annotation.NonNull;
 
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.core.BaseController;
 import com.ylink.fullgoal.fg.CostFg;
+import com.ylink.fullgoal.fg.DimenFg;
+
+import java.util.List;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.ylink.fullgoal.config.ComConfig.CC;
@@ -37,7 +41,7 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
         /*if(!check(getDB())){
             initDB(new CostFg("009", "差旅费"));
         }*/
-        return no(CostFg::getCostIndex);
+        return vor(CostFg::getCostIndex);
     }
 
     @Override
@@ -56,22 +60,44 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
         return CostFg.class;
     }
 
-    public T update(boolean share) {
+    public T update(List<DimenFg> data) {
         if (check(getDB())) {
-            getDB().setShare(share ? "需要分摊" : "无需分摊");
+            getDB().setShare(TextUtils.isEmpty(data) || data.get(0) == null || data.get(0).isEmpty()
+                    ? "无需分摊" : "需要分摊");
         }
         return getThis();
     }
 
     public T update(CostFg fg) {
         if (check(fg)) {
-            if(check(getDB())){
+            if (check(getDB())) {
                 getDB().setCostIndex(fg.getCostIndex());
                 getDB().setCostCode(fg.getCostCode());
                 getDB().setExplain(fg.getExplain());
             } else {
                 initDB(fg);
             }
+        }
+        return getThis();
+    }
+
+    public T updateAmount(String amount) {
+        if (getDB() != null) {
+            getDB().setAmount(amount);
+        }
+        return getThis();
+    }
+
+    public T updateTaxAmount(String amount) {
+        if (getDB() != null) {
+            getDB().setTaxAmount(amount);
+        }
+        return getThis();
+    }
+
+    public T updateExTaxAmount(String amount) {
+        if (getDB() != null) {
+            getDB().setExTaxAmount(amount);
         }
         return getThis();
     }

@@ -13,6 +13,10 @@ public class DimenFg {
     private String code;
     private String name;
 
+    public boolean isEmpty(){
+        return code == null && name == null;
+    }
+
     public String getCode() {
         return code;
     }

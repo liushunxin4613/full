@@ -32,7 +32,7 @@ public class ProcessController<T extends ProcessController> extends BaseStringCo
 
     @Override
     public String getViewBean() {
-        return no(ProcessFg::getCause);
+        return vor(ProcessFg::getCause);
     }
 
     @Override

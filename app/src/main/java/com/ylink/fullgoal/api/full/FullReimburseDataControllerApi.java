@@ -84,7 +84,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     }
 
     @Override
-    protected DDVo getVo() {
+    public DDVo getVo() {
         if (vo == null) {
             vo = new DDVo();
         }
@@ -124,7 +124,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     }
 
     private String getType() {
-        return no(api, IndicatorControllerApi::getCurrentItemName);
+        return vr(api, IndicatorControllerApi::getCurrentItemName);
     }
 
     private DItemVo getItemValue() {
@@ -132,7 +132,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     }
 
     private Map<String, Object> getUBMap() {
-        return no(getItemValue(), v -> v.getCheckMap(getType()));
+        return vr(getItemValue(), v -> v.getCheckMap(getType()));
     }
 
     private RecycleControllerApi getReiRecycleControllerApi(String type) {
@@ -149,7 +149,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
 
     private void initReimburseVoData(RecycleControllerApi api, List<ApplicationtFg> applicationtData) {
         if (api != null) {
-            iss(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(true));
+            vs(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(true));
             if (!TextUtils.isEmpty(applicationtData)) {
                 api.clear().showContentView();
                 execute(applicationtData, obj -> addVgBean(api, data -> {
@@ -213,7 +213,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             DItemVo vo = new DItemVo();
             vo.getAgent().initDB(getUId());
             vo.getStatus().initDB(name);
-            iso(DDVo::getItem, obj -> obj.initDB(name, vo));
+            vos(DDVo::getItem, obj -> obj.initDB(name, vo));
         }
     }
 
@@ -222,10 +222,10 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     @SuppressLint("RtlHardcoded")
     private void initDrawerLayout() {
         dateArrayBean = new DateArrayBean("查询时间", getListData(D_DATE1, D_DATE2,
-                D_DATE3, D_DATE4, D_DATE5, D_DATE6), text -> iss(getItemValue(), DItemVo::getDate,
+                D_DATE3, D_DATE4, D_DATE5, D_DATE6), text -> vs(getItemValue(), DItemVo::getDate,
                 obj -> obj.initDB(text)));
         typeBean = new ReimburseTypeBean(D_BT1, D_BT2, text ->
-                iss(getItemValue(), DItemVo::getBillType, obj -> obj.initDB(text)));
+                vs(getItemValue(), DItemVo::getBillType, obj -> obj.initDB(text)));
         RecycleControllerApi api = getViewControllerApi(RecycleControllerApi.class, R.layout.l_sx);
         api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         setOnClickListener(api.findViewById(R.id.reset_tv), v -> {
@@ -233,7 +233,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             typeBean.clean();
         }).setOnClickListener(api.findViewById(R.id.confirm_tv), v -> {
             drawerLayout.closeDrawer(gravity);
-            iss(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(false));
+            vs(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(false));
             query();
         });
         DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(-1, -1);
@@ -275,10 +275,10 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             getRightTv().setCompoundDrawables(null, null, drawable, null);
             setRightTv("筛选", v -> {
                 if (check(dateArrayBean)) {
-                    dateArrayBean.update(no(getItemValue(), value -> value.getDate().getDB()));
+                    dateArrayBean.update(vr(getItemValue(), value -> value.getDate().getDB()));
                 }
                 if (check(typeBean)) {
-                    typeBean.updateSelected(no(getItemValue(), value -> value.getBillType().getDB()));
+                    typeBean.updateSelected(vr(getItemValue(), value -> value.getBillType().getDB()));
                 }
                 drawerLayout.openDrawer(gravity);
             });

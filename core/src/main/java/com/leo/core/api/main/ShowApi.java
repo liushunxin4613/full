@@ -48,7 +48,7 @@ public class ShowApi<T extends ShowApi> extends ThisApi<T> implements IShowApi<T
 
     @Override
     public T show(@NonNull CharSequence text) {
-        ToastUtil.show(thisObj, text);
+        ToastUtil.show(text);
         return getThis();
     }
 

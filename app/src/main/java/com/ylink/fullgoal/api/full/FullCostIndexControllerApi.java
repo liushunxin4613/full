@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.api.full;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.HelperUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -44,7 +46,7 @@ import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.getMoneyString;
 import static com.leo.core.util.TextUtils.toJSONMap;
 import static com.ylink.fullgoal.config.ComConfig.QR;
-import static com.ylink.fullgoal.config.Config.COST;
+import static com.ylink.fullgoal.config.Config.COST_LIST;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
 import static com.ylink.fullgoal.config.Config.MONEY;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
@@ -62,16 +64,16 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     LinearLayout searchVg;
     @Bind(R.id.name_tv)
     TextView nameTv;
-    @Bind(R.id.detail_tv)
-    TextView detailTv;
     @Bind(R.id.type_tv)
     TextView typeTv;
-    @Bind(R.id.tax_tv)
-    TextView taxTv;
-    @Bind(R.id.none_tax_money_tv)
-    TextView noneTaxMoneyTv;
     @Bind(R.id.yet_complete_tv)
     TextView yetCompleteTv;
+    @Bind(R.id.detail_et)
+    EditText detailEt;
+    @Bind(R.id.tax_et)
+    EditText taxEt;
+    @Bind(R.id.none_tax_money_et)
+    EditText noneTaxMoneyEt;
 
     private int maxHeight;
     private int minHeight;
@@ -101,23 +103,22 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
 
     private String getDimenValue(RecycleControllerApi api, String code) {
         if (check(api, code)) {
-            return no(no(getCostItemController(api), c -> c.getValue(code)),
-                    DimenListFg::getName);
+            return vr(getCostItemController(api), obj -> obj.getValue(code), DimenListFg::getName);
         }
         return null;
     }
 
     private CostItemController getCostItemController(IControllerApi api) {
-        return gt(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getItem);
+        return vor(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getItem);
     }
 
     private double getCostMoney(IControllerApi api) {
-        return getExecute(gt(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getMoney), 0d,
+        return getExecute(vor(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getMoney), 0d,
                 DoubleController::getdouble);
     }
 
     private String getCostRatio(IControllerApi api) {
-        return getExecute(gt(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getRatio),
+        return vor(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getRatio,
                 RatioController::getDB);
     }
 
@@ -134,7 +135,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         execute(getFinish(), new TypeToken<SearchVo<DimenListFg>>() {
         }, vo -> {
             RecycleControllerApi api = getThisApi();
-            no(getCostItemController(api), c -> c.initDB(vo.getValue(), vo.getObj()));
+            vs(getCostItemController(api), c -> c.initDB(vo.getValue(), vo.getObj()));
             initAddVgBean(api);
         });
     }
@@ -146,15 +147,20 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                 .setRightTv("确认", v -> submit())
                 .setOnClickListener(nameTv, v -> startSearch(SearchVo.COST_INDEX))
                 .setOnClickListener(searchVg, v -> startSearch(SearchVo.COST_INDEX));
+        HelperUtil.addMoneyTextChangedListener(detailEt, null, this::updateAllMoney);
+        HelperUtil.addMoneyTextChangedListener(taxEt, null, this::updateTaxAmount);
+        HelperUtil.addMoneyTextChangedListener(noneTaxMoneyEt, null, this::updateExTaxAmount);
         executeBundle(bundle -> {
             String text = bundle.getString(DATA_QR);
             dataMap = toJSONMap(text);
             if (!TextUtils.isEmpty(dataMap)) {
                 ee("dataMap", dataMap);
                 serialNo = (String) dataMap.get(SERIAL_NO);
-                CostFg cost = decode(encode(dataMap.get(COST)), CostFg.class);
+                CostFg cost = decode(encode(dataMap.get(COST_LIST)), CostFg.class);
                 if (cost != null) {
-                    cost.setAmount((String) dataMap.get(MONEY));
+                    if (cost.getAmount() == null) {
+                        cost.setAmount((String) dataMap.get(MONEY));
+                    }
                     cost.setTaxAmount("0.00");
                     cost.setExTaxAmount("0.00");
                     onCost(cost);
@@ -165,9 +171,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             if (bean.isSuccess()) {
                 switch (path) {
                     case FULL_DIMENSION_LIST://分摊维度列表
-                        iso(CostVo::getCost, obj -> obj.update(!TextUtils.isEmpty(bean.getDimen())));
+                        vos(CostVo::getCost, obj -> obj.update(bean.getDimen()));
                         initCast();
-                        iso(CostVo::getDimenData, obj -> obj.initDB(bean.getDimen()));
+                        vos(CostVo::getDimenData, obj -> obj.initDB(bean.getDimen()));
                         initViewPager();
                         break;
                     case FULL_REIMBURSE_SUBMIT://报销确认
@@ -184,24 +190,42 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         });
     }
 
+    private void updateAllMoney(String money) {
+        getVo().setAllMoney(money);
+    }
+
+    /*.setText(taxEt, fg.getTaxAmount())
+            .setText(noneTaxMoneyEt, fg.getExTaxAmount())
+            .setText(yetCompleteTv, getVo().getOtherRatio()));*/
+
+    private void updateTaxAmount(String amount) {
+        vos(CostVo::getCost, obj -> obj.updateTaxAmount(amount));
+//        setText(taxEt, );
+    }
+
+    private void updateExTaxAmount(String amount) {
+        vos(CostVo::getCost, obj -> obj.updateExTaxAmount(amount));
+    }
+
     private void submit() {
         if (checkSubmit()) {
             Map<String, Object> map = getVo().getCheckMap(QR);
             if (check(map, dataMap)) {
-                dataMap.putAll(map);
-                api().submitReimburse(dataMap);
+//                dataMap.putAll(map);//TODO
+//                api().submitReimburse(dataMap);//TODO
+                ee("map", map);
             }
         }
     }
 
     private void onCost(CostFg fg) {
-        if (fg != null) {
+        if (check(fg) && check(fg.getShare())) {
             //正常项
-            iso(CostVo::getCost, obj -> obj.update(fg));
-            getVo().initAllMoney(JavaTypeUtil.getdouble(gt(CostVo::getCost, CostIndexController::getDB,
-                    CostFg::getAmount), 0));
+            vos(CostVo::getCost, obj -> obj.update(fg));
+            getVo().updateAllMoney();
             initCast();
-            api().queryDimensionList(gt(CostVo::getCost, CostIndexController::getDB, CostFg::getCostCode));
+            api().queryDimensionList(vor(CostVo::getCost, CostIndexController::getDB,
+                    CostFg::getCostCode));
         }
     }
 
@@ -218,12 +242,12 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     }
 
     private void initCast() {
-        executeNon(gtd(CostVo::getCost), (CostFg fg)
+        vos(CostVo::getCost, CostIndexController::getDB, fg
                 -> setText(nameTv, fg.getCostIndex())
-                .setText(detailTv, fg.getAmount())
+                .setText(detailEt, fg.getAmount())
                 .setText(typeTv, fg.getShare())
-                .setText(taxTv, fg.getTaxAmount())
-                .setText(noneTaxMoneyTv, fg.getExTaxAmount())
+                .setText(taxEt, fg.getTaxAmount())
+                .setText(noneTaxMoneyEt, fg.getExTaxAmount())
                 .setText(yetCompleteTv, getVo().getOtherRatio()));
     }
 
@@ -254,12 +278,12 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             }
             return false;
         }).setHorizontalApi(this::checkToMore);
-        iso(CostVo::getPager, MapController::clear);
+        vos(CostVo::getPager, MapController::clear);
         add(getRecycleControllerApi());
     }
 
     private boolean checkAddMore() {
-        CostIndexVo vo = gt(CostVo::getPager, obj -> obj.getValue(getThisApi()));
+        CostIndexVo vo = vor(CostVo::getPager, obj -> obj.getValue(getThisApi()));
         if (vo != null) {
             if (vo.getMoney().getdouble() <= 0) {
                 show("你还没有分摊金额");
@@ -276,10 +300,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
 
     private boolean checkToMore() {
         SoftInputUtil.hidSoftInput(getRootView());
-        CostIndexVo vo = gt(CostVo::getPager, obj -> obj.getValue(getThisApi()));
+        CostIndexVo vo = vor(CostVo::getPager, obj -> obj.getValue(getThisApi()));
         if (vo != null) {
             Map<String, DimenListFg> map = vo.getItem().getMap();
-            List<DimenFg> data = gt(CostVo::getDimenData, DimenListController::getViewBean);
+            List<DimenFg> data = vor(CostVo::getDimenData, DimenListController::getViewBean);
             if (!TextUtils.isEmpty(data)) {
                 for (DimenFg fg : data) {
                     if (check(fg)) {
@@ -308,14 +332,14 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     }
 
     private void updateOtherMoney(IControllerApi api, double otherMoney) {
-        iso(CostVo::getPager, obj -> obj.getValue(api), obj -> obj.init(otherMoney, getAllMoney()));
+        vos(CostVo::getPager, obj -> obj.getValue(api), obj -> obj.init(otherMoney, getAllMoney()));
         setText(yetCompleteTv, getVo().getOtherRatio());
     }
 
     private void initAddVgBean(RecycleControllerApi controllerApi) {
         executeNon(controllerApi, api -> {
             api.clear();
-            List<DimenFg> list = gtv(CostVo::getDimenData);
+            List<DimenFg> list = vor(CostVo::getDimenData, DimenListController::getData);
             boolean empty = isEmpty(list);
             if (!empty) {
                 addVgBean(api, data -> {
@@ -328,7 +352,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         double itemMoney = JavaTypeUtil.getdouble(text, 0);
                         updateOtherMoney(api, itemMoney);
                         setText(blBean.getTextView(), getVo().getRatio(itemMoney));
-                        iso(CostVo::getPager, obj -> obj.update(api, itemMoney));
+                        vos(CostVo::getPager, obj -> obj.update(api, itemMoney));
                     }).setMax(itemMax);
                     data.add(moneyBean);
                     data.add(blBean);
@@ -352,15 +376,15 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         double allMoney = getAllMoney();
         double itemMax = allMoney - getOtherMoney(api);
         CostIndexVo vo = new CostIndexVo(itemMax, allMoney);
-        Map<String, DimenListFg> map = no(getCostItemController(getThisApi()),
+        Map<String, DimenListFg> map = vr(getCostItemController(getThisApi()),
                 CostItemController::getMap);
         if (!TextUtils.isEmpty(map)) {
             vo.getItem().getMap().putAll(map);
         }
-        iso(CostVo::getPager, obj -> obj.initDB(api, vo));
+        vos(CostVo::getPager, obj -> obj.initDB(api, vo));
         initAddVgBean(api);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {
-            iso(CostVo::getPager, obj -> obj.remove(api));
+            vos(CostVo::getPager, obj -> obj.remove(api));
             adapter.remove(api);
             if (adapter.getCount() == 0) {
                 add(getRecycleControllerApi());
@@ -379,25 +403,25 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     }
 
     private View getThisView() {
-        return no(getThisApi(), CoreControllerApi::getRootView);
+        return vr(getThisApi(), CoreControllerApi::getRootView);
     }
 
     private double getAllMoney() {
-        return gt(CostVo::getAllMoney, DoubleController::getdouble);
+        return vor(CostVo::getAllMoney, DoubleController::getdouble);
     }
 
     private double getThisMoney() {
-        Double d = no(gt(CostVo::getPager, obj -> obj.getValue(getThisApi()),
-                CostIndexVo::getMoney), DoubleController::getdouble);
+        Double d = vor(CostVo::getPager, obj -> obj.getValue(getThisApi()),
+                CostIndexVo::getMoney, DoubleController::getdouble);
         return (d == null ? 0 : d);
     }
 
     private double getThisSumMoney() {
-        return gt(CostVo::getPager, obj -> obj.getFilterMoney());
+        return vor(CostVo::getPager, obj -> obj.getFilterMoney());
     }
 
     private double getOtherMoney(IControllerApi api) {
-        return gt(CostVo::getPager, obj -> obj.getFilterMoney(api));
+        return vor(CostVo::getPager, obj -> obj.getFilterMoney(api));
     }
 
     private boolean isEmpty(List<DimenFg> list) {

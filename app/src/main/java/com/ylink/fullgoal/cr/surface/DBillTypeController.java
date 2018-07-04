@@ -33,7 +33,7 @@ public class DBillTypeController<T extends DBillTypeController> extends StringCo
                     return "428";
             }
             return null;
-        }), "");
+        }));
     }
 
 }

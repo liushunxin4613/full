@@ -15,6 +15,8 @@ import com.leo.core.api.api.GalleryApi;
 import com.leo.core.api.api.GsonDecodeApi;
 import com.leo.core.api.api.MD5Api;
 import com.leo.core.api.api.MergeApi;
+import com.leo.core.api.api.VosApi;
+import com.leo.core.api.api.VsApi;
 import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.api.ObjectApi;
 import com.leo.core.api.api.PicassoLoadImageApi;
@@ -27,6 +29,8 @@ import com.leo.core.config.Config;
 import com.leo.core.factory.ActionApiFactory;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.IUrlApi;
+import com.leo.core.iapi.api.IVosApi;
+import com.leo.core.iapi.api.IVsApi;
 import com.leo.core.net.RetrofitSubscriber;
 import com.leo.core.net.UrlApi;
 import com.leo.core.other.Transformer;
@@ -212,6 +216,16 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     @Override
     public IUrlApi newApi() {
         return new UrlApi(getThis());
+    }
+
+    @Override
+    public IVsApi newVsApi() {
+        return new VsApi();
+    }
+
+    @Override
+    public IVosApi newVosApi() {
+        return new VosApi(getThis());
     }
 
     @Override

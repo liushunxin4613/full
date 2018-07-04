@@ -134,7 +134,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     protected abstract void onData();
 
     @Override
-    protected DVo getVo() {
+    public DVo getVo() {
         if (vo == null) {
             vo = new DVo();
         }
@@ -146,9 +146,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         super.initView();
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
-            iso(DVo::getFirst, obj -> obj.initDB(state));
+            vos(DVo::getFirst, obj -> obj.initDB(state));
             String serialNo = bundle.getString(SERIAL_NO);
-            iso(DVo::getSerialNo, obj -> obj.initDB(serialNo));
+            vos(DVo::getSerialNo, obj -> obj.initDB(serialNo));
             if (TextUtils.equals(state, FQ)) {
                 title = getBTitle();
             } else {
@@ -176,43 +176,43 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 case XG:
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
                         //申请特批
-                        iso(DVo::getLogo, obj -> obj.initDB(XG1));
+                        vos(DVo::getLogo, obj -> obj.initDB(XG1));
                         submit();
                     }).setOnClickListener(wbylIv, v -> {
                         //我不要了
-                        iso(DVo::getLogo, obj -> obj.initDB(XG2));
+                        vos(DVo::getLogo, obj -> obj.initDB(XG2));
                         submit();
                     }).setOnClickListener(xgtjIv, v -> {
                         //修改提交
-                        iso(DVo::getLogo, obj -> obj.initDB(XG3));
+                        vos(DVo::getLogo, obj -> obj.initDB(XG3));
                         submit();
                     }).setOnClickListener(qxbxIv, v -> {
                         //取消报销
-                        iso(DVo::getLogo, obj -> obj.initDB(XG4));
+                        vos(DVo::getLogo, obj -> obj.initDB(XG4));
                         submit();
                     });
                     break;
             }
         });
         //test
-        iso(DVo::getImageList, obj -> obj.setOnCom(this));
-        iso(DVo::getAgent, obj -> obj.initDB(getUser()));
-        iso(DVo::getReimbursement, obj -> obj.initDB(getUser()));
-        iso(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
-        iso(DVo::getBudgetDepartment, obj -> obj.initDB(getDepartment()));
+        vos(DVo::getImageList, obj -> obj.setOnCom(this));
+        vos(DVo::getAgent, obj -> obj.initDB(getUser()));
+        vos(DVo::getReimbursement, obj -> obj.initDB(getUser()));
+        vos(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
+        vos(DVo::getBudgetDepartment, obj -> obj.initDB(getDepartment()));
 //        ee("core", getVo().toCheckString());
     }
 
     @Override
     public void initData() {
         super.initData();
-        add(Exceptions.class, (path, what, msg, bean) -> iso(DVo::getImageList, obj
+        add(Exceptions.class, (path, what, msg, bean) -> vos(DVo::getImageList, obj
                 -> obj.onError(msg)));
         add(ImageFg.class, (path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(msg)) {
-                iso(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
-                iso(DVo::getSbumitFlag, SbumitFlagController::open);
-                iso(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
+                vos(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
+                vos(DVo::getSbumitFlag, SbumitFlagController::open);
+                vos(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
             }
         });
         add(DataFg.class, (path, what, msg, bean) -> {
@@ -254,8 +254,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         HintDialogBean dialogBean = new HintDialogBean("温馨提示", "是否需要添加新的报销", "是",
                 "否", (bean, v, dialog) -> {
             dialog.dismiss();
-            iso(DVo::getImageList, AddController::clear);
-            iso(DVo::getSerialNo, SerialNoController::clear);
+            vos(DVo::getImageList, AddController::clear);
+            vos(DVo::getSerialNo, SerialNoController::clear);
             notifyDataChanged();
         }, (bean, v, dialog) -> {
             dialog.dismiss();
@@ -279,25 +279,25 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     public void onResume() {
         super.onResume();
         //报销人
-        executeSearch(UserFg.class, fg -> iso(DVo::getReimbursement, obj -> obj.initDB(fg)));
+        executeSearch(UserFg.class, fg -> vos(DVo::getReimbursement, obj -> obj.initDB(fg)));
         //预算归属部门
-        executeSearch(DepartmentFg.class, fg -> iso(DVo::getBudgetDepartment, obj -> obj.initDB(fg)));
+        executeSearch(DepartmentFg.class, fg -> vos(DVo::getBudgetDepartment, obj -> obj.initDB(fg)));
         //项目
-        executeSearch(ProjectFg.class, fg -> iso(DVo::getProject, obj -> obj.initDB(fg)));
+        executeSearch(ProjectFg.class, fg -> vos(DVo::getProject, obj -> obj.initDB(fg)));
         //合同付款申请单
-        executeSearch(ContractPaymentFg.class, fg -> iso(DVo::getContractPayment, obj -> obj.initDB(fg)));
+        executeSearch(ContractPaymentFg.class, fg -> vos(DVo::getContractPayment, obj -> obj.initDB(fg)));
         //招待申请单
-        executeSearch(ProcessFg.class, fg -> iso(DVo::getProcess, obj -> obj.initDB(fg)));
+        executeSearch(ProcessFg.class, fg -> vos(DVo::getProcess, obj -> obj.initDB(fg)));
         //费用指标
-        executeSearch(CostFg.class, fg -> iso(DVo::getCostIndex, obj -> obj.initDB(fg)));
+        executeSearch(CostFg.class, fg -> vos(DVo::getCostIndex, obj -> obj.initDB(fg)));
         //出差申请单
-        executeSearch(TravelFormFg.class, fg -> iso(DVo::getTrave, obj -> obj.initDB(fg)));
+        executeSearch(TravelFormFg.class, fg -> vos(DVo::getTrave, obj -> obj.initDB(fg)));
         //调研报告
-        executeSearch(ResearchReportFg.class, fg -> iso(DVo::getReport, obj -> obj.initDB(fg)));
+        executeSearch(ResearchReportFg.class, fg -> vos(DVo::getReport, obj -> obj.initDB(fg)));
         //携程机票
-        executeSearch(CtripTicketsFg.class, fg -> iso(DVo::getCtrip, obj -> obj.initDB(fg)));
+        executeSearch(CtripTicketsFg.class, fg -> vos(DVo::getCtrip, obj -> obj.initDB(fg)));
         //票据修改金额
-        execute(getFinish(), ImageVo.class, fg -> iso(DVo::getImageList, obj
+        execute(getFinish(), ImageVo.class, fg -> vos(DVo::getImageList, obj
                 -> obj.updateMoney(fg)));
         notifyDataChanged();
     }
@@ -308,7 +308,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         executeNon(com, key -> {
             switch (key) {
                 case UPDATE_MONEY:
-                    iso(DVo::getMoney, obj -> obj.initDB(JavaTypeUtil.getdouble(msg, 0)));
+                    vos(DVo::getMoney, obj -> obj.initDB(JavaTypeUtil.getdouble(msg, 0)));
                     break;
             }
         });
@@ -333,8 +333,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     //打开图片
                     cameraApi().openCamera(type, (what, msg, file, args) -> {
                         ImageVo vo = addPhoto(file.getPath(), what);
-                        api().imageUpload(gt(DVo::getFirst, obj -> obj.getUB(TP)),
-                                what, gtd(DVo::getSerialNo), file, file.getPath(), vo);
+                        api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
+                                what, vord(DVo::getSerialNo), file, file.getPath(), vo);
                     }), null));
         }
         return gridData;
@@ -401,7 +401,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     protected GridBean newGridBean(int type) {
         return new GridBean(getPhotoGridBeanData(type,
-                gt(DVo::getImageList, obj -> obj.getFilterDBData(type))));
+                vor(DVo::getImageList, obj -> obj.getFilterDBData(type))));
     }
 
     protected GridBean newGridBean(int type, List<ImageVo> data) {
@@ -439,16 +439,16 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             if (bean.getObj() instanceof ImageVo) {
                 ImageVo vo = (ImageVo) bean.getObj();
                 vo.onError(false);
-                api().imageUpload(gt(DVo::getFirst, obj -> obj.getUB(TP)),
-                        vo.getInvoiceUseType(), gtd(DVo::getSerialNo), new File(vo.getPath()),
-                        vo.getPath(), vo);
+                api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
+                        vo.getInvoiceUseType(), vord(DVo::getSerialNo),
+                        new File(vo.getPath()), vo.getPath(), vo);
             }
         }, (item, v, dialog) -> {
             dialog.dismiss();
             if (bean.getObj() instanceof ImageVo) {
                 ImageVo vo = (ImageVo) bean.getObj();
-                api().imageDelete(gtd(DVo::getSerialNo), vo.getImageID(), vo.getAmount(),
-                        vo.getKey(), vo.getImageID());
+                api().imageDelete(vord(DVo::getSerialNo), vo.getImageID(),
+                        vo.getAmount(), vo.getKey(), vo.getImageID());
             }
             notifyDataChanged();
         });
@@ -499,7 +499,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     private ImageVo addPhoto(String path, int type) {
         if (!TextUtils.isEmpty(path)) {
             ImageVo vo = new ImageVo(path, type);
-            iso(DVo::getImageList, obj -> obj.initDB(vo));
+            vos(DVo::getImageList, obj -> obj.initDB(vo));
             notifyDataChanged();
             return vo;
         }

@@ -359,4 +359,36 @@ public interface INewApi {
      */
     <B> B newActivityLifecycleApi();
 
+    /**
+     * vsApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B vsApi();
+
+    /**
+     * new vsApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newVsApi();
+
+    /**
+     * vosApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B vosApi();
+
+    /**
+     * new vosApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newVosApi();
+
 }

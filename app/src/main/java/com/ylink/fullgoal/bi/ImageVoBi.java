@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.leo.core.util.HelperUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
@@ -39,8 +40,7 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
                 .setText(nameTv, "金额")
                 .setText(detailEt, bean.getAmount())
                 .setImage(photoIv, bean.getPhoto())
-                .execute(() -> detailEt.addTextChangedListener(
-                        api.getMoneyTextWatcher(bean::setAmount)));
+                .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt, null, bean::setAmount));
     }
 
 }

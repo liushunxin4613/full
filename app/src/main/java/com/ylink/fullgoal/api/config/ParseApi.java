@@ -161,7 +161,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      */
     private void onItem(Object obj, List<IPathMsgAction> data) {
         if (check(obj, data)) {
-            execute(data, action -> action.execute(no(path, ""), what, no(msg, ""), obj));
+            execute(data, action -> action.execute(no(path), what, no(msg), obj));
         }
     }
 

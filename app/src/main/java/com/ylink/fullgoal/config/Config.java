@@ -106,6 +106,7 @@ public class Config {
     public final static String STATE = "state";
     public final static String SERIAL_NO = "serialNo";
     public final static String COST = "cost";
+    public final static String COST_LIST = "costList";
     public final static String SEARCH = "search";
     public final static String FILTERS = "filters";
     public final static String VALUE = "value";

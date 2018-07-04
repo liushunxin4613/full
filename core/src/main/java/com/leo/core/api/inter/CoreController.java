@@ -2,13 +2,14 @@ package com.leo.core.api.inter;
 
 import android.support.annotation.NonNull;
 
+import com.leo.core.api.api.VsApi;
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.util.TextUtils;
 
-public abstract class CoreController<T extends CoreController, DB, UB> extends ThisApi<T> implements IController<T, DB, UB> {
+public abstract class CoreController<T extends CoreController, DB, UB> extends VsApi<T> implements IController<T, DB, UB> {
 
     private String field;
     private DB db;
@@ -136,8 +137,8 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends T
         return null;
     }
 
-    protected <B> B no(IReturnAction<DB, B> action) {
-        return no(getDB(), action);
+    protected <B> B vor(IReturnAction<DB, B> action) {
+        return vr(getDB(), action);
     }
 
     private <A> A getValue(String[] args, A def, IReturnAction<String, A> action) {
