@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import static com.leo.core.config.Config.EMPTY;
 
@@ -256,7 +257,8 @@ public class TextUtils {
      * 检测http地址
      */
     public static boolean checkUrl(String imageUrl) {
-        return !TextUtils.isEmpty(imageUrl) && (imageUrl.startsWith("http://") || imageUrl.startsWith("https://"));
+        return !TextUtils.isEmpty(imageUrl) && (imageUrl.startsWith("http://")
+                || imageUrl.startsWith("https://"));
     }
 
     /**
@@ -401,9 +403,64 @@ public class TextUtils {
         return money == null ? null : getMoneyString((double) money);
     }
 
+    public static String getSMoneyString(double money) {
+        return getDecimalString(getMoneyString(money), 2);
+    }
+
+    public static String getSMoneyString(Double money) {
+        return money == null ? null : getSMoneyString((double) money);
+    }
+
+    public static String getDecimalString(String text, int dec) {
+        if (!TextUtils.isEmpty(text)) {
+            if (!Pattern.compile("^([1-9][0-9]+\\.[0-9]+)$|^([1-9][0-9]+)$")
+                    .matcher(text).find()) {
+                return null;
+            } else {
+                int index = text.indexOf(".");
+                if (index >= 0) {
+                    int a = index + 1 + dec;
+                    if (a > text.length()) {
+                        a = text.length();
+                    }
+                    text = text.substring(0, a);
+                }
+            }
+        }
+        if (!TextUtils.isEmpty(text)) {
+            boolean decimal = false;
+            StringBuilder start = new StringBuilder();
+            StringBuilder end = new StringBuilder();
+            for (char c : text.toCharArray()) {
+                switch (c) {
+                    default:
+                        if (end.length() > 0) {
+                            start.append(end);
+                            end.setLength(0);
+                        }
+                        start.append(c);
+                        break;
+                    case '.':
+                        decimal = true;
+                        end.append(c);
+                        break;
+                    case '0':
+                        if (decimal) {
+                            end.append(c);
+                        } else if (start.length() > 0) {
+                            start.append(c);
+                        }
+                        break;
+                }
+            }
+            return start.toString();
+        }
+        return null;
+    }
+
     @SuppressLint("DefaultLocale")
     public static String getPercentage(double a, double b) {
-        float f = (float) (a < b ? a / b : b / a) * 100;
+        float f = (float) (b == 0 ? 0 : a / b * 100);
         return String.format("%.2f%%", f);
     }
 
@@ -493,14 +550,14 @@ public class TextUtils {
                         break;
                     case ';':
                         isKey = true;
-                        if(key.length() > 0 && value.length() > 0){
+                        if (key.length() > 0 && value.length() > 0) {
                             map.put(key.toString(), value.toString());
                         }
                         key = new StringBuilder();
                         break;
                 }
             }
-            if(key.length() > 0 && value.length() > 0){
+            if (key.length() > 0 && value.length() > 0) {
                 map.put(key.toString(), value.toString());
             }
             return map;

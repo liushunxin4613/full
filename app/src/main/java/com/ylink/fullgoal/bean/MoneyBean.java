@@ -1,9 +1,13 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.iapi.inter.IObjAction;
+import android.widget.EditText;
+
+import com.leo.core.iapi.inter.IABAction;
 import com.leo.core.iapi.main.IBindControllerApi;
 import com.ylink.fullgoal.bi.MoneyBi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+
+import static com.leo.core.util.TextUtils.getMoneyString;
 
 public class MoneyBean extends ApiBean<MoneyBean> {
 
@@ -12,7 +16,8 @@ public class MoneyBean extends ApiBean<MoneyBean> {
         return new MoneyBi();
     }
 
-    private transient IObjAction<String> action;
+    private transient IABAction<MoneyBean, String> action;
+    private transient double max;
 
     public MoneyBean(String name, String detail) {
         super(name, detail);
@@ -20,8 +25,9 @@ public class MoneyBean extends ApiBean<MoneyBean> {
         setMoneyEnable(false);
     }
 
-    public MoneyBean(String name, String detail, String hint, IObjAction<String> action) {
-        super(name, detail, hint);
+    public MoneyBean(String name, String detail, double max, IABAction<MoneyBean, String> action) {
+        super(name, detail);
+        setMax(max);
         setEtEnable(false);
         setMoneyEnable(true);
         this.action = action;
@@ -31,8 +37,17 @@ public class MoneyBean extends ApiBean<MoneyBean> {
     public void setDetail(String detail) {
         super.setDetail(detail);
         if (action != null) {
-            action.execute(getDetail());
+            action.execute(this, getDetail());
         }
+    }
+
+    @Override
+    public MoneyBean setMax(Double max) {
+        setHint(String.format("最多可分摊%s", getMoneyString(max)));
+        if (getTextView() instanceof EditText) {
+            getTextView().setHint(getHint());
+        }
+        return super.setMax(max);
     }
 
 }

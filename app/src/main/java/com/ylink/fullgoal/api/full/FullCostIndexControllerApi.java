@@ -11,6 +11,7 @@ import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.other.Number;
 import com.leo.core.util.HelperUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.SoftInputUtil;
@@ -43,7 +44,9 @@ import java.util.Map;
 import butterknife.Bind;
 
 import static com.leo.core.util.TextUtils.check;
+import static com.leo.core.util.TextUtils.count;
 import static com.leo.core.util.TextUtils.getMoneyString;
+import static com.leo.core.util.TextUtils.getSMoneyString;
 import static com.leo.core.util.TextUtils.toJSONMap;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.Config.COST_LIST;
@@ -82,7 +85,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private int miniWidth = 120;
     private CostVo vo;
     private String serialNo;
-    private BasePagerAdapter adapter;
+    private BasePagerAdapter<RecycleControllerApi> adapter;
     private Map<String, Object> dataMap;
 
     public FullCostIndexControllerApi(C controller) {
@@ -108,18 +111,21 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         return null;
     }
 
+    private CostIndexVo getCostIndexVo(IControllerApi api) {
+        return vor(CostVo::getPager, obj -> obj.getValue(api));
+    }
+
     private CostItemController getCostItemController(IControllerApi api) {
-        return vor(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getItem);
+        return vr(getCostIndexVo(api), CostIndexVo::getItem);
     }
 
     private double getCostMoney(IControllerApi api) {
-        return getExecute(vor(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getMoney), 0d,
+        return getExecute(vr(getCostIndexVo(api), CostIndexVo::getMoney), 0d,
                 DoubleController::getdouble);
     }
 
     private String getCostRatio(IControllerApi api) {
-        return vor(CostVo::getPager, obj -> obj.getValue(api), CostIndexVo::getRatio,
-                RatioController::getDB);
+        return vr(getCostIndexVo(api), CostIndexVo::getRatio, RatioController::getDB);
     }
 
     private MViewPager getViewPager() {
@@ -161,8 +167,8 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                     if (cost.getAmount() == null) {
                         cost.setAmount((String) dataMap.get(MONEY));
                     }
-                    cost.setTaxAmount("0.00");
-                    cost.setExTaxAmount("0.00");
+                    cost.setTaxAmount("0");
+                    cost.setExTaxAmount("0");
                     onCost(cost);
                 }
             }
@@ -190,17 +196,32 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         });
     }
 
-    private void updateAllMoney(String money) {
-        getVo().setAllMoney(money);
+    private void updateAllMoney(String amount) {
+        getVo().setAllMoney(amount);
+        double allMoney = getAllMoney();
+        Number offset = new Number(getSumMoney() - allMoney);
+        setText(yetCompleteTv, vor(CostVo::getOtherRatio));
+        if (check(adapter)) {
+            List<RecycleControllerApi> data = adapter.getApi().getData();
+            execute(count(data), false, data::get, api -> {
+                double itemMoney = getCostMoney(api);
+                if (offset.get() > 0) {
+                    offset.add(-itemMoney);
+                    if (offset.get() >= 0) {
+                        remove(api);
+                    } else {
+                        vs(getCostIndexVo(api), obj -> obj.init(-offset.get(), allMoney));
+                    }
+                } else {
+                    vs(getCostIndexVo(api), obj -> obj.init(itemMoney, allMoney));
+                }
+                initAddVgBean(api);
+            });
+        }
     }
-
-    /*.setText(taxEt, fg.getTaxAmount())
-            .setText(noneTaxMoneyEt, fg.getExTaxAmount())
-            .setText(yetCompleteTv, getVo().getOtherRatio()));*/
 
     private void updateTaxAmount(String amount) {
         vos(CostVo::getCost, obj -> obj.updateTaxAmount(amount));
-//        setText(taxEt, );
     }
 
     private void updateExTaxAmount(String amount) {
@@ -231,6 +252,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
 
     private boolean checkSubmit() {
         if (!checkToMore()) {
+            if(getAllMoney() <= 0){
+                show("分摊金额不能为0");
+                return false;
+            }
             double poor = getVo().getRestMoney();
             if (poor > 0) {
                 show(String.format("你还有%s没有分摊", getMoneyString(poor)));
@@ -299,7 +324,6 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     }
 
     private boolean checkToMore() {
-        SoftInputUtil.hidSoftInput(getRootView());
         CostIndexVo vo = vor(CostVo::getPager, obj -> obj.getValue(getThisApi()));
         if (vo != null) {
             Map<String, DimenListFg> map = vo.getItem().getMap();
@@ -315,6 +339,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                     }
                 }
             }
+            SoftInputUtil.hidSoftInput(getRootView());
             return false;
         }
         return true;
@@ -343,17 +368,17 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             boolean empty = isEmpty(list);
             if (!empty) {
                 addVgBean(api, data -> {
-                    double money = getCostMoney(api);
-                    String bl = getCostRatio(api);
-                    double itemMax = getVo().getRestMoney(api);
-                    MoneyBean blBean = new MoneyBean("分摊比例", bl);
-                    MoneyBean moneyBean = new MoneyBean("金额", getMoneyString(money),
-                            String.format("最多可分摊%s", getMoneyString(itemMax)), text -> {
+                    MoneyBean blBean = new MoneyBean("分摊比例", getCostRatio(api));
+                    MoneyBean moneyBean = new MoneyBean("金额", getSMoneyString(getCostMoney(api)),
+                            getVo().getRestMoney(api), (bean, text) -> {
+                        if (TextUtils.isEmpty(text)) {
+                            bean.setMax(getVo().getRestMoney(api));
+                        }
                         double itemMoney = JavaTypeUtil.getdouble(text, 0);
                         updateOtherMoney(api, itemMoney);
                         setText(blBean.getTextView(), getVo().getRatio(itemMoney));
                         vos(CostVo::getPager, obj -> obj.update(api, itemMoney));
-                    }).setMax(itemMax);
+                    });
                     data.add(moneyBean);
                     data.add(blBean);
                     execute(list, item -> {
@@ -384,20 +409,33 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         vos(CostVo::getPager, obj -> obj.initDB(api, vo));
         initAddVgBean(api);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {
+            remove(api);
+            initAddVgBean(getThisApi());
+        });
+        return api;
+    }
+
+    private void remove(RecycleControllerApi api) {
+        if (check(api, adapter)) {
             vos(CostVo::getPager, obj -> obj.remove(api));
             adapter.remove(api);
             if (adapter.getCount() == 0) {
                 add(getRecycleControllerApi());
             }
             adapter.notifyDataSetChanged();
-            initAddVgBean(getThisApi());
-        });
-        return api;
+        }
     }
 
     private RecycleControllerApi getThisApi() {
         if (check(adapter, getViewPager())) {
-            return (RecycleControllerApi) adapter.getItemApi(getViewPager().getCurrentItem());
+            return adapter.getItemApi(getViewPager().getCurrentItem());
+        }
+        return null;
+    }
+
+    private RecycleControllerApi getEndApi() {
+        if (check(adapter)) {
+            return adapter.getApi().getLastItem(0);
         }
         return null;
     }
@@ -411,12 +449,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     }
 
     private double getThisMoney() {
-        Double d = vor(CostVo::getPager, obj -> obj.getValue(getThisApi()),
-                CostIndexVo::getMoney, DoubleController::getdouble);
-        return (d == null ? 0 : d);
+        return getCostMoney(getThisApi());
     }
 
-    private double getThisSumMoney() {
+    private double getSumMoney() {
         return vor(CostVo::getPager, obj -> obj.getFilterMoney());
     }
 

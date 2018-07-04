@@ -4,31 +4,39 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.leo.core.api.api.VsApi;
 import com.leo.core.api.main.DataApi;
 import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 
-public class BasePagerAdapter<T extends IControllerApi> extends PagerAdapter {
+public class BasePagerAdapter<A extends IControllerApi> extends PagerAdapter {
 
-    private DataApi<DataApi, T> api;
+    private DataApi<DataApi, A> api;
+    private VsApi vsApi;
 
     public BasePagerAdapter() {
         api = new DataApi<>();
+        vsApi = new VsApi();
     }
 
-    public DataApi<DataApi, T> getApi() {
+    private <AA, BB> BB vr(AA aa, IReturnAction<AA, BB> ab) {
+        return (BB) vsApi.vr(aa, ab);
+    }
+
+    public DataApi<DataApi, A> getApi() {
         return api;
     }
 
-    public BasePagerAdapter add(T api) {
+    public BasePagerAdapter add(A api) {
         if (api != null) {
             getApi().add(api);
         }
         return this;
     }
 
-    public BasePagerAdapter remove(T api) {
+    public BasePagerAdapter remove(A api) {
         if (api != null) {
             getApi().remove(api);
         }
@@ -41,12 +49,12 @@ public class BasePagerAdapter<T extends IControllerApi> extends PagerAdapter {
         }
     }
 
-    public T getItemApi(int position) {
+    public A getItemApi(int position) {
         return getApi().getItem(position);
     }
 
-    public View getItemView(int position) {
-        return getItemApi(position).getRootView();
+    private View getItemView(int position) {
+        return vr(getItemApi(position), IControllerApi::getRootView);
     }
 
     @Override

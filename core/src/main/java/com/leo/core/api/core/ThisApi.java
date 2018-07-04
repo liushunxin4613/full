@@ -16,11 +16,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.leo.core.util.TextUtils.check;
+
 public class ThisApi<T extends ThisApi> implements IThisApi<T> {
 
     @Override
     public T getThis() {
         return (T) this;
+    }
+
+    protected <A> T execute(int count, boolean sequence, IReturnAction<Integer, A> ra,
+                            IObjAction<A> action) {
+        if (count > 0 && check(ra, action)) {
+            int index = sequence ? 0 : count - 1;
+            while ((sequence && index < count) || (!sequence && index >= 0)) {
+                try {
+                    A a = ra.execute(sequence ? index++ : index--);
+                    if (check(a)) {
+                        action.execute(a);
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        return getThis();
     }
 
     protected T execute(String text, ITextAction action) {

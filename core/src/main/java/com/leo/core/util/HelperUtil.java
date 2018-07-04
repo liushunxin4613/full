@@ -4,11 +4,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import com.leo.core.iapi.inter.IGet;
+import com.leo.core.iapi.inter.IGetAction;
 import com.leo.core.iapi.inter.ITextAction;
 
 public class HelperUtil {
 
-    public static void addMoneyTextChangedListener(EditText editText, Double max, ITextAction action) {
+    public static void addMoneyTextChangedListener(EditText editText, IGetAction<Double> get, ITextAction action) {
         if (editText != null) {
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -21,13 +23,13 @@ public class HelperUtil {
 
                 @Override
                 public void afterTextChanged(Editable text) {
-                    onAfterTextChanged(text, max, action);
+                    onAfterTextChanged(text, get, action);
                 }
             });
         }
     }
 
-    private static void onAfterTextChanged(Editable text, Double max, ITextAction action) {
+    private static void onAfterTextChanged(Editable text, IGetAction<Double> get, ITextAction action) {
         String temp = text.toString();
         int posDot = temp.indexOf(".");
         int endPosDot = temp.lastIndexOf(".");
@@ -43,9 +45,9 @@ public class HelperUtil {
         } else if (posDot == 0) {
             text.insert(0, "0");
         }
-        if (max != null) {
+        if (get != null && get.get() != null) {
             float f = JavaTypeUtil.getfloat(temp, 0);
-            if (f > max) {
+            if (f > get.get() && !TextUtils.isEmpty(temp)) {
                 text.delete(temp.length() - 1, temp.length());
                 return;
             }

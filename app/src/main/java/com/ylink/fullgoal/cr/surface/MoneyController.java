@@ -1,7 +1,6 @@
 package com.ylink.fullgoal.cr.surface;
 
 import com.ylink.fullgoal.cr.core.DoubleController;
-import com.ylink.fullgoal.cr.core.StringController;
 
 import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.QR;

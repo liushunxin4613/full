@@ -78,6 +78,17 @@ public class CostPageController<T extends CostPageController> extends MapControl
         return otherSum;
     }
 
+    public List<IControllerApi> getFilterApi(IControllerApi... args) {
+        List<IControllerApi> data = new ArrayList<>();
+        List<IControllerApi> filter = Arrays.asList(args);
+        execute(getMap(), (api, value) -> {
+            if (!filter.contains(api)) {
+                data.add(api);
+            }
+        });
+        return data;
+    }
+
     @Override
     protected String getOnUBKey(String key) {
         switch (key) {

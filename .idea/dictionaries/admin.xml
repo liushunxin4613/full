@@ -25,6 +25,7 @@
       <w>fullgoal</w>
       <w>getdouble</w>
       <w>getfloat</w>
+      <w>getint</w>
       <w>gson</w>
       <w>hmmss</w>
       <w>iboolean</w>

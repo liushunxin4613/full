@@ -1,14 +1,11 @@
 package com.ylink.fullgoal.bean;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.util.HelperUtil;
-import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.core.SurfaceBiBean;
@@ -107,6 +104,10 @@ public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
         return (T) this;
     }
 
+    public Double getMax() {
+        return max;
+    }
+
     public String getName() {
         return name;
     }
@@ -154,7 +155,7 @@ public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
     public void setTextView(TextView textView) {
         this.textView = textView;
         if (textView instanceof EditText && !isEtEnable() && isMoneyEnable()) {
-            HelperUtil.addMoneyTextChangedListener((EditText) textView, max, text -> {
+            HelperUtil.addMoneyTextChangedListener((EditText) textView, this::getMax, text -> {
                 if (!TextUtils.equals(text, getHint())) {
                     setDetail(text);
                 }
