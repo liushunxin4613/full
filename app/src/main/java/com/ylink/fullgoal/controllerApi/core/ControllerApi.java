@@ -10,6 +10,7 @@ import com.ylink.fullgoal.api.config.ParseApi;
 import com.ylink.fullgoal.api.func.UserApi;
 import com.leo.core.net.Api;
 import com.ylink.fullgoal.api.surface.MHttpApi;
+import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.UserFg;
 
@@ -67,7 +68,7 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     }
 
     @Override
-    public UserFg getUser() {
+    public UserBean getUser() {
         return super.getUser();
     }
 

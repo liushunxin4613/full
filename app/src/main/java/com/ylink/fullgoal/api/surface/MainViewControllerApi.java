@@ -7,30 +7,26 @@ import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.api.full.FullBankControllerApi;
+import com.ylink.fullgoal.api.full.FullBankControllerApiV1;
 import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
+import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.fg.CostFg;
+import com.ylink.fullgoal.fg.StatusFg;
 
 import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.YB;
-import static com.ylink.fullgoal.config.Config.COOKIE;
-import static com.ylink.fullgoal.config.Config.COOKIE_STR;
 import static com.ylink.fullgoal.config.Config.COST;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
 import static com.ylink.fullgoal.config.Config.DEBUG;
-import static com.ylink.fullgoal.config.Config.NAME;
-import static com.ylink.fullgoal.config.Config.PORTAL_PAC;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
-import static com.ylink.fullgoal.config.Config.USERNAME;
-import static com.ylink.fullgoal.config.Config.USER_ID;
 
 /**
  * 主View视图
@@ -47,15 +43,14 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         super.initView();
         onAppData();
         hideBackIv().setTitle("我的报销");
-//        clear().
-        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销", (bean, view)
+        clear().addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般费用报销", (bean, view)
                         -> general(FQ)),
                 new IconTvMoreBean(R.mipmap.test_icon2, "出差费用报销", (bean, view)
                         -> evection(FQ)))
                 .addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "报销列表查询", (bean, view)
                                 -> startSurfaceActivity(FullReimburseDataControllerApi.class)),
                         new IconTvMoreBean(R.mipmap.test_icon2, "选择银行卡号", (bean, view)
-                                -> startSurfaceActivity(FullBankControllerApi.class)))
+                                -> startSurfaceActivity(FullBankControllerApiV1.class)))
                 .notifyDataSetChanged();
         if (DEBUG) {
             addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "一般报销确认", (bean, view) -> {
@@ -76,11 +71,16 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
             }));
         }
         addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用分摊", (bean, view) -> test()));
-        test();
         showContentView();
     }
 
-    private void test(){
+    @Override
+    public void initData() {
+        super.initData();
+        add(StatusFg.class, (path, what, msg, bean) -> ii(String.format("SSO认证%s", bean.isSuccess() ? "成功" : "失败")));
+    }
+
+    private void test() {
         String json = "{\"statusCode\":\"SUCCESS\",\"paymentRequest\":{\"applicationDate\":\"2018-05-24\",\"leadDepartment\":\"部门3\",\"status\":\"已完成\",\"leader\":\"李磊\",\"fileNumber\":\"9993\",\"name\":\"xxxx合同\",\"code\":\"0003\"},\"imageList\":[{\"amount\":\"200.300\",\"imageURL\":\"http://192.168.8.108:8088/ssca/public/20180629\\\\3\\\\1530252663192344.jpg\",\"invoiceUse\":\"一般\",\"imageID\":\"402894816449939d01644a2a99a4000a\"}],\"agent\":{\"userCode\":\"3\",\"userName\":\"张3\"},\"process\":{\"advAmount\":\"20000\",\"applyDepartment\":\"1部门\",\"applicant\":\"李强\",\"date\":\"2018-05-24\",\"cause\":\"事由是\",\"code\":\"001\"},\"budgetDepartment\":{\"departmentCode\":\"3\",\"departmentName\":\"3部门\"},\"reimbursement\":{\"userCode\":\"3\",\"userName\":\"张3\"},\"project\":{\"projectName\":\"3项目\",\"applicationDate\":\"2018-06-04\",\"amount\":\"3000\",\"leadDepartment\":\"部门\",\"judtification\":\"测试用\",\"projectCode\":\"3\",\"leader\":\"丁杰\"},\"costList\":{\"amount\":\"200.00\",\"costCode\":\"002\",\"share\":\"需要分摊\",\"taxAmount\":\"0.00\",\"costIndex\":\"指标2\",\"exTaxAmount\":\"0.00\"},\"ruleList\":[],\"cause\":\"招待费\"}";
         Bundle os = new Bundle();
         os.putString(DATA_QR, json);
@@ -96,25 +96,10 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         String name = intent.getStringExtra("name");
         String cookieStr = intent.getStringExtra("cookieStr");
         String portalPac = intent.getStringExtra("portalPac");
-        if (intent.getExtras() != null) {//TODO 测试用
-            saveData(COOKIE, cookie);
-            saveData(USER_ID, userId);
-            saveData(USERNAME, username);
-            saveData(NAME, name);
-            saveData(COOKIE_STR, cookieStr);
-            saveData(PORTAL_PAC, portalPac);
+        if (TextUtils.check(userId, username)) {//TODO 测试用
+            initUser(new UserBean(name, cookie, userId, username, cookieStr, portalPac));
         }
-        ee("cookie", cookie);
-        ee("userId", userId);
-        ee("username", username);
-        ee("name", name);
-        ee("cookieStr", cookieStr);
-        ee("portalPac", portalPac);
-        String castgc = getCastgc();
-        ee("castgc", castgc);
-        if (!TextUtils.isEmpty(castgc)) {
-//            api().SSO(castgc);
-        }
+        api().SSO(getCastgc());
     }
 
     //私有的

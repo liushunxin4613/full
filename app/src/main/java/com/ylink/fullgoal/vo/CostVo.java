@@ -3,7 +3,6 @@ package com.ylink.fullgoal.vo;
 import com.leo.core.bean.NewFieldBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.JavaTypeUtil;
-import com.leo.core.util.LogUtil;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.CostPageController;
 import com.ylink.fullgoal.cr.surface.DimenListController;
@@ -45,8 +44,6 @@ public class CostVo extends NewFieldBean {
     }
 
     public double getRestMoney(IControllerApi... args) {
-        LogUtil.ee(this, "getAllMoney().getdouble(): " + getAllMoney().getdouble());
-        LogUtil.ee(this, "getPager().getFilterMoney(args): " + getPager().getFilterMoney(args));
         return getAllMoney().getdouble() - getPager().getFilterMoney(args);
     }
 

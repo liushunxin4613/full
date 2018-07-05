@@ -1,10 +1,10 @@
 package com.leo.core.api.main;
 
-import com.leo.core.api.core.ThisApi;
+import com.leo.core.api.api.VsApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.iapi.main.IHasControllerApi;
 
-public class HasControllerApi<T extends HasControllerApi> extends ThisApi<T> implements IHasControllerApi<T> {
+public class HasControllerApi<T extends HasControllerApi> extends VsApi<T> implements IHasControllerApi<T> {
 
     private IControllerApi controllerApi;
 

@@ -1,6 +1,5 @@
 package com.leo.core.iapi.api;
 
-import com.leo.core.R;
 import com.leo.core.iapi.core.IApi;
 
 public interface IUserApi<T extends IUserApi> extends IApi {
@@ -65,17 +64,9 @@ public interface IUserApi<T extends IUserApi> extends IApi {
     String getUserName();
 
     /**
-     * 获取token
-     *
-     * @return token
+     * 获取castgc
+     * @return castgc
      */
-    String getToken();
-
-    /**
-     * 获取u time
-     *
-     * @return u time
-     */
-    String getUTime();
+    String getCastgc();
 
 }

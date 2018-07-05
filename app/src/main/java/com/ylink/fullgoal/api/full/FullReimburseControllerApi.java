@@ -30,6 +30,7 @@ import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
+import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
@@ -167,9 +168,15 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setRightTv("确认", v -> {
                         Map<String, Object> map = getSubmitMap();
                         if (!TextUtils.isEmpty(map)) {
-                            Bundle os = new Bundle();
-                            os.putString(DATA_QR, encode(map));
-                            startSurfaceActivity(os, FullCostIndexControllerApi.class);
+                            String share = vor(DVo::getCostIndex, CostIndexController::getDB,
+                                    CostFg::getShare);
+                            if (TextUtils.equals(share, "无需分摊")) {
+                                api().submitReimburse(map);
+                            } else {
+                                Bundle os = new Bundle();
+                                os.putString(DATA_QR, encode(map));
+                                startSurfaceActivity(os, FullCostIndexControllerApi.class);
+                            }
                         }
                     });
                     break;
@@ -196,8 +203,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         });
         //test
         vos(DVo::getImageList, obj -> obj.setOnCom(this));
-        vos(DVo::getAgent, obj -> obj.initDB(getUser()));
-        vos(DVo::getReimbursement, obj -> obj.initDB(getUser()));
+        vos(DVo::getAgent, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
+        vos(DVo::getReimbursement, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
         vos(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
         vos(DVo::getBudgetDepartment, obj -> obj.initDB(getDepartment()));
 //        ee("core", getVo().toCheckString());
@@ -261,7 +268,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             dialog.dismiss();
             getActivity().finish();
         });
-        SurfaceControllerApi api = getDialogControllerApi(SurfaceControllerApi.class,
+        SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
                 dialogBean.getApiType());
         api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
             Window window = api.getDialog().getWindow();
@@ -347,7 +354,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
             api().submitReimburse(map);
-            getContentView().invalidate();
         }
     }
 
@@ -369,7 +375,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     protected void initVgApiBean(String title, IAction action) {
         if (!TextUtils.isEmpty(title)) {
-            RecycleControllerApi api = getDialogControllerApi(RecycleControllerApi.class,
+            RecycleControllerApi api = getDialogControllerApi(getActivity(), RecycleControllerApi.class,
                     R.layout.l_dialog);
             api.execute(() -> api.add(new TvBean("删除", (b, v) -> {
                 api.dismiss();
@@ -452,7 +458,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
             notifyDataChanged();
         });
-        SurfaceControllerApi api = getDialogControllerApi(SurfaceControllerApi.class, db.getApiType());
+        SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
+                db.getApiType());
         api.dialogShow().onBindViewHolder(db, 0);
         Window window = api.getDialog().getWindow();
         if (window != null) {

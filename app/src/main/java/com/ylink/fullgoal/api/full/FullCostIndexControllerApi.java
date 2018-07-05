@@ -232,9 +232,8 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         if (checkSubmit()) {
             Map<String, Object> map = getVo().getCheckMap(QR);
             if (check(map, dataMap)) {
-//                dataMap.putAll(map);//TODO
-//                api().submitReimburse(dataMap);//TODO
-                ee("map", map);
+                dataMap.putAll(map);
+                api().submitReimburse(dataMap);
             }
         }
     }
@@ -252,7 +251,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
 
     private boolean checkSubmit() {
         if (!checkToMore()) {
-            if(getAllMoney() <= 0){
+            if (getAllMoney() <= 0) {
                 show("分摊金额不能为0");
                 return false;
             }

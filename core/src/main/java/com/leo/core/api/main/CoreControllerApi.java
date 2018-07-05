@@ -606,6 +606,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public T setActivity(Activity activity) {
+        this.activity = activity;
+        return getThis();
+    }
+
+    @Override
     public Activity getActivity() {
         return activity;
     }
@@ -702,7 +708,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public T dialogShow() {
-        if (isDialog() && !getDialog().isShowing()) {
+        if (isDialog() && !getDialog().isShowing() && !getActivity().isFinishing()) {
             getDialog().show();
         }
         return getThis();
@@ -710,7 +716,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public T dismiss() {
-        if (isDialog()) {
+        if (isDialog() && !getActivity().isFinishing()) {
             getDialog().dismiss();
         }
         return getThis();
@@ -1823,6 +1829,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public String getCastgc() {
+        return userApi().getCastgc();
+    }
+
+    @Override
     public <A> A getDepartment() {
         return (A) userApi().getDepartment();
     }
@@ -1830,16 +1841,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public String getDepartmentCode() {
         return userApi().getDepartmentCode();
-    }
-
-    @Override
-    public String getToken() {
-        return userApi().getToken();
-    }
-
-    @Override
-    public String getUTime() {
-        return userApi().getUTime();
     }
 
     @Override

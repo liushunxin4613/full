@@ -5,8 +5,8 @@ import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.config.Config;
 import com.leo.core.iapi.api.IUserApi;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.fg.DepartmentFg;
-import com.ylink.fullgoal.fg.UserFg;
 
 public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implements IUserApi<T> {
 
@@ -33,6 +33,9 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public <R> T initUser(R user) {
+        if (user instanceof UserBean) {
+            saveData(USER, user);
+        }
         return getThis();
     }
 
@@ -41,40 +44,29 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
         return getDepartment().getDepartmentCode();
     }
 
-    /*@Override
+    @Override
     public UserBean getUser() {
         return getBean(USER, UserBean.class);
-    }*/
-
-    @Override
-    public UserFg getUser() {
-        return new UserFg(getUId(), getUserName());
     }
 
     @Override
     public String getUId() {
-//        return "12001324";
-        return "3";
+        return vr(getUser(), UserBean::getUserId);
     }
 
     @Override
     public String getUserName() {
-        return "张3";
+        return vr(getUser(), UserBean::getUsername);
+    }
+
+    @Override
+    public String getCastgc() {
+        return vr(getUser(), UserBean::getCastgc);
     }
 
     @Override
     public DepartmentFg getDepartment() {
         return new DepartmentFg("3", "3部门");
-    }
-
-    @Override
-    public String getToken() {
-        return null;
-    }
-
-    @Override
-    public String getUTime() {
-        return null;
     }
 
 }

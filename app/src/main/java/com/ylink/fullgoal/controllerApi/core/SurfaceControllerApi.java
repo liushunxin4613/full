@@ -1,12 +1,13 @@
 package com.ylink.fullgoal.controllerApi.core;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiFragment;
@@ -38,49 +39,36 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.ComConfig.SHOW;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
-import static com.ylink.fullgoal.config.Config.CASTGC;
-import static com.ylink.fullgoal.config.Config.COOKIE_STR;
 import static com.ylink.fullgoal.config.Config.FIELDS;
 
 @SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
 
-    private AlertDialog loadingDialog;
+    private LoadingDialogControllerApi dialogApi;
+
+    private LoadingDialogControllerApi getDialogApi() {
+        return dialogApi;
+    }
 
     public SurfaceControllerApi(C controller) {
         super(controller);
     }
 
     public void showLoading() {
-        AtomicBoolean isNew = new AtomicBoolean(true);
-        executeNon(getLoadingDialog(), dialog -> {
-            if (dialog.isShowing()) {
-                isNew.set(false);
-            }
-        });
-        if (isNew.get()) {
-            loadingDialog = (AlertDialog) getDialogControllerApi(LoadingDialogControllerApi.class)
-                    .dialogShow()
-                    .getDialog();
+        if (!(check(getDialogApi()) && check(getDialogApi().getDialog())
+                && getDialogApi().getDialog().isShowing())) {
+            dialogApi = (LoadingDialogControllerApi) getDialogControllerApi(getActivity(),
+                    LoadingDialogControllerApi.class).dialogShow();
         }
     }
 
     public void dismissLoading() {
-        executeNon(getLoadingDialog(), dialog -> {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-        });
-    }
-
-    private AlertDialog getLoadingDialog() {
-        return loadingDialog;
+        executeNon(getDialogApi(), CoreControllerApi::dismiss);
     }
 
     @Override
@@ -171,14 +159,15 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 .controllerApi();
     }
 
-    public <B extends IControllerApi> B getDialogControllerApi(Class<B> clz, Integer layoutResId) {
-        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(clz, layoutResId)
-                .controllerApi();
+    public <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz,
+                                                               Integer layoutResId) {
+        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(activity,
+                clz, layoutResId).controllerApi();
     }
 
-    public <B extends IControllerApi> B getDialogControllerApi(Class<B> clz) {
-        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(clz, null)
-                .controllerApi();
+    public <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz) {
+        return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(activity,
+                clz, null).controllerApi();
     }
 
     protected <B> B getBundle(Bundle bundle, Class<B> clz) {
@@ -463,7 +452,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     protected <S, A extends IController, B> B vorv(IReturnAction<S, A> action) {
         A obj = vor(action);
-        if(check(obj)){
+        if (check(obj)) {
             return (B) obj.getViewBean();
         }
         return null;
@@ -471,19 +460,8 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     protected <S, A extends IController, B> B vord(IReturnAction<S, A> action) {
         A obj = vor(action);
-        if(check(obj)){
+        if (check(obj)) {
             return (B) obj.getDB();
-        }
-        return null;
-    }
-
-    protected String getCastgc(){
-        String cookieStr = getString(COOKIE_STR);
-        if(!TextUtils.isEmpty(cookieStr)){
-            Map<String, String> map = TextUtils.parse(cookieStr);
-            if(!TextUtils.isEmpty(map)){
-                return map.get(CASTGC);
-            }
         }
         return null;
     }

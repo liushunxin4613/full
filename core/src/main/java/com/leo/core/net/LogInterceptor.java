@@ -142,7 +142,7 @@ public class LogInterceptor implements Interceptor {
 
     private void print(String key, String value) {
         if (!TextUtils.isEmpty(key)) {
-            if(value.length() > 1000){
+            if(TextUtils.count(value) > 1000){
                 value = value.substring(0, 1000);
             }
             LogUtil.ii(this, key + ": " + value);

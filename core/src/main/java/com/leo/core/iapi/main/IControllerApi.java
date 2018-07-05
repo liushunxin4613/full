@@ -35,7 +35,7 @@ import java.lang.reflect.Type;
  * @param <T> 自身
  * @param <C> 控制器
  */
-public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IAttachApi<T, C>, IOnCom{
+public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IAttachApi<T, C>, IOnCom {
 
     /**
      * 初始化controller
@@ -69,6 +69,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * 是否是Application
      */
     boolean isApplication();
+
+    /**
+     * 设置activity
+     */
+    T setActivity(Activity activity);
 
     /**
      * 获取Activity

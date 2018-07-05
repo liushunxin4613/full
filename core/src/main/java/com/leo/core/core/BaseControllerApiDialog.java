@@ -1,5 +1,6 @@
 package com.leo.core.core;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,13 +24,13 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
 
     @Override
     public IControllerApi<C, T> controllerApi() {
-        if(controllerApi == null){
-            if(apiClz != null){
+        if (controllerApi == null) {
+            if (apiClz != null) {
                 controllerApi = (IControllerApi) ObjectUtil.getObject(apiClz, Object.class, this);
             } else {
                 controllerApi = newControllerApi();
             }
-            if(controllerApi == null){
+            if (controllerApi == null) {
                 throw new NullPointerException("newControllerApi 不能为空");
             }
         }
@@ -37,7 +38,7 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
     }
 
     @Override
-    public IControllerApi<C, T> newControllerApi(){
+    public IControllerApi<C, T> newControllerApi() {
         return new BaseControllerApi(this);
     }
 
@@ -48,19 +49,21 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
     }
 
     /**
-     *  自定义初始化
-     * @param clz clz
+     * 自定义初始化
+     *
+     * @param activity    activity
+     * @param clz         clz
      * @param layoutResId layoutResId
      */
-    public T init(Class<? extends IControllerApi> clz, Integer layoutResId){
+    public T init(Activity activity, Class<? extends IControllerApi> clz, Integer layoutResId) {
         this.apiClz = clz;
-        if(controllerApi() != null){
-            controllerApi().setRootViewResId(layoutResId);
+        if (controllerApi() != null) {
+            controllerApi().setActivity(activity).setRootViewResId(layoutResId);
         }
         return (T) this;
     }
 
-    protected <B> void execute(B obj, IObjAction<B> api){
+    protected <B> void execute(B obj, IObjAction<B> api) {
         RunUtil.executeNon(obj, api);
     }
 

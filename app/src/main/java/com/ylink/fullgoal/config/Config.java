@@ -112,12 +112,6 @@ public class Config {
     public final static String VALUE = "value";
     public final static String DATA_QR = "dataQR";
     public final static String MONEY = "totalAmountLower";
-    public final static String COOKIE = "cookie";
-    public final static String USER_ID = "userId";
-    public final static String USERNAME = "username";
-    public final static String NAME = "name";
-    public final static String COOKIE_STR = "cookieStr";
-    public final static String PORTAL_PAC = "portalPac";
     public final static String CASTGC = "CASTGC";
 
 }

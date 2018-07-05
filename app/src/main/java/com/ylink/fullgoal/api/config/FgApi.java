@@ -223,11 +223,41 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * SSO 模拟登入
      */
     public void SSO(String tid) {
-        get("http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
-            map.put("ticketGrantingTicketId", tid);
-            map.put("type", "validateTGT");
-        });
+        if(!TextUtils.isEmpty(tid)){
+            get("http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
+                map.put("ticketGrantingTicketId", tid);
+                map.put("type", "validateTGT");
+            });
+        }
     }
+
+    // >>> ****************************** 2018-07-05 11:38 ****************************** >>>
+
+    /**
+     * 银行卡请求数据
+     */
+    public void queryBankV1() {
+        post(ROOT_URL, PATH_QUERY_BANK_DATA, g(map -> {
+            map.put("agent", api().getUId());
+            map.put("agentName", api().getUserName());
+            map.put("type", "1");
+        }));
+    }
+
+    /**
+     * 银行卡请求数据
+     */
+    public void submitBankV1(String cardNo, String openBank) {
+        post(ROOT_URL, PATH_QUERY_BANK_DATA, g(map -> {
+            map.put("agent", api().getUId());
+            map.put("agentName", api().getUserName());
+            map.put("type", "2");
+            map.put("cardNo", cardNo);
+            map.put("openBank", openBank);
+        }));
+    }
+
+    // <<< ****************************** 2018-07-05 11:38 ****************************** <<<
 
     //私有的
 
