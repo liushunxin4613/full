@@ -1,9 +1,12 @@
 package com.leo.core.api.main;
 
+import android.support.v7.widget.RecyclerView;
+
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.api.ICheckApi;
 import com.leo.core.iapi.inter.IbooleanAction;
+import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IDataApi;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
@@ -17,8 +20,10 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
 
     private List<D> data;
     private List<D> filterData;
+    private IBolAction<D> filterAction;
     private IbooleanAction emptyAction;
     private ICheckApi<ICheckApi, D> api;
+    private RecyclerView.Adapter adapter;
 
     public DataApi() {
         data = new ArrayList<>();
@@ -39,21 +44,44 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
         return getThis();
     }
 
+    public T setAdapter(RecyclerView.Adapter adapter) {
+        this.adapter = adapter;
+        return getThis();
+    }
+
     public T setEmptyAction(IbooleanAction action) {
         this.emptyAction = action;
         return getThis();
     }
 
-    public T initFilterAction(IBolAction<D> action) {
-        if (action != null && !TextUtils.isEmpty(getData())) {
+    public T setFilterAction(IBolAction<D> action) {
+        this.filterAction = action;
+        return getThis();
+    }
+
+    public IBolAction<D> getFilterAction() {
+        return filterAction;
+    }
+
+    public T initFilterAction() {
+        if (getFilterAction() != null && !TextUtils.isEmpty(getData())) {
             filterData = new ArrayList<>();
             for (D obj : getData()) {
-                if (obj != null && action.execute(obj)) {
+                if (obj != null && getFilterAction().execute(obj)) {
                     filterData.add(obj);
                 }
             }
         } else {
             filterData = null;
+        }
+        return getThis();
+    }
+
+    @Override
+    public T notifyDataSetChanged() {
+        initFilterAction();
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
         }
         return getThis();
     }

@@ -509,18 +509,6 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void onLayout(boolean changed, int l, int t, int r, int b);
 
     /**
-     * finish
-     */
-    void onFinish();
-
-    /**
-     * onStartActivity
-     *
-     * @param intent intent
-     */
-    void onStartActivity(Intent intent);
-
-    /**
      * 关闭activity
      *
      * @param obj obj

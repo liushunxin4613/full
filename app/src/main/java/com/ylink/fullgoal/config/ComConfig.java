@@ -16,5 +16,6 @@ public class ComConfig {
     public final static String QR = "确认";
     public final static String XG = "修改";
     public final static String XQ = "详情";
+    public final static String DQ = "单据";
 
 }

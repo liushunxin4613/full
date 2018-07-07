@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.leo.core.util.TextUtils.check;
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
@@ -32,8 +33,11 @@ import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_USER_DATA;
 
 public class FgApi<T extends FgApi> extends UrlApi<T> {
 
+    private final static boolean SERVER = true;
     private final static String ROOT_URL = FG_ROOT_URL;
-    private final static String DEBUG_URL = "http://192.168.8.108:8088/ssca/";
+    private final static String DEBUG_URL = SERVER
+            ? "http://111.231.231.226/app/fullApp/"
+            : "http://192.168.8.102/app/fullApp/";
 
     public FgApi(CoreControllerApi controllerApi) {
         super(controllerApi);
@@ -200,7 +204,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * @param amount   修改金额
      */
     public void imageUpdateAmount(String serialNo, String imageId, String amount) {
-        post(DEBUG_URL, FULL_IMAGE_UPLOAD, g(map -> {
+        post(ROOT_URL, FULL_IMAGE_UPLOAD, g(map -> {
             map.put("agent", api().getUId());
             map.put("serialNo", serialNo);
             map.put("status", "修改金额");
@@ -223,7 +227,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * SSO 模拟登入
      */
     public void SSO(String tid) {
-        if(!TextUtils.isEmpty(tid)){
+        if (!TextUtils.isEmpty(tid)) {
             get("http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
                 map.put("ticketGrantingTicketId", tid);
                 map.put("type", "validateTGT");
@@ -255,6 +259,28 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
             map.put("cardNo", cardNo);
             map.put("openBank", openBank);
         }));
+    }
+
+    /**
+     * 申请单查询
+     */
+    public void queryApply(String costCode) {
+        if (check(costCode)) {
+            post(DEBUG_URL, "ApplyCompensation", map -> {
+                map.put("agent", api().getUId());
+                map.put("departmentCode", api().getDepartmentCode());
+                map.put("costCode", costCode);
+            });
+        }
+    }
+
+    /**
+     * 申请单查询
+     */
+    public void queryApplyContent(String applyCode) {
+        if (check(applyCode)) {
+            post(DEBUG_URL, "ApplyContentCompensation", map -> map.put("applyCode", applyCode));
+        }
     }
 
     // <<< ****************************** 2018-07-05 11:38 ****************************** <<<

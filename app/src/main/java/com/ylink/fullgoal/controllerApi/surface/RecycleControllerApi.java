@@ -3,7 +3,6 @@ package com.ylink.fullgoal.controllerApi.surface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
 import com.leo.core.iapi.api.IRecycleApi;
@@ -101,7 +100,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     @Override
     public T notifyDataSetChanged() {
-        getRecycleAdapter().notifyDataSetChanged();
+        adapterDataApi().notifyDataSetChanged();
         return getThis();
     }
 

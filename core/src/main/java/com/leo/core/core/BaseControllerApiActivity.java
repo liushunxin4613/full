@@ -13,7 +13,6 @@ import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
@@ -117,19 +116,6 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
     public void onBackPressed() {
         super.onBackPressed();
         execute(controllerApi(), IControllerApi::onBackPressed);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        execute(controllerApi(), obj -> obj.onStartActivity(intent));
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        execute(controllerApi(), IControllerApi::onFinish);
-
     }
 
     @Override

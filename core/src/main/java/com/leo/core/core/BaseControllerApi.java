@@ -1,6 +1,5 @@
 package com.leo.core.core;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 
@@ -25,7 +24,6 @@ import com.leo.core.api.api.SubjoinApi;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HttpApi;
 import com.leo.core.api.main.ShowApi;
-import com.leo.core.config.Config;
 import com.leo.core.factory.ActionApiFactory;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.IUrlApi;
@@ -241,22 +239,6 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     @Override
     public IActivityLifecycleCallbacksApi newActivityLifecycleApi() {
         return new ActivityLifecycleCallbacksApi();
-    }
-
-    @Override
-    public void onFinish() {
-        super.onFinish();
-        saveData(Config.LAST_FINISH_ACTIVITY, (String) getExecute(getActivity(),
-                activity -> activity.getClass().getName()));
-        saveData(Config.LAST_FINISH_CONTROLLER_API, getClass().getName());
-    }
-
-    @Override
-    public void onStartActivity(Intent intent) {
-        super.onStartActivity(intent);
-        executeNon(intent, obj -> saveData(Config.LAST_START_ACTIVITY, (String) getExecute(getActivity(),
-                activity -> activity.getClass().getName())));
-        saveData(Config.LAST_START_CONTROLLER_API, getClass().getName());
     }
 
     @Override

@@ -130,8 +130,7 @@ public class RetrofitFactory {
                     long.class, Long.class, LONG));
             gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(
                     int.class, Integer.class, INT));
-            builder.baseUrl(url)
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            builder.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(NullOnEmptyConverterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
@@ -143,7 +142,7 @@ public class RetrofitFactory {
                             .sslSocketFactory(SSLUtil.getSSLSocketFactory())
                             .build());
         }
-        return builder.build();
+        return builder.baseUrl(url).build();
     }
 
 }

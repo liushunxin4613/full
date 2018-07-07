@@ -83,7 +83,6 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private boolean isOpen;
     private int miniSpeed = 0;
     private int miniWidth = 120;
-    private CostVo vo;
     private String serialNo;
     private BasePagerAdapter<RecycleControllerApi> adapter;
     private Map<String, Object> dataMap;
@@ -92,11 +91,14 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         super(controller);
     }
 
+    @Override
     public CostVo getVo() {
-        if (vo == null) {
-            vo = new CostVo();
-        }
-        return vo;
+        return super.getVo();
+    }
+
+    @Override
+    public CostVo newVo() {
+        return new CostVo();
     }
 
     @Override
@@ -136,7 +138,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     public void onResume() {
         super.onResume();
         //费用指标
-        executeSearch(CostFg.class, this::onCost);
+        executeSearch(CostFg.class, obj -> onCost(obj.getObj()));
         //费用指标维度
         execute(getFinish(), new TypeToken<SearchVo<DimenListFg>>() {
         }, vo -> {

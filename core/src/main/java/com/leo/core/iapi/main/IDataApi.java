@@ -13,6 +13,8 @@ import java.util.Set;
  */
 public interface IDataApi<T extends IDataApi, D> extends ICheckApi<T, D> {
 
+    T notifyDataSetChanged();
+
     /**
      * 数据比较
      *

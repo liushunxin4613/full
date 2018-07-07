@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
-import com.leo.core.config.Config;
 import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
@@ -84,6 +83,7 @@ import java.util.Set;
 import butterknife.ButterKnife;
 import rx.Observable;
 
+import static com.leo.core.config.Config.FINISH;
 import static com.leo.core.config.Config.RX;
 import static com.leo.core.util.TextUtils.getEmptyLength;
 
@@ -137,7 +137,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private Observable.Transformer transformer;
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
-    private String finish;
 
     private List<OnAddListener> addListeners;
 
@@ -854,24 +853,16 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public void onFinish() {
-        executeViewControllerApi(IControllerApi::onFinish);
-    }
-
-    @Override
-    public void onStartActivity(Intent intent) {
-        executeViewControllerApi(obj -> obj.onStartActivity(intent));
-    }
-
-    @Override
     public T finishActivity(Object obj) {
-        getActivity().finish();
         executeNon(obj, o -> saveData(getClass().getName(), obj));
+        getActivity().finish();
         return getThis();
     }
 
     @Override
     public <B> B getFinish(Type... args) {
+        String finish = vr(getActivity(), Activity::getIntent,
+                i -> i.getStringExtra(FINISH));
         if (!TextUtils.isEmpty(finish)) {
             final String txt = finish.replaceAll(RX, "/");
             if (!TextUtils.isEmpty(args)) {
@@ -882,7 +873,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                             return (B) txt;
                         } else {
                             Object obj = decode(txt, type);
-                            if (obj != null && emptyCount == getEmptyLength(encode(obj))) {
+                            if (obj != null && emptyCount ==
+                                    getEmptyLength(encode(obj))) {
                                 return (B) obj;
                             }
                         }
@@ -1033,7 +1025,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public void onResume() {
         executeViewControllerApi(IControllerApi::onResume);
-        finish = getString(getString(Config.LAST_FINISH_CONTROLLER_API));
     }
 
     @Override
@@ -2091,6 +2082,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public <AA> AA getVo() {
+        return (AA) vosApi().getVo();
+    }
+
+    @Override
+    public <AA> AA newVo() {
         return null;
     }
 

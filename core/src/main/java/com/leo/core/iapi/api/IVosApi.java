@@ -8,6 +8,8 @@ public interface IVosApi<T extends IVosApi> extends IApi {
 
     <AA> AA getVo();
 
+    <AA> AA newVo();
+
     <AA> T vos(IObjAction<AA> action);
 
     <AA, BB> BB vor(IReturnAction<AA, BB> ab);

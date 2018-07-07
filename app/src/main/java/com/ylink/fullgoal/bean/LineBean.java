@@ -8,7 +8,7 @@ public class LineBean extends SurfaceBiBean<LineBean> {
     public final static int NORMAL = R.layout.v_line;
     public final static int SMALL = R.layout.v_line2;
 
-    private int apiType = NORMAL;
+    private transient int apiType = NORMAL;
 
     @Override
     public Integer getApiType() {

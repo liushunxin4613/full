@@ -2,17 +2,27 @@ package com.leo.core.api.inter;
 
 import android.support.annotation.NonNull;
 
-import com.leo.core.api.api.VsApi;
-import com.leo.core.api.core.ThisApi;
+import com.leo.core.api.api.VesApi;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.util.TextUtils;
 
-public abstract class CoreController<T extends CoreController, DB, UB> extends VsApi<T> implements IController<T, DB, UB> {
+public abstract class CoreController<T extends CoreController, DB, UB> extends VesApi<T> implements
+        IController<T, DB, UB> {
 
     private String field;
     private DB db;
+
+    @Override
+    public DB getVo() {
+        return super.getVo();
+    }
+
+    @Override
+    public DB newVo() {
+        return getDB();
+    }
 
     @Override
     public T initField(String field) {
@@ -135,10 +145,6 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
      */
     protected UB getOnUB(String key) {
         return null;
-    }
-
-    protected <B> B vor(IReturnAction<DB, B> action) {
-        return vr(getDB(), action);
     }
 
     private <A> A getValue(String[] args, A def, IReturnAction<String, A> action) {

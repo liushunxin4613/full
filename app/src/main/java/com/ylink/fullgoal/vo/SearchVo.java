@@ -3,6 +3,9 @@ package com.ylink.fullgoal.vo;
 import com.google.gson.reflect.TypeToken;
 import com.ylink.fullgoal.fg.SerialVersionTag;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 public class SearchVo<D> extends SerialVersionTag {
 
     /**
@@ -39,6 +42,16 @@ public class SearchVo<D> extends SerialVersionTag {
      * 费用指标
      */
     public final static String COST_INDEX = "费用指标";
+
+    /**
+     * 单据
+     */
+    public final static String APPLY = "单据";
+
+    /**
+     * 单据内容
+     */
+    public final static String APPLY_CONTENT = "单据内容";
 
     /**
      * 费用指标维度
@@ -85,8 +98,25 @@ public class SearchVo<D> extends SerialVersionTag {
         this.search = search;
         this.value = value;
         this.obj = obj;
-        setSerialVersionTag(obj == null ? null : TypeToken.getParameterized(SearchVo.class,
-                obj.getClass()).getType().toString());
+        setSerialVersionTag(getType(getObj(), getClass()));
+    }
+
+    private Type getType(Object obj, Class clz) {
+        if (obj != null && clz != null) {
+            if (obj instanceof List) {
+                List data = (List) obj;
+                if (data.size() > 0) {
+                    Type type = getType(data.get(0), List.class);
+                    if (type != null) {
+                        return TypeToken.getParameterized(clz, type).getType();
+                    }
+                }
+                return TypeToken.getParameterized(clz, List.class).getType();
+            } else {
+                return TypeToken.getParameterized(clz, obj.getClass()).getType();
+            }
+        }
+        return null;
     }
 
     public SearchVo(String search, D obj) {
@@ -116,4 +146,5 @@ public class SearchVo<D> extends SerialVersionTag {
     public void setValue(String value) {
         this.value = value;
     }
+
 }

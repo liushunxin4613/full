@@ -205,25 +205,42 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         addList(DataFg.class, clz, action);
     }
 
-    protected void startSearch(String search, String value, ArrayList<String> filterData) {
-        SoftInputUtil.hidSoftInput(getRootView());
-        Bundle bundle = new Bundle();
-        bundle.putString(Config.SEARCH, search);
-        bundle.putString(Config.VALUE, value);
-        bundle.putStringArrayList(Config.FILTERS, filterData);
-        startSurfaceActivity(bundle, FullSearchControllerApi.class);
+    private void startSearch(Class<? extends IControllerApi> clz, String search, String key,
+                             String value, ArrayList<String> filterData) {
+        if (check(clz)) {
+            SoftInputUtil.hidSoftInput(getRootView());
+            Bundle bundle = new Bundle();
+            bundle.putString(Config.SEARCH, search);
+            bundle.putString(Config.KEY, key);
+            bundle.putString(Config.VALUE, value);
+            bundle.putStringArrayList(Config.FILTERS, filterData);
+            startSurfaceActivity(bundle, clz);
+        }
+    }
+
+    private void startSearch(String search, String key, ArrayList<String> filterData) {
+        startSearch(FullSearchControllerApi.class, search, key, null, filterData);
     }
 
     protected void startSearch(String search, ArrayList<String> filterData) {
         startSearch(search, null, filterData);
     }
 
-    protected void startSearch(String search, String value) {
-        startSearch(search, value, null);
+    protected void startSearch(String search, String key) {
+        startSearch(search, key, null);
     }
 
     protected void startSearch(String search) {
         startSearch(search, null, null);
+    }
+
+    protected void startSearch(Class<? extends IControllerApi> clz, String search, String key) {
+        startSearch(clz, search, key, null, null);
+    }
+
+    protected void startSearch(Class<? extends IControllerApi> clz, String search, String key,
+                               String value) {
+        startSearch(clz, search, key, value, null);
     }
 
     public int getResTvColor(CharSequence text) {
@@ -346,11 +363,11 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getValue(argss, key, null);
     }
 
-    protected <A> void executeSearch(Class<A> clz, IObjAction<A> action) {
+    protected <A> void executeSearch(Class<A> clz, IObjAction<SearchVo<A>> action) {
         if (clz != null && action != null) {
             TypeToken<SearchVo<A>> token = (TypeToken<SearchVo<A>>) TypeToken
                     .getParameterized(SearchVo.class, clz);
-            execute(getFinish(), token, vo -> action.execute(vo.getObj()));
+            execute(getFinish(), token, action);
         }
     }
 

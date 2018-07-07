@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
-import com.leo.core.config.Config;
 import com.leo.core.iapi.api.IStartApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
@@ -70,8 +69,6 @@ public class StartApi<T extends StartApi> extends HasCoreControllerApi<T> implem
     @Override
     public final T startFinishActivity(Class<? extends Activity> clz, Bundle bundle, Class<? extends IControllerApi>... args) {
         if(controllerApi().getActivity() != null && clz != null){
-            saveData(Config.LAST_FINISH_ACTIVITY, (String) getExecute(controllerApi().getActivity(),
-                    activity -> activity.getClass().getName()));
             controllerApi().getActivity().finish();
             startActivity(clz, bundle, args);
         }

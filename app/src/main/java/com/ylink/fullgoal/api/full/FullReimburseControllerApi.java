@@ -95,7 +95,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private String state;
     private String title;
-    private DVo vo;
 
     protected FullReimburseControllerApi(C controller) {
         super(controller);
@@ -136,10 +135,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     @Override
     public DVo getVo() {
-        if (vo == null) {
-            vo = new DVo();
-        }
-        return vo;
+        return super.getVo();
+    }
+
+    @Override
+    public DVo newVo() {
+        return new DVo();
     }
 
     @Override
@@ -286,26 +287,25 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     public void onResume() {
         super.onResume();
         //报销人
-        executeSearch(UserFg.class, fg -> vos(DVo::getReimbursement, obj -> obj.initDB(fg)));
+        executeSearch(UserFg.class, vo -> vos(DVo::getReimbursement, obj -> obj.initDB(vo.getObj())));
         //预算归属部门
-        executeSearch(DepartmentFg.class, fg -> vos(DVo::getBudgetDepartment, obj -> obj.initDB(fg)));
+        executeSearch(DepartmentFg.class, vo -> vos(DVo::getBudgetDepartment, obj -> obj.initDB(vo.getObj())));
         //项目
-        executeSearch(ProjectFg.class, fg -> vos(DVo::getProject, obj -> obj.initDB(fg)));
+        executeSearch(ProjectFg.class, vo -> vos(DVo::getProject, obj -> obj.initDB(vo.getObj())));
         //合同付款申请单
-        executeSearch(ContractPaymentFg.class, fg -> vos(DVo::getContractPayment, obj -> obj.initDB(fg)));
+        executeSearch(ContractPaymentFg.class, vo -> vos(DVo::getContractPayment, obj -> obj.initDB(vo.getObj())));
         //招待申请单
-        executeSearch(ProcessFg.class, fg -> vos(DVo::getProcess, obj -> obj.initDB(fg)));
+        executeSearch(ProcessFg.class, vo -> vos(DVo::getProcess, obj -> obj.initDB(vo.getObj())));
         //费用指标
-        executeSearch(CostFg.class, fg -> vos(DVo::getCostIndex, obj -> obj.initDB(fg)));
+        executeSearch(CostFg.class, vo -> vos(DVo::getCostIndex, obj -> obj.initDB(vo.getObj())));
         //出差申请单
-        executeSearch(TravelFormFg.class, fg -> vos(DVo::getTrave, obj -> obj.initDB(fg)));
+        executeSearch(TravelFormFg.class, vo -> vos(DVo::getTrave, obj -> obj.initDB(vo.getObj())));
         //调研报告
-        executeSearch(ResearchReportFg.class, fg -> vos(DVo::getReport, obj -> obj.initDB(fg)));
+        executeSearch(ResearchReportFg.class, vo -> vos(DVo::getReport, obj -> obj.initDB(vo.getObj())));
         //携程机票
-        executeSearch(CtripTicketsFg.class, fg -> vos(DVo::getCtrip, obj -> obj.initDB(fg)));
+        executeSearch(CtripTicketsFg.class, vo -> vos(DVo::getCtrip, obj -> obj.initDB(vo.getObj())));
         //票据修改金额
-        execute(getFinish(), ImageVo.class, fg -> vos(DVo::getImageList, obj
-                -> obj.updateMoney(fg)));
+        execute(getFinish(), ImageVo.class, vo -> vos(DVo::getImageList, obj -> obj.updateMoney(vo)));
         notifyDataChanged();
     }
 

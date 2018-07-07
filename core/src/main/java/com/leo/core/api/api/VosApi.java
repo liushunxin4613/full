@@ -8,61 +8,74 @@ import com.leo.core.iapi.inter.IReturnAction;
 
 public class VosApi<T extends VosApi> extends HasCoreControllerApi<T> implements IVosApi<T> {
 
+    private Object vo;
+
     public VosApi(CoreControllerApi controllerApi) {
         super(controllerApi);
     }
 
     @Override
     public <AA> AA getVo() {
-        return (AA) controllerApi().getVo();
+        if(vo == null){
+            vo = newVo();
+            if(vo == null){
+                throw new NullPointerException("newVo()不能为空");
+            }
+        }
+        return (AA) vo;
+    }
+
+    @Override
+    public <AA> AA newVo() {
+        return (AA) controllerApi().newVo();
     }
 
     @Override
     public <AA> T vos(IObjAction<AA> action) {
-        controllerApi().vs((AA) getVo(), action);
+        controllerApi().vs(getVo(), action);
         return getThis();
     }
 
     @Override
     public <AA, BB> BB vor(IReturnAction<AA, BB> ab) {
-        return (BB) controllerApi().vr((AA) getVo(), ab);
+        return (BB) controllerApi().vr(getVo(), ab);
     }
 
     @Override
     public <AA, BB> T vos(IReturnAction<AA, BB> ab, IObjAction<BB> action) {
-        controllerApi().vs((AA) getVo(), ab, action);
+        controllerApi().vs(getVo(), ab, action);
         return getThis();
     }
 
     @Override
     public <AA, BB, CC> CC vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc) {
-        return (CC) controllerApi().vr((AA) getVo(), ab, bc);
+        return (CC) controllerApi().vr(getVo(), ab, bc);
     }
 
     @Override
     public <AA, BB, CC> T vos(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc,
                              IObjAction<CC> action) {
-        controllerApi().vs((AA) getVo(), ab, bc, action);
+        controllerApi().vs(getVo(), ab, bc, action);
         return getThis();
     }
 
     @Override
     public <AA, BB, CC, DD> DD vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc,
                                   IReturnAction<CC, DD> cd) {
-        return (DD) controllerApi().vr((AA) getVo(), ab, bc, cd);
+        return (DD) controllerApi().vr(getVo(), ab, bc, cd);
     }
 
     @Override
     public <AA, BB, CC, DD> T vos(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc,
                                  IReturnAction<CC, DD> cd, IObjAction<DD> action) {
-        controllerApi().vs((AA) getVo(), ab, bc, cd, action);
+        controllerApi().vs(getVo(), ab, bc, cd, action);
         return getThis();
     }
 
     @Override
     public <AA, BB, CC, DD, EE> EE vor(IReturnAction<AA, BB> ab, IReturnAction<BB, CC> bc,
                                       IReturnAction<CC, DD> cd, IReturnAction<DD, EE> de) {
-        return (EE) controllerApi().vr((AA) getVo(), ab, bc, cd, de);
+        return (EE) controllerApi().vr(getVo(), ab, bc, cd, de);
     }
 
     @Override

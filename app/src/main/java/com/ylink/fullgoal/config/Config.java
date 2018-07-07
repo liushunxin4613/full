@@ -16,6 +16,7 @@ public class Config {
     //配置
     public final static boolean DEBUG = false;//debug模式是否开启5
     public final static boolean LOCAL = false;//本地模式是否开启
+    public final static boolean TEST = true;//测试模式是否开启
     public final static boolean SIMULATE_HTTP = false;//模拟模式是否开启
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间
@@ -109,6 +110,7 @@ public class Config {
     public final static String COST_LIST = "costList";
     public final static String SEARCH = "search";
     public final static String FILTERS = "filters";
+    public final static String KEY = "key";
     public final static String VALUE = "value";
     public final static String DATA_QR = "dataQR";
     public final static String MONEY = "totalAmountLower";

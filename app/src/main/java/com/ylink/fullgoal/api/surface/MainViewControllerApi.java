@@ -10,7 +10,7 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.full.FullBankControllerApiV1;
 import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
-import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
+import com.ylink.fullgoal.api.full.FullGeneralControllerApiV1;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.UserBean;
@@ -57,7 +57,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 Bundle bundle = new Bundle();
                 bundle.putString(STATE, QR);
                 bundle.putString(SERIAL_NO, "2018062136000447");
-                startSurfaceActivity(bundle, FullGeneralControllerApi.class);
+                startSurfaceActivity(bundle, FullGeneralControllerApiV1.class);
             }), new IconTvMoreBean(R.mipmap.test_icon2, "出差报销确认", (bean, view) -> {
                 Bundle bundle = new Bundle();
                 bundle.putString(STATE, QR);
@@ -78,6 +78,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     public void initData() {
         super.initData();
         add(StatusFg.class, (path, what, msg, bean) -> ii(String.format("SSO认证%s", bean.isSuccess() ? "成功" : "失败")));
+        general(FQ);
     }
 
     private void test() {
@@ -99,7 +100,8 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         if (TextUtils.check(userId, username)) {//TODO 测试用
             initUser(new UserBean(name, cookie, userId, username, cookieStr, portalPac));
         }
-        api().SSO(getCastgc());
+//        api().SSO(getCastgc());
+        ii("user", getUser());
     }
 
     //私有的
@@ -108,7 +110,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
      * 一般费用普票报销
      */
     private void general(String state) {
-        startSurfaceActivity(FullGeneralControllerApi.class, YB, state);
+        startSurfaceActivity(FullGeneralControllerApiV1.class, YB, state);
     }
 
     /**

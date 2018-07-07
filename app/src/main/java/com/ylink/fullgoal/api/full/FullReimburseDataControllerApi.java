@@ -71,7 +71,6 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     @Bind(R.id.drawerLayout)
     DrawerLayout drawerLayout;
 
-    private DDVo vo;
     private IndicatorControllerApi api;
     private ReimburseTypeBean typeBean;
     private DateArrayBean dateArrayBean;
@@ -85,10 +84,12 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
 
     @Override
     public DDVo getVo() {
-        if (vo == null) {
-            vo = new DDVo();
-        }
-        return vo;
+        return super.getVo();
+    }
+
+    @Override
+    public DDVo newVo() {
+        return new DDVo();
     }
 
     @Override
