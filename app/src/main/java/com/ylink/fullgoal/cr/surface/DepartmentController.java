@@ -23,6 +23,10 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
         return DepartmentFg.class;
     }
 
+    public String getDepartmentCode(){
+        return vor(DepartmentFg::getDepartmentCode);
+    }
+
     @Override
     protected String getOnUBKey(String key) {
         return toField(field -> {

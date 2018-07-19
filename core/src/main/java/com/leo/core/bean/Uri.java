@@ -7,12 +7,15 @@ import java.util.regex.Pattern;
 
 public class Uri {
 
+    private String url;
     private String start;
     private String content;
     private String end;
 
-    public Uri(String text) {
-        if (!TextUtils.isEmpty(text)) {
+    public Uri(String url) {
+        if (TextUtils.isHttpUrl(url)) {
+            this.url = url;
+            String text = url;
             Matcher m = Pattern.compile("[htps]+://[1-9\\.]+/").matcher(text);
             if (m.find() && !TextUtils.isEmpty(m.group())) {
                 setStart(m.group());
@@ -27,7 +30,8 @@ public class Uri {
     }
 
     public boolean check() {
-        return !TextUtils.isEmpty(getStart())
+        return !TextUtils.isEmpty(getUrl())
+                && !TextUtils.isEmpty(getStart())
                 && !TextUtils.isEmpty(getContent())
                 && !TextUtils.isEmpty(getEnd());
     }
@@ -54,6 +58,14 @@ public class Uri {
 
     public void setEnd(String end) {
         this.end = end;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }

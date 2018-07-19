@@ -1,9 +1,8 @@
 package com.ylink.fullgoal.config;
 
 import com.leo.core.api.inter.ClzAction;
-import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IReturnAction;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.Map;
 public class Node {
 
     private String name;
-    private transient Node end;
+    private Node end;
     private List<Node> childData;
     private transient ClzAction action;
     private transient IReturnAction<Map<String, Object>, Boolean> returnAction;
@@ -60,6 +59,10 @@ public class Node {
         return childData;
     }
 
+    public void setEnd(Node end) {
+        this.end = end;
+    }
+
     public void addChild(Node node) {
         if (node != null) {
             if (childData == null) {
@@ -73,6 +76,12 @@ public class Node {
     public void addEndChild(Node node) {
         if (node != null && end != null) {
             end.addChild(node);
+        }
+    }
+
+    public <A> void setEndAction(Class<A> clz, IMapAction<Map, A> action) {
+        if (TextUtils.check(clz, end, action)) {
+            end.setAction(new ClzAction(clz, action));
         }
     }
 

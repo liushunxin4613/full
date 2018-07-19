@@ -6,8 +6,10 @@ import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -21,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,6 +77,8 @@ import com.leo.core.util.StatusBarUtil;
 import com.leo.core.util.TextUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,6 +141,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private Integer rootViewResId;
     private MsgSubscriber subscriber;
     private Observable.Transformer transformer;
+    private ViewGroup container;
+    private XmlResourceParser parser;
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
 
@@ -825,18 +830,40 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public XmlResourceParser getRootXmlResourceParser() {
+        return parser;
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
 
     @Override
-    public Class<? extends View> getRootViewClz() {
+    public final Class<? extends View> getRootViewClz() {
         return viewClz;
     }
 
     @Override
     public Class<? extends IControllerApi> getRootViewClzApi() {
         return controllerApiClz;
+    }
+
+    @Override
+    public ViewGroup getRootContainer() {
+        return container;
+    }
+
+    @Override
+    public T setRootContainer(ViewGroup container) {
+        this.container = container;
+        return getThis();
+    }
+
+    @Override
+    public T setRootXmlResourceParser(XmlResourceParser parser) {
+        this.parser = parser;
+        return getThis();
     }
 
     @Override
@@ -873,8 +900,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public T finishActivity(Object obj) {
-        executeNon(obj, o -> saveData(getClass().getName(), obj));
-        getActivity().finish();
+        activityLifecycleApi().finishActivity(obj);
         return getThis();
     }
 
@@ -912,6 +938,41 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public LayoutInflater inflater() {
+        return LayoutInflater.from(getContext());
+    }
+
+    @Override
+    public XmlResourceParser openFileLayoutXmlPullParser(File dir, String xml) {
+        if (TextUtils.check(dir, xml, getContext()) && dir.exists() && dir.isDirectory()) {
+            AssetManager asset = getContext().getResources().getAssets();
+            try {
+                if (asset != null) {
+                    Method method = asset.getClass().getMethod("addAssetPath", String.class);
+                    int cookie = (Integer) method.invoke(asset, dir.getPath());
+                    return asset.openXmlResourceParser(cookie, xml);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public XmlResourceParser openAssetsLayoutXmlPullParser(String xml) {
+        if (TextUtils.check(getContext(), xml)) {
+            try {
+                return getContext().getResources().getAssets()
+                        .openXmlResourceParser(xml);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void notifyDataChanged() {
     }
 
@@ -943,76 +1004,47 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        init(savedInstanceState);
-        if (isActivity()) {
-            if (getRootViewClz() != null) {
-                if (rootView == null) {
-                    rootView = getObject(getRootViewClz()
-                            , new Class[]{Context.class}
-                            , new Object[]{getContext()});
-                }
-                if (rootView instanceof BaseControllerApiView && getRootViewClzApi() != null) {
-                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), (View) null);
-                }
-            }
-            if (getRootViewResId() != null) {
-                getActivity().setContentView(getRootViewResId());
-                rootView = getActivity().getWindow().getDecorView();
-            } else if (getRootView() != null) {
+        onCreateView(inflater(), null, savedInstanceState);
+        if (getRootView() != null) {
+            if (isActivity()) {
                 getActivity().setContentView(getRootView());
-            }
-            initView();
-            initData();
-        } else if (isDialog()) {
-            if (getRootViewClz() != null) {
-                if (rootView == null) {
-                    rootView = getObject(getRootViewClz()
-                            , new Class[]{Context.class}
-                            , new Object[]{getContext()});
-                }
-                if (rootView instanceof BaseControllerApiView && getRootViewClzApi() != null) {
-                    ((BaseControllerApiView) rootView).init(getRootViewClzApi(), (View) null);
-                }
-            }
-            if (getRootViewResId() != null) {
-                getDialog().setContentView(getRootViewResId());
-                Window window = getDialog().getWindow();
-                if (window != null) {
-                    rootView = window.getDecorView();
-                }
-            } else if (getRootView() != null) {
+            } else if (isDialog()) {
                 getDialog().setContentView(getRootView());
             }
-            initView();
-            initData();
         }
-    }
-
-    @Override
-    public void init(Bundle savedInstanceState) {
+        onViewCreated(getRootView(), savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if (isFragment()) {
-            if (getRootViewClz() != null && getRootViewClzApi() != null) {
-                if (rootView == null) {
-                    rootView = getObject(getRootViewClz()
-                            , new Class[]{Class.class, Context.class}
-                            , new Object[]{getRootViewClzApi(), getContext()});
-                }
-            }
-        }
+        init(savedInstanceState);
         if (getRootViewResId() != null) {
             if (isView()) {
-                rootView = inflater.inflate(getRootViewResId(), container);
+                setRootView(inflater.inflate(getRootViewResId(), container));
             } else {
-                rootView = inflater.inflate(getRootViewResId(), container, false);
+                setRootView(inflater.inflate(getRootViewResId(), container, false));
+            }
+        } else if (getRootViewClz() != null) {
+            setRootView(getObject(getRootViewClz()
+                    , new Class[]{Context.class}
+                    , new Object[]{getContext()}));
+        } else if (getRootXmlResourceParser() != null) {
+            if (isView()) {
+                setRootView(inflater.inflate(getRootXmlResourceParser(), container));
+            } else {
+                setRootView(inflater.inflate(getRootXmlResourceParser(), container, false));
             }
         }
+        if (getRootView() instanceof BaseControllerApiView && getRootViewClzApi() != null) {
+            ((BaseControllerApiView) getRootView()).init(getRootViewClzApi());
+        }
         return getRootView();
+    }
+
+    @Override
+    public void init(Bundle savedInstanceState) {
     }
 
     @Override

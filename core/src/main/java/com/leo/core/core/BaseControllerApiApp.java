@@ -15,12 +15,17 @@ public class BaseControllerApiApp<T extends BaseControllerApiApp, C extends ICon
     @Override
     public IControllerApi<C, T> controllerApi() {
         if(controllerApi == null){
-            controllerApi = newControllerApi();
-            if(controllerApi == null){
-                throw new NullPointerException("newControllerApi 不能为空");
-            }
+            setControllerApi(newControllerApi());
         }
         return controllerApi;
+    }
+
+    @Override
+    public void setControllerApi(IControllerApi<C, T> api) {
+        controllerApi = api;
+        if(controllerApi == null){
+            throw new NullPointerException("newControllerApi 不能为空");
+        }
     }
 
     @Override

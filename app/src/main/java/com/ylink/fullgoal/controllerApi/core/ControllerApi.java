@@ -1,10 +1,7 @@
 package com.ylink.fullgoal.controllerApi.core;
 
-import android.view.View;
-
 import com.leo.core.api.main.HttpApi;
 import com.leo.core.core.BaseControllerApi;
-import com.leo.core.core.BaseControllerApiView;
 import com.ylink.fullgoal.api.config.FgApi;
 import com.ylink.fullgoal.api.config.ParseApi;
 import com.ylink.fullgoal.api.func.UserApi;
@@ -12,7 +9,6 @@ import com.leo.core.net.Api;
 import com.ylink.fullgoal.api.surface.MHttpApi;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.fg.DepartmentFg;
-import com.ylink.fullgoal.fg.UserFg;
 
 import butterknife.ButterKnife;
 
@@ -75,11 +71,6 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     @Override
     public DepartmentFg getDepartment() {
         return super.getDepartment();
-    }
-
-    @Override
-    public Class<? extends View> getRootViewClz() {
-        return BaseControllerApiView.class;
     }
 
     @Override

@@ -46,4 +46,8 @@ public class UserController<T extends UserController> extends BaseStringControll
         return vor(UserFg::getUserName);
     }
 
+    public String getUserCode(){
+        return vor(UserFg::getUserCode);
+    }
+
 }

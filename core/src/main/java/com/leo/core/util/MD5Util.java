@@ -1,101 +1,120 @@
 package com.leo.core.util;
 
-import android.annotation.SuppressLint;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
+/**
+ * Md5校验工具类
+ */
 public class MD5Util {
 
-//    private static final String densityKey = "It*s_My-EncryKey>741";
-    private static final String densityKey = "1234567";
-    public static String encode(String string) throws Exception {
-        byte[] hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
-        StringBuilder hex = new StringBuilder(hash.length * 2);
-        for (byte b : hash) {
-            if ((b & 0xFF) < 0x10) {
-                hex.append("0");
-            }
-            hex.append(Integer.toHexString(b & 0xFF));
-        }
-        return hex.toString();
-    }
-    /**
-     *  MD5的Token
-     * @return
-     *          <p>model+action+时间戳+key做md5加密传递到服务器99-k ymd</p>
-     */
-    @CheckResult
-    private static String getMD5OfToken(String model, String action) {
-        if (TextUtils.isEmpty(model) || TextUtils.isEmpty(action)) {
-            throw new IllegalArgumentException("paramter exception");
-        }
-        StringBuilder md5String = new StringBuilder();
-        md5String.append(model);
-        md5String.append(action);
-        @SuppressLint("SimpleDateFormat")
-        String timeTemplater = DateUtil.getFormatString(new Date(System.currentTimeMillis()), "yyMMdd");
-        md5String.append(timeTemplater);
-        md5String.append(densityKey);
-        try {
-            return MD5(md5String.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+	private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6',
+			'7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-    /**
-     * 返回一个带有 token 的 MAP
-     */
-    @CheckResult
-    public static Map<String ,String> getDefaultMD5Params(@NonNull String model, @NonNull String action){
-        Map<String, String> params = new HashMap<>();
-        try {
-            String token = getMD5OfToken(model, action);
-            if (TextUtils.isEmpty(token)) return  null;
-            params.put("api_token", token);
-            return params;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+	public static String getFileMD5(File file) {
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(file);
+			FileChannel ch = in.getChannel();
+			return MD5(ch.map(FileChannel.MapMode.READ_ONLY, 0, file.length()));
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// 关闭流产生的错误一般都可以忽略
+				}
+			}
+		}
+	}
 
-    private static final char[] DIGITS_LOWER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	/**
+	 * MD5校验字符串
+	 */
+	public static String getStringMD5(String s) {
+		MessageDigest mdInst;
+		try {
+			// 获得MD5摘要算法的 MessageDigest 对象
+			mdInst = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "";
+		}
+		byte[] btInput = s.getBytes();
+		// 使用指定的字节更新摘要
+		mdInst.update(btInput);
+		// 获得密文
+		byte[] md = mdInst.digest();
+		// 把密文转换成十六进制的字符串形式
+		int length = md.length;
+		char str[] = new char[length * 2];
+		int k = 0;
+		for (byte b : md) {
+			str[k++] = HEX_DIGITS[b >>> 4 & 0xf];
+			str[k++] = HEX_DIGITS[b & 0xf];
+		}
+		return new String(str);
+	}
 
-    public static String MD5(String str) {
-        if (str == null) {
-            return null;
-        }
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(str.getBytes());
-            return new String(encodeHex(messageDigest.digest()));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+	@SuppressWarnings("unused")
+	private static String getSubStr(String str, int subNu, char replace) {
+		int length = str.length();
+		if (length > subNu) {
+			str = str.substring(length - subNu, length);
+		} else if (length < subNu) {
+			// NOTE: padding字符填充在字符串的右侧，和服务器的算法是一致的
+			str += createPaddingString(subNu - length, replace);
+		}
+		return str;
+	}
 
-    public static String MMD5(String text) {
-        if (!TextUtils.isNull(text)){
-            return MD5(MD5(text));
-        }
-        return null;
-    }
+	private static String createPaddingString(int n, char pad) {
+		if (n <= 0) {
+			return "";
+		}
+		char[] paddingArray = new char[n];
+		Arrays.fill(paddingArray, pad);
+		return new String(paddingArray);
+	}
 
-    private static char[] encodeHex(final byte[] data) {
-        final int l = data.length;
-        final char[] out = new char[l << 1];
-        for (int i = 0, j = 0; i < l; i++) {
-            out[j++] = DIGITS_LOWER[(0xF0 & data[i]) >>> 4];
-            out[j++] = DIGITS_LOWER[0x0F & data[i]];
-        }
-        return out;
-    }
+	/**
+	 * 计算MD5校验
+	 *
+	 * @param buffer buffer
+	 * @return 空串，如果无法获得 MessageDigest实例
+	 */
+	private static String MD5(ByteBuffer buffer) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(buffer);
+			byte tmp[] = md.digest(); // MD5 的计算结果是一个 128 位的长整数，
+			// 用字节表示就是 16 个字节
+			char str[] = new char[16 * 2]; // 每个字节用 16 进制表示的话，使用两个字符，
+			// 所以表示成 16 进制需要 32 个字符
+			int k = 0; // 表示转换结果中对应的字符位置
+			for (int i = 0; i < 16; i++) { // 从第一个字节开始，对 MD5 的每一个字节
+				// 转换成 16 进制字符的转换
+				byte byte0 = tmp[i]; // 取第 i 个字节
+				str[k++] = HEX_DIGITS[byte0 >>> 4 & 0xf]; // 取字节中高 4 位的数字转换, >>>,
+				// 逻辑右移，将符号位一起右移
+				str[k++] = HEX_DIGITS[byte0 & 0xf]; // 取字节中低 4 位的数字转换
+			}
+			return new String(str); // 换后的结果转换为字符串
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

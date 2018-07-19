@@ -10,7 +10,6 @@ import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiAdapter,
@@ -29,7 +28,7 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         this.superControllerApi = superControllerApi;
         dataApi = new DataApi<>().setAdapter(this);
         dataApi.setApi(obj -> {
-            if (obj.getApiType() == null) {
+            if (!obj.checkApi()) {
                 return true;
             }
             for (IApiBean bean : dataApi.getData()) {
@@ -49,12 +48,17 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
     @Override
     public IControllerApi<C, T> controllerApi() {
         if (controllerApi == null) {
-            controllerApi = newControllerApi();
-            if (controllerApi == null) {
-                throw new NullPointerException("newControllerApi 不能为空");
-            }
+            setControllerApi(newControllerApi());
         }
         return controllerApi;
+    }
+
+    @Override
+    public void setControllerApi(IControllerApi<C, T> api) {
+        controllerApi = api;
+        if (controllerApi == null) {
+            throw new NullPointerException("newControllerApi 不能为空");
+        }
     }
 
     @Override
@@ -87,13 +91,15 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         if (bean == null) {
             throw new NullPointerException("bean不能为空");
         }
-        if (bean.getApiType() == null) {
-            throw new NullPointerException("bean.getApiType()不能为空");
+        if (!bean.checkApi()) {
+            throw new NullPointerException("bean.checkApi()不通过");
         }
         IControllerApi api = bean.getControllerApi(superControllerApi);
         if (api == null) {
             throw new NullPointerException("api不能为空");
         }
+        api.setRootContainer(parent);
+        api.setRootXmlResourceParser(bean.getApiXmlResourceParser());
         api.setRootViewResId(bean.getApiType());
         api.initController(this);
         api.onCreateView(LayoutInflater.from(getContext()), parent, null);

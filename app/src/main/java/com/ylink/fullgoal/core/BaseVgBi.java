@@ -17,7 +17,8 @@ public abstract class BaseVgBi<T extends BaseVgBi, B> extends SurfaceBi<T, B> {
         super.onBindApi(api, bean);
         api.setViewGroupApi(getVg(), vg -> {
             vg.removeAllViews();
-            executePos(getData(bean), (item, position) -> vg.addView(api.getViewControllerApi(
+            executePos(getData(bean), (item, position)
+                    -> vg.addView(api.getViewControllerApi(
                     item.getControllerApi(api), item.getApiType())
                     .onBindViewHolder(item, position)
                     .getRootView()));

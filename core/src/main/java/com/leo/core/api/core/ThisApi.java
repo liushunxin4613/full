@@ -7,11 +7,13 @@ import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IThisApi;
 import com.leo.core.iapi.inter.ITextAction;
+import com.leo.core.other.MMap;
 import com.leo.core.other.ParamType;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -124,6 +126,44 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
                 args[i] = ParamType.get(clz, typeArguments[i]);
             }
             return args;
+        }
+        return null;
+    }
+
+    protected <A> List<A> getData(Class<A> clz, Object obj) {
+        if (clz != null && obj != null) {
+            try {
+                return (List<A>) obj;
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    protected <K, V> Map<K, V> getMap(Class<K> kClz, Class<V> vClz, Object obj) {
+        if (kClz != null && vClz != null && obj != null) {
+            try {
+                return (Map<K, V>) obj;
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    protected <K, V> Map<K, V> map(IObjAction<MMap<K, V>> action) {
+        if (action != null) {
+            MMap<K, V> mMap = new MMap<>();
+            action.execute(mMap.map(new HashMap<>()));
+            return mMap.map();
+        }
+        return null;
+    }
+
+    protected <K, V> Map<K, V> map(Class<K> k, Class<V> v, IObjAction<MMap<K, V>> action) {
+        if (TextUtils.check(k, v, action)) {
+            MMap<K, V> mMap = new MMap<>();
+            action.execute(mMap.map(new HashMap<>()));
+            return mMap.map();
         }
         return null;
     }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.iapi.inter.IObjAction;
@@ -26,12 +27,19 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
     @Override
     public IControllerApi<C, T> controllerApi() {
         if (controllerApi == null) {
-            controllerApi = newControllerApi();
-            if (controllerApi == null) {
-                throw new NullPointerException("newControllerApi 不能为空");
-            }
+            setControllerApi(newControllerApi());
         }
         return controllerApi;
+    }
+
+    @Override
+    public void setControllerApi(IControllerApi<C, T> api) {
+        controllerApi = api;
+        if (controllerApi == null) {
+            throw new NullPointerException("newControllerApi 不能为空");
+        }
+        controllerApi.setRootContainer((ViewGroup) getWindow()
+                .getDecorView().findViewById(android.R.id.content));
     }
 
     @Override
@@ -90,7 +98,8 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return (controllerApi() != null && controllerApi().onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+        return (controllerApi() != null && controllerApi().onKeyDown(keyCode, event))
+                || super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -100,9 +109,11 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        execute(controllerApi(), api -> api.onRequestPermissionsResult(requestCode, permissions, grantResults));
+        execute(controllerApi(), api -> api.onRequestPermissionsResult(requestCode, permissions,
+                grantResults));
     }
 
     @Override
@@ -131,12 +142,12 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
             Class clz = (Class) intent.getSerializableExtra(CONTROLLER_API);
             Class rootViewClz = (Class) intent.getSerializableExtra(ROOT_VIEW_CLZ_API);
             if (clz != null && CoreControllerApi.class.isAssignableFrom(clz)) {
-                controllerApi = (IControllerApi) ObjectUtil.getObject(clz, Object.class, this);
+                setControllerApi((IControllerApi) ObjectUtil.getObject(clz, Object.class, this));
                 ((CoreControllerApi) controllerApi()).remove(clz);
             }
-            if (controllerApi != null && rootViewClz != null &&
+            if (controllerApi() != null && rootViewClz != null &&
                     IControllerApi.class.isAssignableFrom(rootViewClz)) {
-                controllerApi.setRootViewClzApi(rootViewClz);
+                controllerApi().setRootViewClzApi(rootViewClz);
             }
         } catch (Exception ignored) {
             ignored.printStackTrace();

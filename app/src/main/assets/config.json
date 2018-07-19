@@ -1,40 +1,71 @@
 {
-  "download": [
+  "files": [
     {
-      "name": "l_view.xml",
-      "url": "http://111.231.231.226/uploadfile/20180710/l_view.xml"
+      "name": "l_item_v1",
+      "file": "l_item_v1.xml",
+      "version": "3",
+      "state": "1",
+      "hashcode": "f8f9bc94935475ec09d7988385b25d99",
+      "url": "http://111.231.231.226/uploadfile/20180716/20180716203657B2D7I.xml"
+    },
+    {
+      "name": "l_item_v2",
+      "file": "l_item_v2.xml",
+      "version": "2",
+      "state": "1",
+      "hashcode": "6344eb8c27fd0d9107b7b8ac8271a3bb",
+      "url": "http://111.231.231.226/uploadfile/20180716/20180716203855OINBM.xml"
+    },
+    {
+      "name": "l_apply",
+      "file": "l_apply.xml",
+      "version": "2",
+      "state": "1",
+      "hashcode": "481846f2d6138d43966ae15f0064221b",
+      "url": "http://111.231.231.226/uploadfile/20180719/20180719150926N3X38.xml"
     }
   ],
   "view": [
     {
-      "name": "l_view.xml",
-      "data": [
-        {
-          "code": "1",
-          "data": [
-            {
-              "vId": "tv1",
-              "key": "name"
-            },
-            {
-              "vId": "tv2",
-              "key": "detail"
-            },
-            {
-              "vId": "tv3",
-              "key": "time"
-            },
-            {
-              "vId": "tv4",
-              "key": "age"
-            },
-            {
-              "vId": "tv5",
-              "key": "text"
-            }
-          ]
-        }
-      ]
+      "name": "l_item_v1",
+      "xml": "l_item_v1.xml",
+      "path": "val",
+      "params": "{\"type\": \"1\"}",
+      "data": {
+        "name": "tv0",
+        "detail": "tv1",
+        "time": "tv2",
+        "age": "tv3",
+        "text": "tv4"
+      }
+    },
+    {
+      "name": "l_item_v2",
+      "xml": "l_item_v2.xml",
+      "path": "val",
+      "params": "{\"type\": \"2\"}",
+      "data": {
+        "name": "tv0",
+        "code": "tv1",
+        "text": "tv2"
+      }
+    },
+    {
+      "name": "l_apply",
+      "xml": "l_apply.xml",
+      "path": "ApplyContentCompensation",
+      "params": "{\"applyType\": \"001\"}",
+      "data": {
+        "extension3": "tv0",
+        "extension8": "tv1",
+        "extension2": "tv2",
+        "extension7": "tv3",
+        "extension9": "tv4",
+        "extension5": "tv5",
+        "extension6": "tv6",
+        "extension10": "tv7",
+        "extension4": "tv8"
+      }
     }
   ]
 }

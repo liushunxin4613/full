@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.alibaba.fastjson.JSON;
 import com.leo.core.bean.NewFieldBean;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.lang.reflect.Field;
@@ -14,6 +15,15 @@ import java.lang.reflect.Field;
 public class InterceptorBean extends NewFieldBean {
 
     private final static transient boolean OPEN = false;
+
+    private final static transient String FILTER[] = {
+            "/uploadfile/",
+    };
+    private final static transient String PARAMS_FILTER[] = {
+            "Image_upload.action"
+    };
+    private final static transient String RESPONSE_FILTER[] = {
+    };
 
     private boolean update;
     private String url;
@@ -43,6 +53,19 @@ public class InterceptorBean extends NewFieldBean {
     public boolean check() {
         return OPEN && instance != null && !TextUtils.isEmpty(url) &&
                 !url.startsWith(instance.getRootUrl());
+    }
+
+    private boolean isShowEnable(String[]... args) {
+        if (!TextUtils.isEmpty(getUrl()) && !TextUtils.isEmpty(args)) {
+            for (String[] filter : args) {
+                for (String text : filter) {
+                    if(!TextUtils.isEmpty(text) && getUrl().contains(text)){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -99,6 +122,9 @@ public class InterceptorBean extends NewFieldBean {
     }
 
     public String getParams() {
+        if (!isShowEnable(FILTER, PARAMS_FILTER)) {
+            return "params 禁止显示";
+        }
         return params;
     }
 
@@ -107,10 +133,13 @@ public class InterceptorBean extends NewFieldBean {
     }
 
     public String getResponse() {
+        if (!isShowEnable(FILTER, RESPONSE_FILTER)) {
+            return "response 禁止显示";
+        }
         if (response instanceof String) {
             return "\n" + response;
         }
-        return JSON.toJSONString(response);
+        return LogUtil.getLog(response);
     }
 
     public void setResponse(String response) {

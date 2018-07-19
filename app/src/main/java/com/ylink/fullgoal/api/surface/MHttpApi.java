@@ -16,6 +16,7 @@ import java.util.Map;
 import rx.Observable;
 
 import static com.leo.core.util.TextUtils.getHashMap;
+import static com.leo.core.util.TextUtils.getUriParams;
 import static com.ylink.fullgoal.config.Config.SIMULATE_HTTP;
 
 public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
@@ -35,7 +36,7 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
                                           String path, Map<String, String> map, int what, String tag) {
         if (SIMULATE_HTTP) {//拦截并处理代码
             String url = startUrl + path;
-            String params = getParams(map);
+            String params = getUriParams(map);
             LogUtil.ii(this, "url: " + url);
             LogUtil.ii(this, "params: " + params);
             AuxiliaryFactory.getInstance().postSimulate(getHashMap(m -> {
@@ -59,15 +60,6 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
         if (TextUtils.getListData(UrlConfig.LOADING_DIALOGS).contains(path)) {
             showLoading();
         }
-    }
-
-    private String getParams(Map<String, String> map) {
-        if (!TextUtils.isEmpty(map)) {
-            StringBuilder builder = new StringBuilder();
-            execute(map, (key, value) -> builder.append(key).append("=").append(value));
-            return builder.toString();
-        }
-        return null;
     }
 
 }

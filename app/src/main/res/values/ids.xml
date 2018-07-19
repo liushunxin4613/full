@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="tv" type="id" />
     <item name="tv0" type="id" />
     <item name="tv1" type="id" />
     <item name="tv2" type="id" />
@@ -11,7 +10,6 @@
     <item name="tv7" type="id" />
     <item name="tv8" type="id" />
     <item name="tv9" type="id" />
-    <item name="et" type="id" />
     <item name="et0" type="id" />
     <item name="et1" type="id" />
     <item name="et2" type="id" />

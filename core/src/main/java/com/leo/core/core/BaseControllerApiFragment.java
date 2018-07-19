@@ -27,12 +27,17 @@ public class BaseControllerApiFragment<T extends BaseControllerApiFragment, C ex
     @Override
     public IControllerApi<C, T> controllerApi() {
         if(controllerApi == null){
-            controllerApi = newControllerApi();
-            if(controllerApi == null){
-                throw new NullPointerException("newControllerApi 不能为空");
-            }
+            setControllerApi(newControllerApi());
         }
         return controllerApi;
+    }
+
+    @Override
+    public void setControllerApi(IControllerApi<C, T> api) {
+        controllerApi = api;
+        if(controllerApi == null){
+            throw new NullPointerException("newControllerApi 不能为空");
+        }
     }
 
     @Override
@@ -55,8 +60,10 @@ public class BaseControllerApiFragment<T extends BaseControllerApiFragment, C ex
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         if(controllerApi() != null){
+            controllerApi().setRootContainer(container);
             return controllerApi().onCreateView(inflater, container, savedInstanceState);
         }
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -146,10 +153,11 @@ public class BaseControllerApiFragment<T extends BaseControllerApiFragment, C ex
                 Class clz = (Class) getArguments().getSerializable(CONTROLLER_API);
                 Class rootViewClz = (Class) getArguments().getSerializable(ROOT_VIEW_CLZ_API);
                 if (clz != null && CoreControllerApi.class.isAssignableFrom(clz)) {
-                    controllerApi = (IControllerApi) ObjectUtil.getObject(clz, Object.class, this);
+                    setControllerApi((IControllerApi) ObjectUtil.getObject(clz, Object.class, this));
                 }
-                if (rootViewClz != null && controllerApi != null && IControllerApi.class.isAssignableFrom(rootViewClz)) {
-                    controllerApi.setRootViewClzApi(rootViewClz);
+                if (rootViewClz != null && controllerApi() != null && IControllerApi.class
+                        .isAssignableFrom(rootViewClz)) {
+                    controllerApi().setRootViewClzApi(rootViewClz);
                 }
             } catch (Exception ignored) {}
         }

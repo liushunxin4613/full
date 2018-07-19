@@ -43,12 +43,12 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public String getUId() {
-        return vr(getUser(), UserBean::getUserId);
+        return no(vr(getUser(), UserBean::getUserId), "yupeng");
     }
 
     @Override
     public String getUserName() {
-        return vr(getUser(), UserBean::getUsername);
+        return no(vr(getUser(), UserBean::getUsername), "yupeng");
     }
 
     @Override

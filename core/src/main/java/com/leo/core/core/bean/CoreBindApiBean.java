@@ -3,7 +3,6 @@ package com.leo.core.core.bean;
 import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.iapi.main.IViewApiBean;
-import com.leo.core.util.LogUtil;
 
 public abstract class CoreBindApiBean<T extends CoreBindApiBean, A extends IControllerApi,
         AA extends IControllerApi> extends CoreApiBean<T, A, AA> implements IViewApiBean<A, AA, T> {

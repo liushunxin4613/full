@@ -12,6 +12,7 @@ import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApiV1;
+import com.ylink.fullgoal.api.full.FullGeneralControllerApiV2;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.UserBean;
@@ -22,6 +23,7 @@ import com.ylink.fullgoal.fg.StatusFg;
 import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 import static com.ylink.fullgoal.config.Config.COST;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
@@ -73,6 +75,14 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
             addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon2, "费用分摊", (bean, view) -> test()));
         }
         showContentView();
+//        tests();
+    }
+
+    private void tests() {
+        Bundle bundle = new Bundle();
+        bundle.putString(STATE, XG);
+        bundle.putString(SERIAL_NO, "20180710yupeng6000650");
+        startSurfaceActivity(bundle, FullGeneralControllerApi.class);
     }
 
     @Override
@@ -110,8 +120,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
      * 一般费用普票报销
      */
     private void general(String state) {
-//        startSurfaceActivity(FullGeneralControllerApiV1.class, YB, state);
         startSurfaceActivity(FullGeneralControllerApi.class, YB, state);
+//        startSurfaceActivity(FullGeneralControllerApiV1.class, YB, state?);
+//        startSurfaceActivity(FullGeneralControllerApiV2.class, YB, state);
     }
 
     /**

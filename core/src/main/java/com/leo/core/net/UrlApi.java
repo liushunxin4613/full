@@ -6,6 +6,7 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.IUrlAction;
+import com.leo.core.other.MMap;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
@@ -61,6 +62,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         return getThis();
     }
 
+
     @Override
     public T jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
                       String tag) {
@@ -95,6 +97,11 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         return new HashMap<>();
     }
 
+    protected void postParams(String url, String path, IObjAction<MMap<String, Object>> action) {
+        Map<String, String> map = getActionMap(gm(action));
+        observable(url, path, map, WHAT_DEFAULT, LogUtil.getLog(false, map), (a, u, p, m) -> a.post(p, m));
+    }
+
     public void get(String url, String path, String tag) {
         get(url, path, null, WHAT_DEFAULT, tag);
     }
@@ -117,6 +124,19 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
 
     public void post(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
         post(url, path, action, WHAT_DEFAULT, tag);
+    }
+
+    protected IObjAction<Map<String, Object>> g(IObjAction<Map<String, Object>> action) {
+        Map<String, Object> mp;
+        executeNon(mp = new HashMap<>(), action);
+        if (!TextUtils.isEmpty(mp)) {
+            return map -> map.put("REQINFO", LogUtil.getLog(false, mp));
+        }
+        return null;
+    }
+
+    private IObjAction<Map<String, Object>> gm(IObjAction<MMap<String, Object>> action) {
+        return action == null ? null : map -> action.execute(new MMap<String, Object>().map(map));
     }
 
 }

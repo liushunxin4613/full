@@ -1,6 +1,7 @@
 package com.leo.core.util;
 
 import android.annotation.SuppressLint;
+import android.content.res.XmlResourceParser;
 import android.util.SparseArray;
 
 import com.leo.core.iapi.inter.IObjAction;
@@ -9,7 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -563,6 +568,114 @@ public class TextUtils {
             return map;
         }
         return null;
+    }
+
+    public static void onXmlResourceParser(XmlResourceParser parser) {
+        try {
+            int type = parser.getEventType();
+            while (type != parser.END_DOCUMENT) {
+                LogUtil.ee("parser.getDepth()", parser.getDepth());
+                LogUtil.ee("parser.getName()", parser.getName());
+                switch (type) {
+                    case XmlPullParser.START_TAG:
+                        for (int i = 0; i < parser.getAttributeCount(); i++) {
+                            LogUtil.ee(parser.getAttributeName(i), parser.getAttributeValue(i));
+                        }
+                        break;
+                    case XmlPullParser.TEXT:
+                        break;
+                    case XmlPullParser.END_TAG:
+                        break;
+                }
+                type = parser.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <E> boolean contains(Iterable<E> col, E obj) {
+        if (TextUtils.check(col, obj)) {
+            if (col instanceof Collection) {
+                return ((Collection) col).contains(obj);
+            } else {
+                for (E e : col) {
+                    if (equals(e, obj)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static <E> boolean contains(E[] args, E obj) {
+        if (TextUtils.check(args, obj)) {
+            for (E e : args) {
+                if (equals(e, obj)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static String getUriParams(Map<String, ?> map) {
+        if (!TextUtils.isEmpty(map)) {
+            StringBuilder builder = new StringBuilder();
+            RunUtil.execute(map, (key, value) -> builder.append(key)
+                    .append("=").append(LogUtil.getLog(false, value)));
+            return builder.toString();
+        }
+        return null;
+    }
+
+    public static boolean checkParams(Object v1, Object v2) {
+        return v1 == null && v2 == null || v1 != null && v2 != null
+                && TextUtils.equals(String.class, v1.getClass())
+                && TextUtils.equals(String.class, v2.getClass())
+                && mapEquals(TextUtils.toJSONMap((String) v1), TextUtils.toJSONMap((String) v2));
+    }
+
+    public static boolean mapEquals(Map<?, ?> m1, Map<?, ?> m2) {
+        if (m1 == null && m2 == null) {
+            return true;
+        } else if (m1 != null && m2 != null && m1.size() == m2.size()) {
+            for (Map.Entry entry : m1.entrySet()) {
+                if (!TextUtils.equals(entry.getValue(), m2.get(entry.getKey()))) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @SafeVarargs
+    public static <K, V> Map<K, V> getMap(Map<K, V> map, boolean filter,
+                                          K... args) {
+        if (map != null) {
+            Map<K, V> rm = new LinkedHashMap<>();
+            List<K> data = Arrays.asList(args);
+            for (Map.Entry<K, V> entry : map.entrySet()) {
+                if(data.contains(entry.getKey()) == filter){
+                    rm.put(entry.getKey(), entry.getValue());
+                }
+            }
+            return rm;
+        }
+        return null;
+    }
+
+    public static Map<String, Object> getMap(String text, boolean filter, String... args){
+        return getMap(toJSONMap(text), filter, args);
+    }
+
+    public static String toJsonString(String text, boolean filter, String... args){
+        return GsonDecodeUtil.encode(getMap(text, filter, args));
     }
 
 }

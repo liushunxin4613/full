@@ -141,7 +141,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         notifyDataSetChanged();
     }
 
-    protected List<IApiBean> getLineData(List<IApiBean> data) {
+    protected List<IApiBean> getLineData(List<? extends IApiBean> data) {
         if (!TextUtils.isEmpty(data)) {
             List<IApiBean> dat = new ArrayList<>();
             int count = TextUtils.count(data);

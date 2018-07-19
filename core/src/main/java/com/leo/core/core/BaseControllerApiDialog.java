@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.view.ViewGroup;
 
 import com.leo.core.R;
 import com.leo.core.iapi.inter.IObjAction;
@@ -25,16 +26,23 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
     @Override
     public IControllerApi<C, T> controllerApi() {
         if (controllerApi == null) {
-            if (apiClz != null) {
-                controllerApi = (IControllerApi) ObjectUtil.getObject(apiClz, Object.class, this);
-            } else {
-                controllerApi = newControllerApi();
-            }
-            if (controllerApi == null) {
-                throw new NullPointerException("newControllerApi 不能为空");
-            }
+            setControllerApi(newControllerApi());
         }
         return controllerApi;
+    }
+
+    @Override
+    public void setControllerApi(IControllerApi<C, T> api) {
+        if (apiClz != null) {
+            controllerApi = (IControllerApi) ObjectUtil.getObject(apiClz, Object.class, this);
+        } else {
+            controllerApi = api;
+        }
+        if (controllerApi == null) {
+            throw new NullPointerException("newControllerApi 不能为空");
+        }
+        controllerApi.setRootContainer((ViewGroup) getWindow()
+                .getDecorView().findViewById(android.R.id.content));
     }
 
     @Override

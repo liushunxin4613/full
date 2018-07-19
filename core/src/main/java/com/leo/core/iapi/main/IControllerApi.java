@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
@@ -27,6 +28,7 @@ import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IAttachApi;
 
+import java.io.File;
 import java.lang.reflect.Type;
 
 /**
@@ -236,6 +238,13 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     IControllerApi getViewControllerApi();
 
     /**
+     * 返回根视图xml文件
+     *
+     * @return XmlResourceParser
+     */
+    XmlResourceParser getRootXmlResourceParser();
+
+    /**
      * 返回根视图
      *
      * @return 根视图
@@ -255,6 +264,27 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @return Class Api
      */
     Class<? extends IControllerApi> getRootViewClzApi();
+
+    /**
+     * 返回根视图container
+     * @return container
+     */
+    ViewGroup getRootContainer();
+
+    /**
+     * 设置根视图container
+     * @param container container
+     * @return 本身
+     */
+    T setRootContainer(ViewGroup container);
+
+    /**
+     * 返回根视图xml文件
+     *
+     * @param parser parser
+     * @return 本身
+     */
+    T setRootXmlResourceParser(XmlResourceParser parser);
 
     /**
      * 设置根视图Class
@@ -531,6 +561,26 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     boolean onTouchEvent(MotionEvent event);
 
     //自定义的
+
+    /**
+     * 布局
+     */
+    LayoutInflater inflater();
+
+    /**
+     * 获取布局文件
+     * @param dir dir
+     * @param xml xml
+     * @return XmlResourceParser
+     */
+    XmlResourceParser openFileLayoutXmlPullParser(File dir, String xml);
+
+    /**
+     * 获取布局文件
+     * @param xml xml
+     * @return XmlResourceParser
+     */
+    XmlResourceParser openAssetsLayoutXmlPullParser(String xml);
 
     /**
      * 更新数据

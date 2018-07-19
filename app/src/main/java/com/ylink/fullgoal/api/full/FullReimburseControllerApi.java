@@ -31,7 +31,6 @@ import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.core.DoubleController;
-import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
 import com.ylink.fullgoal.fg.ContractPaymentFg;

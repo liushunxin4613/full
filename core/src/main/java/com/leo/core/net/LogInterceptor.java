@@ -39,8 +39,9 @@ public class LogInterceptor implements Interceptor {
         long t1 = System.nanoTime();
         Request request = chain.request();
         String url = request.url().toString();
+        url = decode(url);
         Request.Builder builder = request.newBuilder();
-        builder.url(decode(url));
+        builder.url(url);
         List<String> cookies = getUserDataApi().getStringData(COOKIE);
         if (!TextUtils.isEmpty(cookies)) {
             for (String cookie : cookies) {
@@ -50,6 +51,19 @@ public class LogInterceptor implements Interceptor {
         Buffer req = new Buffer();
         if (request.body() != null)
             request.body().writeTo(req);
+        InterceptorBean bean = new InterceptorBean();
+        bean.setUrl(url);
+        bean.setRequestSize(FileSizeUtil.getFormetFileSize(getLength(request.body())));
+        bean.setMethod(request.method());
+        bean.setRequestHead(request.headers().toString());
+        bean.setContentType(getContentType(request.body()));
+        bean.setParams(printParams(request.body(), req));
+        print("url", bean.getUrl());
+        print("request size", bean.getRequestSize());
+        print("method", bean.getMethod());
+        print("request head", bean.getRequestHead());
+        print("contentType", bean.getContentType());
+        print("params", bean.getParams());
         Response response = chain.proceed(builder.build());
         cookies = response.headers(COOKIE);
         if (!TextUtils.isEmpty(cookies)) {
@@ -58,26 +72,26 @@ public class LogInterceptor implements Interceptor {
         BufferedSource source = response.body().source();
         source.request(Long.MAX_VALUE);
         Buffer res = source.buffer().clone();
-        InterceptorBean bean = new InterceptorBean();
-        bean.setUrl(decode(url));
-        bean.setRequestSize(FileSizeUtil.getFormetFileSize(getLength(request.body())));
-        bean.setResponseSize(FileSizeUtil.getFormetFileSize(getLength(response.body())));
         bean.setCode(String.format("%d", response.code()));
-        bean.setMethod(request.method());
+        bean.setResponseSize(FileSizeUtil.getFormetFileSize(getLength(response.body())));
         bean.setTime(String.format("%.1fms", (System.nanoTime() - t1) / 1e6d));
-        bean.setRequestHead(request.headers().toString());
         bean.setResponseHead(response.headers().toString());
-        bean.setContentType(getContentType(request.body()));
-        bean.setParams(printParams(request.body(), req));
         bean.setResponse(decode(res.readUtf8()));
+        print("code", bean.getCode());
+        print("response size", bean.getResponseSize());
+        print("time", bean.getTime());
+        print("response head", bean.getResponseHead());
+        print("response", bean.getResponse());
         bean.completed();
         req.close();
         res.close();
-        print(bean);
         return response;
     }
 
     private String printParams(RequestBody body, Buffer req) {
+        if (body instanceof MRequestBody) {
+            body = ((MRequestBody) body).getRequestBody();
+        }
         if (body instanceof FormBody) {
             FormBody formBody = (FormBody) body;
             StringBuilder builder = new StringBuilder();
@@ -143,7 +157,7 @@ public class LogInterceptor implements Interceptor {
 
     private void print(String key, String value) {
         if (!TextUtils.isEmpty(key)) {
-            if(TextUtils.count(value) > 10000){
+            if (TextUtils.count(value) > 10000) {
                 value = value.substring(0, 10000);
             }
             LogUtil.ii(this, key + ": " + value);
@@ -152,7 +166,6 @@ public class LogInterceptor implements Interceptor {
 
     private void print(InterceptorBean bean) {
         if (bean != null && !bean.check()) {
-            print("url", bean.getUrl());
             print("code", bean.getCode());
             print("method", bean.getMethod());
             print("time", bean.getTime());

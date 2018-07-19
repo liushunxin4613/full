@@ -11,4 +11,7 @@ import java.util.Stack;
 public interface IActivityLifecycleCallbacksApi extends IApi, Application.ActivityLifecycleCallbacks {
     Stack<Activity> getActivityStack();
     <A extends Activity> void remove(Class<A> clz, IObjAction<A> action);
+    int getCount();
+    Activity getItem(int position);
+    void finishActivity(Object obj);
 }

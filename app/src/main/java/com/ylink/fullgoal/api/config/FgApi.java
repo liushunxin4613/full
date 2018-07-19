@@ -2,7 +2,6 @@ package com.ylink.fullgoal.api.config;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.bean.Uri;
-import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.net.UrlApi;
 import com.leo.core.util.Base64Util;
@@ -10,7 +9,6 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
@@ -283,30 +281,46 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
         }
     }
 
-    // >>> ****************************** 2018-06-09 19:25 ****************************** >>>
+    // >>> ****************************** 2018-07-09 19:25 ****************************** >>>
 
-    public void download(String url) {
-        Uri uri = new Uri(url);
-        if (uri.check()) {
-            get(uri.getStart(), uri.getContent() + uri.getEnd(), uri.getEnd());
+    public void download(String url, String name) {
+        if (TextUtils.check(url, name)) {
+            Uri uri = new Uri(url);
+            if (uri.check()) {
+                get(uri.getStart(), uri.getContent() + uri.getEnd(), name);
+            }
         }
     }
 
-    public void queryConfig(){
+    public void queryConfig() {
         post("http://111.231.231.226/", "app/fullApp/queryConfig", g(map -> map.put("channel", "android")));
     }
 
-    //私有的
-
-    private IObjAction<Map<String, Object>> g(IObjAction<Map<String, Object>> action) {
-        Map<String, Object> mp;
-        executeNon(mp = new HashMap<>(), action);
-        if (!TextUtils.isEmpty(mp)) {
-            Map<String, Object> m = TextUtils.copy(mp, true, "stream");
-            api().ii(m);
-            return map -> map.put("REQINFO", api().encode(mp));
+    public void val(String type) {
+        if (!TextUtils.isEmpty(type)) {
+            postParams("http://111.231.231.226/app/test/", "val", map -> map.put("type", type));
         }
-        return null;
+    }
+
+    // >>> ****************************** 2018-07-18 16:10 ****************************** >>>
+
+    public void queryApply(Map<String, Object> jsonMap) {
+        if (TextUtils.check(jsonMap)) {
+            postParams("http://111.231.231.226/app/fullApp/", "ApplyCompensation",
+                    map -> map.put("departmentCode", jsonMap.get("departmentCode"))
+                            .put("reimbursement", jsonMap.get("reimbursement"))
+                            .put("costIndexCode", jsonMap.get("costIndexCode")));
+        }
+    }
+
+    public void queryApplyContent(Map<String, Object> jsonMap) {
+        if (TextUtils.check(jsonMap)) {
+            postParams("http://111.231.231.226/app/fullApp/", "ApplyContentCompensation",
+                    map -> map.put("departmentCode", jsonMap.get("departmentCode"))
+                            .put("reimbursement", jsonMap.get("reimbursement"))
+                            .put("costIndexCode", jsonMap.get("costIndexCode"))
+                            .put("applyType", jsonMap.get("applyType")));
+        }
     }
 
 }

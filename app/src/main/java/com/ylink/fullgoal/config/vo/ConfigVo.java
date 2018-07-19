@@ -4,13 +4,13 @@ import java.util.List;
 
 public class ConfigVo extends BaseVo {
 
-    private List<String> configList;
+    private List<ConfigFileVo> configList;
 
-    public List<String> getConfigList() {
+    public List<ConfigFileVo> getConfigList() {
         return configList;
     }
 
-    public void setConfigList(List<String> configList) {
+    public void setConfigList(List<ConfigFileVo> configList) {
         this.configList = configList;
     }
 

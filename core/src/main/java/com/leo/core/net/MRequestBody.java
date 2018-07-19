@@ -25,6 +25,10 @@ public class MRequestBody extends RequestBody implements IProgressListener {
         this.mListener = listener;
     }
 
+    public RequestBody getRequestBody(){
+        return mRequestBody;
+    }
+
     @Override
     public MediaType contentType() {
         return mRequestBody.contentType();

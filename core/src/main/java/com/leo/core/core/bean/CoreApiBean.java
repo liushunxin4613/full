@@ -1,5 +1,6 @@
 package com.leo.core.core.bean;
 
+import android.content.res.XmlResourceParser;
 import android.view.View;
 
 import com.leo.core.api.core.ThisApi;
@@ -20,12 +21,28 @@ public abstract class CoreApiBean<T extends CoreApiBean, A extends IControllerAp
     private transient boolean enable = true;
     private transient String keyword;
     private transient String filter;
+    private transient XmlResourceParser parser;
 
     @Override
     public abstract A getControllerApi(AA api);
 
     @Override
     public abstract Integer getApiType();
+
+    @Override
+    public boolean checkApi() {
+        return getApiXmlResourceParser() != null || getApiType() != null;
+    }
+
+    @Override
+    public XmlResourceParser getApiXmlResourceParser() {
+        return parser;
+    }
+
+    @Override
+    public void setApiXmlResourceParser(XmlResourceParser parser) {
+        this.parser = parser;
+    }
 
     @Override
     public Object getApiId() {

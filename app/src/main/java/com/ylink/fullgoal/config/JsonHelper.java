@@ -2,10 +2,11 @@ package com.ylink.fullgoal.config;
 
 import com.leo.core.api.api.VsApi;
 import com.leo.core.api.inter.ClzAction;
-import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.util.TextUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class JsonHelper extends VsApi<JsonHelper> {
 
     private Node root;
     private List<Node> data;
-    private List<IObjAction> actionData;
+    private List<IMapAction<Map, Object>> actionData;
 
     public static JsonHelper newBuilder() {
         return new JsonHelper();
@@ -32,7 +33,7 @@ public class JsonHelper extends VsApi<JsonHelper> {
         return data;
     }
 
-    private List<IObjAction> getActionData() {
+    private List<IMapAction<Map, Object>> getActionData() {
         return actionData;
     }
 
@@ -44,23 +45,25 @@ public class JsonHelper extends VsApi<JsonHelper> {
         return this;
     }
 
-    public <A> JsonHelper addChild(Class<A> clz, IObjAction<A> action, Node... args) {
+    public <A> JsonHelper addChild(Class<A> clz, IMapAction<Map, A> action, Node... args) {
         if (getRoot() == null) {
             throw new NullPointerException("setRoot()不能为空");
         }
         Node node = node(clz, action, args);
         if (node != null) {
             getRoot().addEndChild(node);
+        } else {
+            getRoot().setEndAction(clz, action);
         }
         return this;
     }
 
-    public JsonHelper addChild(IObjAction<Object> action, Node... args) {
+    public JsonHelper addChild(IMapAction<Map, Object> action, Node... args) {
         addChild(Object.class, action, args);
         return this;
     }
 
-    public <A> JsonHelper add(Class<A> clz, IObjAction<A> action, Node... args) {
+    public <A> JsonHelper add(Class<A> clz, IMapAction<Map, A> action, Node... args) {
         if (action != null) {
             if (!TextUtils.isEmpty(args)) {
                 Node node = node(clz, action, args);
@@ -68,13 +71,13 @@ public class JsonHelper extends VsApi<JsonHelper> {
                     getData().add(node);
                 }
             } else {
-                getActionData().add(action);
+                getActionData().add((IMapAction<Map, Object>) action);
             }
         }
         return this;
     }
 
-    public JsonHelper add(IObjAction<Object> action, Node... args) {
+    public JsonHelper add(IMapAction<Map, Object> action, Node... args) {
         add(Object.class, action, args);
         return this;
     }
@@ -85,14 +88,10 @@ public class JsonHelper extends VsApi<JsonHelper> {
     }
 
     private void executeJson(Object obj) {
-        execute(getActionData(), a -> a.execute(obj));
+        execute(getActionData(), a -> a.execute(new HashMap(), obj));
         if (obj instanceof Map) {
-            execute(getData(), node -> {
-                try {
-                    onNode(node, (Map<String, Object>) obj);
-                } catch (Exception ignored) {
-                }
-            });
+            execute(getData(), node -> onNode(node,
+                    getMap(String.class, Object.class, obj)));
         }
     }
 
@@ -100,33 +99,37 @@ public class JsonHelper extends VsApi<JsonHelper> {
         if (node != null && map != null && ((node.getReturnAction() != null
                 && node.getReturnAction().execute(map))
                 || node.getReturnAction() == null)) {
+//            ii("isEmpty data", !TextUtils.isEmpty(node.getChildData()));
+//            ii("node.getAction() != null", node.getAction() != null);
+//            ii("map.get(node.getName())", map.get(node.getName()));
+            Object obj = map.get(node.getName());
             if (!TextUtils.isEmpty(node.getChildData())) {
-                Object obj = map.get(node.getName());
                 if (obj instanceof Map) {
-                    try {
-                        Map<String, Object> childMap = (Map<String, Object>) obj;
-                        execute(node.getChildData(), child -> onNode(child, childMap));
-                    } catch (Exception ignored) {
-                    }
+                    execute(node.getChildData(), child -> onNode(child,
+                            getMap(String.class, Object.class, obj)));
                 } else if (obj instanceof List) {
                     execute((List) obj, item -> {
                         if (item instanceof Map) {
-                            try {
-                                Map<String, Object> childMap = (Map<String, Object>) item;
-                                execute(node.getChildData(), child -> onNode(child, childMap));
-                            } catch (Exception ignored) {
-                            }
+                            execute(node.getChildData(), child -> onNode(child,
+                                    getMap(String.class, Object.class, item)));
                         }
                     });
                 }
             } else if (node.getAction() != null) {
-                node.getAction().execute(map.get(node.getName()));
+                node.getAction().execute(map, obj);
+                if(obj instanceof List){
+                    execute((List) obj, item -> {
+                        if (item instanceof Map) {
+                            node.getAction().execute(null, item);
+                        }
+                    });
+                }
             }
         }
     }
 
-    private <A> Node node(Class<A> clz, IObjAction<A> action, Node... args) {
-        if (action != null && !TextUtils.isEmpty(args)) {
+    private <A> Node node(Class<A> clz, IMapAction<Map, A> action, Node... args) {
+        if (TextUtils.check(clz, action, args)) {
             Node end = args[args.length - 1];
             if (end != null) {
                 end.setAction(new ClzAction(clz, action));
@@ -146,6 +149,8 @@ public class JsonHelper extends VsApi<JsonHelper> {
                 } else {
                     if (tNode != null) {
                         node.addChild(tNode);
+                    } else {
+                        node.setEnd(node);
                     }
                     tNode = node;
                 }

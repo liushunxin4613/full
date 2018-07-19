@@ -3,11 +3,9 @@ package com.leo.core.api.api;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.GsonDecodeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +47,26 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
     }
 
     @Override
+    public int getCount() {
+        return getActivityStack().size();
+    }
+
+    @Override
+    public Activity getItem(int position) {
+        if (position >= 0 && position < getCount()) {
+            return getActivityStack().get(position);
+        }
+        return null;
+    }
+
+    @Override
+    public void finishActivity(Object obj) {
+        vs(getItem(getCount() - 2), Activity::getIntent, in
+                -> in.putExtra(FINISH, GsonDecodeUtil.encode(obj)));
+        vs(getItem(getCount() - 1), Activity::finish);
+    }
+
+    @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         getActivityStack().add(activity);
     }
@@ -81,22 +99,6 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
     @Override
     public void onActivityDestroyed(Activity activity) {
         getActivityStack().remove(activity);
-        if (activity instanceof BaseControllerApiActivity) {
-            onDestroyedActivity((BaseControllerApiActivity) activity);
-        }
-    }
-
-    private void onDestroyedActivity(BaseControllerApiActivity apiActivity) {
-        IControllerApi api = vr(apiActivity, BaseControllerApiActivity::controllerApi);
-        if(api instanceof CoreControllerApi){
-            CoreControllerApi coreApi = (CoreControllerApi) api;
-            String name = vr(coreApi, IControllerApi::getClass, Class::getName);
-            String finish = coreApi.getString(name);
-            if(getActivityStack().size() > 0){
-                executeNon(getActivityStack().peek(), activity
-                        -> activity.getIntent().putExtra(FINISH, finish));
-            }
-        }
     }
 
 }

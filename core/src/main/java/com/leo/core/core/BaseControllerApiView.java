@@ -15,7 +15,6 @@ import com.leo.core.R;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
@@ -38,16 +37,22 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
     @Override
     public IControllerApi<C, T> controllerApi() {
         if (controllerApi == null) {
-            if (apiClz != null) {
-                controllerApi = (IControllerApi) ObjectUtil.getObject(apiClz, Object.class, this);
-            } else {
-                controllerApi = newControllerApi();
-            }
-            if (controllerApi == null) {
-                throw new NullPointerException("newControllerApi 不能为空");
-            }
+            setControllerApi(newControllerApi());
         }
         return controllerApi;
+    }
+
+    @Override
+    public void setControllerApi(IControllerApi<C, T> api) {
+        if (apiClz != null) {
+            controllerApi = (IControllerApi) ObjectUtil.getObject(apiClz, Object.class, this);
+        } else {
+            controllerApi = api;
+        }
+        if (controllerApi == null) {
+            throw new NullPointerException("newControllerApi 不能为空");
+        }
+        controllerApi.setRootContainer(this);
     }
 
     @Override
@@ -62,30 +67,23 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
                 String className = a.getString(R.styleable.BaseControllerApiView_api);
                 Integer layoutResId = a.getResourceId(R.styleable.BaseControllerApiView_layout, 0);
                 layoutResId = layoutResId == 0 ? null : layoutResId;
-                this.apiClz = ObjectUtil.getClass(className);
-                init((View) null, layoutResId);
+                init(ObjectUtil.getClass(className), layoutResId);
             } finally {
                 a.recycle();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void init(View rootView, Integer layoutResId) {
-        if (controllerApi() != null) {
-            controllerApi().setRootView(rootView);
-            controllerApi().setRootViewResId(layoutResId);
-            initControllerApi();
-        }
-    }
-
-    private void initControllerApi(){
+    private void initControllerApi() {
         if (controllerApi() != null) {
             Bundle savedInstanceState = new Bundle();
-            controllerApi().onCreateView(LayoutInflater.from(getContext()), this, savedInstanceState);
+            controllerApi().onCreateView(LayoutInflater.from(getContext()), this,
+                    savedInstanceState);
             if (attrs != null && controllerApi().getStyleableRes() != null) {
-                TypedArray a = getContext().obtainStyledAttributes(attrs, controllerApi().getStyleableRes());
+                TypedArray a = getContext().obtainStyledAttributes(attrs, controllerApi()
+                        .getStyleableRes());
                 try {
                     controllerApi().initStyleable(a);
                 } finally {
@@ -98,13 +96,23 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
 
     /**
      * 自定义初始化
+     */
+    public T init(Class<? extends IControllerApi> clz) {
+        this.apiClz = clz;
+        initControllerApi();
+        return (T) this;
+    }
+
+    /**
+     * 自定义初始化
      *
      * @param clz         clz
      * @param layoutResId layoutResId
      */
     public T init(Class<? extends IControllerApi> clz, Integer layoutResId) {
         this.apiClz = clz;
-        init((View) null, layoutResId);
+        controllerApi().setRootViewResId(layoutResId);
+        initControllerApi();
         return (T) this;
     }
 
@@ -116,13 +124,14 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
      */
     public T init(Class<? extends IControllerApi> clz, View rootView) {
         this.apiClz = clz;
-        init(rootView, null);
+        controllerApi().setRootView(rootView);
+        initControllerApi();
         return (T) this;
     }
 
-    public T init(IControllerApi controllerApi, Integer layoutResId){
-        this.controllerApi = controllerApi;
-        if(controllerApi() != null){
+    public T init(IControllerApi controllerApi, Integer layoutResId) {
+        setControllerApi(controllerApi);
+        if (controllerApi() != null) {
             controllerApi().setRootViewResId(layoutResId);
             controllerApi().initController((T) this);
         }
@@ -132,7 +141,8 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return (controllerApi() != null && controllerApi().onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+        return (controllerApi() != null && controllerApi().onKeyDown(keyCode, event))
+                || super.onKeyDown(keyCode, event);
     }
 
     @Override

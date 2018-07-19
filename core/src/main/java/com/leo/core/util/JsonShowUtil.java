@@ -28,7 +28,12 @@ public class JsonShowUtil {
                         break;
                 }
             }
-            return buffer.toString();
+            String show = buffer.toString();
+            show = show.replaceAll("\\\\/", "/");
+            show = show.replaceAll(": //", "://");
+            show = show.replaceAll("\"\\{\\s+", "\"{");
+            show = show.replaceAll("\\s+\\}\"", "}\"");
+            return show;
         }
         return null;
     }

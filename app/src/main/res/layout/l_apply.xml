@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon_iv"
+        android:layout_width="@dimen/x72"
+        android:layout_height="@dimen/x72"
+        android:src="@mipmap/apply"
+        android:tag="icon_iv"
+        tools:ignore="ContentDescription,HardcodedText" />
+
+    <TextView
+        android:id="@id/tv0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/icon_iv"
+        android:layout_toRightOf="@+id/icon_iv"
+        android:maxLines="1"
+        android:tag="tv0"
+        android:textColor="#808000"
+        android:textSize="@dimen/tv2"
+        tools:text="IT技术培训" />
+
+    <TextView
+        android:id="@id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv0"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="@dimen/y8"
+        android:layout_toEndOf="@+id/icon_iv"
+        android:layout_toRightOf="@+id/icon_iv"
+        android:maxLines="1"
+        android:tag="tv1"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:text="金额: 2000.00" />
+
+    <TextView
+        android:id="@id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:maxLines="1"
+        android:tag="tv2"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap"
+        tools:text="FG-201807001" />
+
+    <TextView
+        android:id="@id/tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv0"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/x50"
+        android:paddingStart="@dimen/x50"
+        android:tag="tv3"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap,RtlSymmetry"
+        tools:text="经办人: 张三" />
+
+    <TextView
+        android:id="@id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv0"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:tag="tv3"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap"
+        tools:text="2018-07-01" />
+
+    <TextView
+        android:id="@id/tv5"
+        android:layout_width="@dimen/x240"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon_iv"
+        android:layout_marginTop="@dimen/y8"
+        android:background="@drawable/l_kuang_shape"
+        android:gravity="center"
+        android:maxLines="1"
+        android:tag="tv4"
+        android:textColor="#68ABFA"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap"
+        tools:text="技术培训" />
+
+    <TextView
+        android:id="@id/tv6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/y16"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/x50"
+        android:paddingStart="@dimen/x50"
+        android:tag="tv5"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap,RtlSymmetry"
+        tools:text="申请人: 欧燕" />
+
+    <TextView
+        android:id="@id/tv7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv3"
+        android:layout_marginTop="@dimen/y16"
+        android:maxLines="1"
+        android:tag="tv6"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap"
+        tools:text="2018-07-02止" />
+
+    <TextView
+        android:id="@id/tv8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv5"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:tag="tv7"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap"
+        tools:text="培训内容: 环境搭建" />
+
+</RelativeLayout>

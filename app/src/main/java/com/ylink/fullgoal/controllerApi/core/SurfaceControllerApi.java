@@ -151,7 +151,8 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     public <B extends IControllerApi> B getViewControllerApi(Class<B> clz) {
-        return getViewControllerApi(clz, (Integer) null);
+        return clz == null ? null : (B) new BaseControllerApiView(getContext()).init(clz)
+                .controllerApi();
     }
 
     public <B extends IControllerApi> B getViewControllerApi(IControllerApi api, Integer layoutResId) {

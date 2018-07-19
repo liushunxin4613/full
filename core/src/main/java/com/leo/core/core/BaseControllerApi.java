@@ -229,7 +229,12 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public IActivityLifecycleCallbacksApi newActivityLifecycleApi() {
+    public ActivityLifecycleCallbacksApi activityLifecycleApi() {
+        return (ActivityLifecycleCallbacksApi) super.activityLifecycleApi();
+    }
+
+    @Override
+    public ActivityLifecycleCallbacksApi newActivityLifecycleApi() {
         return new ActivityLifecycleCallbacksApi();
     }
 
