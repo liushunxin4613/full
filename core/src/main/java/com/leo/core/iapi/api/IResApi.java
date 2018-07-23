@@ -21,4 +21,8 @@ public interface IResApi<T extends IResApi> extends IBindContextApi<T> {
 
     Drawable getDrawable(@DrawableRes int res);
 
+    int getIdentifier(String name, String defType);
+
+    int getIdentifier(String name, String defType, String defPackage);
+
 }

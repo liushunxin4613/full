@@ -310,6 +310,10 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
                     map -> map.put("departmentCode", jsonMap.get("departmentCode"))
                             .put("reimbursement", jsonMap.get("reimbursement"))
                             .put("costIndexCode", jsonMap.get("costIndexCode")));
+            /*postParams("http://111.231.231.226/app/fullApp/", "ApplyCompensation",
+                    map -> map.put("departmentCode", jsonMap.get("departmentCode"))
+                            .put("reimbursement", jsonMap.get("reimbursement"))
+                            .put("costIndexCode", jsonMap.get("costIndexCode")));*/
         }
     }
 

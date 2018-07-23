@@ -1,7 +1,9 @@
 package com.leo.core.core;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -20,7 +22,9 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
     private IControllerApi superControllerApi;
     private IControllerApi controllerApi;
     private DataApi<DataApi, IApiBean> dataApi;
+    private SparseArray<Integer> sparseArray;
 
+    @SuppressLint("UseSparseArrays")
     public BaseRecycleControllerApiAdapter(IControllerApi superControllerApi) {
         if (superControllerApi == null) {
             throw new NullPointerException("superControllerApi 不能为空");
@@ -38,6 +42,7 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
             }
             return false;
         });
+        sparseArray = new SparseArray<>();
     }
 
     @Override
@@ -81,13 +86,19 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        IApiBean bean = getItem(position);
+        if (bean == null) {
+            throw new NullPointerException("bean不能为空");
+        }
+        int viewType = bean.hashCode();
+        sparseArray.put(viewType, position);
+        return viewType;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-        IApiBean bean = getItem(position);
+        IApiBean bean = getItem(sparseArray.get(viewType));
         if (bean == null) {
             throw new NullPointerException("bean不能为空");
         }

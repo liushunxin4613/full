@@ -14,6 +14,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.bean.VgBean;
+import com.ylink.fullgoal.bean.VgBeanD1;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
 import com.ylink.fullgoal.core.BaseBiBean;
 
@@ -218,9 +219,16 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     //私有的
 
-    public T addSmallVgBean(BaseBiBean... args) {
+    protected T addSmallVgBean(BaseBiBean... args) {
         if (!TextUtils.isEmpty(args)) {
             add(new VgBean(TextUtils.getListData(args), LineBean.SMALL));
+        }
+        return getThis();
+    }
+
+    protected T addSmallVgBeanD1(BaseBiBean... args) {
+        if (!TextUtils.isEmpty(args)) {
+            add(new VgBeanD1(TextUtils.getListData(args), LineBean.SMALL));
         }
         return getThis();
     }

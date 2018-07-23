@@ -15,6 +15,7 @@ import com.leo.core.R;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
 
@@ -159,7 +160,12 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
+        try {
+            super.onLayout(changed, left, top, right, bottom);
+        } catch (Exception e) {
+            LogUtil.ee(this, "controllerApi: " + controllerApi().getClass().getName());
+            e.printStackTrace();
+        }
         execute(controllerApi(), api -> api.onLayout(changed, left, top, right, bottom));
     }
 

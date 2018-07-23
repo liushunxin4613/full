@@ -20,13 +20,11 @@ import com.leo.core.api.api.VsApi;
 import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.api.ObjectApi;
 import com.leo.core.api.api.PicassoLoadImageApi;
-import com.leo.core.api.api.StartApi;
 import com.leo.core.api.api.SubjoinApi;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HttpApi;
 import com.leo.core.api.main.ShowApi;
 import com.leo.core.factory.ActionApiFactory;
-import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.IDirApi;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.api.IVosApi;
@@ -121,16 +119,6 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     @Override
     public ActionApiFactory newActionApi() {
         return ActionApiFactory.getInstance();
-    }
-
-    @Override
-    public StartApi startApi() {
-        return (StartApi) super.startApi();
-    }
-
-    @Override
-    public StartApi newStartApi() {
-        return new StartApi(getThis());
     }
 
     @Override

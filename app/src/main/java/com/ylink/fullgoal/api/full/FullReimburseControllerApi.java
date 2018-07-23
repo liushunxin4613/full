@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.full;
 
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -171,21 +170,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                         vos(DVo::getCostIndex, obj -> obj.update(money));
                         Map<String, Object> map = getSubmitMap();
                         if (!TextUtils.isEmpty(map)) {
-                            /*String share = vor(DVo::getCostIndex, CostIndexController::getDB,
-                                    CostFg::getShare);
-                            if (TextUtils.equals(share, "无需分摊")) {
-                                api().submitReimburse(map);
-                            } else {
-                                Bundle os = new Bundle();
-                                os.putString(DATA_QR, encode(map));
-                                startSurfaceActivity(os, FullCostIndexControllerApi.class);
-                            }*/
                             if (vor(DVo::getSbumitFlag, SbumitFlagController::isOpen)) {
                                 api().submitReimburse(map);
                             } else {
-                                Bundle os = new Bundle();
-                                os.putString(DATA_QR, encode(map));
-                                startSurfaceActivity(os, FullCostIndexControllerApi.class);
+                                routeApi().costIndex(m -> m.put(DATA_QR, encode(map)));
                             }
                         }
                     });
@@ -436,8 +424,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * @param vo   vo
      */
     private void onGridPhotoClick(List<ImageVo> data, ImageVo vo) {
-        executeNon(vo, obj -> startSurfaceActivity(getBundle(data, vo,
-                new Bol(isNoneInitiateEnable())), FullBillControllerApi.class));
+        executeNon(vo, obj -> routeApi().bill(data, vo, new Bol(isNoneInitiateEnable())));
     }
 
     /**

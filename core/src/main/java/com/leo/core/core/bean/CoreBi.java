@@ -1,12 +1,12 @@
 package com.leo.core.core.bean;
 
-import com.leo.core.api.core.ThisApi;
+import com.leo.core.api.api.VsApi;
 import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.iapi.main.IControllerApi;
 
 import butterknife.ButterKnife;
 
-public abstract class CoreBi<T extends CoreBi, B, A extends IControllerApi> extends ThisApi<T> implements
+public abstract class CoreBi<T extends CoreBi, B, A extends IControllerApi> extends VsApi<T> implements
         IBindControllerApi<A, B> {
 
     private B bean;

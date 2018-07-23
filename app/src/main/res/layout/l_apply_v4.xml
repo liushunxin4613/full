@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon_iv"
+        android:layout_width="@dimen/x72"
+        android:layout_height="@dimen/x72"
+        android:src="@mipmap/apply"
+        android:tag="icon_iv"
+        tools:ignore="ContentDescription,HardcodedText" />
+
+    <TextView
+        android:id="@id/tv0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/icon_iv"
+        android:layout_toRightOf="@+id/icon_iv"
+        android:maxLines="1"
+        android:tag="tv0"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:text="流水号 FG-2018-01-22" />
+
+    <TextView
+        android:id="@id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv0"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="@dimen/y8"
+        android:layout_toEndOf="@+id/icon_iv"
+        android:layout_toRightOf="@+id/icon_iv"
+        android:maxLines="1"
+        android:tag="tv1"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:text="张三" />
+
+    <TextView
+        android:id="@id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv0"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/x50"
+        android:paddingStart="@dimen/x50"
+        android:tag="tv3"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap,RtlSymmetry"
+        tools:text="信息技术部" />
+
+    <TextView
+        android:id="@id/tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv0"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:tag="tv3"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RelativeOverlap"
+        tools:text="2018-02-21 发起" />
+
+    <LinearLayout
+        android:id="@+id/vg0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon_iv"
+        android:layout_marginTop="@dimen/y8"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@id/tv4"
+            android:layout_width="@dimen/x180"
+            android:layout_height="wrap_content"
+            android:background="@drawable/l_kuang_shape"
+            android:gravity="center"
+            android:maxLines="1"
+            android:tag="tv0"
+            android:text="广告小礼品"
+            android:textColor="#68ABFA"
+            android:textSize="@dimen/tv2"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@id/tv5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/x20"
+            android:tag="tv0"
+            android:textColor="#000000"
+            android:textSize="@dimen/tv2"
+            tools:ignore="RtlHardcoded,RtlSymmetry"
+            tools:text="￥100.00" />
+
+        <TextView
+            android:id="@id/tv6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_marginStart="@dimen/x40"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:tag="tv0"
+            android:textColor="#000000"
+            android:textSize="@dimen/tv2"
+            tools:ignore="HardcodedText"
+            tools:text="100件" />
+
+        <TextView
+            android:id="@id/tv7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="right"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/x20"
+            android:tag="tv0"
+            android:textColor="#000000"
+            android:textSize="@dimen/tv2"
+            tools:ignore="RtlHardcoded,RtlSymmetry"
+            tools:text="2018-02-21 入库" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@id/tv8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vg0"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:tag="tv7"
+        android:text="用途"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="HardcodedText,RelativeOverlap" />
+
+    <TextView
+        android:id="@id/tv9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vg0"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginStart="@dimen/x20"
+        android:layout_marginTop="@dimen/y8"
+        android:layout_toEndOf="@id/tv8"
+        android:layout_toRightOf="@id/tv8"
+        android:maxLines="1"
+        android:tag="tv7"
+        android:textColor="#FF8040"
+        android:textSize="@dimen/tv2"
+        tools:ignore="HardcodedText,RelativeOverlap"
+        tools:text="员工福利" />
+
+</RelativeLayout>

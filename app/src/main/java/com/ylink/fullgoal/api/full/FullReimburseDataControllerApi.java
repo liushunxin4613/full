@@ -2,7 +2,6 @@ package com.ylink.fullgoal.api.full;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
@@ -13,7 +12,6 @@ import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
-import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -56,8 +54,6 @@ import static com.ylink.fullgoal.config.Config.D_DATE4;
 import static com.ylink.fullgoal.config.Config.D_DATE5;
 import static com.ylink.fullgoal.config.Config.D_DATE6;
 import static com.ylink.fullgoal.config.Config.FULL_STATUS;
-import static com.ylink.fullgoal.config.Config.SERIAL_NO;
-import static com.ylink.fullgoal.config.Config.STATE;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB;
 
@@ -166,12 +162,10 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                             && !TextUtils.isEmpty(obj.getBillType())) {
                         switch (obj.getBillType()) {
                             case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB://一般报销
-                                startSurfaceActivity(FullGeneralControllerApi.class,
-                                        status, obj.getSerialNo());
+                                routeApi().general(status, obj.getSerialNo());
                                 break;
                             case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC://出差报销
-                                startSurfaceActivity(FullEvectionControllerApi.class,
-                                        status, obj.getSerialNo());
+                                routeApi().evection(status, obj.getSerialNo());
                                 break;
                         }
                     }
@@ -180,14 +174,6 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 api.showNullView(true);
             }
         }
-    }
-
-    private void startSurfaceActivity(Class<? extends IControllerApi> clz,
-                                      String state, String serialNo) {
-        Bundle bundle = new Bundle();
-        bundle.putString(STATE, state);
-        bundle.putString(SERIAL_NO, serialNo);
-        startSurfaceActivity(bundle, clz);
     }
 
     private RecycleControllerApi getRecycleControllerApi(String name) {

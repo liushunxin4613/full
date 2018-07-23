@@ -10,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.core.BaseControllerApiDialog;
-import com.leo.core.core.BaseControllerApiFragment;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IMapAction;
@@ -19,21 +18,16 @@ import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.net.Exceptions;
-import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.leo.core.util.ToastUtil;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.api.full.FullSearchControllerApi;
 import com.ylink.fullgoal.api.surface.LoadingDialogControllerApi;
-import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.fg.DataFg;
-import com.ylink.fullgoal.main.SurfaceActivity;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -67,7 +61,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    public void dismissLoading() {
+    private void dismissLoading() {
         executeNon(getDialogApi(), CoreControllerApi::dismiss);
     }
 
@@ -103,41 +97,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     @Override
     public BaseControllerApiDialog getDialog() {
         return super.getDialog();
-    }
-
-    @SafeVarargs
-    public final T startSurfaceActivity(Class<? extends IControllerApi>... args) {
-        startActivity(SurfaceActivity.class, args);
-        return getThis();
-    }
-
-    @SafeVarargs
-    public final T startFinishSurfaceActivity(Class<? extends IControllerApi>... args) {
-        startFinishActivity(SurfaceActivity.class, args);
-        return getThis();
-    }
-
-
-    @SafeVarargs
-    public final T startSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
-        startActivity(SurfaceActivity.class, bundle, args);
-        return getThis();
-    }
-
-    @SafeVarargs
-    public final T startFinishSurfaceActivity(Bundle bundle, Class<? extends IControllerApi>... args) {
-        startFinishActivity(SurfaceActivity.class, bundle, args);
-        return getThis();
-    }
-
-    @SafeVarargs
-    public final BaseControllerApiFragment getFragment(Class<? extends IControllerApi>... args) {
-        return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, args);
-    }
-
-    @SafeVarargs
-    public final BaseControllerApiFragment getFragment(Bundle bundle, Class<? extends IControllerApi>... args) {
-        return (BaseControllerApiFragment) getFragment(BaseControllerApiFragment.class, bundle, args);
     }
 
     public <B extends IControllerApi> B getViewControllerApi(Class<B> clz, Integer layoutResId) {
@@ -186,15 +145,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected Bundle getBundle(Object... args) {
-        if (!TextUtils.isEmpty(args)) {
-            Bundle bundle = new Bundle();
-            execute(args, obj -> bundle.putString(getObjectType(obj).toString(), encode(obj)));
-            return bundle;
-        }
-        return null;
-    }
-
     /**
      * 查询基础类
      *
@@ -204,44 +154,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
      */
     protected <B> void addList(Class<B> clz, IPathMsgAction<List<B>> action) {
         addList(DataFg.class, clz, action);
-    }
-
-    private void startSearch(Class<? extends IControllerApi> clz, String search, String key,
-                             String value, ArrayList<String> filterData) {
-        if (check(clz)) {
-            SoftInputUtil.hidSoftInput(getRootView());
-            Bundle bundle = new Bundle();
-            bundle.putString(Config.SEARCH, search);
-            bundle.putString(Config.KEY, key);
-            bundle.putString(Config.VALUE, value);
-            bundle.putStringArrayList(Config.FILTERS, filterData);
-            startSurfaceActivity(bundle, clz);
-        }
-    }
-
-    private void startSearch(String search, String key, ArrayList<String> filterData) {
-        startSearch(FullSearchControllerApi.class, search, key, null, filterData);
-    }
-
-    protected void startSearch(String search, ArrayList<String> filterData) {
-        startSearch(search, null, filterData);
-    }
-
-    protected void startSearch(String search, String key) {
-        startSearch(search, key, null);
-    }
-
-    protected void startSearch(String search) {
-        startSearch(search, null, null);
-    }
-
-    protected void startSearch(Class<? extends IControllerApi> clz, String search, String key) {
-        startSearch(clz, search, key, null, null);
-    }
-
-    protected void startSearch(Class<? extends IControllerApi> clz, String search, String key,
-                               String value) {
-        startSearch(clz, search, key, value, null);
     }
 
     public int getResTvColor(CharSequence text) {
@@ -258,7 +170,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getThis();
     }
 
-    protected Map<String, Object> getCheck(Object obj, Set<String> must, Set<String> all) {
+    private Map<String, Object> getCheck(Object obj, Set<String> must, Set<String> all) {
         if (!TextUtils.isEmpty(all) && obj != null) {
             Map<String, Object> mp = new HashMap<>();
             Class clz = obj.getClass();
@@ -372,24 +284,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    protected Type getObjectType(Object obj) {
-        if (obj instanceof List) {
-            List data = (List) obj;
-            if (!TextUtils.isEmpty(data)) {
-                for (Object item : data) {
-                    if (item != null) {
-                        return TypeToken.getParameterized(List.class,
-                                getObjectType(item)).getType();
-                    }
-                }
-            }
-            return List.class;
-        } else if (obj != null) {
-            return obj.getClass();
-        }
-        return null;
-    }
-
     public Map<String, String> getFieldStringMap(Object obj) {
         if (obj != null) {
             Map<String, String> map = new HashMap<>();
@@ -399,7 +293,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    public Map<String, Object> getFieldMap(Object obj) {
+    private Map<String, Object> getFieldMap(Object obj) {
         if (obj != null) {
             Map<String, Object> map = new HashMap<>();
             initFieldMap(obj, map::put);
@@ -408,7 +302,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    public void initFieldMap(Object obj, IMapAction<String, Object> action) {
+    private void initFieldMap(Object obj, IMapAction<String, Object> action) {
         if (obj != null && action != null) {
             Set<Field> set = getFields(obj);
             if (!TextUtils.isEmpty(set)) {
@@ -426,7 +320,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    public Set<Field> getFields(Object obj) {
+    private Set<Field> getFields(Object obj) {
         if (obj != null) {
             Set<Field> set = new LinkedHashSet<>();
             Class clz = obj.getClass();

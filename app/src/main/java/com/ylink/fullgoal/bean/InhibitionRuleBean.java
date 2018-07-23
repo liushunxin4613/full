@@ -13,8 +13,8 @@ public class InhibitionRuleBean extends ApiBean<InhibitionRuleBean> {
         return new InhibitionRuleBi();
     }
 
-    public static final String STATE_RED = "红灯";
-    public static final String STATE_YELLOW = "黄灯";
+    private static final String STATE_RED = "红灯";
+    private static final String STATE_YELLOW = "黄灯";
 
     public InhibitionRuleBean(String state, String name, String detail) {
         super(name, detail);

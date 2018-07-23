@@ -26,6 +26,16 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public <V extends View> V findViewById(View rootView, int resId) {
+        return rootView == null ? null : (V) rootView.findViewById(resId);
+    }
+
+    @Override
+    public <V extends View> V findViewWithTag(View rootView, Object tag) {
+        return rootView == null ? null : (V) rootView.findViewWithTag(tag);
+    }
+
+    @Override
     public T setVisibility(View view, int visibility) {
         if (checkView(view)) {
             view.setVisibility(visibility);

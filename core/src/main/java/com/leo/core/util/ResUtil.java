@@ -36,4 +36,12 @@ public class ResUtil {
         return getApi().getDrawable(res);
     }
 
+    public static int getIdentifier(String name, String defType){
+        return getApi().getIdentifier(name, defType);
+    }
+
+    public static int getIdentifier(String name, String defType, String defPackage){
+        return getApi().getIdentifier(name, defType, defPackage);
+    }
+
 }

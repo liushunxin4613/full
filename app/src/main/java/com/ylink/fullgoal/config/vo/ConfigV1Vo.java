@@ -4,23 +4,23 @@ import java.util.List;
 
 public class ConfigV1Vo {
 
-    private List<ConfigFileVo> files;
-    private List<ViewVo> view;
+    private List<ConfigFileVo> fileList;
+    private List<ViewVo> viewList;
 
-    public List<ConfigFileVo> getFiles() {
-        return files;
+    public List<ConfigFileVo> getFileList() {
+        return fileList;
     }
 
-    public void setFiles(List<ConfigFileVo> files) {
-        this.files = files;
+    public void setFileList(List<ConfigFileVo> fileList) {
+        this.fileList = fileList;
     }
 
-    public List<ViewVo> getView() {
-        return view;
+    public List<ViewVo> getViewList() {
+        return viewList;
     }
 
-    public void setView(List<ViewVo> view) {
-        this.view = view;
+    public void setViewList(List<ViewVo> viewList) {
+        this.viewList = viewList;
     }
 
 }

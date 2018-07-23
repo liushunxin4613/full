@@ -5,6 +5,7 @@
     <dimen name="pad">20dp</dimen>
     <dimen name="pad_smal">10dp</dimen>
     <dimen name="margin">16dp</dimen>
+    <dimen name="tv_big">20sp</dimen>
     <dimen name="tv">17sp</dimen>
     <dimen name="tv1">15sp</dimen>
     <dimen name="tv2">12sp</dimen>

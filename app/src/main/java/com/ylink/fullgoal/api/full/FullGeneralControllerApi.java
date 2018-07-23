@@ -49,22 +49,22 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
             data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
             checkAdd(data, vorv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", vorv(DVo::getReimbursement), "请输入报销人", (bean, view)
-                    -> startSearch(SearchVo.REIMBURSEMENT), text
+                    -> routeApi().search(SearchVo.REIMBURSEMENT), text
                     -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
             checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
                     vorv(DVo::getBudgetDepartment), "请选择预算归属部门",
-                    (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
+                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT)));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject), "请选择项目",
-                    (bean, view) -> startSearch(SearchVo.PROJECT)));
+                    (bean, view) -> routeApi().search(SearchVo.PROJECT)));
             checkAdd(data, vorv(DVo::getContractPayment), new TvH2MoreBean("合同付款申请单",
                     vorv(DVo::getContractPayment), "请选择合同付款申请单",
-                    (bean, view) -> startSearch(SearchVo.CONTRACT_BILL)));
+                    (bean, view) -> routeApi().search(SearchVo.CONTRACT_BILL)));
             checkAdd(data, vorv(DVo::getProcess), new TvH2MoreBean("招待申请单",
                     vorv(DVo::getProcess), "请选择招待申请单",
-                    (bean, view) -> startSearch(SearchVo.SERVE_BILL)));
+                    (bean, view) -> routeApi().search(SearchVo.SERVE_BILL)));
             checkAdd(data, vorv(DVo::getCostIndex),
                     new TvH2MoreBean("费用指标", vorv(DVo::getCostIndex), "请选择费用指标",
-                            (bean, view) -> startSearch(SearchVo.COST_INDEX)));
+                            (bean, view) -> routeApi().search(SearchVo.COST_INDEX)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));

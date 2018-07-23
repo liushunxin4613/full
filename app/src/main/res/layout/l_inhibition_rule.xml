@@ -20,9 +20,10 @@
 
             <ImageView
                 android:id="@+id/icon_iv"
+                android:padding="@dimen/x20"
                 android:layout_width="@dimen/x120"
                 android:layout_height="@dimen/y120"
-                android:src="@mipmap/icon_red"
+                android:src="@mipmap/icon_yellow"
                 tools:ignore="ContentDescription" />
 
         </LinearLayout>

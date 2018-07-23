@@ -11,7 +11,7 @@
         android:id="@+id/back_iv"
         android:layout_width="@dimen/bar_height"
         android:layout_height="@dimen/bar_height"
-        android:padding="@dimen/icon_padding"
+        android:padding="12dp"
         android:background="@null"
         android:clickable="true"
         android:focusable="true"
@@ -25,8 +25,8 @@
         android:layout_marginLeft="@dimen/bar_height"
         android:layout_marginRight="@dimen/bar_height"
         android:layout_gravity="center_vertical"
-        android:textColor="@color/tv"
-        android:textSize="@dimen/tv"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/tv_big"
         tools:text="返回"
         />
 
@@ -37,11 +37,11 @@
         android:layout_marginLeft="@dimen/bar_height"
         android:layout_marginRight="@dimen/bar_height"
         android:layout_gravity="center"
-        android:textColor="@color/tv"
-        android:textSize="@dimen/tv"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/tv_big"
         tools:text="中央"
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
         />
 
     <TextView
@@ -51,18 +51,11 @@
         android:layout_marginLeft="@dimen/margin"
         android:layout_marginRight="@dimen/margin"
         android:layout_gravity="center_vertical|right"
-        android:textColor="@color/EE4433"
+        android:textColor="#FFFFFF"
         android:textSize="@dimen/tv"
         tools:text="确定"
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
         tools:ignore="RtlHardcoded" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1.0px"
-        android:background="@color/ccC"
-        android:layout_gravity="bottom"
-        />
 
 </FrameLayout>

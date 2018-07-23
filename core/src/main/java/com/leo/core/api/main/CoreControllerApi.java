@@ -35,6 +35,7 @@ import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.ICameraApi;
 import com.leo.core.iapi.api.IDirApi;
+import com.leo.core.iapi.api.IRouteApi;
 import com.leo.core.iapi.api.IVosApi;
 import com.leo.core.iapi.api.IVsApi;
 import com.leo.core.iapi.inter.IAction;
@@ -54,7 +55,6 @@ import com.leo.core.iapi.api.IObjectApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.api.ISerialVersionTagApi;
-import com.leo.core.iapi.api.IStartApi;
 import com.leo.core.iapi.api.ISubjoinApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IProgressListener;
@@ -96,9 +96,8 @@ import static com.leo.core.util.TextUtils.getEmptyLength;
 @SuppressLint("MissingSuperCall")
 public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi<T, C> implements
         IControllerApi<T, C>, IViewApi<T>, IShowApi<T>, IHttpApi<T>, IMD5Api, IDataApi<T>, IObjectApi<T>,
-        IActionApi<T, IApi>, IStartApi<T>, IUserApi<T>, ILoadImageApi<T>, IConfigApi<T>, IDataTypeApi<T>,
-        IMergeApi<T>, IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi<T>, IVsApi<T>,
-        IVosApi<T>, IDirApi {
+        IActionApi<T, IApi>, IUserApi<T>, ILoadImageApi<T>, IConfigApi<T>, IDataTypeApi<T>, IMergeApi<T>,
+        IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi<T>, IVsApi<T>, IVosApi<T>, IDirApi {
 
     private C controller;
     private Handler mainHandler;
@@ -119,7 +118,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IDataApi dataApi;
     private IObjectApi objectApi;
     private IActionApi actionApi;
-    private IStartApi startApi;
     private IUserApi userApi;
     private ILoadImageApi loadImageApi;
     private IConfigApi configApi;
@@ -136,6 +134,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IVsApi vsApi;
     private IVosApi vosApi;
     private IDirApi dirApi;
+    private IRouteApi routeApi;
 
     //other
     private Integer rootViewResId;
@@ -318,22 +317,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public IActionApi newActionApi() {
-        return null;
-    }
-
-    @Override
-    public IStartApi startApi() {
-        if (startApi == null) {
-            startApi = newStartApi();
-            if (startApi == null) {
-                throw new NullPointerException("newStartApi 不能为空");
-            }
-        }
-        return startApi;
-    }
-
-    @Override
-    public IStartApi newStartApi() {
         return null;
     }
 
@@ -609,6 +592,22 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public IRouteApi routeApi() {
+        if (routeApi == null) {
+            routeApi = newRouteApi();
+            if (routeApi == null) {
+                throw new NullPointerException("newRouteApi 不能为空");
+            }
+        }
+        return routeApi;
+    }
+
+    @Override
+    public IRouteApi newRouteApi() {
+        return null;
+    }
+
+    @Override
     public C getController() {
         return controller;
     }
@@ -647,66 +646,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public <D extends Dialog> D getDialog() {
         return (D) dialog;
-    }
-
-    @Override
-    public Intent getIntent(Class<? extends Activity> clz, Class<? extends IControllerApi>... args) {
-        return startApi().getIntent(clz, args);
-    }
-
-    @Override
-    public T startActivity(Class<? extends Activity> clz, Class<? extends IControllerApi>... args) {
-        startApi().startActivity(clz, args);
-        return getThis();
-    }
-
-    @Override
-    public Intent getIntent(Class<? extends Activity> clz, Bundle bundle,
-                            Class<? extends IControllerApi>... args) {
-        return startApi().getIntent(clz, bundle, args);
-    }
-
-    @Override
-    public T startActivity(Class<? extends Activity> clz, Bundle bundle,
-                           Class<? extends IControllerApi>... args) {
-        startApi().startActivity(clz, bundle, args);
-        return getThis();
-    }
-
-    @Override
-    public T startFinishActivity(Class<? extends Activity> clz,
-                                 Class<? extends IControllerApi>... args) {
-        startApi().startFinishActivity(clz, args);
-        return getThis();
-    }
-
-    @Override
-    public T startFinishActivity(Class<? extends Activity> clz, Bundle bundle,
-                                 Class<? extends IControllerApi>... args) {
-        startApi().startFinishActivity(clz, bundle, args);
-        return getThis();
-    }
-
-    @Override
-    public Bundle getBundle(Class<? extends IControllerApi>... args) {
-        return startApi().getBundle(args);
-    }
-
-    @Override
-    public Fragment getFragment(Class<? extends Fragment> clz,
-                                Class<? extends IControllerApi>... args) {
-        return startApi().getFragment(clz, args);
-    }
-
-    @Override
-    public Bundle getBundle(Bundle bundle, Class<? extends IControllerApi>... args) {
-        return startApi().getBundle(bundle, args);
-    }
-
-    @Override
-    public Fragment getFragment(Class<? extends Fragment> clz, Bundle bundle,
-                                Class<? extends IControllerApi>... args) {
-        return startApi().getFragment(clz, bundle, args);
     }
 
     @Override
@@ -1133,8 +1072,18 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public <V extends View> V findViewWithTag(Object tag) {
+        return findViewWithTag(getRootView(), tag);
+    }
+
+    @Override
     public <V extends View> V findViewById(View rootView, int resId) {
-        return rootView == null ? null : (V) rootView.findViewById(resId);
+        return (V) viewApi().findViewById(rootView, resId);
+    }
+
+    @Override
+    public <V extends View> V findViewWithTag(View rootView, Object tag) {
+        return (V) viewApi().findViewWithTag(rootView, tag);
     }
 
     @Override

@@ -98,7 +98,14 @@ public class SearchVo<D> extends SerialVersionTag {
         this.search = search;
         this.value = value;
         this.obj = obj;
-        setSerialVersionTag(getType(getObj(), getClass()));
+        this.setSerialVersionTag(getType(obj, getClass()));
+    }
+
+    public SearchVo(String search, String value, D obj, TypeToken token) {
+        this.search = search;
+        this.value = value;
+        this.obj = obj;
+        this.setSerialVersionTag(token);
     }
 
     private Type getType(Object obj, Class clz) {

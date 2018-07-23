@@ -10,13 +10,14 @@ import com.leo.core.util.LogUtil;
 import com.leo.core.util.MD5Util;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.vo.ConfigFileVo;
+import com.ylink.fullgoal.config.vo.ConfigV1Vo;
 import com.ylink.fullgoal.config.vo.ConfigVo;
+import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.controllerApi.core.ControllerApi;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.ResponseBody;
 
@@ -25,7 +26,7 @@ import static com.leo.core.util.TextUtils.contains;
 
 public class MVCFactory extends VsApi<MVCFactory> {
 
-    private final static boolean LOCAL = true;
+    private final static boolean LOCAL = false;
     private final static String FILTER[] = {};
     private final static String DIR = "config";
 
@@ -44,12 +45,8 @@ public class MVCFactory extends VsApi<MVCFactory> {
 
     private boolean copy;
     private String config;
-    private List<Mvc> data;
+    private ConfigV1Vo vo;
     private ControllerApi api;
-
-    private MVCFactory() {
-        data = new ArrayList<>();
-    }
 
     public MVCFactory init(ControllerApi api) {
         this.api = api;
@@ -77,46 +74,48 @@ public class MVCFactory extends VsApi<MVCFactory> {
     }
 
     private void onFile(File file) {
-        if (file != null && file.exists() && TextUtils.equals(file.getName(), "config.json")) {
-            initConfig(file.getName());
-            JsonHelper.newBuilder()
-                    .add(Map.class, (parent, map) -> {
-                        String hashcode = (String) map.get("hashcode");
-                        String url = (String) map.get("url");
-                        String fileName = (String) map.get("file");
-                        File f = new File(getConfigDir(), fileName);
-                        if (!f.exists()) {
-                            download(fileName, url);
-                        } else {
-                            String md5 = MD5Util.getFileMD5(f);
-                            api().ii(String.format("%s => md5: %s, hashcode: %s", f.getPath(), md5,
-                                    hashcode));
-                            if (!TextUtils.equals(md5, hashcode)) {
-                                download(fileName, url);
-                            }
-                        }
-                    }, new Node("files"))
-                    .execute(getConfig());
+        if (TextUtils.check(file) && TextUtils.check(file.getName()) && file.exists()) {
+            switch (file.getName()) {
+                case "config.json":
+                    initConfig(LOCAL, file.getName());
+                    setVo((ConfigV1Vo) api().decode(getConfig(), ConfigV1Vo.class));
+                    initConfigVo();
+                    break;
+            }
         }
     }
 
+    private void initConfigVo() {
+        if (!TextUtils.check(getVo())) {
+            return;
+        }
+        api().ee("vo", getVo());
+        execute(getVo().getFileList(), vo -> {
+            File file = new File(getConfigDir(), vo.getFile());
+            if (!file.exists()) {
+                download(vo.getFile(), vo.getUrl());
+            } else {
+                String md5 = MD5Util.getFileMD5(file);
+                api().ii(String.format("%s => md5: %s, hashcode: %s", file.getPath(), md5,
+                        vo.getHashcode()));
+                if (!TextUtils.equals(md5, vo.getHashcode())) {
+                    download(vo.getFile(), vo.getUrl());
+                }
+            }
+        });
+    }
+
     public void onData(String path, String params, List list, IObjAction<List<ViewBean>> action) {
-        checkOriginal();
-        if (TextUtils.check(path, list, action)) {
+        if (TextUtils.check(path, list, action, getVo()) && TextUtils.check(getVo().getViewList())) {
             LogUtil.ee("path", path);
             LogUtil.ee("params", params);
-            JsonHelper.newBuilder()
-                    .add(Map.class, (parent, m) -> {
-                        getData().clear();
-                        execute(m, (key, view) -> {
-                            if (key instanceof String && view instanceof String) {
-                                add((String) key, (String) view);
-                            }
-                        });
-                        action.execute(getVBData(list, (String) parent.get("xml")));
-                    }, new Node("view"), new Node("data", m -> TextUtils.equals(path, m.get("path"))
-                            && checkParams(params, m.get("params"))))
-                    .execute(getConfig());
+            executeBol(getVo().getViewList(), vo -> {
+                if (TextUtils.equals(path, vo.getPath()) && checkParams(params, vo.getParams())) {
+                    action.execute(getVBData(vo.getXml(), vo.getList(), list));
+                    return true;
+                }
+                return false;
+            });
         }
     }
 
@@ -124,14 +123,22 @@ public class MVCFactory extends VsApi<MVCFactory> {
         return TextUtils.equals(vo.getName(), "config");
     }
 
-    private void initConfig(String config) {
+    private void initConfig(boolean local, String config) {
         if (TextUtils.check(config)) {
-            if (LOCAL) {
+            if (local) {
                 this.config = api().getAssetsString(config);
             } else {
                 this.config = FileUtil.readFile(new File(getConfigDir(), config));
             }
         }
+    }
+
+    private ConfigV1Vo getVo() {
+        return vo;
+    }
+
+    private void setVo(ConfigV1Vo vo) {
+        this.vo = vo;
     }
 
     private String getConfig() {
@@ -146,33 +153,15 @@ public class MVCFactory extends VsApi<MVCFactory> {
         return api().getRootDir(DIR);
     }
 
-    private List<Mvc> getData() {
-        return data;
-    }
-
-    private boolean check(Mvc mvc) {
-        return TextUtils.check(mvc) && TextUtils.check(mvc.getKey(), mvc.getView());
-    }
-
     private <A> void add(Class<A> root, IPathMsgAction<A> action) {
         api().add(root, action);
     }
 
-    private List<ViewBean> getVBData(List list, String xml) {
-        if (TextUtils.check(list, xml)) {
+    private List<ViewBean> getVBData(String xml, List<TemplateVo> templateData, List list) {
+        if (TextUtils.check(xml, templateData, list)) {
             List<ViewBean> data = new ArrayList<>();
-            execute(list, item -> {
-                MVCFactory factory = copy();
-                if (item instanceof Map) {
-                    Map m = (Map) item;
-                    execute(m, (key, value) -> {
-                        if (key instanceof String && value instanceof String) {
-                            factory.update((String) key, (String) value);
-                        }
-                    });
-                }
-                executeNon(factory.getViewBean(xml), data::add);
-            });
+            execute(list, item -> executeNon(new ViewBean(getXmlResourceParser(xml),
+                    templateData, item), data::add));
             return data;
         }
         return null;
@@ -200,64 +189,6 @@ public class MVCFactory extends VsApi<MVCFactory> {
         if (TextUtils.check(name) && TextUtils.isHttpUrl(url)) {
             api().api().download(url, name);
         }
-    }
-
-    private void checkOriginal() {
-        if (copy) {
-            throw new RuntimeException("此方法必须使用源对象");
-        }
-    }
-
-    private void checkCopy() {
-        if (!copy) {
-            throw new RuntimeException("此方法必须使用复制对象");
-        }
-    }
-
-    private MVCFactory copy() {
-        MVCFactory factory = new MVCFactory();
-        factory.copy = true;
-        factory.api = api;
-        for (Mvc mvc : getData()) {
-            if (check(mvc)) {
-                factory.getData().add(new Mvc(mvc.getKey(), mvc.getView()));
-            }
-        }
-        return factory;
-    }
-
-    private void add(String key, String view) {
-        checkOriginal();
-        if (TextUtils.check(key, view)) {
-            getData().add(new Mvc(key, view));
-        }
-    }
-
-    private void update(String key, String value) {
-        checkCopy();
-        if (TextUtils.check(key, getData())) {
-            for (Mvc mvc : getData()) {
-                if (check(mvc) && TextUtils
-                        .equals(mvc.getKey(), key)) {
-                    mvc.setValue(value);
-                    return;
-                }
-            }
-        }
-    }
-
-    private ViewBean getViewBean(String xml) {
-        checkCopy();
-        if (!TextUtils.isEmpty(getData())) {
-            ViewBean bean = new ViewBean(getXmlResourceParser(xml));
-            for (Mvc mvc : getData()) {
-                if (check(mvc)) {
-                    bean.update(mvc.getView(), mvc.getValue());
-                }
-            }
-            return bean;
-        }
-        return null;
     }
 
     private XmlResourceParser getXmlResourceParser(String xml) {

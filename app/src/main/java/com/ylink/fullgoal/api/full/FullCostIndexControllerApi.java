@@ -153,8 +153,8 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         super.initView();
         setTitle("费用指标")
                 .setRightTv("确认", v -> submit())
-                .setOnClickListener(nameTv, v -> startSearch(SearchVo.COST_INDEX))
-                .setOnClickListener(searchVg, v -> startSearch(SearchVo.COST_INDEX));
+                .setOnClickListener(nameTv, v -> routeApi().search(SearchVo.COST_INDEX))
+                .setOnClickListener(searchVg, v -> routeApi().search(SearchVo.COST_INDEX));
         HelperUtil.addMoneyTextChangedListener(detailEt, null, this::updateAllMoney);
         HelperUtil.addMoneyTextChangedListener(taxEt, null, this::updateTaxAmount);
         HelperUtil.addMoneyTextChangedListener(noneTaxMoneyEt, null, this::updateExTaxAmount);
@@ -384,7 +384,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         if (check(item.getCode(), item.getName())) {
                             data.add(new TvH2MoreBean(item.getName(), getDimenValue(api, item.getCode()),
                                     String.format("请选择%s", item.getName()), (bean, view)
-                                    -> startSearch(SearchVo.COST_INDEX_DIMEN, encode(item))));
+                                    -> routeApi().search(SearchVo.COST_INDEX_DIMEN, encode(item))));
                         }
                     });
                 });

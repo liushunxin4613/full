@@ -439,24 +439,6 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void onNewIntent(Intent intent);
 
     /**
-     * 查找资源
-     *
-     * @param resId 资源id
-     * @param <V>   view泛型
-     * @return view
-     */
-    <V extends View> V findViewById(@IdRes int resId);
-
-    /**
-     * 查找资源
-     *
-     * @param resId 资源id
-     * @param <V>   view泛型
-     * @return view
-     */
-    <V extends View> V findViewById(View rootView, @IdRes int resId);
-
-    /**
      * 按键监听
      *
      * @param keyCode keyCode
@@ -537,6 +519,24 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @param b       相对于父view的底侧距离
      */
     void onLayout(boolean changed, int l, int t, int r, int b);
+
+    /**
+     * 查找资源
+     *
+     * @param resId 资源id
+     * @param <V>   view泛型
+     * @return view
+     */
+    <V extends View> V findViewById(@IdRes int resId);
+
+    /**
+     * 查找资源
+     *
+     * @param tag 资源tag
+     * @param <V>   view泛型
+     * @return view
+     */
+    <V extends View> V findViewWithTag(Object tag);
 
     /**
      * 关闭activity

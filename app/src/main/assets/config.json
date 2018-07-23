@@ -1,71 +1,304 @@
 {
-  "files": [
+  "fileList": [
     {
-      "name": "l_item_v1",
-      "file": "l_item_v1.xml",
+      "name": "l_apply_v1",
+      "file": "l_apply_v1.xml",
       "version": "3",
       "state": "1",
-      "hashcode": "f8f9bc94935475ec09d7988385b25d99",
-      "url": "http://111.231.231.226/uploadfile/20180716/20180716203657B2D7I.xml"
+      "hashcode": "a8933528d0e738fd92b04ae5d0e22f2c",
+      "url": "http://111.231.231.226/uploadfile/20180723/20180723093106QT5BI.xml"
     },
     {
-      "name": "l_item_v2",
-      "file": "l_item_v2.xml",
-      "version": "2",
+      "name": "l_apply_v2",
+      "file": "l_apply_v2.xml",
+      "version": "5",
       "state": "1",
-      "hashcode": "6344eb8c27fd0d9107b7b8ac8271a3bb",
-      "url": "http://111.231.231.226/uploadfile/20180716/20180716203855OINBM.xml"
+      "hashcode": "491e2bf6ec4e1050c8c618c7bd347d9b",
+      "url": "http://111.231.231.226/uploadfile/20180723/20180723093113BG6DC.xml"
     },
     {
-      "name": "l_apply",
-      "file": "l_apply.xml",
+      "name": "l_apply_v3",
+      "file": "l_apply_v3.xml",
       "version": "2",
       "state": "1",
-      "hashcode": "481846f2d6138d43966ae15f0064221b",
-      "url": "http://111.231.231.226/uploadfile/20180719/20180719150926N3X38.xml"
+      "hashcode": "23241af4b51808c632a35fb8def23179",
+      "url": "http://111.231.231.226/uploadfile/20180723/20180723093118PGZMI.xml"
+    },
+    {
+      "name": "l_apply_v4",
+      "file": "l_apply_v4.xml",
+      "version": "3",
+      "state": "1",
+      "hashcode": "b2f1850ea313ba8898b9b0ee5e05bac4",
+      "url": "http://111.231.231.226/uploadfile/20180723/20180723093123GTGN4.xml"
     }
   ],
-  "view": [
+  "viewList": [
     {
-      "name": "l_item_v1",
-      "xml": "l_item_v1.xml",
-      "path": "val",
-      "params": "{\"type\": \"1\"}",
-      "data": {
-        "name": "tv0",
-        "detail": "tv1",
-        "time": "tv2",
-        "age": "tv3",
-        "text": "tv4"
-      }
-    },
-    {
-      "name": "l_item_v2",
-      "xml": "l_item_v2.xml",
-      "path": "val",
-      "params": "{\"type\": \"2\"}",
-      "data": {
-        "name": "tv0",
-        "code": "tv1",
-        "text": "tv2"
-      }
-    },
-    {
-      "name": "l_apply",
-      "xml": "l_apply.xml",
+      "id": "9",
+      "name": "l_apply_v1",
+      "xml": "l_apply_v1.xml",
+      "type": "view",
       "path": "ApplyContentCompensation",
       "params": "{\"applyType\": \"001\"}",
-      "data": {
-        "extension3": "tv0",
-        "extension8": "tv1",
-        "extension2": "tv2",
-        "extension7": "tv3",
-        "extension9": "tv4",
-        "extension5": "tv5",
-        "extension6": "tv6",
-        "extension10": "tv7",
-        "extension4": "tv8"
-      }
+      "list": [
+        {
+          "id": "2",
+          "name": "l_apply_v1",
+          "vId": "tv0",
+          "tag": "tv0",
+          "text": "extension3"
+        },
+        {
+          "id": "3",
+          "name": "l_apply_v1",
+          "vId": "tv1",
+          "tag": "tv1",
+          "text": "extension8",
+          "format": "金额: <extension8>"
+        },
+        {
+          "id": "5",
+          "name": "l_apply_v1",
+          "vId": "tv2",
+          "tag": "tv2",
+          "text": "extension2"
+        },
+        {
+          "id": "6",
+          "name": "l_apply_v1",
+          "vId": "tv3",
+          "tag": "tv3",
+          "text": "extension7",
+          "format": "经办人: <extension7>"
+        },
+        {
+          "id": "7",
+          "name": "l_apply_v1",
+          "vId": "tv4",
+          "tag": "tv4",
+          "text": "extension9"
+        },
+        {
+          "id": "8",
+          "name": "l_apply_v1",
+          "vId": "tv5",
+          "tag": "tv5",
+          "text": "extension5"
+        },
+        {
+          "id": "9",
+          "name": "l_apply_v1",
+          "vId": "tv6",
+          "tag": "tv6",
+          "text": "extension6",
+          "format": "申请人: <extension6>"
+        },
+        {
+          "id": "10",
+          "name": "l_apply_v1",
+          "vId": "tv7",
+          "tag": "tv7",
+          "text": "extension10"
+        },
+        {
+          "id": "11",
+          "name": "l_apply_v1",
+          "vId": "tv8",
+          "tag": "tv8",
+          "text": "extension4",
+          "format": "培训内容: <extension4>"
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "name": "l_apply_v2",
+      "xml": "l_apply_v2.xml",
+      "type": "view",
+      "path": "ApplyContentCompensation",
+      "params": "{\"applyType\": \"002\"}",
+      "list": [
+        {
+          "id": "12",
+          "name": "l_apply_v2",
+          "vId": "tv1",
+          "tag": "tv1",
+          "text": "extension2"
+        },
+        {
+          "id": "13",
+          "name": "l_apply_v2",
+          "vId": "tv3",
+          "tag": "tv3",
+          "text": "extension7"
+        },
+        {
+          "id": "14",
+          "name": "l_apply_v2",
+          "vId": "tv4",
+          "tag": "tv4",
+          "text": "extension4"
+        },
+        {
+          "id": "15",
+          "name": "l_apply_v2",
+          "vId": "tv5",
+          "tag": "tv5",
+          "text": "extension5"
+        },
+        {
+          "id": "16",
+          "name": "l_apply_v2",
+          "vId": "tv6",
+          "tag": "tv6",
+          "text": "extension6"
+        },
+        {
+          "id": "17",
+          "name": "l_apply_v2",
+          "vId": "tv8",
+          "tag": "tv8",
+          "text": "extension3"
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "name": "l_apply_v3",
+      "xml": "l_apply_v3.xml",
+      "type": "view",
+      "path": "ApplyContentCompensation",
+      "params": "{\"applyType\": \"003\"}",
+      "list": [
+        {
+          "id": "18",
+          "name": "l_apply_v3",
+          "vId": "tv1",
+          "tag": "tv1",
+          "text": "extension5"
+        },
+        {
+          "id": "19",
+          "name": "l_apply_v3",
+          "vId": "tv3",
+          "tag": "tv3",
+          "text": "extension2"
+        },
+        {
+          "id": "20",
+          "name": "l_apply_v3",
+          "vId": "tv5",
+          "tag": "tv5",
+          "text": "extension3"
+        },
+        {
+          "id": "21",
+          "name": "l_apply_v3",
+          "vId": "tv6",
+          "tag": "tv6",
+          "text": "extension8"
+        },
+        {
+          "id": "22",
+          "name": "l_apply_v3",
+          "vId": "tv7",
+          "tag": "tv7",
+          "text": "extension6"
+        },
+        {
+          "id": "23",
+          "name": "l_apply_v3",
+          "vId": "tv8",
+          "tag": "tv8",
+          "text": "extension4"
+        },
+        {
+          "id": "24",
+          "name": "l_apply_v3",
+          "vId": "tv9",
+          "tag": "tv9",
+          "text": "extension7"
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "name": "l_apply_v4",
+      "xml": "l_apply_v4.xml",
+      "type": "view",
+      "path": "ApplyContentCompensation",
+      "params": "{\"applyType\": \"004\"}",
+      "list": [
+        {
+          "id": "25",
+          "name": "l_apply_v4",
+          "vId": "tv0",
+          "tag": "tv0",
+          "text": "extension2",
+          "format": "流水号  <extension2>"
+        },
+        {
+          "id": "26",
+          "name": "l_apply_v4",
+          "vId": "tv1",
+          "tag": "tv1",
+          "text": "extension3"
+        },
+        {
+          "id": "27",
+          "name": "l_apply_v4",
+          "vId": "tv2",
+          "tag": "tv2",
+          "text": "extension6"
+        },
+        {
+          "id": "28",
+          "name": "l_apply_v4",
+          "vId": "tv3",
+          "tag": "tv3",
+          "text": "extension4",
+          "format": "<extension4> 发起"
+        },
+        {
+          "id": "29",
+          "name": "l_apply_v4",
+          "vId": "tv4",
+          "tag": "tv4",
+          "text": "extension7"
+        },
+        {
+          "id": "30",
+          "name": "l_apply_v4",
+          "vId": "tv5",
+          "tag": "tv5",
+          "text": "extension10",
+          "format": "￥<extension10>"
+        },
+        {
+          "id": "31",
+          "name": "l_apply_v4",
+          "vId": "tv6",
+          "tag": "tv6",
+          "text": "extension8",
+          "format": "<extension8>件"
+        },
+        {
+          "id": "32",
+          "name": "l_apply_v4",
+          "vId": "tv7",
+          "tag": "tv7",
+          "text": "extension5",
+          "format": "<extension5> 入库"
+        },
+        {
+          "id": "33",
+          "name": "l_apply_v4",
+          "vId": "tv9",
+          "tag": "tv9",
+          "text": "extension9"
+        }
+      ]
     }
   ]
 }

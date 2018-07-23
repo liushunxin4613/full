@@ -16,6 +16,7 @@ public class UrlConfig {
     public final static String FG_ROOT_URL = TEST ? "http://192.168.41.123:7001/ssca/"
             : FG_ROOT_IP + "ssca/";//fg调试地址
 //    public final static String FG_ROOT_URL = "http://192.168.8.109:8088/ssca/";
+//    public final static String FG_ROOT_URL = "http://192.168.41.123:7001/applications/";
     public final static String UPLOAD_URL = ROOT_IP + "app/fullApp/upload";//根api地址
     public final static String UPLOAD_IMAGE_URL = UPLOAD_URL;//根api地址
 

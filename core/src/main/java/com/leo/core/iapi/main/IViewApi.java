@@ -2,6 +2,7 @@ package com.leo.core.iapi.main;
 
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -21,6 +22,24 @@ public interface IViewApi<T extends IViewApi> extends IApi {
      * @return true为有, false为无
      */
     boolean checkView(View view);
+
+    /**
+     * 查找资源
+     *
+     * @param resId 资源id
+     * @param <V>   view泛型
+     * @return view
+     */
+    <V extends View> V findViewById(View rootView, @IdRes int resId);
+
+    /**
+     * 查找资源
+     *
+     * @param tag 资源tag
+     * @param <V>   view泛型
+     * @return view
+     */
+    <V extends View> V findViewWithTag(View rootView, Object tag);
 
     /**
      * 设置view是否的显示状态

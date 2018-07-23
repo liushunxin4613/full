@@ -8,7 +8,6 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 import butterknife.Bind;
-import cn.com.fullgoal.pt0001.MainActivity;
 
 import static com.ylink.fullgoal.config.Config.TIME_SPLASH;
 
@@ -50,7 +49,7 @@ public class SplashControllerApi<T extends SplashControllerApi, C> extends Surfa
      */
     private void skip(){
         if (isLogin()) {
-            startFinishActivity(MainActivity.class);
+            routeApi().main();
         }
         cancel(uiCode);
     }

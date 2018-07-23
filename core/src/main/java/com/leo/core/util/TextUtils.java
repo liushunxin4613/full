@@ -60,6 +60,15 @@ public class TextUtils {
         return true;
     }
 
+    public static boolean checkNull(Object... args) {
+        for (Object obj : args) {
+            if (obj == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static boolean isEmpty(List data) {
         return data == null || data.isEmpty();
     }
@@ -622,6 +631,17 @@ public class TextUtils {
         return false;
     }
 
+    public static <E> int indexOf(E[] args, E obj) {
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
+                if(equals(args[i], obj)){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
     public static String getUriParams(Map<String, ?> map) {
         if (!TextUtils.isEmpty(map)) {
             StringBuilder builder = new StringBuilder();
@@ -661,7 +681,7 @@ public class TextUtils {
             Map<K, V> rm = new LinkedHashMap<>();
             List<K> data = Arrays.asList(args);
             for (Map.Entry<K, V> entry : map.entrySet()) {
-                if(data.contains(entry.getKey()) == filter){
+                if (data.contains(entry.getKey()) == filter) {
                     rm.put(entry.getKey(), entry.getValue());
                 }
             }
@@ -670,12 +690,23 @@ public class TextUtils {
         return null;
     }
 
-    public static Map<String, Object> getMap(String text, boolean filter, String... args){
+    public static Map<String, Object> getMap(String text, boolean filter, String... args) {
         return getMap(toJSONMap(text), filter, args);
     }
 
-    public static String toJsonString(String text, boolean filter, String... args){
+    public static String toJsonString(String text, boolean filter, String... args) {
         return GsonDecodeUtil.encode(getMap(text, filter, args));
+    }
+
+    public static String getJsonStringValue(String text, String key){
+        Map<String, Object> map = toJSONMap(text);
+        if(checkNull(map, key)){
+            Object obj = map.get(key);
+            if(obj instanceof String){
+                return (String) obj;
+            }
+        }
+        return null;
     }
 
 }

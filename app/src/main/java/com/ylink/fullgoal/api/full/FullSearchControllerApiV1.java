@@ -51,8 +51,8 @@ public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> e
         initDataAction(data -> execute(map, (key, value) -> data.add(new TvH2MoreBean(vr(value,
                 ApplyDataFgV1::getKey, ApplyFgV1::getName), vr(value, ApplyDataFgV1::getValue,
                 ApplyContentFgV1::getName), String.format("请选择%s", vr(value, ApplyDataFgV1::getKey,
-                ApplyFgV1::getName)), (bean, view) -> startSearch(FullSearchControllerApi.class,
-                APPLY_CONTENT, vr(value, ApplyDataFgV1::getKey, ApplyFgV1::getCode))))));
+                ApplyFgV1::getName)), (bean, view) -> routeApi().search(APPLY_CONTENT,
+                vr(value, ApplyDataFgV1::getKey, ApplyFgV1::getCode))))));
     }
 
     @Override

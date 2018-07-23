@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.controllerApi.surface;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.Completed;
 import com.leo.core.iapi.api.IKeywordApi;
 import com.leo.core.search.SearchUtil;
@@ -9,6 +10,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.config.Config;
+import com.ylink.fullgoal.config.ViewBean;
 import com.ylink.fullgoal.fg.DataFg;
 
 import java.util.List;
@@ -27,11 +29,11 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
         super(controller);
     }
 
-    public String getKeyword() {
+    private String getKeyword() {
         return keyword;
     }
 
-    public void setKeyword(String keyword) {
+    private void setKeyword(String keyword) {
         this.keyword = keyword;
     }
 
@@ -59,12 +61,13 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
         this.search = search;
     }
 
-    public List<String> getFilterData() {
+    private List<String> getFilterData() {
         return filterData;
     }
 
-    public void setFilterData(List<String> filterData) {
-        this.filterData = filterData;
+    private void setFilterData(String filterData) {
+        this.filterData = decode(filterData, TypeToken
+                .getParameterized(List.class, String.class));
     }
 
     @Override
@@ -88,7 +91,7 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
             executeNon(bundle.getString(Config.SEARCH), this::setSearch);
             executeNon(bundle.getString(Config.KEY), this::setKey);
             executeNon(bundle.getString(Config.VALUE), this::setValue);
-            executeNon(bundle.getStringArrayList(Config.FILTERS), this::setFilterData);
+            executeNon(bundle.getString(Config.FILTERS), this::setFilterData);
         });
     }
 
@@ -120,7 +123,6 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
                 return !(adapterDataApi().getLastItem(0) instanceof LineBean)
                         && adapterDataApi().getCount() != 0;
             } else if (obj instanceof IKeywordApi) {
-                String key = ((IKeywordApi) obj).getKeyword();
                 String fk = ((IKeywordApi) obj).getFilter();
                 if (!TextUtils.isEmpty(getFilterData())) {
                     for (String filter : getFilterData()) {
@@ -130,7 +132,13 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
                         }
                     }
                 }
-                return TextUtils.isEmpty(keyword) || SearchUtil.search(obj, keyword);
+                if (TextUtils.isEmpty(keyword)) {
+                    return true;
+                }
+                if (obj instanceof ViewBean) {
+                    return SearchUtil.search(((ViewBean) obj).getMap(), keyword);
+                }
+                return SearchUtil.search(obj, keyword);
             }
             return true;
         });
@@ -151,7 +159,7 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
         return null;
     }
 
-    protected void showView(boolean enable) {
+    private void showView(boolean enable) {
         if (enable) {
             showContentView();
         } else {

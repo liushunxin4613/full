@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.fg;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.iapi.api.ISerialVersionTagApi;
 import com.leo.core.util.TextUtils;
 
@@ -24,8 +25,13 @@ public class SerialVersionTag implements ISerialVersionTagApi<String> {
         this.serialVersionTag = type == null ? null : type.toString();
     }
 
+    protected <A> void setSerialVersionTag(TypeToken<A> token) {
+        this.serialVersionTag = token == null ? null : token.getType().toString();
+    }
+
     @Override
     public boolean isSerialVersionTag(String text) {
         return TextUtils.equals(text, getSerialVersionTag());
     }
+
 }

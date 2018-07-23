@@ -150,6 +150,15 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return null;
     }
 
+    protected <K, V> Map<K, V> map(Map<K, V> map, IObjAction<MMap<K, V>> action) {
+        if (action != null) {
+            MMap<K, V> mMap = new MMap<>();
+            action.execute(mMap.map(map));
+            return mMap.map();
+        }
+        return null;
+    }
+
     protected <K, V> Map<K, V> map(IObjAction<MMap<K, V>> action) {
         if (action != null) {
             MMap<K, V> mMap = new MMap<>();

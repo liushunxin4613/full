@@ -129,22 +129,6 @@ public interface INewApi {
     <B> B newActionApi();
 
     /**
-     * start api
-     *
-     * @param <B> 泛型
-     * @return api
-     */
-    <B> B startApi();
-
-    /**
-     * new start api
-     *
-     * @param <B> 泛型
-     * @return api
-     */
-    <B> B newStartApi();
-
-    /**
      * user api
      *
      * @param <B> 泛型
@@ -406,5 +390,21 @@ public interface INewApi {
      * @return api
      */
     <B> B newDirApi();
+
+    /**
+     * routeApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B routeApi();
+
+    /**
+     * new routeApi
+     *
+     * @param <B> 泛型
+     * @return api
+     */
+    <B> B newRouteApi();
 
 }

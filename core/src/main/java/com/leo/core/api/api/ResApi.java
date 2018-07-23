@@ -42,4 +42,14 @@ public class ResApi<T extends ResApi> extends BindContextApi<T> implements IResA
         return getResources().getDrawable(res);
     }
 
+    @Override
+    public int getIdentifier(String name, String defType) {
+        return getIdentifier(name, defType, getContext().getPackageName());
+    }
+
+    @Override
+    public int getIdentifier(String name, String defType, String defPackage) {
+        return getResources().getIdentifier(name, defType, defPackage);
+    }
+
 }

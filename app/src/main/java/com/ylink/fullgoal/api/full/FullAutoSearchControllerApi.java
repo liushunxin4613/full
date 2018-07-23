@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -15,8 +16,10 @@ import com.ylink.fullgoal.config.JsonHelper;
 import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.config.Node;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 
@@ -82,14 +85,19 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
     private void initAdds() {
         add(String.class, (path, what, msg, response)
                 -> JsonHelper.newBuilder()
-                .add(List.class, (parent, list) -> onData(
-                        path, msg, list), new Node("applyCodeResult"))
+                .add(List.class, (parent, list) -> onData(path, msg, list),
+                        new Node("applyCodeResult"))
                 .execute(response));
     }
 
     private void onData(String path, String params, List list) {
-        MVCFactory.getInstance().onData(path, toJsonString(params, true, "applyType"), list, data
-                -> initDataAction(d -> d.addAll(data)));
+        MVCFactory.getInstance().onData(path, toJsonString(params, true, "applyType"), list, d
+                -> initDataAction(data -> execute(d, item -> {
+            item.setOnClickListener((bean, view) -> finishActivity(new SearchVo<>(getSearch(),
+                    getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String, String>>>() {
+            })));
+            data.add(item);
+        })));
     }
 
     @Override

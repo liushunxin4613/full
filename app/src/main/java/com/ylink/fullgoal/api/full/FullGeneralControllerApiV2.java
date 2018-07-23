@@ -73,16 +73,16 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
             data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
             checkAdd(data, vorv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", vorv(DVo::getReimbursement), "请输入报销人", (bean, view)
-                    -> startSearch(SearchVo.REIMBURSEMENT), text
+                    -> routeApi().search(SearchVo.REIMBURSEMENT), text
                     -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
             checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
                     vorv(DVo::getBudgetDepartment), "请选择预算归属部门",
-                    (bean, view) -> startSearch(SearchVo.BUDGET_DEPARTMENT)));
+                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT)));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject),
-                    "请选择项目", (bean, view) -> startSearch(SearchVo.PROJECT)));
+                    "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT)));
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreBean("费用指标",
                     vorv(DVo::getCostIndex), "请选择费用指标", (bean, view)
-                    -> startSearch(SearchVo.COST_INDEX)));
+                    -> routeApi().search(SearchVo.COST_INDEX)));
             /*checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("单据内容",
                     vorv(DVoV1::getCostIndexValue), "请选择单据内容", (bean, view)
                     -> startSearch(FullSearchControllerApiV2.class, SearchVo.APPLY,
@@ -90,7 +90,7 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
                     encode(vor(DVoV1::getCostIndexValue, CostIndexValueController::getDB)))));*/
             checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("单据内容",
                     vorv(DVoV1::getCostIndexValue), "请选择单据内容", (bean, view)
-                    -> startSearch(FullSearchControllerApiV2.class, SearchVo.APPLY,
+                    -> routeApi().searchApply(SearchVo.APPLY,
                     encode(map(map -> map.put("departmentCode", vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentCode))
                             .put("reimbursement", vor(DVo::getReimbursement, UserController::getUserCode))
                             .put("costIndexCode", vor(DVo::getCostIndex, CostIndexController::getCostCode)))))));

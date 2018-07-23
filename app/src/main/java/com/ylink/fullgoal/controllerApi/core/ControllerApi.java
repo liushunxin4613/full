@@ -2,6 +2,7 @@ package com.ylink.fullgoal.controllerApi.core;
 
 import com.leo.core.api.main.HttpApi;
 import com.leo.core.core.BaseControllerApi;
+import com.ylink.fullgoal.api.api.RouteApi;
 import com.ylink.fullgoal.api.config.FgApi;
 import com.ylink.fullgoal.api.config.ParseApi;
 import com.ylink.fullgoal.api.func.UserApi;
@@ -56,6 +57,16 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     @Override
     public HttpApi newHttpApi() {
         return new MHttpApi(getThis(), newTransformer());
+    }
+
+    @Override
+    public RouteApi routeApi() {
+        return (RouteApi) super.routeApi();
+    }
+
+    @Override
+    public RouteApi newRouteApi() {
+        return new RouteApi(getThis());
     }
 
     @Override

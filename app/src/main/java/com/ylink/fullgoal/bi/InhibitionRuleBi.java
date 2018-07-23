@@ -11,6 +11,7 @@ import butterknife.Bind;
 
 public class InhibitionRuleBi extends BaseApiBi<InhibitionRuleBi, InhibitionRuleBean> {
 
+
     @Bind(R.id.icon_iv)
     ImageView iconIv;
     @Bind(R.id.name_tv)

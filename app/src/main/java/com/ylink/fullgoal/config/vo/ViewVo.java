@@ -4,14 +4,6 @@ import java.util.List;
 
 public class ViewVo {
 
-    /**
-     * name : l_apply
-     * xml : l_apply.xml
-     * path : ApplyContentCompensation
-     * params : {"applyType": "001"}
-     * list : [{"vId":"","vType":"","tag":"","text":"","format":"","color":"","colorId":"","textSizeId":"","bgId":"","imageId":"","imageUrl":""}]
-     */
-
     private String name;
     private String xml;
     private String path;
