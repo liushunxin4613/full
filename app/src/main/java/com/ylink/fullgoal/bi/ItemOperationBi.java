@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -22,8 +23,8 @@ public class ItemOperationBi extends SurfaceBi<ItemOperationBi, ItemOperationBea
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, ItemOperationBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull ItemOperationBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
                 .setOnClickListener(nameTv, bean.getNameOnClickListener())

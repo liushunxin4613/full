@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,8 +26,8 @@ public class DateArrayBi extends SurfaceBi<DateArrayBi, DateArrayBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, DateArrayBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull DateArrayBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setViewGroupApi(vg, vg -> {
                     vg.removeAllViews();

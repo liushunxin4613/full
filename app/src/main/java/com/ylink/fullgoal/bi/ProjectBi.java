@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -30,8 +31,8 @@ public class ProjectBi extends SurfaceBi<ProjectBi, ProjectBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, ProjectBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull ProjectBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setText(timeTv, bean.getTime())
                 .setText(leftTv, bean.getLeft())

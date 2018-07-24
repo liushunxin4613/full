@@ -1,8 +1,10 @@
 package com.leo.core.iapi.main;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.iapi.core.IApi;
 
-public interface IBindControllerApi<A extends IControllerApi, B> extends IApi{
+public interface IBindControllerApi<A extends IControllerApi, B> extends IApi {
 
     /**
      * 布局id
@@ -28,5 +30,9 @@ public interface IBindControllerApi<A extends IControllerApi, B> extends IApi{
     void onBindApi(A api, B bean);
 
     void onDestroyUnBind();
+
+    void updateBind();
+
+    void updateBind(@NonNull A api, @NonNull B bean);
 
 }

@@ -1,5 +1,7 @@
 package com.leo.core.core.bean;
 
+import android.support.annotation.NonNull;
+
 import com.leo.core.api.api.VsApi;
 import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.iapi.main.IControllerApi;
@@ -27,7 +29,7 @@ public abstract class CoreBi<T extends CoreBi, B, A extends IControllerApi> exte
     public abstract Integer getDefLayoutResId();
 
     @Override
-    public A api() {
+    public final A api() {
         return api;
     }
 
@@ -56,6 +58,18 @@ public abstract class CoreBi<T extends CoreBi, B, A extends IControllerApi> exte
         onBindBean(bean);
         api(api);
         ButterKnife.bind(this, api.getRootView());
+        updateBind();
+    }
+
+    @Override
+    public void updateBind() {
+        if(api() != null && bean() != null){
+            updateBind(api(), bean());
+        }
+    }
+
+    @Override
+    public void updateBind(@NonNull A api, @NonNull B bean) {
     }
 
     @Override

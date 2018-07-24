@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -20,8 +21,8 @@ public class TvH4Bi extends SurfaceBi<TvH4Bi, TvH4Bean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, TvH4Bean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull TvH4Bean bean) {
+        super.updateBind(api, bean);
         TextView timeTv = (TextView) api.findViewById(R.id.time_tv);
         TextView nameTv = (TextView) api.findViewById(R.id.name_tv);
         TextView detailTv = (TextView) api.findViewById(R.id.detail_tv);

@@ -123,6 +123,13 @@ public class RouteApi extends CoreRouteApi {
     /**
      * 搜索页面
      */
+    public void search(String search, String key, List<String> filterData) {
+        search(search, key, null, filterData);
+    }
+
+    /**
+     * 搜索页面
+     */
     public void search(String search, String key, String value) {
         search(search, key, value, null);
     }
@@ -174,10 +181,6 @@ public class RouteApi extends CoreRouteApi {
 
     @Override
     protected Class<? extends IControllerApi> getViewApiClz(@NonNull String module, @NonNull String viewApi) {
-        switch (viewApi) {
-            case "":
-                break;
-        }
         return null;
     }
 

@@ -58,7 +58,7 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public DepartmentFg getDepartment() {
-        return new DepartmentFg("3", "3部门");
+        return new DepartmentFg("f43368e1-8bd5-4ee3-aa51-2006c0489f1b", "固定收益投资部");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.config;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,8 +20,8 @@ public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, ViewBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull ViewBean bean) {
+        super.updateBind(api, bean);
         execute(bean.getData(), this::onVo);
         api.setOnClickListener(bean.getOnClickListener());
     }

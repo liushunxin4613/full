@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -30,8 +31,8 @@ public class XCJPBi extends SurfaceBi<XCJPBi, XCJPBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, XCJPBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull XCJPBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
                 .setText(typeTv, bean.getType())

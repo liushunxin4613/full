@@ -14,14 +14,13 @@ public abstract class CoreBindApiBean<T extends CoreBindApiBean, A extends ICont
     }
 
     protected IBindControllerApi<A, T> api() {
-        IBindControllerApi<A, T> api = bindControllerApi;
-        if (api == null) {
-            api = newDefApi();
+        if (bindControllerApi == null) {
+            bindControllerApi = newDefApi();
         }
-        if (api != null) {
-            api.onBindBean(getThis());
+        if (bindControllerApi != null) {
+            bindControllerApi.onBindBean(getThis());
         }
-        return api;
+        return bindControllerApi;
     }
 
     protected IBindControllerApi<A, T> api(IBindControllerApi<A, T> api) {

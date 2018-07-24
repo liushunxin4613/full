@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,8 +26,8 @@ public class InhibitionRuleBi extends BaseApiBi<InhibitionRuleBi, InhibitionRule
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, InhibitionRuleBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull InhibitionRuleBean bean) {
+        super.updateBind(api, bean);
         api.setImage(iconIv, bean.getIconResId())
                 .setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail());

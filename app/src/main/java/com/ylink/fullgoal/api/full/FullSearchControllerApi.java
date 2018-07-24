@@ -174,7 +174,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     api().queryDepartmentData();
                     break;
                 case PROJECT://项目
-                    api().queryProjectData(getDepartmentCode());
+                    api().queryProjectData();
                     break;
                 case CONTRACT_BILL://合同付款申请单
                     api().queryContractPaymentData();
@@ -183,7 +183,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     api().queryProcessData();
                     break;
                 case COST_INDEX://费用指标
-                    api().queryCostIndexData();
+                    api().queryCostIndexData(getKey());
                     break;
                 case APPLY_CONTENT://申请单内容
                     api().queryApplyContent(getKey());
@@ -198,13 +198,13 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     }
                     break;
                 case BUSINESS://出差申请单
-                    api().queryTravelFormData();
+                    api().queryTravelFormData(getKey());
                     break;
                 case REPORT://投研报告
-                    api().queryResearchReportData();
+                    api().queryResearchReportData(getKey());
                     break;
                 case XC_AIR://携程机票
-                    api().queryCtripTicketsData();
+                    api().queryCtripTicketsData(getKey());
                     break;
             }
         }

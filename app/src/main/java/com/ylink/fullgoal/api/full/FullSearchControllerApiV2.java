@@ -74,7 +74,9 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
                 vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName), value.getViewValue(),
                 String.format("请选择%s", vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName)),
                 (bean, view) -> routeApi().searchApplyContent(APPLY_CONTENT, encode(map(getMap(), m
-                        -> m.put("applyType", key))))))));
+                        -> m.put("applyType", key)))), (bean, view) -> {
+            show("清除");
+        }))));
     }
 
     @Override

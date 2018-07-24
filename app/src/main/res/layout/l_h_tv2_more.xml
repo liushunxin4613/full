@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin"
         android:layout_weight="3"
+        android:gravity="right"
         android:maxLines="1"
         android:textColor="@color/tv1"
         android:textSize="@dimen/tv1"
@@ -33,8 +34,9 @@
 
     <ImageView
         android:id="@+id/icon_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:padding="@dimen/x12"
+        android:layout_width="@dimen/x64"
+        android:layout_height="@dimen/x64"
         android:src="@mipmap/more"
         tools:ignore="ContentDescription" />
 

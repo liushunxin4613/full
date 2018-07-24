@@ -3,13 +3,11 @@ package com.leo.core.api.main;
 import android.support.v7.widget.RecyclerView;
 
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.api.ICheckApi;
+import com.leo.core.iapi.inter.IDataHelper;
 import com.leo.core.iapi.inter.IbooleanAction;
-import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IDataApi;
 import com.leo.core.util.RunUtil;
-import com.leo.core.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +18,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
 
     private List<D> data;
     private List<D> filterData;
-    private IBolAction<D> filterAction;
+    private IDataHelper<D> helper;
     private IbooleanAction emptyAction;
     private ICheckApi<ICheckApi, D> api;
     private RecyclerView.Adapter adapter;
@@ -49,40 +47,38 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
         return getThis();
     }
 
-    public T setEmptyAction(IbooleanAction action) {
+    public void setEmptyAction(IbooleanAction action) {
         this.emptyAction = action;
+    }
+
+    public IDataHelper<D> getHelper() {
+        return helper;
+    }
+
+    public T setHelper(IDataHelper<D> helper) {
+        this.helper = helper;
         return getThis();
     }
 
-    public T setFilterAction(IBolAction<D> action) {
-        this.filterAction = action;
+    public T setFilterData(List<D> filterData) {
+        this.filterData = filterData;
         return getThis();
     }
 
-    public IBolAction<D> getFilterAction() {
-        return filterAction;
-    }
-
-    public T initFilterAction() {
-        if (getFilterAction() != null && !TextUtils.isEmpty(getData())) {
-            filterData = new ArrayList<>();
-            for (D obj : getData()) {
-                if (obj != null && getFilterAction().execute(obj)) {
-                    filterData.add(obj);
-                }
+    private void initFilterAction() {
+        if(adapter != null){
+            if(getHelper() == null){
+                filterData = null;
+                adapter.notifyDataSetChanged();
+            } else {
+                getHelper().execute(adapter, getThis(), getData());
             }
-        } else {
-            filterData = null;
         }
-        return getThis();
     }
 
     @Override
     public T notifyDataSetChanged() {
         initFilterAction();
-        if(adapter != null){
-            adapter.notifyDataSetChanged();
-        }
         return getThis();
     }
 

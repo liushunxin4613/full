@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,8 +33,8 @@ public class SearchWaterfallBi extends BaseApiBi<SearchWaterfallBi, SearchWaterf
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, SearchWaterfallBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull SearchWaterfallBean bean) {
+        super.updateBind(api, bean);
         api.setViewGroupApi(vg, vg -> {
             bean.setCloseIv(iconIv).setTextView(nameEt);
             api.setText(nameTv, bean.getName());

@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -26,8 +27,8 @@ public class HintDialogBi extends SurfaceBi<HintDialogBi, HintDialogBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, HintDialogBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull HintDialogBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getTitle())
                 .setText(detailTv, bean.getDetail())
                 .setText(confirmTv, bean.getConfirm())

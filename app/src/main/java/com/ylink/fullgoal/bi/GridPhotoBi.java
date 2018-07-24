@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -33,8 +34,8 @@ public class GridPhotoBi extends SurfaceBi<GridPhotoBi, GridPhotoBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, GridPhotoBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull GridPhotoBean bean) {
+        super.updateBind(api, bean);
         api.setImage(iconIv, bean.getRes())
                 .execute(() -> {
                     if (bean.getObj() instanceof ImageVo) {

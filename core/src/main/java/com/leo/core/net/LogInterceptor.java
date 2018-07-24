@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.leo.core.factory.DataFactory;
 import com.leo.core.iapi.api.IDataApi;
 import com.leo.core.util.FileSizeUtil;
+import com.leo.core.util.JsonShowUtil;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
@@ -35,7 +36,7 @@ public class LogInterceptor implements Interceptor {
 
     @SuppressLint("DefaultLocale")
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public synchronized Response intercept(Chain chain) throws IOException {
         long t1 = System.nanoTime();
         Request request = chain.request();
         String url = request.url().toString();
@@ -160,7 +161,7 @@ public class LogInterceptor implements Interceptor {
             if (TextUtils.count(value) > 10000) {
                 value = value.substring(0, 10000);
             }
-            LogUtil.ii(this, key + ": " + value);
+            LogUtil.ii(this, key + ": " + JsonShowUtil.getShowJson(value));
         }
     }
 

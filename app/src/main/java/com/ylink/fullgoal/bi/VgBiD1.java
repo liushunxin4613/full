@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -34,8 +35,8 @@ public class VgBiD1 extends BaseVgBi<VgBiD1, VgBeanD1> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, VgBeanD1 bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull VgBeanD1 bean) {
+        super.updateBind(api, bean);
         api.setOnClickListener(bean.getOnClickListener());
     }
 

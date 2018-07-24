@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,8 +27,8 @@ public class TvHEtIconMoreBi extends BaseApiBi<TvHEtIconMoreBi, TvHEtIconMoreBea
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, TvHEtIconMoreBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull TvHEtIconMoreBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .execute(() -> bean.setTextView(detailEt))
                 .setImage(iconIv, bean.getIconResId())

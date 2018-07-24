@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -32,8 +33,8 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, ImageVo bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull ImageVo bean) {
+        super.updateBind(api, bean);
         api.setVisibility(bean.isShow() ? View.VISIBLE : View.GONE, vg)
                 .setVisibility(TextUtils.isEmpty(bean.getPhoto()) ?
                         View.INVISIBLE : View.VISIBLE, photoIv)

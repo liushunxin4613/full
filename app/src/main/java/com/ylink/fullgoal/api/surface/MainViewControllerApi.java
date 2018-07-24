@@ -55,7 +55,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         if (TextUtils.check(userId, username)) {//TODO 测试用
             initUser(new UserBean(name, cookie, userId, username, cookieStr, portalPac));
         }
-//        api().SSO(getCastgc());
+        api().SSO(getCastgc());
         ii("user", getUser());
     }
 

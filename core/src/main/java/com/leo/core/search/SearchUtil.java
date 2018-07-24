@@ -41,7 +41,7 @@ public class SearchUtil {
     /**
      * 普拼
      */
-    public static boolean PPSearch(String text, String search) {
+    private static boolean PPSearch(String text, String search) {
         return TextUtils.check(text, search) && Pattern
                 .compile(search, Pattern.CASE_INSENSITIVE).matcher(text).find();
     }
@@ -49,7 +49,7 @@ public class SearchUtil {
     /**
      * 简拼
      */
-    public static boolean JPSearch(String text, String search) {
+    private static boolean JPSearch(String text, String search) {
         return TextUtils.check(text, search) && search.length() < 6
                 && Pattern.compile(search, Pattern.CASE_INSENSITIVE)
                 .matcher(FirstLetterUtil.getFirstLetter(text)).find();
@@ -58,7 +58,7 @@ public class SearchUtil {
     /**
      * 全拼
      */
-    public static boolean QPSearch(String text, String search) {
+    private static boolean QPSearch(String text, String search) {
         return TextUtils.check(text, search) && Pattern
                 .compile(search, Pattern.CASE_INSENSITIVE)
                 .matcher(CharacterParserFactory.getInstance().getSelling(text))

@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -26,8 +27,8 @@ public class CCSQDBi extends SurfaceBi<CCSQDBi, CCSQDBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, CCSQDBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull CCSQDBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
                 .setText(startTv, bean.getStart())

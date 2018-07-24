@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.bi;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -23,8 +24,8 @@ public class TvH2SBi extends BaseApiBi<TvH2SBi, TvH2SBean> {
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindApi(SurfaceControllerApi api, TvH2SBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull TvH2SBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
                 .execute(() -> {

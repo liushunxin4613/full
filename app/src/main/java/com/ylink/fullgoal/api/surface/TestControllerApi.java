@@ -1,11 +1,11 @@
 package com.ylink.fullgoal.api.surface;
 
-import com.leo.core.iapi.inter.IAction;
-import com.ylink.fullgoal.config.JsonHelper;
+import com.leo.core.util.FileUtil;
 import com.ylink.fullgoal.config.MVCFactory;
-import com.ylink.fullgoal.config.Node;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.fg.DataFg;
 
+import java.io.File;
 import java.util.List;
 
 public class TestControllerApi<T extends TestControllerApi, C> extends RecycleBarControllerApi<T, C> {
@@ -18,7 +18,7 @@ public class TestControllerApi<T extends TestControllerApi, C> extends RecycleBa
     public void initView() {
         super.initView();
         setTitle("测试列表");
-        add(String.class, (path, what, msg, response)
+        /*add(String.class, (path, what, msg, response)
                 -> JsonHelper.newBuilder()
                 .add(List.class, (parent, list) -> onData(
                         path, msg, list), new Node("list"))
@@ -27,7 +27,15 @@ public class TestControllerApi<T extends TestControllerApi, C> extends RecycleBa
             api().val("1");
             api().val("2");
         });
-        start();
+        start();*/
+        /*String fileName = "config.json";
+        add(DataFg.class, byte[].class, (path, what, msg, bytes) -> {
+            File file = new File(getRootDir("test"), fileName);
+            if (FileUtil.writeFile(file.getPath(), bytes)) {
+                ii("保存成功", file.getPath());
+            }
+        });
+        api().uploadFile(fileName);*/
     }
 
     private void onData(String path, String params, List list) {

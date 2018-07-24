@@ -13,7 +13,7 @@ import com.leo.core.util.NetUtils;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.ylink.fullgoal.config.MVCFactory;
+import com.ylink.fullgoal.config.MVCFactoryV1;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
 
@@ -40,8 +40,7 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
                 -> new MaterialHeader(context));
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout)
                 -> new ClassicsFooter(context));
-//        ConfigFactory.getInstance().init(getThis()).start();
-        MVCFactory.getInstance().init(getThis()).start();
+        MVCFactoryV1.getInstance().init(getThis()).start();
     }
 
 }

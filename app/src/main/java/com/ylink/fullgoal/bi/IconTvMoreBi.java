@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +16,8 @@ public class IconTvMoreBi extends BaseApiBi<IconTvMoreBi, IconTvMoreBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, IconTvMoreBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull IconTvMoreBean bean) {
+        super.updateBind(api, bean);
         ImageView iconIv = (ImageView) api.findViewById(R.id.icon_iv);
         TextView nameTv = (TextView) api.findViewById(R.id.name_tv);
         api.setImage(iconIv, bean.getIconResId())

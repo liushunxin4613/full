@@ -137,4 +137,30 @@ public class FileUtil {
         return false;
     }
 
+    public static boolean writeFile(String filePath, byte[] bytes) {
+        if (!TextUtils.check(filePath, bytes)) {
+            return false;
+        }
+        try {
+            File file = new File(filePath);
+            if (file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            if (file.exists() && file.isFile()) {
+                FileOutputStream fileOutputStream
+                        = new FileOutputStream(file);
+                fileOutputStream.write(bytes);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

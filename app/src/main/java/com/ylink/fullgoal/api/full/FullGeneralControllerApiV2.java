@@ -1,12 +1,11 @@
 package com.ylink.fullgoal.api.full;
 
 import com.google.gson.reflect.TypeToken;
-import com.ylink.fullgoal.R;
+import com.leo.core.api.inter.CoreController;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
-import com.ylink.fullgoal.bean.TvHTvIconMoreBean;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.DepartmentController;
 import com.ylink.fullgoal.cr.surface.RuleController;
@@ -70,19 +69,29 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
         //VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
-            data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
-            checkAdd(data, vorv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
+            data.add(new TvH2Bean("经办人", vorv(DVo::getAgent)));
+            /*checkAdd(data, vorv(DVo::getReimbursement), new TvH2MoreBean(
                     "报销人", vorv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> routeApi().search(SearchVo.REIMBURSEMENT), text
-                    -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
-            checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
-                    vorv(DVo::getBudgetDepartment), "请选择预算归属部门",
-                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT)));
+                    -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));*/
+            checkAdd(data, vorv(DVo::getReimbursement), new TvH2MoreBean("报销人",
+                    vorv(DVo::getReimbursement), "请选择报销人",
+                    (bean, view) -> routeApi().search(SearchVo.REIMBURSEMENT), (bean, view) -> {
+                vos(DVo::getReimbursement, CoreController::clear);
+            }));
+            checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属",
+                    vorv(DVo::getBudgetDepartment), "请选择预算归属",
+                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT), (bean, view) -> {
+                vos(DVo::getBudgetDepartment, CoreController::clear);
+            }));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject),
-                    "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT)));
+                    "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT), (bean, view) -> {
+                vos(DVo::getProject, CoreController::clear);
+            }));
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreBean("费用指标",
-                    vorv(DVo::getCostIndex), "请选择费用指标", (bean, view)
-                    -> routeApi().search(SearchVo.COST_INDEX)));
+                    vorv(DVo::getCostIndex), "请选择费用指标", (bean, view) -> routeApi().search(
+                    SearchVo.COST_INDEX, (String) vor(DVo::getReimbursement, UserController::getUserCode)),
+                    (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
             /*checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("单据内容",
                     vorv(DVoV1::getCostIndexValue), "请选择单据内容", (bean, view)
                     -> startSearch(FullSearchControllerApiV2.class, SearchVo.APPLY,
@@ -93,7 +102,9 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
                     -> routeApi().searchApply(SearchVo.APPLY,
                     encode(map(map -> map.put("departmentCode", vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentCode))
                             .put("reimbursement", vor(DVo::getReimbursement, UserController::getUserCode))
-                            .put("costIndexCode", vor(DVo::getCostIndex, CostIndexController::getCostCode)))))));
+                            .put("costIndexCode", vor(DVo::getCostIndex, CostIndexController::getCostCode))))), (bean, view) -> {
+                vos(DVoV1::getCostIndexValue, CoreController::clear);
+            }));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));

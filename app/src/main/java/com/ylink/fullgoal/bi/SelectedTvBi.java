@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,8 +24,8 @@ public class SelectedTvBi extends SurfaceBi<SelectedTvBi, SelectedTvBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, SelectedTvBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull SelectedTvBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .execute(() -> bean.setTextView(nameTv))
                 .setOnClickListener(v -> {

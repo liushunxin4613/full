@@ -61,7 +61,7 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
             try {
                 String text = gson.toJson(obj);
                 if (json) {
-                    return JsonShowUtil.getShowJson("\n" + text);
+                    return "\n" + JsonShowUtil.getShowJson(text);
                 } else {
                     return text;
                 }

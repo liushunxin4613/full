@@ -63,12 +63,18 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                     -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
             checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
                     vorv(DVo::getBudgetDepartment), "请选择预算归属部门",
-                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT)));
+                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT), (bean, view) -> {
+                show("清除");
+            }));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject), "请选择项目",
-                    (bean, view) -> routeApi().search(SearchVo.PROJECT)));
+                    (bean, view) -> routeApi().search(SearchVo.PROJECT), (bean, view) -> {
+                show("清除");
+            }));
             checkAdd(data, vorv(DVo::getCostIndex),
                     new TvH2MoreBean("费用指标", vorv(DVo::getCostIndex), "请选择费用指标",
-                            (bean, view) -> routeApi().search(SearchVo.COST_INDEX)));
+                            (bean, view) -> routeApi().search(SearchVo.COST_INDEX), (bean, view) -> {
+                        show("清除");
+                    }));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));
@@ -100,7 +106,8 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加出差申请单", (bean, view)
-                        -> routeApi().search(SearchVo.BUSINESS, filterData)));
+                        -> routeApi().search(SearchVo.BUSINESS, vor(DVo::getReimbursement,
+                        UserController::getUserCode), filterData)));
             }
         });
         //VgBean 投研报告
@@ -119,7 +126,8 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加投研报告", (bean, view)
-                        -> routeApi().search(SearchVo.REPORT, filterData)));
+                        -> routeApi().search(SearchVo.REPORT, vor(DVo::getReimbursement,
+                        UserController::getUserCode), filterData)));
             }
         });
         //GridBean 交通费报销
@@ -145,7 +153,8 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加携程机票", (bean, view)
-                        -> routeApi().search(SearchVo.XC_AIR, filterData)));
+                        -> routeApi().search(SearchVo.XC_AIR, vor(DVo::getReimbursement,
+                        UserController::getUserCode), filterData)));
             }
             if (!(!isEnable() && TextUtils.isEmpty(imageData))) {
                 data.add(newGridBean(FILTER_CCJPF, imageData));

@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,8 +26,8 @@ public class TvV2DialogBi extends SurfaceBi<TvV2DialogBi, TvV2DialogBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, TvV2DialogBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull TvV2DialogBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
                 .execute(() -> bean.setDialog(api.getDialog()))

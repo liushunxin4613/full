@@ -23,6 +23,7 @@ public class InterceptorBean extends NewFieldBean {
             "Image_upload.action"
     };
     private final static transient String RESPONSE_FILTER[] = {
+            "Trans_file.action"
     };
 
     private boolean update;

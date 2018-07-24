@@ -34,7 +34,7 @@ public class AuxiliaryFactory {
         return instance;
     }
 
-    private final static transient boolean SERVER = false;
+    private final static transient boolean SERVER = true;
     private final static transient String ROOT_IP = SERVER ? "111.231.231.226" : "192.168.8.102";
     private final static transient String ROOT_URL = String.format("http://%s/app/api/", ROOT_IP);
 

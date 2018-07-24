@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,13 +26,16 @@ public class TvH2MoreBi extends BaseApiBi<TvH2MoreBi, TvH2MoreBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, TvH2MoreBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull TvH2MoreBean bean) {
+        super.updateBind(api, bean);
         api.setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail())
                 .execute(() -> bean.setTextView(detailTv))
                 .setText(detailTv, TextUtils.isEmpty(bean.getDetail()) ? bean.getHint() : bean.getDetail())
                 .setTextColor(detailTv, api.getResTvColor(bean.getDetail()))
+                .setImage(iconIv, TextUtils.isEmpty(bean.getDetail()) ? R.mipmap.more : R.mipmap.cha)
+                .setOnClickListener(iconIv, TextUtils.isEmpty(bean.getDetail()) ? bean.getOnClickListener()
+                        : bean.getIconOnClickListener())
                 .setOnClickListener(bean.getOnClickListener());
     }
 

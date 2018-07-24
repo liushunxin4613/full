@@ -11,6 +11,8 @@ public class DataFg extends StatusCodeFg {
 
     //消息
     private String message;
+    //sessionId
+    private String sessionId;
     //用户列表
     private List<UserFg> userList;
     //部门列表
@@ -38,6 +40,8 @@ public class DataFg extends StatusCodeFg {
     private List<DimenFg> dimen;
     //银行卡查询列表
     private List<DimenListFg> dimenList;
+    //文件流数组
+    private byte[] fileByte;
 
     public List<UserFg> getUserList() {
         return userList;
@@ -149,6 +153,22 @@ public class DataFg extends StatusCodeFg {
 
     public void setDimenList(List<DimenListFg> dimenList) {
         this.dimenList = dimenList;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public byte[] getFileByte() {
+        return fileByte;
+    }
+
+    public void setFileByte(byte[] fileByte) {
+        this.fileByte = fileByte;
     }
 
 }

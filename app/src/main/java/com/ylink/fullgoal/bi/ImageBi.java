@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.bi;
 
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.ylink.fullgoal.R;
@@ -20,8 +21,8 @@ public class ImageBi extends SurfaceBi<ImageBi, ImageBean> {
     }
 
     @Override
-    public void onBindApi(SurfaceControllerApi api, ImageBean bean) {
-        super.onBindApi(api, bean);
+    public void updateBind(@NonNull SurfaceControllerApi api, @NonNull ImageBean bean) {
+        super.updateBind(api, bean);
         api.setImage(image, bean.getPath());
     }
 

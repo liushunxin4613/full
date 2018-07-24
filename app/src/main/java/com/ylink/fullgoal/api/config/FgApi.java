@@ -50,22 +50,22 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * 获取员工信息
      */
     public void queryUserData() {
-        post(ROOT_URL, PATH_QUERY_USER_DATA);
+        post(ROOT_URL, PATH_QUERY_USER_DATA, g());
     }
 
     /**
      * 获取部门信息
      */
     public void queryDepartmentData() {
-        post(ROOT_URL, PATH_QUERY_DEPARTMENT_DATA);
+        post(ROOT_URL, PATH_QUERY_DEPARTMENT_DATA, g());
     }
 
     /**
      * 获取项目信息
      */
-    public void queryProjectData(String departmentCode) {
-        post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g(map ->
-                map.put("departmentCode", departmentCode)));
+    public void queryProjectData() {
+        post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g(map
+                -> map.put("departmentCode", controllerApi().getDepartmentCode())));
     }
 
     /**
@@ -85,29 +85,47 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 获取费用指标
      */
-    public void queryCostIndexData() {
-        post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA);
+    public void queryCostIndexData(String reimbursement) {
+        if (TextUtils.check(reimbursement)) {
+            post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA, g(map -> {
+                map.put("reimbursement", reimbursement);
+                map.put("depertation", controllerApi().getDepartmentCode());
+            }));
+        }
     }
 
     /**
      * 获取出差申请单
      */
-    public void queryTravelFormData() {
-        post(ROOT_URL, PATH_QUERY_TRAVEL_FORM_DATA);
+    public void queryTravelFormData(String reimbursement) {
+        if (TextUtils.check(reimbursement)) {
+            post(ROOT_URL, PATH_QUERY_TRAVEL_FORM_DATA, g(map -> {
+                map.put("reimbursement", reimbursement);
+                map.put("budgetDepartment", controllerApi().getDepartmentCode());
+            }));
+        }
     }
 
     /**
      * 获取投研报告
      */
-    public void queryResearchReportData() {
-        post(ROOT_URL, PATH_QUERY_RESEARCH_REPORT_DATA);
+    public void queryResearchReportData(String reimbursement) {
+        if (TextUtils.check(reimbursement)) {
+            post(ROOT_URL, PATH_QUERY_RESEARCH_REPORT_DATA, g(map -> {
+                map.put("reimbursement", reimbursement);
+                map.put("departmentCode", controllerApi().getDepartmentCode());
+            }));
+        }
     }
 
     /**
      * 获取携程机票
      */
-    public void queryCtripTicketsData() {
-        post(ROOT_URL, PATH_QUERY_CTRIP_TICKETS_DATA);
+    public void queryCtripTicketsData(String reimbursement) {
+        if (TextUtils.check(reimbursement)) {
+            post(ROOT_URL, PATH_QUERY_CTRIP_TICKETS_DATA, g(map
+                    -> map.put("reimbursement", reimbursement)));
+        }
     }
 
     /**
@@ -306,24 +324,53 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     public void queryApply(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
-            postParams("http://111.231.231.226/app/fullApp/", "ApplyCompensation",
-                    map -> map.put("departmentCode", jsonMap.get("departmentCode"))
-                            .put("reimbursement", jsonMap.get("reimbursement"))
-                            .put("costIndexCode", jsonMap.get("costIndexCode")));
-            /*postParams("http://111.231.231.226/app/fullApp/", "ApplyCompensation",
-                    map -> map.put("departmentCode", jsonMap.get("departmentCode"))
-                            .put("reimbursement", jsonMap.get("reimbursement"))
-                            .put("costIndexCode", jsonMap.get("costIndexCode")));*/
+            jsonMap.put("departmentCode", "7bcbb865-b8c0-4ff5-9650-bdb9c9ebb614");
+            jsonMap.put("reimbursement", "fujianjun");
+            jsonMap.put("costIndexCode", "8e5da371-6636-4714-880a-11e2827c6602");
+            postParams(ROOT_URL, "Apply_compensation.action", g(map -> {
+                map.put("departmentCode", jsonMap.get("departmentCode"));
+                map.put("reimbursement", jsonMap.get("reimbursement"));
+                map.put("costIndexCode", jsonMap.get("costIndexCode"));
+            }));
+            /*postParams(DEBUG_URL, "ApplyCompensation", map -> {
+                map.put("departmentCode", jsonMap.get("departmentCode"));
+                map.put("reimbursement", jsonMap.get("reimbursement"));
+                map.put("costIndexCode", jsonMap.get("costIndexCode"));
+            });*/
         }
     }
 
     public void queryApplyContent(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
-            postParams("http://111.231.231.226/app/fullApp/", "ApplyContentCompensation",
-                    map -> map.put("departmentCode", jsonMap.get("departmentCode"))
-                            .put("reimbursement", jsonMap.get("reimbursement"))
-                            .put("costIndexCode", jsonMap.get("costIndexCode"))
-                            .put("applyType", jsonMap.get("applyType")));
+            jsonMap.put("departmentCode", "7bcbb865-b8c0-4ff5-9650-bdb9c9ebb614");
+            jsonMap.put("reimbursement", "fujianjun");
+            jsonMap.put("costIndexCode", "8e5da371-6636-4714-880a-11e2827c6602");
+            postParams(ROOT_URL, "Apply_content.action", g(map -> {
+                map.put("departmentCode", jsonMap.get("departmentCode"));
+                map.put("reimbursement", jsonMap.get("reimbursement"));
+                map.put("costIndexCode", jsonMap.get("costIndexCode"));
+                map.put("applyType", jsonMap.get("applyType"));
+            }));
+            /*postParams(DEBUG_URL, "ApplyContentCompensation", map -> {
+                map.put("departmentCode", jsonMap.get("departmentCode"));
+                map.put("reimbursement", jsonMap.get("reimbursement"));
+                map.put("costIndexCode", jsonMap.get("costIndexCode"));
+                map.put("applyType", jsonMap.get("applyType"));
+            });*/
+        }
+    }
+
+    // >>> ****************************** 2018-07-24 09:37 ****************************** >>>
+
+    /**
+     * 下载文件
+     */
+    public void uploadFile(String fileName){
+        if(TextUtils.check(fileName)){
+            post(ROOT_URL, "Trans_file.action", g(map -> {
+                map.put("type", "Android");
+                map.put("fileName", fileName);
+            }), fileName);
         }
     }
 
