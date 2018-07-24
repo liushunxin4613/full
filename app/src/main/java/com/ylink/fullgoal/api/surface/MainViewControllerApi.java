@@ -2,7 +2,6 @@ package com.ylink.fullgoal.api.surface;
 
 import android.content.Intent;
 
-import com.leo.core.iapi.inter.IAction;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
@@ -36,16 +35,22 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 new IconTvMoreBean(R.mipmap.m4, "选择银行卡号", (bean, view) -> routeApi().selectBank()))
                 .notifyDataSetChanged()
                 .showContentView();
-        test();
+//        test();
     }
 
     private void test() {
-        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试: 确认数据", (bean, view) -> clickTest()));
-        clickTest();
+        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试: 一般费用报销确认", (bean, view)
+                -> clickTestGeneral()), new IconTvMoreBean(R.mipmap.test_icon2, "测试: 出差费用报销确认",
+                (bean, view) -> clickTestEvection()));
+        clickTestEvection();
     }
 
-    private void clickTest() {
+    private void clickTestGeneral() {
         routeApi().general(QR, "20180724xijiong6000815");
+    }
+
+    private void clickTestEvection() {
+        routeApi().evection(QR, "20180725xijiong6000821");
     }
 
     @Override

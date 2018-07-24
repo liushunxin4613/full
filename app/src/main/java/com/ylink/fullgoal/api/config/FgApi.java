@@ -244,6 +244,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void submitReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {
+            api().ii("任务", map);
             post(ROOT_URL, FULL_REIMBURSE_SUBMIT, g(mp -> mp.putAll(map)));
         }
     }

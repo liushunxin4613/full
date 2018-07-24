@@ -560,6 +560,14 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      */
     boolean onTouchEvent(MotionEvent event);
 
+    /**
+     * 启动activity
+     * @param intent intent
+     * @param requestCode requestCode
+     * @param options options
+     */
+    void onStartActivityForResult(Intent intent, int requestCode, @Nullable Bundle options);
+
     //自定义的
 
     /**

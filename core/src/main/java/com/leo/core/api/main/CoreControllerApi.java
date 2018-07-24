@@ -877,6 +877,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public void onStartActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        getActivity().getIntent().putExtra(FINISH, (String) null);
+    }
+
+    @Override
     public LayoutInflater inflater() {
         return LayoutInflater.from(getContext());
     }

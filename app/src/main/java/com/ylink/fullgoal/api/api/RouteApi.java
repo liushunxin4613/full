@@ -16,6 +16,7 @@ import com.ylink.fullgoal.api.full.FullBankControllerApiV1;
 import com.ylink.fullgoal.api.full.FullBillControllerApi;
 import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
+import com.ylink.fullgoal.api.full.FullEvectionControllerApiV2;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApiV1;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApiV2;
@@ -159,7 +160,9 @@ public class RouteApi extends CoreRouteApi {
                         FullGeneralControllerApiV1.class,
                         FullGeneralControllerApiV2.class);
             case "evection"://出差费用普票报销
-                return getClz(module, FullEvectionControllerApi.class);
+                return getClz(module, FullEvectionControllerApi.class,
+                        FullEvectionControllerApi.class,
+                        FullEvectionControllerApiV2.class);
             case "queryReimburse"://报销列表查询
                 return getClz(module, FullReimburseDataControllerApi.class);
             case "selectBank"://选择银行卡

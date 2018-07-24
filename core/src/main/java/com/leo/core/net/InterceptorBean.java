@@ -20,7 +20,8 @@ public class InterceptorBean extends NewFieldBean {
             "/uploadfile/",
     };
     private final static transient String PARAMS_FILTER[] = {
-            "Image_upload.action"
+            "Image_upload.action",
+            "Task_submit.action",
     };
     private final static transient String RESPONSE_FILTER[] = {
             "Trans_file.action"

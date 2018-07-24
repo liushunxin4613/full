@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.iapi.api.ICameraApi;
 import com.leo.core.iapi.inter.IMsgAction;
-import com.leo.core.util.BitmapUtil;
 import com.leo.core.util.FileSizeUtil;
 
 import java.io.File;
