@@ -13,7 +13,12 @@ import com.leo.core.util.NetUtils;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.config.MVCFactoryV1;
+
+import static com.ylink.fullgoal.config.Config.TEMPLATE_FULL;
+import static com.ylink.fullgoal.config.Config.VERSION;
+import static com.ylink.fullgoal.config.Config.VERSION_V2;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
 
@@ -40,7 +45,16 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
                 -> new MaterialHeader(context));
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout)
                 -> new ClassicsFooter(context));
-        MVCFactoryV1.getInstance().init(getThis()).start();
+        //版本处理
+        switch (VERSION) {
+            case VERSION_V2:
+                if (!TEMPLATE_FULL) {
+                    MVCFactory.getInstance().init(getThis()).start();
+                } else {
+                    MVCFactoryV1.getInstance().init(getThis()).start();
+                }
+                break;
+        }
     }
 
 }

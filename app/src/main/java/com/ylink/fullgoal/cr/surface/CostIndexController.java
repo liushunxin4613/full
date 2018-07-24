@@ -53,9 +53,6 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
 
     @Override
     public String getViewBean() {
-        /*if(!check(getDB())){
-            initDB(new CostFg("009", "差旅费"));
-        }*/
         return vor(CostFg::getCostIndex);
     }
 

@@ -47,7 +47,6 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
     @Override
     public void initView() {
         super.initView();
-        ee("key", getKey());
         setMap(TextUtils.toJSONMap(getKey()));
         setTitle("单据内容");
         /*setRightTv("确定", v -> finishActivity(new SearchVo<>(getSearch(),

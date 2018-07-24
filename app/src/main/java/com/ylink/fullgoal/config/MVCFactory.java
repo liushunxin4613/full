@@ -6,7 +6,6 @@ import com.leo.core.api.api.VsApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.util.FileUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.MD5Util;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.vo.ConfigFileVo;
@@ -89,7 +88,7 @@ public class MVCFactory extends VsApi<MVCFactory> {
         if (!TextUtils.check(getVo())) {
             return;
         }
-        api().ee("vo", getVo());
+        api().ii("vo", getVo());
         execute(getVo().getFileList(), vo -> {
             File file = new File(getConfigDir(), vo.getFile());
             if (!file.exists()) {
@@ -107,8 +106,8 @@ public class MVCFactory extends VsApi<MVCFactory> {
 
     public void onData(String path, String params, List list, IObjAction<List<ViewBean>> action) {
         if (TextUtils.check(path, list, action, getVo()) && TextUtils.check(getVo().getViewList())) {
-            LogUtil.ee("path", path);
-            LogUtil.ee("params", params);
+            api().ii("path", path);
+            api().ii("params", params);
             executeBol(getVo().getViewList(), vo -> {
                 if (TextUtils.equals(path, vo.getPath()) && checkParams(params, vo.getParams())) {
                     action.execute(getVBData(vo.getXml(), vo.getList(), list));

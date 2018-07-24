@@ -1,5 +1,7 @@
 package com.ylink.fullgoal.config;
 
+import com.ylink.fullgoal.api.api.RouteApi;
+
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_QR;
@@ -13,7 +15,14 @@ import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY_BILL_TYPE_YB;
 
 public class Config {
 
+    //版本
+    public final static String VERSION_APP = RouteApi.MODULE_APP;
+    public final static String VERSION_V1 = RouteApi.MODULE_V1;
+    public final static String VERSION_V2 = RouteApi.MODULE_V2;
+
     //配置
+    public final static String VERSION = VERSION_V2;//版本
+    public final static boolean TEMPLATE_FULL = false;//template下载方式
     public final static boolean DEBUG = false;//debug模式是否开启5
     public final static boolean LOCAL = false;//本地模式是否开启
     public final static boolean TEST = true;//测试模式是否开启
@@ -22,6 +31,7 @@ public class Config {
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间
     public final static int TIME_SPLASH = 1;//引导页时间
     public final static String HTTP_SUCCESS = "AAAAAA";//接口成功标志
+
     public final static String[][] FIELDS = {
             {"agentList", "经办人"},
             {"reimbursementList", "报销人"},

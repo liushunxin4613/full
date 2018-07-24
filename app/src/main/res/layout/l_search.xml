@@ -12,7 +12,7 @@
         android:background="@color/bar_bg"
         android:orientation="horizontal">
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/back_iv"
             android:layout_width="@dimen/bar_height"
             android:layout_height="@dimen/bar_height"
@@ -20,6 +20,17 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="@dimen/icon_padding"
+            android:src="@mipmap/back"
+            tools:ignore="ContentDescription,RtlSymmetry" />-->
+
+        <ImageView
+            android:id="@+id/back_iv"
+            android:layout_width="@dimen/bar_height"
+            android:layout_height="@dimen/bar_height"
+            android:padding="12dp"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@mipmap/back"
             tools:ignore="ContentDescription,RtlSymmetry" />
 

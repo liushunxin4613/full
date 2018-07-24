@@ -9,28 +9,28 @@
       "url": "http://111.231.231.226/uploadfile/20180723/20180723093106QT5BI.xml"
     },
     {
-      "name": "l_apply_v2",
-      "file": "l_apply_v2.xml",
-      "version": "5",
-      "state": "1",
-      "hashcode": "491e2bf6ec4e1050c8c618c7bd347d9b",
-      "url": "http://111.231.231.226/uploadfile/20180723/20180723093113BG6DC.xml"
-    },
-    {
-      "name": "l_apply_v3",
-      "file": "l_apply_v3.xml",
-      "version": "2",
-      "state": "1",
-      "hashcode": "23241af4b51808c632a35fb8def23179",
-      "url": "http://111.231.231.226/uploadfile/20180723/20180723093118PGZMI.xml"
-    },
-    {
       "name": "l_apply_v4",
       "file": "l_apply_v4.xml",
       "version": "3",
       "state": "1",
       "hashcode": "b2f1850ea313ba8898b9b0ee5e05bac4",
       "url": "http://111.231.231.226/uploadfile/20180723/20180723093123GTGN4.xml"
+    },
+    {
+      "name": "l_apply_v2",
+      "file": "l_apply_v2.xml",
+      "version": "6",
+      "state": "1",
+      "hashcode": "6f7f046453c9e31ead82a07dc936a80e",
+      "url": "http://111.231.231.226/uploadfile/20180724/20180724151408WA8ZH.xml"
+    },
+    {
+      "name": "l_apply_v3",
+      "file": "l_apply_v3.xml",
+      "version": "3",
+      "state": "1",
+      "hashcode": "2dcb0bc70c98c1fe781a0b68d6f2b8fd",
+      "url": "http://111.231.231.226/uploadfile/20180724/20180724151413QRI1C.xml"
     }
   ],
   "viewList": [
@@ -39,8 +39,8 @@
       "name": "l_apply_v1",
       "xml": "l_apply_v1.xml",
       "type": "view",
-      "path": "ApplyContentCompensation",
-      "params": "{\"applyType\": \"001\"}",
+      "path": "Apply_content.action",
+      "params": "{\"applyType\":\"001\"}",
       "list": [
         {
           "id": "2",
@@ -116,8 +116,8 @@
       "name": "l_apply_v2",
       "xml": "l_apply_v2.xml",
       "type": "view",
-      "path": "ApplyContentCompensation",
-      "params": "{\"applyType\": \"002\"}",
+      "path": "Apply_content.action",
+      "params": "{\"applyType\":\"002\"}",
       "list": [
         {
           "id": "12",
@@ -168,8 +168,8 @@
       "name": "l_apply_v3",
       "xml": "l_apply_v3.xml",
       "type": "view",
-      "path": "ApplyContentCompensation",
-      "params": "{\"applyType\": \"003\"}",
+      "path": "Apply_content.action",
+      "params": "{\"applyType\":\"003\"}",
       "list": [
         {
           "id": "18",
@@ -227,8 +227,8 @@
       "name": "l_apply_v4",
       "xml": "l_apply_v4.xml",
       "type": "view",
-      "path": "ApplyContentCompensation",
-      "params": "{\"applyType\": \"004\"}",
+      "path": "Apply_content.action",
+      "params": "{\"applyType\":\"004\"}",
       "list": [
         {
           "id": "25",

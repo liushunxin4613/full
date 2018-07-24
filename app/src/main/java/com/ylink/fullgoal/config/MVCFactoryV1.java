@@ -52,7 +52,8 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
 
     public void start() {
         String[] args = getConfigDir().list();
-        api().ii("args", args);
+        api().ii(String.format("dir: %s, list: %s", getConfigDir().getPath(),
+                LogUtil.getLog((Object) args)));
         add(DataFg.class, byte[].class, (path, what, fileName, bytes) -> {
             if (TextUtils.check(path, fileName)) {
                 File file = new File(getConfigDir(), fileName);
@@ -99,8 +100,8 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
 
     public void onData(String path, String params, List list, IObjAction<List<ViewBean>> action) {
         if (TextUtils.check(path, list, action, getVo()) && TextUtils.check(getVo().getViewList())) {
-            LogUtil.ee("path", path);
-            LogUtil.ee("params", params);
+            api().ii("path", path);
+            api().ii("params", params);
             executeBol(getVo().getViewList(), vo -> {
                 if (TextUtils.equals(path, vo.getPath()) && checkParams(params, vo.getParams())) {
                     action.execute(getVBData(vo.getXml(), vo.getList(), list));

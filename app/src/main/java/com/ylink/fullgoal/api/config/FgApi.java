@@ -85,6 +85,13 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 获取费用指标
      */
+    public void queryCostIndexData() {
+        post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA, g());
+    }
+
+    /**
+     * 获取费用指标
+     */
     public void queryCostIndexData(String reimbursement) {
         if (TextUtils.check(reimbursement)) {
             post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA, g(map -> {
@@ -244,10 +251,12 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void SSO(String tid) {
         if (!TextUtils.isEmpty(tid)) {
-            get("http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
-                map.put("ticketGrantingTicketId", tid);
-                map.put("type", "validateTGT");
-            });
+            if(FG_ROOT_URL.startsWith("FULL_TEST_HTTP")){
+                get("http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
+                    map.put("ticketGrantingTicketId", tid);
+                    map.put("type", "validateTGT");
+                });
+            }
         }
     }
 
@@ -324,9 +333,6 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     public void queryApply(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
-            jsonMap.put("departmentCode", "7bcbb865-b8c0-4ff5-9650-bdb9c9ebb614");
-            jsonMap.put("reimbursement", "fujianjun");
-            jsonMap.put("costIndexCode", "8e5da371-6636-4714-880a-11e2827c6602");
             postParams(ROOT_URL, "Apply_compensation.action", g(map -> {
                 map.put("departmentCode", jsonMap.get("departmentCode"));
                 map.put("reimbursement", jsonMap.get("reimbursement"));
@@ -342,9 +348,6 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     public void queryApplyContent(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
-            jsonMap.put("departmentCode", "7bcbb865-b8c0-4ff5-9650-bdb9c9ebb614");
-            jsonMap.put("reimbursement", "fujianjun");
-            jsonMap.put("costIndexCode", "8e5da371-6636-4714-880a-11e2827c6602");
             postParams(ROOT_URL, "Apply_content.action", g(map -> {
                 map.put("departmentCode", jsonMap.get("departmentCode"));
                 map.put("reimbursement", jsonMap.get("reimbursement"));
@@ -365,8 +368,8 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 下载文件
      */
-    public void uploadFile(String fileName){
-        if(TextUtils.check(fileName)){
+    public void uploadFile(String fileName) {
+        if (TextUtils.check(fileName)) {
             post(ROOT_URL, "Trans_file.action", g(map -> {
                 map.put("type", "Android");
                 map.put("fileName", fileName);

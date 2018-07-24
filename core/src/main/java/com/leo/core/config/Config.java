@@ -5,7 +5,7 @@ public class Config {
     //系统配置
 
     //超时时间(单位:秒)
-    public final static int TIME_OUT_SECONDS = 60;
+    public final static int TIME_OUT_SECONDS = 10;
 
     //其他
 

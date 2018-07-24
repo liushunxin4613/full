@@ -13,6 +13,7 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.config.JsonHelper;
+import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.config.MVCFactoryV1;
 import com.ylink.fullgoal.config.Node;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
@@ -24,6 +25,7 @@ import java.util.Map;
 import butterknife.Bind;
 
 import static com.leo.core.util.TextUtils.toJsonString;
+import static com.ylink.fullgoal.config.Config.TEMPLATE_FULL;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 
 public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, C> extends BaseSearchControllerApi<T, C> {
@@ -88,28 +90,26 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
                 .add(List.class, (parent, list) -> onData(path, msg, list),
                         new Node("applyCodeResult2"))
                 .execute(response));
-        /*add(String.class, (path, what, msg, response)
-                -> JsonHelper.newBuilder()
-                .add(List.class, (parent, list) -> onData(path, msg, list),
-                        new Node("applyCodeResult"))
-                .execute(response));*/
     }
 
     private void onData(String path, String params, List list) {
-        MVCFactoryV1.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list, d
-                -> initDataAction(data -> execute(d, item -> {
-            item.setOnClickListener((bean, view) -> finishActivity(new SearchVo<>(getSearch(),
-                    getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String, String>>>() {
+        if (!TEMPLATE_FULL) {
+            MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list, d
+                    -> initDataAction(data -> execute(d, item -> {
+                item.setOnClickListener((bean, view) -> finishActivity(new SearchVo<>(getSearch(),
+                        getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String, String>>>() {
+                })));
+                data.add(item);
             })));
-            data.add(item);
-        })));
-        /*MVCFactory.getInstance().onData(path, toJsonString(params, true, "applyType"), list, d
-                -> initDataAction(data -> execute(d, item -> {
-            item.setOnClickListener((bean, view) -> finishActivity(new SearchVo<>(getSearch(),
-                    getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String, String>>>() {
+        } else {
+            MVCFactoryV1.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list, d
+                    -> initDataAction(data -> execute(d, item -> {
+                item.setOnClickListener((bean, view) -> finishActivity(new SearchVo<>(getSearch(),
+                        getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String, String>>>() {
+                })));
+                data.add(item);
             })));
-            data.add(item);
-        })));*/
+        }
     }
 
     @Override

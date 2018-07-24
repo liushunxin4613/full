@@ -256,8 +256,8 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         setTitle("查询列表");
         if (getRightTv() != null) {
             getRightTv().setTextSize(15);
-            getRightTv().setTextColor(ResUtil.getColor(R.color.tv));
-            Drawable drawable = ResUtil.getDrawable(R.mipmap.icon_sx);
+            getRightTv().setTextColor(ResUtil.getColor(R.color.ccF));
+            Drawable drawable = ResUtil.getDrawable(R.mipmap.shaixuan);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             getRightTv().setCompoundDrawables(null, null, drawable, null);
             setRightTv("筛选", v -> {

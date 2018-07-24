@@ -27,6 +27,7 @@
         android:layout_weight="3"
         android:background="@null"
         android:maxLines="1"
+        android:gravity="right"
         android:textColor="@color/tv"
         android:textColorHint="@color/tv1"
         android:textSize="@dimen/tv1"

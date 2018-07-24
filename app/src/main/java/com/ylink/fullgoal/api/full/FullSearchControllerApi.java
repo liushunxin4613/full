@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.api.full;
 
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
@@ -33,6 +34,9 @@ import com.ylink.fullgoal.vo.SearchVo;
 
 import butterknife.Bind;
 
+import static com.ylink.fullgoal.config.Config.VERSION;
+import static com.ylink.fullgoal.config.Config.VERSION_APP;
+import static com.ylink.fullgoal.config.Config.VERSION_V2;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 import static com.ylink.fullgoal.vo.SearchVo.BUDGET_DEPARTMENT;
@@ -183,7 +187,14 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     api().queryProcessData();
                     break;
                 case COST_INDEX://费用指标
-                    api().queryCostIndexData(getKey());
+                    switch (VERSION){
+                        case VERSION_APP:
+                            api().queryCostIndexData();
+                            break;
+                        case VERSION_V2:
+                            api().queryCostIndexData(getKey());
+                            break;
+                    }
                     break;
                 case APPLY_CONTENT://申请单内容
                     api().queryApplyContent(getKey());

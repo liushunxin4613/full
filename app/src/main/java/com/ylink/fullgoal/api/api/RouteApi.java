@@ -36,12 +36,13 @@ import static com.ylink.fullgoal.config.Config.SEARCH;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
 import static com.ylink.fullgoal.config.Config.VALUE;
+import static com.ylink.fullgoal.config.Config.VERSION;
 
 public class RouteApi extends CoreRouteApi {
 
-    private final static String MODULE_APP = "app";
-    private final static String MODULE_V1 = "v1";
-    private final static String MODULE_V2 = "v2";
+    public final static String MODULE_APP = "app";
+    public final static String MODULE_V1 = "v1";
+    public final static String MODULE_V2 = "v2";
 
     private final static String MODULE = MODULE_APP;
     private final static String[] MODULE_ARGS = {MODULE_APP, MODULE_V1, MODULE_V2};
@@ -188,14 +189,14 @@ public class RouteApi extends CoreRouteApi {
      * 一般费用报销
      */
     public void general(String state, String serialNo) {
-        route(MODULE_V2, "surface/general", null, map -> map.put(STATE, state).put(SERIAL_NO, serialNo));
+        route(VERSION, "surface/general", null, map -> map.put(STATE, state).put(SERIAL_NO, serialNo));
     }
 
     /**
      * 出差费用报销
      */
     public void evection(String state, String serialNo) {
-        route(MODULE_V2, "surface/evection", null, map -> map.put(STATE, state).put(SERIAL_NO, serialNo));
+        route(VERSION, "surface/evection", null, map -> map.put(STATE, state).put(SERIAL_NO, serialNo));
     }
 
     /**
