@@ -94,6 +94,10 @@ public class SearchVo<D> extends SerialVersionTag {
     private String value;
     private D obj;
 
+    public SearchVo(String search, D obj) {
+        this(search, null, obj);
+    }
+
     public SearchVo(String search, String value, D obj) {
         this.search = search;
         this.value = value;
@@ -124,10 +128,6 @@ public class SearchVo<D> extends SerialVersionTag {
             }
         }
         return null;
-    }
-
-    public SearchVo(String search, D obj) {
-        this(search, null, obj);
     }
 
     public String getSearch() {

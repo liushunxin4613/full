@@ -2,6 +2,7 @@ package com.ylink.fullgoal.api.surface;
 
 import android.content.Intent;
 
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.IconTvMoreBean;
@@ -11,6 +12,7 @@ import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.fg.StatusFg;
 
 import static com.ylink.fullgoal.config.ComConfig.FQ;
+import static com.ylink.fullgoal.config.ComConfig.QR;
 
 /**
  * 主View视图
@@ -34,6 +36,16 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 new IconTvMoreBean(R.mipmap.m4, "选择银行卡号", (bean, view) -> routeApi().selectBank()))
                 .notifyDataSetChanged()
                 .showContentView();
+        test();
+    }
+
+    private void test() {
+        addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试: 确认数据", (bean, view) -> clickTest()));
+        clickTest();
+    }
+
+    private void clickTest() {
+        routeApi().general(QR, "20180724xijiong6000815");
     }
 
     @Override

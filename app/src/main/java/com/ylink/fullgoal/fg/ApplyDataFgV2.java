@@ -21,7 +21,7 @@ public class ApplyDataFgV2 {
                 case "002"://
                     return getMap().get("extension2");
                 case "003"://
-                    return getMap().get("extension3");
+                    return getMap().get("extension5");
                 case "004"://
                     return getMap().get("extension2");
             }

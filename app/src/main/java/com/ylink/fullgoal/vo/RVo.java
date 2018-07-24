@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.vo;
 
 import com.leo.core.iapi.inter.IGet;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.fg.MessageBackFg;
 
 /**
@@ -10,7 +11,7 @@ public class RVo extends MessageBackFg implements IGet<DVo> {
 
     @Override
     public DVo get(DVo vo) {
-        if(vo != null){
+        if (vo != null) {
             vo.getAgent().initDB(getAgent());
             vo.getReimbursement().initDB(getReimbursement());
             vo.getBudgetDepartment().initDB(getBudgetDepartment());
@@ -24,6 +25,11 @@ public class RVo extends MessageBackFg implements IGet<DVo> {
             vo.getReport().initDB(getReport());
             vo.getTrave().initDB(getTravel());
             vo.getRuleList().initDB(getRuleList());
+            //新加 2018-07-24 20:51
+            vo.getIsShare().initDB(TextUtils.equals(getIsShare(), "需要分摊"));
+            if (vo instanceof DVoV1) {
+                ((DVoV1) vo).getApply().init(getApply());
+            }
         }
         return vo;
     }

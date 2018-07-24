@@ -108,23 +108,26 @@ public class UrlConfig {
     public final static String PATH_QUERY_APPLICATION_FORM_DATA = "Application_form.action";//获取报销列表
     public final static String PATH_QUERY_DIMENSION_DATA = FULL_DIMENSION_LIST;//获取分摊维度列表
     public final static String PATH_QUERY_DIMENSION_INFORMATION_DATA = "Dimension_information.action";//获取分摊维度信息列表
-//    public final static String PATH_QUERY__DATA = "";//
+    public final static String PATH_QUERY_APPLY = "Apply_compensation.action";//请求申请单信息
+    public final static String PATH_QUERY_APPLY_CONTENT = "Apply_content.action";//请求申请单内容信息
 
     public final static String[] LOADING_DIALOGS = {
-            PATH_QUERY_USER_DATA,
-            PATH_QUERY_DEPARTMENT_DATA,
-            PATH_QUERY_PROJECT_DATA,
-            PATH_QUERY_CONTRACT_PAYMENT_DATA,
-            PATH_QUERY_PROCESS_DATA,
-            PATH_QUERY_COST_INDEX_DATA,
-            PATH_QUERY_TRAVEL_FORM_DATA,
-            PATH_QUERY_RESEARCH_REPORT_DATA,
-            PATH_QUERY_CTRIP_TICKETS_DATA,
-            PATH_QUERY_MESSAGE_BACK_DATA,
-            PATH_QUERY_BANK_DATA,
-            PATH_QUERY_APPLICATION_FORM_DATA,
-            PATH_QUERY_DIMENSION_DATA,
-            PATH_QUERY_DIMENSION_INFORMATION_DATA,
+            PATH_QUERY_USER_DATA,//获取员工信息
+            PATH_QUERY_DEPARTMENT_DATA,//获取部门信息
+            PATH_QUERY_PROJECT_DATA,//获取项目信息
+            PATH_QUERY_CONTRACT_PAYMENT_DATA,//获取合同申请单
+            PATH_QUERY_PROCESS_DATA,//获取招待申请单
+            PATH_QUERY_COST_INDEX_DATA,//获取费用指标
+            PATH_QUERY_TRAVEL_FORM_DATA,//获取出差申请单
+            PATH_QUERY_RESEARCH_REPORT_DATA,//获取投研报告
+            PATH_QUERY_CTRIP_TICKETS_DATA,//获取携程机票
+            PATH_QUERY_MESSAGE_BACK_DATA,//获取报销确认信息
+            PATH_QUERY_BANK_DATA,//获取银行卡报销信息
+            PATH_QUERY_APPLICATION_FORM_DATA,//获取报销列表
+            PATH_QUERY_DIMENSION_DATA,//获取分摊维度列表
+            PATH_QUERY_DIMENSION_INFORMATION_DATA,//获取分摊维度信息列表
+            PATH_QUERY_APPLY,//请求申请单信息
+            PATH_QUERY_APPLY_CONTENT,//请求申请单内容信息
     };
 
 }

@@ -2,6 +2,7 @@ package com.ylink.fullgoal.controllerApi.core;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.helper.TimeFactory;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -22,6 +24,7 @@ import com.leo.core.util.TextUtils;
 import com.leo.core.util.ToastUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.LoadingDialogControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.ContentControllerApi;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.vo.SearchVo;
 
@@ -45,8 +48,20 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     private LoadingDialogControllerApi dialogApi;
 
+    private void setDialogApi(LoadingDialogControllerApi api) {
+        this.dialogApi = api;
+    }
+
     private LoadingDialogControllerApi getDialogApi() {
         return dialogApi;
+    }
+
+    private TimeFactory getTimeFactory() {
+        return TimeFactory.getInstance();
+    }
+
+    protected boolean isNoDialogShowing() {
+        return !no(vr(getDialogApi(), SurfaceControllerApi::getDialog, Dialog::isShowing), false);
     }
 
     public SurfaceControllerApi(C controller) {
@@ -56,20 +71,34 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     public void showLoading() {
         if (!(check(getDialogApi()) && check(getDialogApi().getDialog())
                 && getDialogApi().getDialog().isShowing())) {
-            dialogApi = (LoadingDialogControllerApi) getDialogControllerApi(getActivity(),
-                    LoadingDialogControllerApi.class).dialogShow();
+            setDialogApi((LoadingDialogControllerApi) getDialogControllerApi(getActivity(),
+                    LoadingDialogControllerApi.class).dialogShow());
+            if (this instanceof ContentControllerApi) {
+                ((ContentControllerApi) this).hideViews();
+            }
+            getTimeFactory().start();
         }
     }
 
     private void dismissLoading() {
-        executeNon(getDialogApi(), CoreControllerApi::dismiss);
+        getTimeFactory().check(500, () -> {
+            executeNon(getDialogApi(), CoreControllerApi::dismiss);
+            if (this instanceof ContentControllerApi) {
+                ((ContentControllerApi) this).renewViews();
+            }
+        });
     }
 
     @Override
     public void initView() {
         super.initView();
         add(Completed.class, (path, what, msg, bean) -> dismissLoading());
-        add(Exceptions.class, (path, what, msg, bean) -> dismissLoading());
+        add(Exceptions.class, (path, what, msg, bean) -> {
+            if (this instanceof ContentControllerApi) {
+                ((ContentControllerApi) this).showContentView();
+            }
+            dismissLoading();
+        });
         add(Exceptions.class, (path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(bean.getMessage())) {
                 ToastUtil.show(this, bean.getMessage());

@@ -16,6 +16,8 @@ import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLICATION_FORM_DATA;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLY;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLY_CONTENT;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_BANK_DATA;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_CONTRACT_PAYMENT_DATA;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_COST_INDEX_DATA;
@@ -331,9 +333,12 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     // >>> ****************************** 2018-07-18 16:10 ****************************** >>>
 
+    /**
+     * 请求申请单信息
+     */
     public void queryApply(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
-            postParams(ROOT_URL, "Apply_compensation.action", g(map -> {
+            postParams(ROOT_URL, PATH_QUERY_APPLY, g(map -> {
                 map.put("departmentCode", jsonMap.get("departmentCode"));
                 map.put("reimbursement", jsonMap.get("reimbursement"));
                 map.put("costIndexCode", jsonMap.get("costIndexCode"));
@@ -346,9 +351,12 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
         }
     }
 
+    /**
+     * 请求申请单内容信息
+     */
     public void queryApplyContent(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
-            postParams(ROOT_URL, "Apply_content.action", g(map -> {
+            postParams(ROOT_URL, PATH_QUERY_APPLY_CONTENT, g(map -> {
                 map.put("departmentCode", jsonMap.get("departmentCode"));
                 map.put("reimbursement", jsonMap.get("reimbursement"));
                 map.put("costIndexCode", jsonMap.get("costIndexCode"));

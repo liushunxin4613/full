@@ -12,18 +12,41 @@ import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.checkNull;
+import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.DQ;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.YB;
 
 public class ApplyMapControllerV2<T extends ApplyMapControllerV2> extends BaseMapController<T,
-        String, ApplyDataFgV2, List<ApplyDataFgV2>> {
+        String, ApplyDataFgV2, List<Map<String, String>>> {
 
     @Override
     protected Map<String, ApplyDataFgV2> newMap() {
         return new LinkedHashMap<>();
     }
 
+    public T init(List<Map<String, String>> data) {
+        clear();
+        execute(data, item -> {
+            String applyType = item.get("extension1");
+            String applyName = item.get("applyName");
+            ApplyDataFgV2 dataFgV2 = new ApplyDataFgV2(
+                    new ApplyFgV2(applyType, applyName));
+            dataFgV2.setMap(item);
+            initDB(applyType, dataFgV2);
+        });
+        return getThis();
+    }
+
+    public T insert(ApplyMapControllerV2 controller) {
+        Map<String, ApplyDataFgV2> map = vr(controller, ApplyMapControllerV2::getMap);
+        execute(map, (key, value) -> initDB(key, vr(value, ApplyDataFgV2::getMap)));
+        return getThis();
+    }
+
     public T initKey(ApplyFgV2 key) {
-        if (check(key) && check(key.getApplyType(), key.getApplyName())) {
+        if (check(key) && check(key.getApplyType(), key.getApplyName())
+                && !TextUtils.check(getValue(key.getApplyType()))) {
             getMap().put(key.getApplyType(), new ApplyDataFgV2(key));
         }
         return getThis();
@@ -64,18 +87,29 @@ public class ApplyMapControllerV2<T extends ApplyMapControllerV2> extends BaseMa
     }
 
     @Override
-    protected Class<List<ApplyDataFgV2>> getUBClz() {
+    protected Class<List<Map<String, String>>> getUBClz() {
         return null;
     }
 
     @Override
-    public <VB> VB getViewBean() {
-        return null;
+    public String getViewBean() {
+        StringBuilder builder = new StringBuilder();
+        execute(getMap(), (key, value) -> {
+            String name = vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName);
+            if (TextUtils.check(name, vr(value, ApplyDataFgV2::getMap))) {
+                builder.append(String.format("【%s】", name));
+            }
+        });
+        return builder.toString();
     }
 
     @Override
     protected String getOnUBKey(String key) {
         switch (key) {
+            case YB:
+            case CC:
+            case QR:
+                return "apply";
             case DQ:
                 return key;
         }
@@ -83,11 +117,19 @@ public class ApplyMapControllerV2<T extends ApplyMapControllerV2> extends BaseMa
     }
 
     @Override
-    protected List<ApplyDataFgV2> getOnUB(String key) {
+    protected List<Map<String, String>> getOnUB(String key) {
         switch (key) {
+            case YB:
+            case CC:
+            case QR:
             case DQ:
-                List<ApplyDataFgV2> data = new ArrayList<>();
-                execute(getMap(), (kk, vv) -> data.add(vv));
+                List<Map<String, String>> data = new ArrayList<>();
+                execute(getMap(), (kk, vv) -> {
+                    String name = vr(vv, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName);
+                    if (TextUtils.check(vv.getMap(), name)) {
+                        data.add(map(vv.getMap(), map -> map.put("applyName", name)));
+                    }
+                });
                 return data;
         }
         return super.getOnUB(key);

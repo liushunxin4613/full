@@ -384,8 +384,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         if (check(item.getCode(), item.getName())) {
                             data.add(new TvH2MoreBean(item.getName(), getDimenValue(api, item.getCode()),
                                     String.format("请选择%s", item.getName()), (bean, view) -> routeApi()
-                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item)), (bean, view) -> {
-                                show("清除");
+                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item)), (bean, view)
+                                    -> {
+                                show("清除!!!");
+                                vs(getCostItemController(api), obj -> obj.remove(item.getCode()));
                             }));
                         }
                     });

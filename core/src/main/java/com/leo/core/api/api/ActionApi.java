@@ -29,6 +29,29 @@ public class ActionApi<T extends ActionApi, A extends IApi> extends ThisApi<T> i
     private Set<Integer> codeData;
     private Set<Integer> cancelData;
 
+    public ActionApi() {
+        handler = new Handler(Looper.getMainLooper());
+        thread = new Thread(() -> {
+            synchronized (this) {
+                while (start) {
+                    codeData = new HashSet<>();
+                    start(getUIActionMap(), true);
+                    start(getActionMap(), false);
+                    for (Integer code : codeData) {
+                        if(getCancelData().contains(code)){
+                            getCancelData().remove(code);
+                        }
+                    }
+                    try {
+                        Thread.sleep(getInterval());
+                    } catch (InterruptedException e) {
+                        LogUtil.ee(this, e);
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     public long currentTimeMillis() {
         return System.currentTimeMillis();
@@ -168,27 +191,9 @@ public class ActionApi<T extends ActionApi, A extends IApi> extends ThisApi<T> i
     @Override
     public T start() {
         start = true;
-        handler = new Handler(Looper.getMainLooper());
-        thread = new Thread(() -> {
-            synchronized (this) {
-                while (start) {
-                    codeData = new HashSet<>();
-                    start(getUIActionMap(), true);
-                    start(getActionMap(), false);
-                    for (Integer code : codeData) {
-                        if(getCancelData().contains(code)){
-                            getCancelData().remove(code);
-                        }
-                    }
-                    try {
-                        Thread.sleep(getInterval());
-                    } catch (InterruptedException e) {
-                        LogUtil.ee(this, e);
-                    }
-                }
-            }
-        });
-        thread.start();
+        if(!thread.isAlive()){
+            thread.start();
+        }
         return getThis();
     }
 

@@ -14,7 +14,9 @@ public class JsonShowUtil {
                 char c = json.charAt(i);
                 switch (c) {
                     case ':':
-                        ts = false;
+                        if(!(ts != null && ts)){
+                            ts = false;
+                        }
                         break;
                     case '\\':
                         is = false;

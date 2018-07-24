@@ -13,6 +13,14 @@ public class ApplyFgV2 {
     private String applyType;
     private String applyName;
 
+    public ApplyFgV2() {
+    }
+
+    public ApplyFgV2(String applyType, String applyName) {
+        this.applyType = applyType;
+        this.applyName = applyName;
+    }
+
     public String getApplyType() {
         return applyType;
     }

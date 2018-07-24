@@ -3,6 +3,7 @@ package com.ylink.fullgoal.fg;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 报销确认请求消息
@@ -37,6 +38,10 @@ public class MessageBackFg extends StatusCodeFg {
     private String totalAmountLower;
     //规则信息列表
     private List<RuleFg> ruleList;
+    //分摊标志
+    private String isShare;
+    //申请单
+    private List<Map<String, String>> apply;
 
     public UserFg getAgent() {
         return agent;
@@ -148,6 +153,22 @@ public class MessageBackFg extends StatusCodeFg {
 
     public void setRuleList(List<RuleFg> ruleList) {
         this.ruleList = ruleList;
+    }
+
+    public String getIsShare() {
+        return isShare;
+    }
+
+    public void setIsShare(String isShare) {
+        this.isShare = isShare;
+    }
+
+    public List<Map<String, String>> getApply() {
+        return apply;
+    }
+
+    public void setApply(List<Map<String, String>> apply) {
+        this.apply = apply;
     }
 
 }

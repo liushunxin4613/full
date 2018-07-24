@@ -82,7 +82,7 @@ public class RouteApi extends CoreRouteApi {
         return null;
     }
 
-    private void onSearch(){
+    private void onSearch() {
         SoftInputUtil.hidSoftInput(controllerApi().getRootView());
     }
 
@@ -246,9 +246,9 @@ public class RouteApi extends CoreRouteApi {
     /**
      * 搜索申请单
      */
-    public void searchApply(String search, String key) {
+    public void searchApply(String search, String key, String value) {
         onSearch();
-        route(MODULE, "surface/searchApply", null, map -> map.put(SEARCH, search).put(KEY, key));
+        route(MODULE, "surface/searchApply", null, map -> map.put(SEARCH, search).put(KEY, key).put(VALUE, value));
     }
 
     /**

@@ -34,6 +34,10 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
         this.map = map;
     }
 
+    private Map<String, ApplyDataFgV2> getDataMap() {
+        return vor(ApplyVoV2::getApply, ApplyMapControllerV2::getMap);
+    }
+
     @Override
     public ApplyVoV2 getVo() {
         return super.getVo();
@@ -49,9 +53,7 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
         super.initView();
         setMap(TextUtils.toJSONMap(getKey()));
         setTitle("单据内容");
-        /*setRightTv("确定", v -> finishActivity(new SearchVo<>(getSearch(),
-                getVo().getCheckMap(DQ).get(DQ))));*/
-        setRightTv("确定", v -> ee("确定"));
+        setRightTv("确定", v -> finishActivity(new SearchVo<>(getSearch(), getVo())));
         initAdds();
     }
 
@@ -62,20 +64,16 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
 
     private void initDataAction(List<ApplyFgV2> list) {
         execute(list, item -> vos(ApplyVoV2::getApply, obj -> obj.initKey(item)));
-        vos(ApplyVoV2::getApply, obj -> obj.initDB(decode(getValue(), TypeToken.getParameterized(
-                List.class, ApplyDataFgV2.class).getType())));
+        vos(ApplyVoV2::getApply, obj -> obj.insert(decode(getValue(), ApplyMapControllerV2.class)));
         initActionData();
     }
 
     private void initActionData() {
-        Map<String, ApplyDataFgV2> map = vor(ApplyVoV2::getApply, ApplyMapControllerV2::getMap);
-        initDataAction(data -> execute(map, (key, value) -> data.add(new TvH2MoreBean(
+        initDataAction(data -> execute(getDataMap(), (key, value) -> data.add(new TvH2MoreBean(
                 vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName), value.getViewValue(),
                 String.format("请选择%s", vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName)),
                 (bean, view) -> routeApi().searchApplyContent(APPLY_CONTENT, encode(map(getMap(), m
-                        -> m.put("applyType", key)))), (bean, view) -> {
-            show("清除");
-        }))));
+                        -> m.put("applyType", key)))), (bean, view) -> value.setMap(null)))));
     }
 
     @Override

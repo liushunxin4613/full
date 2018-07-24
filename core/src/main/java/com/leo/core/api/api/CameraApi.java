@@ -84,12 +84,14 @@ public class CameraApi extends DirApi implements ICameraApi {
         switch (requestCode) {
             case PHOTO_REQUEST_CAMERA:
                 if (resultCode == RESULT_OK && photoFile != null) {
-                    BitmapUtil.saveBitmapFile(BitmapUtil.getOptionBitmap(photoFile.getPath(), 2),
+                    /*BitmapUtil.saveBitmapFile(BitmapUtil.getOptionBitmap(photoFile.getPath(), 4),
                             photoFile);
+                    ii("photoFile.getPath()", photoFile.getPath());
+                    ii("photoFile", FileSizeUtil.getFormetFileSize(photoFile));*/
                     Luban.with(controllerApi().getContext())
                             .load(photoFile)
                             .setTargetDir(getRootDir().getPath())
-                            .ignoreBy(100)
+                            .ignoreBy(500)
                             .setCompressListener(new OnCompressListener() {
                                 @Override
                                 public void onStart() {

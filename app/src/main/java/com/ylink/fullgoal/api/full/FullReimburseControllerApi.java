@@ -43,7 +43,9 @@ import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
+import com.ylink.fullgoal.vo.ApplyVoV2;
 import com.ylink.fullgoal.vo.DVo;
+import com.ylink.fullgoal.vo.DVoV1;
 import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.vo.RVo;
 
@@ -303,6 +305,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         executeSearch(CtripTicketsFg.class, vo -> vos(DVo::getCtrip, obj -> obj.initDB(vo.getObj())));
         //票据修改金额
         execute(getFinish(), ImageVo.class, vo -> vos(DVo::getImageList, obj -> obj.updateMoney(vo)));
+        //申请单
+        executeSearch(ApplyVoV2.class, vo -> {
+            if(getVo() instanceof DVoV1){
+                ((DVoV1)getVo()).setApply(vo.getObj().getApply());
+            }
+        });
         notifyDataChanged();
     }
 
@@ -347,7 +355,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     /**
      * 提交数据
      */
-    protected void submit() {
+    private void submit() {
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
             api().submitReimburse(map);
@@ -370,7 +378,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         });
     }
 
-    protected void initVgApiBean(String title, IAction action) {
+    void initVgApiBean(String title, IAction action) {
         if (!TextUtils.isEmpty(title)) {
             RecycleControllerApi api = getDialogControllerApi(getActivity(), RecycleControllerApi.class,
                     R.layout.l_dialog);
@@ -402,12 +410,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         }
     }
 
-    protected GridBean newGridBean(int type) {
+    GridBean newGridBean(int type) {
         return new GridBean(getPhotoGridBeanData(type,
                 vor(DVo::getImageList, obj -> obj.getFilterDBData(type))));
     }
 
-    protected GridBean newGridBean(int type, List<ImageVo> data) {
+    GridBean newGridBean(int type, List<ImageVo> data) {
         return new GridBean(getPhotoGridBeanData(type, data));
     }
 
@@ -469,21 +477,21 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     /**
      * 不为详情
      */
-    protected boolean isEnable() {
+    boolean isEnable() {
         return !TextUtils.equals(state, XQ);
     }
 
     /**
      * 不为修改
      */
-    protected boolean isAlterEnable() {
+    boolean isAlterEnable() {
         return TextUtils.equals(state, XG);
     }
 
     /**
      * 不为发起
      */
-    protected boolean isNoneInitiateEnable() {
+    boolean isNoneInitiateEnable() {
         return !TextUtils.equals(state, FQ);
     }
 
@@ -509,7 +517,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         return null;
     }
 
-    protected <D> void checkAdd(List<D> data, String text, D obj) {
+    <D> void checkAdd(List<D> data, String text, D obj) {
         if (data != null && !(!isEnable() && TextUtils.isEmpty(text))) {
             data.add(obj);
         }

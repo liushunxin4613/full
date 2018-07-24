@@ -82,19 +82,13 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
                     vorv(DVo::getCostIndex), "请选择费用指标", (bean, view) -> routeApi().search(
                     SearchVo.COST_INDEX, (String) vor(DVo::getReimbursement, UserController::getUserCode)),
                     (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
-            /*checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("单据内容",
-                    vorv(DVoV1::getCostIndexValue), "请选择单据内容", (bean, view)
-                    -> startSearch(FullSearchControllerApiV2.class, SearchVo.APPLY,
-                    vor(DVo::getCostIndex, CostIndexController::getDB, CostFg::getCostCode),
-                    encode(vor(DVoV1::getCostIndexValue, CostIndexValueController::getDB)))));*/
-            checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("单据内容",
-                    vorv(DVoV1::getCostIndexValue), "请选择单据内容", (bean, view)
-                    -> routeApi().searchApply(SearchVo.APPLY,
-                    encode(map(map -> map.put("departmentCode", vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentCode))
+            checkAdd(data, vorv(DVoV1::getApply), new TvH2MoreBean("单据内容",
+                    vorv(DVoV1::getApply), "请选择单据内容", (bean, view)
+                    -> routeApi().searchApply(SearchVo.APPLY, encode(map(map -> map.put("departmentCode",
+                    vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentCode))
                             .put("reimbursement", vor(DVo::getReimbursement, UserController::getUserCode))
-                            .put("costIndexCode", vor(DVo::getCostIndex, CostIndexController::getCostCode))))), (bean, view) -> {
-                vos(DVoV1::getCostIndexValue, CoreController::clear);
-            }));
+                            .put("costIndexCode", vor(DVo::getCostIndex, CostIndexController::getCostCode)))),
+                    encode(getVo().getApply())), (bean, view) -> vos(DVoV1::getApply, CoreController::clear)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));

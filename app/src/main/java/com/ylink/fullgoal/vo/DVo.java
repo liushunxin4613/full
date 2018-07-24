@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.leo.core.bean.NewFieldBean;
 import com.leo.core.iapi.inter.IController;
 import com.ylink.fullgoal.cr.surface.BillTypeController;
+import com.ylink.fullgoal.cr.surface.BooleanController;
 import com.ylink.fullgoal.cr.surface.CauseController;
 import com.ylink.fullgoal.cr.surface.ContractPaymentController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
@@ -76,6 +77,8 @@ public class DVo extends NewFieldBean {
     private ImageListController imageList;
     //评审结果集
     private RuleController ruleList;
+    //是否能分摊
+    private transient BooleanController isShare;
 
     @Override
     protected boolean isOther(@NonNull Field field) {
@@ -260,6 +263,14 @@ public class DVo extends NewFieldBean {
 
     public void setRuleList(RuleController ruleList) {
         this.ruleList = ruleList;
+    }
+
+    public BooleanController getIsShare() {
+        return isShare;
+    }
+
+    public void setIsShare(BooleanController isShare) {
+        this.isShare = isShare;
     }
 
 }

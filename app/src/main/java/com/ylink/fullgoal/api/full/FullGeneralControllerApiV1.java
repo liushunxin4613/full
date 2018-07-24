@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.api.full;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.api.inter.CoreController;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
@@ -77,25 +78,21 @@ public class FullGeneralControllerApiV1<T extends FullGeneralControllerApiV1, C>
                     -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));
             checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreBean("预算归属部门",
                     vorv(DVo::getBudgetDepartment), "请选择预算归属部门",
-                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT), (bean, view) -> {
-                show("清除");
-            }));
+                    (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT), (bean, view)
+                    -> vos(DVo::getBudgetDepartment, CoreController::clear)));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject),
-                    "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT), (bean, view) -> {
-                show("清除");
-            }));
+                    "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT), (bean, view)
+                    -> vos(DVo::getProject, CoreController::clear)));
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreBean("费用指标",
                     vorv(DVo::getCostIndex), "请选择费用指标", (bean, view)
-                    -> routeApi().search(SearchVo.COST_INDEX), (bean, view) -> {
-                show("清除");
-            }));
+                    -> routeApi().search(SearchVo.COST_INDEX), (bean, view)
+                    -> vos(DVo::getCostIndex, CoreController::clear)));
             checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("单据内容",
                     vorv(DVoV1::getCostIndexValue), "请选择单据内容", (bean, view)
                     -> routeApi().search(SearchVo.APPLY,
                     vor(DVo::getCostIndex, CostIndexController::getDB, CostFg::getCostCode),
-                    encode(vor(DVoV1::getCostIndexValue, CostIndexValueController::getDB))), (bean, view) -> {
-                show("清除");
-            }));
+                    encode(vor(DVoV1::getCostIndexValue, CostIndexValueController::getDB))), (bean, view)
+                    -> vos(DVoV1::getCostIndexValue, CoreController::clear)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));

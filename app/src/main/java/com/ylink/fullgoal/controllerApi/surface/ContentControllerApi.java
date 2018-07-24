@@ -8,11 +8,25 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 public class ContentControllerApi<T extends ContentControllerApi, C> extends SurfaceControllerApi<T, C>
         implements IContentApi<T> {
 
+    private final static int SHOW_CONTENT = 0x101;
+    private final static int SHOW_NULL = 0x102;
+    private final static int SHOW_ERROR = 0x103;
+    private final static int SHOW_NONE = 0x104;
+
     private View nullView;
     private View errorView;
+    private int show = SHOW_NONE;
 
     public ContentControllerApi(C controller) {
         super(controller);
+    }
+
+    public void setShow(int show) {
+        this.show = show;
+    }
+
+    public int getShow() {
+        return show;
     }
 
     @Override
@@ -27,9 +41,8 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
         return getThis();
     }
 
-    public T setNullView(View nullView) {
+    public void setNullView(View nullView) {
         this.nullView = nullView;
-        return getThis();
     }
 
     public T setErrorView(View errorView) {
@@ -80,6 +93,20 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
         return getThis();
     }
 
+    public void renewViews() {
+        switch (show) {
+            case SHOW_CONTENT:
+                showContentView();
+                break;
+            case SHOW_NULL:
+                showNullView(true);
+                break;
+            case SHOW_ERROR:
+                showErrorView();
+                break;
+        }
+    }
+
     @Override
     public T hideContentView() {
         setVisibility(getContentView(), View.INVISIBLE);
@@ -88,22 +115,31 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
 
     @Override
     public T showContentView() {
-        setVisibility(getContentView(), View.VISIBLE);
-        setVisibility(View.INVISIBLE, getNullView(), getErrorView());
+        setShow(SHOW_CONTENT);
+        if (isNoDialogShowing()) {
+            setVisibility(getContentView(), View.VISIBLE);
+            setVisibility(View.INVISIBLE, getNullView(), getErrorView());
+        }
         return getThis();
     }
 
     @Override
     public T showNullView(boolean refresh) {
-        setVisibility(getNullView(), View.VISIBLE);
-        setVisibility(View.INVISIBLE, getContentView(), getErrorView());
+        setShow(SHOW_NULL);
+        if (isNoDialogShowing()) {
+            setVisibility(getNullView(), View.VISIBLE);
+            setVisibility(View.INVISIBLE, getContentView(), getErrorView());
+        }
         return getThis();
     }
 
     @Override
     public T showErrorView() {
-        setVisibility(getErrorView(), View.VISIBLE);
-        setVisibility(View.INVISIBLE, getContentView(), getNullView());
+        setShow(SHOW_ERROR);
+        if (isNoDialogShowing()) {
+            setVisibility(getErrorView(), View.VISIBLE);
+            setVisibility(View.INVISIBLE, getContentView(), getNullView());
+        }
         return getThis();
     }
 

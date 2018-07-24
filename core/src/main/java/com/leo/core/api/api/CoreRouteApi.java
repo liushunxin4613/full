@@ -141,7 +141,9 @@ public abstract class CoreRouteApi extends HasCoreControllerApi<CoreRouteApi> im
         }
         Intent intent = getIntent(module, activity, api, viewApi, paramsMap);
         if (intent != null) {
-            controllerApi().getActivity().startActivity(intent);
+            Activity ay = controllerApi().getActivity();
+            ay.getIntent().putExtra(FINISH, (String) null);
+            ay.startActivity(intent);
         }
     }
 
