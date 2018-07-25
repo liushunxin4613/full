@@ -27,6 +27,7 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
     private String key;
     private String search;
     private String keyword;
+    private String searchTitle;
     private List<String> filterData;
 
     public BaseSearchControllerApi(C controller) {
@@ -57,6 +58,14 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         this.search = search;
     }
 
+    protected String getSearchTitle() {
+        return String.format("搜索%s", no(searchTitle));
+    }
+
+    private void setSearchTitle(String searchTitle) {
+        this.searchTitle = searchTitle;
+    }
+
     private List<String> getFilterData() {
         return filterData;
     }
@@ -84,6 +93,7 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         adapterDataApi().setEmptyAction(this::showView);
         executeBundle(bundle -> {
+            executeNon(bundle.getString(Config.SEARCH_TITLE), this::setSearchTitle);
             executeNon(bundle.getString(Config.SEARCH), this::setSearch);
             executeNon(bundle.getString(Config.KEY), this::setKey);
             executeNon(bundle.getString(Config.FILTERS), this::setFilterData);

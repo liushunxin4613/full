@@ -34,6 +34,7 @@ import cn.com.fullgoal.pt0001.MainActivity;
 import static com.ylink.fullgoal.config.Config.FILTERS;
 import static com.ylink.fullgoal.config.Config.KEY;
 import static com.ylink.fullgoal.config.Config.SEARCH;
+import static com.ylink.fullgoal.config.Config.SEARCH_TITLE;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
 import static com.ylink.fullgoal.config.Config.VALUE;
@@ -242,8 +243,12 @@ public class RouteApi extends CoreRouteApi {
      */
     public void search(String search, String key, String value, List<String> filterData) {
         onSearch();
-        route(MODULE, "surface/search", null, map -> map.put(SEARCH, search).put(KEY, key)
-                .put(VALUE, value).put(FILTERS, controllerApi().encode(filterData)));
+        route(MODULE, "surface/search", null, map
+                -> map.put(SEARCH_TITLE, search)
+                .put(SEARCH, search)
+                .put(KEY, key)
+                .put(VALUE, value)
+                .put(FILTERS, controllerApi().encode(filterData)));
     }
 
     /**

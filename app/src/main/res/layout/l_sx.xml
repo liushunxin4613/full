@@ -31,11 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="2.2"
-            android:background="@drawable/tv_shape_submit"
+            android:background="@drawable/tv_shape_selected_submit"
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/reset"
-            android:textColor="@color/tv1"
+            android:textColor="@color/selected_v1"
             android:textSize="@dimen/tv1"
             tools:ignore="RtlHardcoded" />
 
@@ -55,7 +55,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/confirm"
-            android:textColor="@color/selected"
+            android:textColor="@color/selected_v1"
             android:textSize="@dimen/tv1"
             tools:ignore="RtlHardcoded" />
 

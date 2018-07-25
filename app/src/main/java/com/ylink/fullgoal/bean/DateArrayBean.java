@@ -21,9 +21,10 @@ public class DateArrayBean extends SurfaceBiBean<DateArrayBean> {
     }
 
     private String name;
+    private transient int iconResId;
     private List<SelectedTvBean> data;
-    private transient IObjAction<String> action;
     private transient View selectedView;
+    private transient IObjAction<String> action;
 
     public DateArrayBean(String name, List<String> data, IObjAction<String> action) {
         this.name = name;

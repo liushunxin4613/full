@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.bi;
 
 import android.support.annotation.NonNull;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ public class DateArrayBi extends SurfaceBi<DateArrayBi, DateArrayBean> {
     TextView nameTv;
     @Bind(R.id.vg)
     LinearLayout vg;
+    @Bind(R.id.icon_iv)
+    ImageView iconIv;
 
     @Override
     public Integer getDefLayoutResId() {

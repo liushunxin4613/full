@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.full;
 
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
@@ -79,6 +78,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         setOnClickListener(iconIv, v -> setText(nameEt, null));
         setText(nullTv, "没有更多的数据");
         setNullView(nullVg);
+        setTextHint(nameEt, getSearchTitle());
         nameEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {

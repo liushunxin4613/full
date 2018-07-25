@@ -20,14 +20,21 @@ public class BarControllerApi<T extends BarControllerApi, C> extends SurfaceCont
     @Bind(R.id.right_tv)
     TextView rightTv;
 
+    private String title;
+
     public BarControllerApi(C controller) {
         super(controller);
     }
 
     public T setTitle(CharSequence title) {
+        this.title = vr(title, CharSequence::toString);
         setText(centerTv, title);
         setText(backTv, title);
         return getThis();
+    }
+
+    protected String getTitle(){
+        return title;
     }
 
     public T hideBackIv() {
@@ -43,7 +50,7 @@ public class BarControllerApi<T extends BarControllerApi, C> extends SurfaceCont
         return getThis();
     }
 
-    public TextView getRightTv() {
+    protected TextView getRightTv() {
         return rightTv;
     }
 

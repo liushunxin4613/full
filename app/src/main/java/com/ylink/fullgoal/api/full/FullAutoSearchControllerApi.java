@@ -57,6 +57,7 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
         setOnClickListener(iconIv, v -> setText(nameEt, null));
         setText(nullTv, "没有更多的数据");
         setNullView(nullVg);
+        setTextHint(nameEt, getSearchTitle());
         nameEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {

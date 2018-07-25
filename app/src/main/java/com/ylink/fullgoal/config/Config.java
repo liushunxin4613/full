@@ -21,7 +21,7 @@ public class Config {
     public final static String VERSION_V2 = RouteApi.MODULE_V2;
 
     //配置
-    public final static String VERSION = VERSION_APP;//版本
+    public final static String VERSION = VERSION_V2;//版本
     public final static boolean TEMPLATE_FULL = false;//template下载方式
     public final static boolean DEBUG = false;//debug模式是否开启5
     public final static boolean LOCAL = false;//本地模式是否开启
@@ -119,6 +119,7 @@ public class Config {
     public final static String COST = "cost";
     public final static String COST_LIST = "cost";
     public final static String SEARCH = "search";
+    public final static String SEARCH_TITLE = "searchTitle";
     public final static String FILTERS = "filters";
     public final static String KEY = "key";
     public final static String VALUE = "value";
