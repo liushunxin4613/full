@@ -47,7 +47,6 @@ public class GsonDecodeApi implements IGsonDecodeApi<GsonDecodeApi, Object, Obje
                 }
             }
         } catch (Exception ignored) {
-//            ignored.printStackTrace();
         }
         return null;
     }

@@ -139,7 +139,7 @@ public class RetrofitFactory {
                             .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
                             .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
                             .writeTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
-                            .sslSocketFactory(SSLUtil.getSSLSocketFactory())
+//                            .sslSocketFactory(SSLUtil.getSSLSocketFactory())
                             .build());
         }
         return builder.baseUrl(url).build();

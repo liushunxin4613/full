@@ -12,6 +12,9 @@ import java.io.File;
 import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
+import static com.ylink.fullgoal.config.Config.VERSION;
+import static com.ylink.fullgoal.config.Config.VERSION_APP;
+import static com.ylink.fullgoal.config.Config.VERSION_V2;
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
@@ -65,9 +68,18 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 获取项目信息
      */
-    public void queryProjectData() {
-        post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g(map
-                -> map.put("departmentCode", controllerApi().getDepartmentCode())));
+    public void queryProjectData(String departmentCode) {
+        switch (VERSION) {
+            case VERSION_APP:
+                if (TextUtils.check(departmentCode)) {
+                    post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g(map
+                            -> map.put("departmentCode", departmentCode)));
+                }
+                break;
+            case VERSION_V2:
+                post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g());
+                break;
+        }
     }
 
     /**
@@ -254,7 +266,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void SSO(String tid) {
         if (!TextUtils.isEmpty(tid)) {
-            if(FG_ROOT_URL.startsWith("FULL_TEST_HTTP")){
+            if (FG_ROOT_URL.startsWith("FULL_TEST_HTTP")) {
                 get("http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
                     map.put("ticketGrantingTicketId", tid);
                     map.put("type", "validateTGT");
@@ -385,5 +397,17 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
             }), fileName);
         }
     }
+
+    // >>> ****************************** 2018-07-25 14:12 ****************************** >>>
+
+    public void queryBankType(String cardNo) {
+        if (TextUtils.check(cardNo)) {
+            get("https://ccdcapi.alipay.com/", "validateAndCacheCardInfo.json", gm(map
+                    -> map.put("_input_charset", "utf-8")
+                    .put("cardBinCheck", true)
+                    .put("cardNo", cardNo)), cardNo);
+        }
+    }
+
 
 }

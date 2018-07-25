@@ -6,6 +6,7 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.IUrlAction;
+import com.leo.core.other.MMap;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
@@ -113,6 +114,10 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         get(url, path, action, WHAT_DEFAULT, null);
     }
 
+    public void get(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+        get(url, path, action, WHAT_DEFAULT, tag);
+    }
+
     public void post(String url, String path, IObjAction<Map<String, Object>> action) {
         post(url, path, action, WHAT_DEFAULT, null);
     }
@@ -136,6 +141,10 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
 
     protected IObjAction<Map<String, Object>> g() {
         return map -> map.put("REQINFO", "{}");
+    }
+
+    protected IObjAction<Map<String, Object>> gm(IObjAction<MMap<String, Object>> action) {
+        return action == null ? null : map -> action.execute(new MMap<String, Object>().map(map));
     }
 
 }

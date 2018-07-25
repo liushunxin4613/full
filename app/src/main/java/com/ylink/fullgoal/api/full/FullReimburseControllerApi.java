@@ -307,8 +307,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         execute(getFinish(), ImageVo.class, vo -> vos(DVo::getImageList, obj -> obj.updateMoney(vo)));
         //申请单
         executeSearch(ApplyVoV2.class, vo -> {
-            if(getVo() instanceof DVoV1){
-                ((DVoV1)getVo()).setApply(vo.getObj().getApply());
+            if (getVo() instanceof DVoV1) {
+                ((DVoV1) getVo()).setApply(vo.getObj().getApply());
             }
         });
         notifyDataChanged();
@@ -364,8 +364,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private Map<String, Object> getSubmitMap() {
         return getCheckMap(getVo().getCheckMap(getBType(), getState()),
-                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由",
-                        "费用指标"));
+                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由"));
+                /*getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由",
+                        "费用指标"));*/
+
     }
 
     @Override

@@ -481,7 +481,23 @@ public class TextUtils {
     public static Map<String, Object> toJSONMap(String text) {
         Object obj = toJSONMap(text, null);
         if (obj instanceof Map) {
-            return (Map<String, Object>) obj;
+            return toJSONMap(String.class, Object.class, text);
+        }
+        return null;
+    }
+
+    public static <K, V> Map<K, V> toJSONMap(Class<K> kClz, Class<V> vClz, String text) {
+        if (TextUtils.check(kClz, vClz, text)) {
+            Object obj = toJSONMap(text, null);
+            if (obj instanceof Map) {
+                Map<K, V> map = new LinkedHashMap<>();
+                RunUtil.execute((Map) obj, (key, value) -> {
+                    if (kClz.isInstance(key) && vClz.isInstance(value)) {
+                        map.put((K) key, (V) value);
+                    }
+                });
+                return map;
+            }
         }
         return null;
     }
@@ -634,7 +650,7 @@ public class TextUtils {
     public static <E> int indexOf(E[] args, E obj) {
         if (args != null) {
             for (int i = 0; i < args.length; i++) {
-                if(equals(args[i], obj)){
+                if (equals(args[i], obj)) {
                     return i;
                 }
             }
@@ -698,11 +714,11 @@ public class TextUtils {
         return GsonDecodeUtil.encode(getMap(text, filter, args));
     }
 
-    public static String getJsonStringValue(String text, String key){
+    public static String getJsonStringValue(String text, String key) {
         Map<String, Object> map = toJSONMap(text);
-        if(checkNull(map, key)){
+        if (checkNull(map, key)) {
             Object obj = map.get(key);
-            if(obj instanceof String){
+            if (obj instanceof String) {
                 return (String) obj;
             }
         }

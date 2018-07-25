@@ -18,4 +18,9 @@ public interface IViewApiBean<A extends IControllerApi, AA extends IControllerAp
      */
     void unBind();
 
+    /**
+     * 更新绑定数据
+     */
+    void updateBind();
+
 }

@@ -15,6 +15,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.config.MVCFactoryV1;
+import com.ylink.fullgoal.factory.BankFactory;
 
 import static com.ylink.fullgoal.config.Config.TEMPLATE_FULL;
 import static com.ylink.fullgoal.config.Config.VERSION;
@@ -40,6 +41,7 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
         LogUtil.openLog();//log
         NetUtils.init(getApplication());
         RetrofitFactory.show(false);
+        BankFactory.getInstance().init(getThis());
         //友盟初始化
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout)
                 -> new MaterialHeader(context));

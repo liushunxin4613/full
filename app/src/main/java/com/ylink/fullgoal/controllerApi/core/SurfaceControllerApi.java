@@ -104,6 +104,11 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 ToastUtil.show(this, bean.getMessage());
             }
         });
+        add(DataFg.class, (path, what, msg, bean) -> {
+            if(!bean.isSuccess()){
+                ToastUtil.show(this, bean.getMessage());
+            }
+        });
     }
 
     @Override

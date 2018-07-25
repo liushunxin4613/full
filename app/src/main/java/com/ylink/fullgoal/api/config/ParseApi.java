@@ -2,14 +2,13 @@ package com.ylink.fullgoal.api.config;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-import com.leo.core.api.api.GsonDecodeApi;
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.DataEmpty;
-import com.leo.core.iapi.api.IGsonDecodeApi;
 import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.net.Exceptions;
+import com.leo.core.util.GsonDecodeUtil;
 import com.leo.core.util.TextUtils;
 
 import java.io.IOException;
@@ -29,12 +28,14 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     private int what;
     private String msg;
     private String path;
-    private IGsonDecodeApi api;
     private Map<Type, Map<Type, List<IPathMsgAction>>> map;
 
     public ParseApi() {
         map = new HashMap<>();
-        api = new GsonDecodeApi();
+    }
+
+    private Map<Type, Map<Type, List<IPathMsgAction>>> getMap() {
+        return map;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     @Override
     public T copy() {
         ParseApi<T> api = new ParseApi<>();
-        api.map = map;
+        execute(getMap(), (key, value) -> api.getMap().put(key, value));
         return (T) api;
     }
 
@@ -114,22 +115,22 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private void mapAdd(Type root, Type type, IPathMsgAction action) {
         if (check(root, type, action)) {
-            Map<Type, List<IPathMsgAction>> rootMap = map.get(root);
+            Map<Type, List<IPathMsgAction>> rootMap = getMap().get(root);
             if (rootMap != null && rootMap.get(type) != null) {
-                map.get(root).get(type).add(action);
+                getMap().get(root).get(type).add(action);
             } else if (rootMap != null) {
-                map.get(root).put(type, getListData(action));
+                getMap().get(root).put(type, getListData(action));
             } else {
                 rootMap = new HashMap<>();
                 rootMap.put(type, getListData(action));
-                map.put(root, rootMap);
+                getMap().put(root, rootMap);
             }
         }
     }
 
     @Override
     public T clearParse() {
-        map.clear();
+        getMap().clear();
         return getThis();
     }
 
@@ -173,9 +174,9 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      */
     private void onString(String text) {
         onObj(text, String.class);
-        execute(map, (type, map) -> {
+        execute(getMap(), (type, map) -> {
             if (checkRootType(type)) {
-                onData(api.decode(text, type), type, map);
+                onData(GsonDecodeUtil.decode(text, type), type, map);
             }
         });
     }
@@ -187,7 +188,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      */
     private void onObj(Object obj, Class clz) {
         if (check(obj, clz) && clz.isInstance(obj)) {
-            onData(obj, clz, map.get(clz));
+            onData(obj, clz, getMap().get(clz));
         }
     }
 

@@ -48,4 +48,9 @@ public abstract class CoreBindApiBean<T extends CoreBindApiBean, A extends ICont
         executeNon(api(), api -> api.onBindApi(controllerApi, getThis()));
     }
 
+    @Override
+    public void updateBind() {
+        executeNon(api(), IBindControllerApi::updateBind);
+    }
+
 }

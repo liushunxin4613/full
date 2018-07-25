@@ -178,7 +178,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     api().queryDepartmentData();
                     break;
                 case PROJECT://项目
-                    api().queryProjectData();
+                    api().queryProjectData(getKey());
                     break;
                 case CONTRACT_BILL://合同付款申请单
                     api().queryContractPaymentData();
