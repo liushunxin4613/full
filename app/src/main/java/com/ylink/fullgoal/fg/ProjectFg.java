@@ -22,6 +22,7 @@ public class ProjectFg{
     private String leader;
     private String projectCode;
     private String projectName;
+    private String status;
 
     /**
      * 此处不可取消
@@ -83,5 +84,13 @@ public class ProjectFg{
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -76,14 +76,15 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
                     (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT), (bean, view)
                     -> vos(DVo::getBudgetDepartment, CoreController::clear)));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject),
-                    "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT), (bean, view)
+                    "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT, (String) vor(DVo::getBudgetDepartment,
+                    DepartmentController::getDepartmentCode)), (bean, view)
                     -> vos(DVo::getProject, CoreController::clear)));
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreBean("费用指标",
                     vorv(DVo::getCostIndex), "请选择费用指标", (bean, view) -> routeApi().search(
                     SearchVo.COST_INDEX, (String) vor(DVo::getReimbursement, UserController::getUserCode)),
                     (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
-            checkAdd(data, vorv(DVoV1::getApply), new TvH2MoreBean("单据内容",
-                    vorv(DVoV1::getApply), "请选择单据内容", (bean, view)
+            checkAdd(data, vorv(DVoV1::getApply), new TvH2MoreBean("申请单",
+                    vorv(DVoV1::getApply), "请选择申请单", (bean, view)
                     -> routeApi().searchApply(SearchVo.APPLY, encode(map(map -> map.put("departmentCode",
                     vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentCode))
                             .put("reimbursement", vor(DVo::getReimbursement, UserController::getUserCode))

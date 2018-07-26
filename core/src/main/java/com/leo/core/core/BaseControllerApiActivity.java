@@ -1,6 +1,5 @@
 package com.leo.core.core;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -136,11 +135,10 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
         return super.onTouchEvent(event);
     }
 
-    @SuppressLint("NewApi")
     @Override
-    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
-        super.startActivityForResult(intent, requestCode, options);
-        execute(controllerApi(), obj -> obj.onStartActivityForResult(intent, requestCode, options));
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        execute(controllerApi(), obj -> obj.onStartActivityForResult(intent, requestCode, null));
     }
 
     //自定义

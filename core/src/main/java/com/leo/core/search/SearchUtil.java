@@ -1,5 +1,6 @@
 package com.leo.core.search;
 
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.util.regex.Pattern;

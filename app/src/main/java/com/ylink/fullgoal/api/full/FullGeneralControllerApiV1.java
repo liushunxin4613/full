@@ -89,8 +89,8 @@ public class FullGeneralControllerApiV1<T extends FullGeneralControllerApiV1, C>
                     vorv(DVo::getCostIndex), "请选择费用指标", (bean, view)
                     -> routeApi().search(SearchVo.COST_INDEX), (bean, view)
                     -> vos(DVo::getCostIndex, CoreController::clear)));
-            checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("单据内容",
-                    vorv(DVoV1::getCostIndexValue), "请选择单据内容", (bean, view)
+            checkAdd(data, vorv(DVoV1::getCostIndexValue), new TvH2MoreBean("申请单",
+                    vorv(DVoV1::getCostIndexValue), "请选择申请单", (bean, view)
                     -> routeApi().search(SearchVo.APPLY,
                     vor(DVo::getCostIndex, CostIndexController::getDB, CostFg::getCostCode),
                     encode(vor(DVoV1::getCostIndexValue, CostIndexValueController::getDB))), (bean, view)

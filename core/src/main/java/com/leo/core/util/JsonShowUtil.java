@@ -3,9 +3,7 @@ package com.leo.core.util;
 public class JsonShowUtil {
 
     public static String getShowJson(String json) {
-        if (!TextUtils.isEmpty(json)
-                && ((json.startsWith("{") && json.endsWith("}"))
-                || (json.startsWith("[") && json.endsWith("]")))) {
+        if (!TextUtils.isNotJsonString(json)) {
             int tab = 0;
             Boolean is = null;
             Boolean ts = null;
@@ -14,7 +12,7 @@ public class JsonShowUtil {
                 char c = json.charAt(i);
                 switch (c) {
                     case ':':
-                        if(!(ts != null && ts)){
+                        if (!(ts != null && ts)) {
                             ts = false;
                         }
                         break;

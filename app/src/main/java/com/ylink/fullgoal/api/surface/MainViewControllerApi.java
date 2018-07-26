@@ -42,15 +42,15 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试: 一般费用报销确认", (bean, view)
                 -> clickTestGeneral()), new IconTvMoreBean(R.mipmap.test_icon2, "测试: 出差费用报销确认",
                 (bean, view) -> clickTestEvection()));
-        clickTestEvection();
+        clickTestGeneral();
     }
 
     private void clickTestGeneral() {
-        routeApi().general(QR, "20180724xijiong6000815");
+        routeApi().general(QR, "20180726xijiong6000828");
     }
 
     private void clickTestEvection() {
-        routeApi().evection(QR, "20180725xijiong6000821");
+//        routeApi().evection(QR, "20180725xijiong6000821");
     }
 
     @Override

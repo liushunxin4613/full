@@ -571,6 +571,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     //自定义的
 
     /**
+     * 初始化添加action
+     */
+    void initAddAction();
+
+    /**
      * 布局
      */
     LayoutInflater inflater();

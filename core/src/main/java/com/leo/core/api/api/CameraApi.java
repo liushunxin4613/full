@@ -1,17 +1,21 @@
 package com.leo.core.api.api;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.iapi.api.ICameraApi;
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IMsgAction;
 import com.leo.core.util.FileSizeUtil;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 
@@ -42,38 +46,77 @@ public class CameraApi extends DirApi implements ICameraApi {
         return getRootDir(ROOT_DIR);
     }
 
+    private Context getContext() {
+        return controllerApi().getContext();
+    }
+
+    private final static int PERMISSION_MEDIA_REQUEST_CODE = 0x101;
+
+    @SuppressLint("CheckResult")
+    private void op(IAction low, IAction action) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (isCameraCanUse()) {
+                if (action != null) {
+                    action.execute();
+                }
+            } else {
+                final RxPermissions rxPermissions = new RxPermissions(controllerApi().getFragmentActivity());
+                rxPermissions.requestEachCombined(Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribe(permission -> {
+                            if (permission.granted && isCameraCanUse()) {
+                                if (action != null) {
+                                    action.execute();
+                                }
+                            } else {
+                                show("请开启拍照权限");
+                            }
+                        });
+            }
+        } else {
+            if (low != null) {
+                low.execute();
+            }
+        }
+    }
+
+    private static boolean isCameraCanUse() {
+        Camera mCamera = null;
+        try {
+            mCamera = Camera.open();
+            mCamera.setParameters(mCamera.getParameters());
+            return true;
+        } catch (Exception ignored) {
+        } finally {
+            if (mCamera != null) {
+                mCamera.release();
+            }
+        }
+        return false;
+    }
+
+
+    @SuppressLint("InlinedApi")
     @Override
     public void openCamera(int type, IMsgAction<File> action) {
         this.photoType = type;
         this.action = action;
-        // 判断存储卡是否可以用，可用进行存储
         if (hasSdCard()) {
-            // 激活相机
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            Uri photoUri;
             String photo = System.currentTimeMillis() + ".jpg";
             photoFile = new File(getRootDir(), photo);
-            if (android.os.Build.VERSION.SDK_INT < 24) {
+            op(() -> {
                 // 从文件中创建uri
-                photoUri = Uri.fromFile(photoFile);
+                Uri photoUri = Uri.fromFile(photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            } else {
+            }, () -> {
                 //兼容android7.0 使用共享文件的形式
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(MediaStore.Images.Media.DATA, photoFile.getAbsolutePath());
-                //检查是否有存储权限，以免崩溃
-                if (ContextCompat.checkSelfPermission(controllerApi().getContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    //申请WRITE_EXTERNAL_STORAGE权限
-                    show("请开启存储权限");
-                    return;
-                }
-                photoUri = controllerApi().getActivity().getContentResolver().insert(
+                Uri photoUri = controllerApi().getActivity().getContentResolver().insert(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            }
-            // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CAMERA
+            });
             controllerApi().getActivity().startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
         }
     }

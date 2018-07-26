@@ -43,6 +43,8 @@ public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
             }
             if (view instanceof TextView) {
                 TextView tv = (TextView) view;
+//                api().ii(String.format("tag: %s, id: %s", vo.getTag(), Integer.toHexString(tv.getId())));
+//                api().ii(String.format("text: %s", tv.getText().toString()));
                 if (TextUtils.check(vo.getFormat())) {
                     String format = vo.getFormat();
                     if (TextUtils.check(getMap())) {
@@ -52,8 +54,10 @@ public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
                         }
                     }
                     api().setText(tv, format);
+//                    api().ee(String.format("id: %s, format: %s", vo.getVId(), format));
                 } else {
                     api().setText(tv, get(vo.getText()));
+//                    api().ee(String.format("id: %s, text: %s, value: %s", vo.getVId(), vo.getText(), get(vo.getText())));
                 }
             }
         }

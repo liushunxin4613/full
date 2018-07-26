@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.DepartmentBean;
+import com.ylink.fullgoal.bean.PersonBean;
 import com.ylink.fullgoal.bean.ProjectBean;
+import com.ylink.fullgoal.bean.ProjectBeanV1;
 import com.ylink.fullgoal.bean.TvBean;
-import com.ylink.fullgoal.bean.TvH2SBean;
 import com.ylink.fullgoal.bean.XCJPBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
 import com.ylink.fullgoal.fg.ApplyContentFgV1;
@@ -109,16 +111,16 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     private void initAdds() {
         //员工列表
         addList(UserFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new TvH2SBean(item.getUserName(), item.getUserDepartment(), (bean, view)
+                -> data.add(new PersonBean(item.getUserName(), item.getUserCode(), item.getUserDepartment(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //部门列表
         addList(DepartmentFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new TvBean(item.getDepartmentName(), (bean, view)
+                -> data.add(new DepartmentBean(item.getDepartmentName(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //项目列表
         addList(ProjectFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ProjectBean(item.getProjectName(), item.getApplicationDate(),
-                item.getLeader(), item.getLeadDepartment(), item.getAmount(), item.getJudtification(),
+                -> data.add(new ProjectBeanV1(item.getProjectName(), item.getProjectCode(),
+                item.getStatus(), item.getLeader(), item.getLeadDepartment(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //合同付款申请单列表
         addList(ContractPaymentFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
@@ -132,7 +134,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //费用指标列表
         addList(CostFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new TvH2SBean(item.getCostIndex(), item.getShare(), (bean, view)
+                -> data.add(new TvBean(item.getCostIndex(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //费用指标维度列表
         addList(DimenListFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
@@ -187,7 +189,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     api().queryProcessData();
                     break;
                 case COST_INDEX://费用指标
-                    switch (VERSION){
+                    switch (VERSION) {
                         case VERSION_APP:
                             api().queryCostIndexData();
                             break;

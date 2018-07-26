@@ -599,8 +599,9 @@ public class TextUtils {
         try {
             int type = parser.getEventType();
             while (type != parser.END_DOCUMENT) {
-                LogUtil.ee("parser.getDepth()", parser.getDepth());
+                LogUtil.ee("onXmlResourceParser", "-----------------------------------------------");
                 LogUtil.ee("parser.getName()", parser.getName());
+                LogUtil.ee("parser.getDepth()", parser.getDepth());
                 switch (type) {
                     case XmlPullParser.START_TAG:
                         for (int i = 0; i < parser.getAttributeCount(); i++) {
@@ -618,6 +619,8 @@ public class TextUtils {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            parser.close();
         }
     }
 
@@ -723,6 +726,11 @@ public class TextUtils {
             }
         }
         return null;
+    }
+
+    public static boolean isNotJsonString(String text){
+        return isEmpty(text) || !((text.startsWith("[") && text.endsWith("]"))
+                || (text.startsWith("{") && text.endsWith("}")));
     }
 
 }

@@ -6,8 +6,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 27
+    buildToolsVersion '28.0.1'
     defaultConfig {
         applicationId "cn.com.fullgoal.pt0001"
         minSdkVersion 16

@@ -71,6 +71,7 @@ import static com.ylink.fullgoal.config.Config.XG1;
 import static com.ylink.fullgoal.config.Config.XG2;
 import static com.ylink.fullgoal.config.Config.XG3;
 import static com.ylink.fullgoal.config.Config.XG4;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
 
@@ -145,6 +146,58 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     @Override
+    public void initAddAction() {
+        super.initAddAction();
+        add(Exceptions.class, (path, what, msg, bean) -> vos(DVo::getImageList, obj
+                -> obj.onError(msg)));
+        add(String.class, (path, what, msg, text) -> {
+            if (TextUtils.equals(path, FULL_IMAGE_UPLOAD) && TextUtils.isNotJsonString(text)) {
+                vos(DVo::getImageList, obj -> obj.onError(msg));
+            }
+        });
+        add(ImageFg.class, (path, what, msg, bean) -> {
+            if (!TextUtils.isEmpty(msg)) {
+                vos(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
+                vos(DVo::getSbumitFlag, SbumitFlagController::open);
+                vos(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
+            }
+        });
+        add(DataFg.class, (path, what, msg, bean) -> {
+            if (bean.isSuccess()) {
+                switch (path) {
+                    case FULL_REIMBURSE_SUBMIT://报销提交
+                        if (!TextUtils.isEmpty(getState())) {
+                            switch (getState()) {
+                                case FQ://经办人发起
+//                                    show("报销成功");
+                                    again();
+                                    break;
+                                case QR://经办人确认
+                                    show("报销确认成功");
+                                    getActivity().finish();
+                                    break;
+                                case XG://经办人修改
+                                    show("报销修改成功");
+                                    getActivity().finish();
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
+        });
+        add(RVo.class, (path, what, msg, bean) -> {
+            switch (path) {
+                case FULL_REIMBURSE_QUERY://报销获取
+                    bean.get(getVo());
+                    showContentView();
+                    notifyDataChanged();
+                    break;
+            }
+        });
+    }
+
+    @Override
     public void initView() {
         super.initView();
         executeBundle(bundle -> {
@@ -211,78 +264,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     @Override
-    public void initData() {
-        super.initData();
-        add(Exceptions.class, (path, what, msg, bean) -> vos(DVo::getImageList, obj
-                -> obj.onError(msg)));
-        add(ImageFg.class, (path, what, msg, bean) -> {
-            if (!TextUtils.isEmpty(msg)) {
-                vos(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
-                vos(DVo::getSbumitFlag, SbumitFlagController::open);
-                vos(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
-            }
-        });
-        add(DataFg.class, (path, what, msg, bean) -> {
-            if (bean.isSuccess()) {
-                switch (path) {
-                    case FULL_REIMBURSE_SUBMIT://报销提交
-                        if (!TextUtils.isEmpty(getState())) {
-                            switch (getState()) {
-                                case FQ://经办人发起
-//                                    show("报销成功");
-                                    again();
-                                    break;
-                                case QR://经办人确认
-                                    show("报销确认成功");
-                                    getActivity().finish();
-                                    break;
-                                case XG://经办人修改
-                                    show("报销修改成功");
-                                    getActivity().finish();
-                                    break;
-                            }
-                        }
-                        break;
-                }
-            }
-        });
-        add(RVo.class, (path, what, msg, bean) -> {
-            switch (path) {
-                case FULL_REIMBURSE_QUERY://报销获取
-                    bean.get(getVo());
-                    showContentView();
-                    notifyDataChanged();
-                    break;
-            }
-        });
-    }
-
-    private void again() {
-        HintDialogBean dialogBean = new HintDialogBean("温馨提示", "是否需要添加新的报销", "是",
-                "否", (bean, v, dialog) -> {
-            dialog.dismiss();
-            vos(DVo::getImageList, AddController::clear);
-            vos(DVo::getSerialNo, SerialNoController::clear);
-            notifyDataChanged();
-        }, (bean, v, dialog) -> {
-            dialog.dismiss();
-            getActivity().finish();
-        });
-        SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
-                dialogBean.getApiType());
-        api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
-            Window window = api.getDialog().getWindow();
-            if (window != null) {
-                window.setGravity(Gravity.CENTER);
-                WindowManager.LayoutParams lp = window.getAttributes();
-                IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
-                lp.width = (int) (display.getX() * 0.8);
-                window.setAttributes(lp);
-            }
-        });
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         //报销人
@@ -335,6 +316,31 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     //私有的
+
+    private void again() {
+        HintDialogBean dialogBean = new HintDialogBean("温馨提示", "是否需要添加新的报销", "是",
+                "否", (bean, v, dialog) -> {
+            dialog.dismiss();
+            vos(DVo::getImageList, AddController::clear);
+            vos(DVo::getSerialNo, SerialNoController::clear);
+            notifyDataChanged();
+        }, (bean, v, dialog) -> {
+            dialog.dismiss();
+            getActivity().finish();
+        });
+        SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
+                dialogBean.getApiType());
+        api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
+            Window window = api.getDialog().getWindow();
+            if (window != null) {
+                window.setGravity(Gravity.CENTER);
+                WindowManager.LayoutParams lp = window.getAttributes();
+                IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
+                lp.width = (int) (display.getX() * 0.8);
+                window.setAttributes(lp);
+            }
+        });
+    }
 
     private List<GridPhotoBean> getPhotoGridBeanData(int type, List<ImageVo> data) {
         List<GridPhotoBean> gridData = new ArrayList<>();

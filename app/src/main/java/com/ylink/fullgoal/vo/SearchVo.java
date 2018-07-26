@@ -14,9 +14,9 @@ public class SearchVo<D> extends SerialVersionTag {
     public final static String REIMBURSEMENT = "员工";
 
     /**
-     * 预算归属部门
+     * 预算归属
      */
-    public final static String BUDGET_DEPARTMENT = "预算归属部门";
+    public final static String BUDGET_DEPARTMENT = "预算归属";
 
     /**
      * 项目
@@ -74,7 +74,7 @@ public class SearchVo<D> extends SerialVersionTag {
     public final static String[][] SEARCHS = {
             //员工
             {REIMBURSEMENT, "reimbursementCompensation"},
-            //预算归属部门
+            //预算归属
             {BUDGET_DEPARTMENT, "BudgetDepartmentCompensation"},
             //项目
             {PROJECT, "ProjectCompensation"},

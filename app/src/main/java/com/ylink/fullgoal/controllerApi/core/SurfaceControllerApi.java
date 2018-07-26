@@ -90,8 +90,8 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     @Override
-    public void initView() {
-        super.initView();
+    public void initAddAction() {
+        super.initAddAction();
         add(Completed.class, (path, what, msg, bean) -> dismissLoading());
         add(Exceptions.class, (path, what, msg, bean) -> {
             if (this instanceof ContentControllerApi) {

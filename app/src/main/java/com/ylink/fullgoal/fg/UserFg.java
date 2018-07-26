@@ -12,8 +12,9 @@ public class UserFg {
 
     private String userCode;
     private String userName;
+    private String userlevel;
     private String userDepartment;
-
+    private String userDepartmentCode;
     private transient String bank;
 
     /**
@@ -57,6 +58,22 @@ public class UserFg {
 
     public void setBank(String bank) {
         this.bank = bank;
+    }
+
+    public String getUserDepartmentCode() {
+        return userDepartmentCode;
+    }
+
+    public void setUserDepartmentCode(String userDepartmentCode) {
+        this.userDepartmentCode = userDepartmentCode;
+    }
+
+    public String getUserlevel() {
+        return userlevel;
+    }
+
+    public void setUserlevel(String userlevel) {
+        this.userlevel = userlevel;
     }
 
 }

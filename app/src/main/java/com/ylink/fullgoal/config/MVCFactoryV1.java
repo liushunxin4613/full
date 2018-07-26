@@ -103,6 +103,7 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
             api().ii("path", path);
             api().ii("params", params);
             executeBol(getVo().getViewList(), vo -> {
+                api().ii("vo", vo);
                 if (TextUtils.equals(path, vo.getPath()) && checkParams(params, vo.getParams())) {
                     action.execute(getVBData(vo.getXml(), vo.getList(), list));
                     return true;

@@ -882,6 +882,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public void initAddAction() {
+    }
+
+    @Override
     public LayoutInflater inflater() {
         return LayoutInflater.from(getContext());
     }
@@ -993,6 +997,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        initAddAction();
         initView();
         initData();
     }

@@ -3,34 +3,34 @@
     {
       "name": "l_apply_v1",
       "file": "l_apply_v1.xml",
-      "version": "3",
+      "version": "4",
       "state": "1",
-      "hashcode": "a8933528d0e738fd92b04ae5d0e22f2c",
-      "url": "http://111.231.231.226/uploadfile/20180723/20180723093106QT5BI.xml"
-    },
-    {
-      "name": "l_apply_v4",
-      "file": "l_apply_v4.xml",
-      "version": "3",
-      "state": "1",
-      "hashcode": "b2f1850ea313ba8898b9b0ee5e05bac4",
-      "url": "http://111.231.231.226/uploadfile/20180723/20180723093123GTGN4.xml"
+      "hashcode": "a4b4d643e45f58a10d1d62d42c61f73d",
+      "url": "http://111.231.231.226/uploadfile/20180726/20180726154508542NH.xml"
     },
     {
       "name": "l_apply_v2",
       "file": "l_apply_v2.xml",
-      "version": "6",
+      "version": "7",
       "state": "1",
-      "hashcode": "6f7f046453c9e31ead82a07dc936a80e",
-      "url": "http://111.231.231.226/uploadfile/20180724/20180724151408WA8ZH.xml"
+      "hashcode": "456ec9dad5f8cb832bb535c0c0f70fcf",
+      "url": "http://111.231.231.226/uploadfile/20180726/20180726154516095X8.xml"
     },
     {
       "name": "l_apply_v3",
       "file": "l_apply_v3.xml",
-      "version": "3",
+      "version": "4",
       "state": "1",
-      "hashcode": "2dcb0bc70c98c1fe781a0b68d6f2b8fd",
-      "url": "http://111.231.231.226/uploadfile/20180724/20180724151413QRI1C.xml"
+      "hashcode": "e234ee521af784068ea4bde0a7f786da",
+      "url": "http://111.231.231.226/uploadfile/20180726/20180726154520P1XGY.xml"
+    },
+    {
+      "name": "l_apply_v4",
+      "file": "l_apply_v4.xml",
+      "version": "4",
+      "state": "1",
+      "hashcode": "abb7ca93c5fee3fd3011f9419a7551a1",
+      "url": "http://111.231.231.226/uploadfile/20180726/20180726154524GKOI0.xml"
     }
   ],
   "viewList": [
@@ -55,7 +55,7 @@
           "vId": "tv1",
           "tag": "tv1",
           "text": "extension8",
-          "format": "金额: <extension8>"
+          "format": "金额:<extension8>"
         },
         {
           "id": "5",
@@ -70,7 +70,7 @@
           "vId": "tv3",
           "tag": "tv3",
           "text": "extension7",
-          "format": "经办人: <extension7>"
+          "format": "经办人:<extension7>"
         },
         {
           "id": "7",
@@ -92,7 +92,7 @@
           "vId": "tv6",
           "tag": "tv6",
           "text": "extension6",
-          "format": "申请人: <extension6>"
+          "format": "申请人:<extension6>"
         },
         {
           "id": "10",
@@ -107,7 +107,7 @@
           "vId": "tv8",
           "tag": "tv8",
           "text": "extension4",
-          "format": "培训内容: <extension4>"
+          "format": "培训内容:<extension4>"
         }
       ]
     },

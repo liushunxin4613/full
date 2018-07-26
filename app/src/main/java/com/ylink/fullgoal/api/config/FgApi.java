@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
+import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.Config.VERSION;
 import static com.ylink.fullgoal.config.Config.VERSION_APP;
 import static com.ylink.fullgoal.config.Config.VERSION_V2;
@@ -69,17 +70,8 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * 获取项目信息
      */
     public void queryProjectData(String departmentCode) {
-        switch (VERSION) {
-            case VERSION_APP:
-                if (TextUtils.check(departmentCode)) {
-                    post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g(map
-                            -> map.put("departmentCode", departmentCode)));
-                }
-                break;
-            case VERSION_V2:
-                post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g());
-                break;
-        }
+        post(ROOT_URL, PATH_QUERY_PROJECT_DATA, g(map
+                -> map.put("departmentCode", departmentCode)));
     }
 
     /**
@@ -214,6 +206,8 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
                 map.put("status", "上传");
                 map.put("invoiceUse", invoiceUse);
                 map.put("invoiceAmount", "");
+                //打印日志
+                controllerApi().ii("imageUpload", TextUtils.getMap(map, false, "stream"));
             }), photoType, tag, listener);
         }
     }
