@@ -61,7 +61,7 @@ public class ToastImplApi extends BindContextApi<ToastImplApi> implements IShowA
      * @return 本身
      */
     public ToastImplApi show(Object thisObj, @NonNull CharSequence in) {
-        show(thisObj, in, Toast.LENGTH_SHORT);
+        show(thisObj, in, Toast.LENGTH_LONG);
         return this;
     }
 
@@ -72,7 +72,7 @@ public class ToastImplApi extends BindContextApi<ToastImplApi> implements IShowA
      * @return 本身
      */
     public ToastImplApi show(Object thisObj, @StringRes int resId) {
-        show(thisObj, resId, Toast.LENGTH_SHORT);
+        show(thisObj, resId, Toast.LENGTH_LONG);
         return this;
     }
 

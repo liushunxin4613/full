@@ -8,15 +8,45 @@
     <include
         android:id="@+id/vg"
         layout="@layout/l_h_money"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-    <uk.co.senab.photoview.PhotoView
-        android:id="@+id/photo_iv"
+    <com.ylink.fullgoal.view.HFrameLayout
+        android:id="@+id/h_vg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/cc0"
-        android:scaleType="fitCenter"
-        android:visibility="invisible"
-        tools:src="@mipmap/test_photo" />
+        android:layout_height="match_parent">
+
+        <uk.co.senab.photoview.PhotoView
+            android:id="@+id/photo_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/cc0"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            tools:src="@mipmap/test_photo" />
+
+        <ImageView
+            android:id="@+id/to_left_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
+            android:src="@mipmap/to_left"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/to_right_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:src="@mipmap/to_right"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+    </com.ylink.fullgoal.view.HFrameLayout>
 
 </LinearLayout>

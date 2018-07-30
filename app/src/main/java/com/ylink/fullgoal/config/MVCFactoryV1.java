@@ -22,7 +22,7 @@ import static com.leo.core.util.TextUtils.checkParams;
 
 public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
 
-    private final static boolean LOCAL = false;
+    private final static boolean LOCAL = true;
     private final static String FILTER[] = {};
     private final static String DIR = "configV1";
     private final static String ROOT_FILE = "config.json";
@@ -103,7 +103,6 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
             api().ii("path", path);
             api().ii("params", params);
             executeBol(getVo().getViewList(), vo -> {
-                api().ii("vo", vo);
                 if (TextUtils.equals(path, vo.getPath()) && checkParams(params, vo.getParams())) {
                     action.execute(getVBData(vo.getXml(), vo.getList(), list));
                     return true;
@@ -154,7 +153,7 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
     private List<ViewBean> getVBData(String xml, List<TemplateVo> templateData, List list) {
         if (TextUtils.check(xml, templateData, list)) {
             List<ViewBean> data = new ArrayList<>();
-            execute(list, item -> executeNon(new ViewBean(getXmlResourceParser(xml),
+            execute(list, item -> executeNon(new ViewBean(xml, getXmlResourceParser(xml),
                     templateData, item), data::add));
             return data;
         }

@@ -19,7 +19,7 @@ public class UrlConfig {
 //    public final static String FG_ROOT_URL = TextUtils.equals(VERSION, VERSION_APP)
 //        ? "http://192.168.8.109:8088/ssca/" : FULL_TEST_HTTP;
     public final static String FG_ROOT_URL = FULL_TEST_HTTP;
-    public final static String UPLOAD_URL = ROOT_IP + "app/fullApp/upload";//根api地址
+    private final static String UPLOAD_URL = ROOT_IP + "app/fullApp/upload";//根api地址
     public final static String UPLOAD_IMAGE_URL = UPLOAD_URL;//根api地址
 
     //请求参数
@@ -54,13 +54,13 @@ public class UrlConfig {
     //报销列表请求状态参数(REIMBURSE_LIST_QUERY_STATUS)
 
     //待处理
-    public final static String REIMBURSE_LIST_QUERY_STATUS_DCL = "1";
+    final static String REIMBURSE_LIST_QUERY_STATUS_DCL = "1";
     //审核中
-    public final static String REIMBURSE_LIST_QUERY_STATUS_SHZ = "2";
+    final static String REIMBURSE_LIST_QUERY_STATUS_SHZ = "2";
     //已完成
-    public final static String REIMBURSE_LIST_QUERY_STATUS_YWC = "3";
+    final static String REIMBURSE_LIST_QUERY_STATUS_YWC = "3";
     //已取消
-    public final static String REIMBURSE_LIST_QUERY_STATUS_YQX = "4";
+    final static String REIMBURSE_LIST_QUERY_STATUS_YQX = "4";
 
     //报销列表请求返回报销类型参数(REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE)
 
@@ -72,16 +72,18 @@ public class UrlConfig {
     //报销列表请求返回状态参数(REIMBURSE_LIST_QUERY_RETURN_STATUS)
 
     //金额确认
-    public final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_QR = "金额确认";
+    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_QR = "金额确认";
     //修改任务
-    public final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_XG = "修改任务";
+    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_XG = "修改任务";
+    //初始化任务
+    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_CS = "初始化任务";
 
     //报销请求类型参数(REIMBURSE_QUERY_BILL_TYPE)
 
     //一般费用报销
-    public final static String REIMBURSE_QUERY_BILL_TYPE_YB = "427";
+    final static String REIMBURSE_QUERY_BILL_TYPE_YB = "427";
     //出差费用报销
-    public final static String REIMBURSE_QUERY_BILL_TYPE_CC = "428";
+    final static String REIMBURSE_QUERY_BILL_TYPE_CC = "428";
 
     //报销确认图片费用类型(MESSAGE_BACK_IMAGE_INVOICE_USE)
 

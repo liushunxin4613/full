@@ -36,7 +36,7 @@ public interface IViewApi<T extends IViewApi> extends IApi {
      * 查找资源
      *
      * @param tag 资源tag
-     * @param <V>   view泛型
+     * @param <V> view泛型
      * @return view
      */
     <V extends View> V findViewWithTag(View rootView, Object tag);
@@ -92,6 +92,16 @@ public interface IViewApi<T extends IViewApi> extends IApi {
      * @return 媒介
      */
     T setImage(ImageView iv, Object path);
+
+    /**
+     * 设置图片
+     *
+     * @param iv     ImageView
+     * @param path   图片路径
+     * @param rotate 旋转
+     * @return 媒介
+     */
+    T setImage(ImageView iv, Object path, float rotate);
 
     /**
      * 设置icon是否隐藏
@@ -208,7 +218,8 @@ public interface IViewApi<T extends IViewApi> extends IApi {
 
     /**
      * 当ViewGroup时
-     * @param vg vg
+     *
+     * @param vg    vg
      * @param vgApi vgApi
      * @return 本身
      */
@@ -216,7 +227,8 @@ public interface IViewApi<T extends IViewApi> extends IApi {
 
     /**
      * 设置view的selected
-     * @param view view
+     *
+     * @param view     view
      * @param selected selected
      * @return 本身
      */
@@ -224,7 +236,8 @@ public interface IViewApi<T extends IViewApi> extends IApi {
 
     /**
      * 设置view以及子view的selected
-     * @param view view
+     *
+     * @param view     view
      * @param selected selected
      * @return 本身
      */
@@ -237,6 +250,7 @@ public interface IViewApi<T extends IViewApi> extends IApi {
 
     /**
      * 设置viewBean
+     *
      * @param action action
      * @return 本身
      */

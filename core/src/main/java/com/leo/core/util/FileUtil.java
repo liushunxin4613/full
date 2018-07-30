@@ -13,6 +13,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FileUtil {
 
@@ -161,6 +165,26 @@ public class FileUtil {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static Map<String, Object> toFileMap(File file) {
+        if (file != null && file.exists()) {
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("fileName", file.getName());
+            map.put("filePath", file.getPath());
+            map.put("isDirectory", file.isDirectory());
+            map.put("isFile", file.isFile());
+            map.put("isHidden", file.isHidden());
+            if (file.isDirectory()) {
+                List<Map<String, Object>> data = new ArrayList<>();
+                for (File f : file.listFiles()) {
+                    RunUtil.executeNon(toFileMap(f), data::add);
+                }
+                map.put("list", data);
+            }
+            return map;
+        }
+        return null;
     }
 
 }

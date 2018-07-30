@@ -9,27 +9,25 @@ public abstract class BaseApiBi<T extends BaseApiBi, A extends ApiBean> extends 
     @Override
     public Integer getDefLayoutResId() {
         ApiBean bean = bean();
-        if(bean != null){
-            if(bean.isEnable()){
-                if(bean.isEtEnable()){
-                    return getEtEnableDefLayoutResId();
-                }
-                return getEnableDefLayoutResId();
+        if (bean != null && bean.isEnable()) {
+            if (bean.isEtEnable()) {
+                return getEtEnableDefLayoutResId();
             }
+            return getEnableDefLayoutResId();
         }
         return getNoneDefLayoutResId();
     }
 
-    protected Integer getEnableDefLayoutResId(){
+    protected Integer getEnableDefLayoutResId() {
         return null;
     }
 
-    protected Integer getEtEnableDefLayoutResId(){
+    protected Integer getEtEnableDefLayoutResId() {
         return null;
     }
 
-    protected Integer getNoneDefLayoutResId(){
-        return R.layout.l_h_tv2_more_s;
+    protected Integer getNoneDefLayoutResId() {
+        return R.layout.l_h_tv2;
     }
 
 }

@@ -63,14 +63,27 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
 
     @Override
     public T load(Object path, ImageView iv) {
-        return load(path, iv, null);
+        load(path, iv, -1, null);
+        return getThis();
     }
 
     @Override
     public T load(Object path, ImageView iv, ICallbackApi api) {
+        load(path, iv, -1, api);
+        return getThis();
+    }
+
+    @Override
+    public T load(Object path, ImageView iv, float rotate) {
+        load(path, iv, rotate, null);
+        return getThis();
+    }
+
+    @Override
+    public T load(Object path, ImageView iv, float rotate, ICallbackApi api) {
         if (iv != null) {
             RequestCreator rc = getRc(path);
-            init(rc);
+            init(rc, rotate);
             if (rc != null) {
                 rc.into(iv, new Callback() {
                     @Override
@@ -104,7 +117,7 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
         }
     }
 
-    private void init(RequestCreator rc) {
+    private void init(RequestCreator rc, float rotate) {
         if (rc != null) {
             rc.config(Bitmap.Config.RGB_565);
             if (!cacheEnable) {
@@ -115,6 +128,9 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
             }
             if (getErrorRes() != null) {
                 rc.error(getErrorRes());
+            }
+            if(rotate >= 0){
+                rc.rotate(rotate);
             }
             if (!TextUtils.isEmpty(map)) {
                 for (Map.Entry<String, ?> entry : map.entrySet()) {

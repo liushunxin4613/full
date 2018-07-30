@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon_iv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/chuchai"
+        android:tag="icon_iv"
+        tools:ignore="ContentDescription,HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/vg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@+id/icon_iv"
+        android:layout_toRightOf="@+id/icon_iv"
+        android:orientation="horizontal"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:id="@id/tv0"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:tag="tv0"
+            tools:text="4842"
+            android:textColor="#000000"
+            android:textSize="@dimen/tv2"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@id/tv1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/x20"
+            android:tag="tv1"
+            android:textColor="#000000"
+            android:textSize="@dimen/tv2"
+            tools:ignore="RtlHardcoded,RtlSymmetry"
+            tools:text="预支金额 1000.00" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/vg"
+        android:layout_below="@id/vg"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:tag="tv2"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RtlHardcoded"
+        tools:text="上海(1天)" />
+
+    <TextView
+        android:id="@id/tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/vg"
+        android:layout_below="@id/vg"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/x20"
+        android:tag="tv3"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RtlHardcoded,RtlSymmetry"
+        tools:text="2018-06-10  ~  2018-06-11" />
+
+    <TextView
+        android:id="@id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon_iv"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:tag="tv4"
+        tools:text="工作内容  产业升级"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        android:ellipsize="end"
+        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+
+</RelativeLayout>

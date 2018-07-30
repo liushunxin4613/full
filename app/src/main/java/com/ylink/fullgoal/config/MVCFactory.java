@@ -159,7 +159,7 @@ public class MVCFactory extends VsApi<MVCFactory> {
     private List<ViewBean> getVBData(String xml, List<TemplateVo> templateData, List list) {
         if (TextUtils.check(xml, templateData, list)) {
             List<ViewBean> data = new ArrayList<>();
-            execute(list, item -> executeNon(new ViewBean(getXmlResourceParser(xml),
+            execute(list, item -> executeNon(new ViewBean(xml, getXmlResourceParser(xml),
                     templateData, item), data::add));
             return data;
         }

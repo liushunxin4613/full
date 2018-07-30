@@ -90,6 +90,14 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public T setImage(ImageView iv, Object path, float rotate) {
+        if (checkView(iv)) {
+            controllerApi().load(path, iv, rotate);
+        }
+        return getThis();
+    }
+
+    @Override
     public T setIcon(ImageView icon, boolean show) {
         return setVisibility(icon, show ? View.VISIBLE : View.INVISIBLE);
     }

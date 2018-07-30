@@ -1,5 +1,6 @@
 package com.leo.core.core;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -8,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.iapi.inter.IObjAction;
@@ -38,7 +38,7 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
         if (controllerApi == null) {
             throw new NullPointerException("newControllerApi 不能为空");
         }
-        controllerApi.setRootContainer((ViewGroup) getWindow()
+        controllerApi.setRootContainer(getWindow()
                 .getDecorView().findViewById(android.R.id.content));
     }
 
@@ -135,10 +135,11 @@ public class BaseControllerApiActivity<T extends BaseControllerApiActivity, C ex
         return super.onTouchEvent(event);
     }
 
+    @SuppressLint({"NewApi", "RestrictedApi"})
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        execute(controllerApi(), obj -> obj.onStartActivityForResult(intent, requestCode, null));
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        super.startActivityForResult(intent, requestCode, options);
+        execute(controllerApi(), obj -> obj.onStartActivityForResult(intent, requestCode, options));
     }
 
     //自定义

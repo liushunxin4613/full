@@ -2,6 +2,7 @@ package com.leo.core.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -119,7 +120,7 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         IControllerApi controllerApi = holder.controllerApi();
         if (controllerApi != null) {
             controllerApi.onBindViewHolder(getItem(position), position);

@@ -169,8 +169,11 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 分摊维度列表
      */
-    public void queryDimensionList(String costIndex) {
-        post(ROOT_URL, PATH_QUERY_DIMENSION_DATA, g(map -> map.put("costIndex", costIndex)));
+    public void queryDimensionList(String costIndex, String department) {
+        post(ROOT_URL, PATH_QUERY_DIMENSION_DATA, g(map -> {
+            map.put("costIndex", costIndex);
+            map.put("department", department);
+        }));
     }
 
     /**

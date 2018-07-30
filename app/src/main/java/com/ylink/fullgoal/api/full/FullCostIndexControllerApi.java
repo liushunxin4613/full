@@ -86,6 +86,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private String serialNo;
     private BasePagerAdapter<RecycleControllerApi> adapter;
     private Map<String, Object> dataMap;
+    private String department;
 
     public FullCostIndexControllerApi(C controller) {
         super(controller);
@@ -152,9 +153,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     public void initView() {
         super.initView();
         setTitle("费用指标")
-                .setRightTv("确认", v -> submit())
-                .setOnClickListener(nameTv, v -> routeApi().search(SearchVo.COST_INDEX))
-                .setOnClickListener(searchVg, v -> routeApi().search(SearchVo.COST_INDEX));
+                .setRightTv("确认", v -> submit());
+//                .setOnClickListener(nameTv, v -> routeApi().search(SearchVo.COST_INDEX))
+//                .setOnClickListener(searchVg, v -> routeApi().search(SearchVo.COST_INDEX));
         HelperUtil.addMoneyTextChangedListener(detailEt, null, this::updateAllMoney);
         HelperUtil.addMoneyTextChangedListener(taxEt, null, this::updateTaxAmount);
         HelperUtil.addMoneyTextChangedListener(noneTaxMoneyEt, null, this::updateExTaxAmount);
@@ -164,6 +165,13 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             if (!TextUtils.isEmpty(dataMap)) {
                 ee("dataMap", dataMap);
                 serialNo = (String) dataMap.get(SERIAL_NO);
+                Object obj = vr(dataMap, map -> map.get("budgetDepartment"));
+                if(obj instanceof Map){
+                    obj = ((Map) obj).get("departmentCode");
+                    if(obj instanceof String){
+                        department = (String) obj;
+                    }
+                }
                 CostFg cost = decode(encode(dataMap.get(COST_LIST)), CostFg.class);
                 if (cost != null) {
                     cost.setAmount((String) dataMap.get(MONEY));
@@ -239,13 +247,13 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     }
 
     private void onCost(CostFg fg) {
-        if (check(fg) && check(fg.getShare())) {
+        if (check(fg)) {
             //正常项
             vos(CostVo::getCost, obj -> obj.update(fg));
             getVo().updateAllMoney();
             initCast();
             api().queryDimensionList(vor(CostVo::getCost, CostIndexController::getDB,
-                    CostFg::getCostCode));
+                    CostFg::getCostCode), department);
         }
     }
 

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon_iv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/m2"
+        android:tag="icon_iv"
+        tools:ignore="ContentDescription,HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/vg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@+id/icon_iv"
+        android:layout_toRightOf="@+id/icon_iv"
+        android:orientation="horizontal"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:id="@id/tv0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:tag="tv0"
+            android:textColor="#000000"
+            android:textSize="@dimen/tv2"
+            tools:ignore="HardcodedText"
+            tools:text="航班号  MU5120" />
+
+        <TextView
+            android:id="@id/tv1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/x20"
+            android:tag="tv1"
+            android:textColor="#000000"
+            android:textSize="@dimen/tv2"
+            tools:ignore="RtlHardcoded,RtlSymmetry"
+            tools:text="北京 - 上海" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/vg"
+        android:layout_below="@id/vg"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:tag="tv2"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RtlHardcoded"
+        tools:text="乘机人  朱凯" />
+
+    <TextView
+        android:id="@id/tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/vg"
+        android:layout_below="@id/vg"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/x20"
+        android:tag="tv3"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RtlHardcoded,RtlSymmetry"
+        tools:text="20170315 16:24  开" />
+
+    <TextView
+        android:id="@id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv2"
+        android:layout_below="@id/icon_iv"
+        android:layout_marginTop="@dimen/y8"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:tag="tv4"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"
+        tools:text="金额      1218" />
+
+    <TextView
+        android:id="@id/tv5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/vg"
+        android:layout_below="@id/icon_iv"
+        android:layout_marginTop="@dimen/y8"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/x20"
+        android:tag="tv5"
+        android:textColor="#000000"
+        android:textSize="@dimen/tv2"
+        tools:ignore="RtlHardcoded,RtlSymmetry"
+        tools:text="20170315 20:00  到" />
+
+</RelativeLayout>

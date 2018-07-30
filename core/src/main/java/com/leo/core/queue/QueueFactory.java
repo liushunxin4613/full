@@ -85,6 +85,21 @@ public class QueueFactory {
 
     private void uiStart() {
         if(!uiThread.isAlive()){
+            uiThread = new Thread(() -> {
+                while (uiQueue.count() > 0) {
+                    IAction action = uiQueue.dequeue();
+                    if (action != null) {
+                        handler.post(action::execute);
+                    }
+                    try {
+                        if(interval > 0){
+                            Thread.sleep(interval);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
             uiThread.start();
         }
     }

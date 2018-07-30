@@ -8,25 +8,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leo.core.update.IRunAction;
+import com.leo.core.update.Update;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bean.ChuchaiBean;
 import com.ylink.fullgoal.bean.DepartmentBean;
+import com.ylink.fullgoal.bean.DiaoyanBean;
 import com.ylink.fullgoal.bean.PersonBean;
-import com.ylink.fullgoal.bean.ProjectBean;
 import com.ylink.fullgoal.bean.ProjectBeanV1;
+import com.ylink.fullgoal.bean.ShareBean;
 import com.ylink.fullgoal.bean.TvBean;
-import com.ylink.fullgoal.bean.XCJPBean;
+import com.ylink.fullgoal.bean.XiechengBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
 import com.ylink.fullgoal.fg.ApplyContentFgV1;
-import com.ylink.fullgoal.fg.ContractPaymentFg;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.DataFgV1;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.DimenFg;
 import com.ylink.fullgoal.fg.DimenListFg;
-import com.ylink.fullgoal.fg.ProcessFg;
 import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
@@ -64,6 +66,9 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     @Bind(R.id.null_vg)
     LinearLayout nullVg;
 
+    private long time;
+    private Update update;
+
     public FullSearchControllerApi(C controller) {
         super(controller);
     }
@@ -88,7 +93,8 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
 
             @Override
             public void onTextChanged(CharSequence text, int start, int before, int count) {
-                setIcon(iconIv, count > 0).search(text.toString());
+                setIcon(iconIv, count > 0);
+                FullSearchControllerApi.this.lazySearch(text.toString());
             }
 
             @Override
@@ -105,7 +111,32 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     return true;
             }
         });
+        update = new Update(new IRunAction() {
+            @Override
+            public boolean isRun(long timeMillis) {
+                return time > timeMillis;
+            }
+
+            @Override
+            public void onListen(int count, long timeMillis) {
+            }
+
+            @Override
+            public void run() {
+                search(getKeyword());
+            }
+        }).setInterval(200);
         initAdds();
+    }
+
+    private void lazySearch(String keyword) {
+        if (update != null) {
+            setKeyword(keyword);
+            time = update.getAddCurrentTimeMillis(600);
+            update.update();
+        } else {
+            search(keyword);
+        }
     }
 
     private void initAdds() {
@@ -122,7 +153,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 -> data.add(new ProjectBeanV1(item.getProjectName(), item.getProjectCode(),
                 item.getStatus(), item.getLeader(), item.getLeadDepartment(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
-        //合同付款申请单列表
+        /*//合同付款申请单列表
         addList(ContractPaymentFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new ProjectBean(item.getName(), item.getApplicationDate(),
                 item.getLeader(), item.getLeadDepartment(), item.getFileNumber(), item.getStatus(),
@@ -131,14 +162,14 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         addList(ProcessFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new ProjectBean(item.getApplicant(), item.getDate(),
                 item.getApplyDepartment(), null, item.getAdvAmount(), item.getCause(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
+                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
         //费用指标列表
         addList(CostFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new TvBean(item.getCostIndex(), (bean, view)
+                -> data.add(new ShareBean(item.getCostIndex(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //费用指标维度列表
         addList(DimenListFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new TvBean(item.getName(), (bean, view)
+                -> data.add(new ShareBean(item.getName(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), getExecute(decode(getKey(),
                 DimenFg.class), DimenFg::getCode), item)))))));
         //申请单内容
@@ -147,23 +178,21 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 -> finishActivity(new SearchVo<>(getSearch(), getKey(), item)))))));
         //出差申请单
         addList(TravelFormFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new XCJPBean(item.getAmount(), String.format("%s天", item.getDates()),
-                item.getWorkName(), String.format("%s 开", item.getStartDate()), String.format("%s 到",
-                item.getEndDate()), item.getDestination(),
+                -> data.add(new ChuchaiBean(item.getCode(), item.getAmount(), item.getDestination(),
+                item.getDates(), item.getStartDate(), item.getEndDate(), item.getWorkName(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
                 .setFilter(item.getAmount())))));
         //投研报告列表
         addList(ResearchReportFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ProjectBean(item.getStockName(), item.getEndTime(),
-                item.getStockCode(), item.getStatus(), item.getType(), item.getReportInfo(),
+                -> data.add(new DiaoyanBean(item.getStockCode(), item.getStockName(), item.getType(),
+                item.getStatus(), item.getUploadTime(), item.getEndTime(), item.getReportInfo(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
                 .setFilter(item.getProjectCode())))));
         //携程机票列表
         addList(CtripTicketsFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new XCJPBean(item.getCrew(), item.getTicket(), item.getFlightNumber(),
-                String.format("%s 开", item.getTakeOffDate()), String.format("%s 到", item.getArrivelTime()),
-                String.format("%s - %s", item.getDeparture(), item.getDestination()),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
+                -> data.add(new XiechengBean(item.getFlightNumber(), item.getDeparture(), item.getDestination(),
+                item.getCrew(), item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(), item.getArrivelDate(),
+                item.getArrivelTime(), (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
                 .setFilter(item.getFlightNumber())))));
     }
 

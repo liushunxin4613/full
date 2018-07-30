@@ -4,8 +4,10 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBi;
@@ -16,6 +18,23 @@ public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
 
     @Override
     public Integer getDefLayoutResId() {
+        ViewBean bean = bean();
+        if (bean != null) {
+            if(TextUtils.isEmpty(bean.getApiXmlResourceParser())
+                    && TextUtils.check(bean.getXml())){
+                switch (bean.getXml()) {
+                    case "l_apply_v1.xml":
+                        return R.layout.l_apply_v1;
+                    case "l_apply_v2.xml":
+                        return R.layout.l_apply_v2;
+                    case "l_apply_v3.xml":
+                        return R.layout.l_apply_v3;
+                    case "l_apply_v4.xml":
+                        return R.layout.l_apply_v4;
+                }
+            }
+        }
+        LogUtil.ee(this, "无事");
         return null;
     }
 
@@ -43,7 +62,7 @@ public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
             }
             if (view instanceof TextView) {
                 TextView tv = (TextView) view;
-//                api().ii(String.format("tag: %s, id: %s", vo.getTag(), Integer.toHexString(tv.getId())));
+                api().ii(String.format("tag: %s, id: %s", vo.getTag(), Integer.toHexString(tv.getId())));
 //                api().ii(String.format("text: %s", tv.getText().toString()));
                 if (TextUtils.check(vo.getFormat())) {
                     String format = vo.getFormat();

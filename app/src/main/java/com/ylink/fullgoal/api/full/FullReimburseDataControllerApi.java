@@ -2,6 +2,7 @@ package com.ylink.fullgoal.api.full;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
@@ -157,15 +158,15 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                     data.add(new TvHTv3Bean("事由", obj.getCause()));
                 }, vg -> vg.setOnClickListener(v -> {
                     //暂不使用
-                    String status = getValue(FULL_STATUS, obj.getStatus());
-                    if (!TextUtils.isEmpty(obj.getSerialNo()) && !TextUtils.isEmpty(status)
+                    String state = getValue(FULL_STATUS, obj.getStatus(), obj.getStatus());
+                    if (!TextUtils.isEmpty(obj.getSerialNo()) && !TextUtils.isEmpty(state)
                             && !TextUtils.isEmpty(obj.getBillType())) {
                         switch (obj.getBillType()) {
                             case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB://一般报销
-                                routeApi().general(status, obj.getSerialNo());
+                                routeApi().general(state, obj.getSerialNo());
                                 break;
                             case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC://出差报销
-                                routeApi().evection(status, obj.getSerialNo());
+                                routeApi().evection(state, obj.getSerialNo());
                                 break;
                         }
                     }
@@ -228,15 +229,15 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         drawerLayout.addView(api.getRootView(), lp);
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
             }
 
             @Override
-            public void onDrawerOpened(View drawerView) {
+            public void onDrawerOpened(@NonNull View drawerView) {
             }
 
             @Override
-            public void onDrawerClosed(View drawerView) {
+            public void onDrawerClosed(@NonNull View drawerView) {
                 SoftInputUtil.hidSoftInput(drawerView);
             }
 

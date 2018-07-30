@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IBindControllerApi;
+import com.leo.core.util.LogUtil;
 import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBiBean;
@@ -23,9 +24,11 @@ public class ViewBean extends SurfaceBiBean<ViewBean> {
     private List<TemplateVo> data;
     private Map<String, String> map;
 
+    private transient String xml;
     private transient View.OnClickListener onClickListener;
 
-    ViewBean(XmlResourceParser parser, List<TemplateVo> data, Object obj) {
+    ViewBean(String xml, XmlResourceParser parser, List<TemplateVo> data, Object obj) {
+        this.xml = xml;
         this.data = data;
         this.map = new LinkedHashMap<>();
         this.setApiXmlResourceParser(parser);
@@ -52,6 +55,14 @@ public class ViewBean extends SurfaceBiBean<ViewBean> {
 
     public void setOnClickListener(OnBVClickListener<ViewBean> listener) {
         this.onClickListener = getOnBVClickListener(listener);
+    }
+
+    public String getXml() {
+        return xml;
+    }
+
+    public void setXml(String xml) {
+        this.xml = xml;
     }
 
 }

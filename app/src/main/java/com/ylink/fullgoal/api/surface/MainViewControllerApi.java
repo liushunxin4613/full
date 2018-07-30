@@ -28,7 +28,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         super.initView();
         onAppData();
         hideBackIv().setTitle("富国基金个人报销平台");
-        add(new ImageBeanD1(R.mipmap.fg));
+        add(new ImageBeanD1(R.mipmap.banner));
         addSmallVgBeanD1(new IconTvMoreBean(R.mipmap.m1, "一般费用报销", (bean, view) -> routeApi().general(FQ)),
                 new IconTvMoreBean(R.mipmap.m2, "出差费用报销", (bean, view) -> routeApi().evection(FQ)),
                 new IconTvMoreBean(R.mipmap.m3, "报销列表查询", (bean, view) -> routeApi().queryReimburse()),
@@ -42,11 +42,13 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         addSmallVgBean(new IconTvMoreBean(R.mipmap.test_icon1, "测试: 一般费用报销确认", (bean, view)
                 -> clickTestGeneral()), new IconTvMoreBean(R.mipmap.test_icon2, "测试: 出差费用报销确认",
                 (bean, view) -> clickTestEvection()));
-        clickTestGeneral();
+        //text
+//        clickTestGeneral();
+//        routeApi().evection(FQ);
     }
 
     private void clickTestGeneral() {
-        routeApi().general(QR, "20180726xijiong6000828");
+//        routeApi().general(QR, "20180726xijiong6000848");
     }
 
     private void clickTestEvection() {

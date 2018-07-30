@@ -20,6 +20,7 @@ import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.net.Exceptions;
+import com.leo.core.other.MMap;
 import com.leo.core.util.TextUtils;
 import com.leo.core.util.ToastUtil;
 import com.ylink.fullgoal.R;
@@ -269,7 +270,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
      * @param value value
      * @return key
      */
-    protected String getKey(String[][] argss, String value) {
+    protected String getKey(String[][] argss, String value, String def) {
         if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(argss)) {
             for (String[] args : argss) {
                 if (count(args) == 2 && TextUtils.equals(args[1], value)) {
@@ -277,7 +278,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 }
             }
         }
-        return null;
+        return def;
     }
 
     /**
@@ -299,7 +300,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
 
     protected String getKey(String value) {
-        return getKey(FIELDS, value);
+        return getKey(FIELDS, value, null);
     }
 
     protected String getValue(String key) {
@@ -410,6 +411,10 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             return (B) obj.getDB();
         }
         return null;
+    }
+
+    protected void ee(String name, IObjAction<MMap<String, Object>> action){
+        ee(name, map(action));
     }
 
 }

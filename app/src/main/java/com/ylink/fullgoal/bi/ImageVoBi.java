@@ -4,13 +4,16 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leo.core.util.HelperUtil;
+import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBi;
+import com.ylink.fullgoal.view.HFrameLayout;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import butterknife.Bind;
@@ -24,8 +27,14 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
     EditText detailEt;
     @Bind(R.id.photo_iv)
     PhotoView photoIv;
+    @Bind(R.id.to_left_tv)
+    ImageView toLeftTv;
+    @Bind(R.id.to_right_tv)
+    ImageView toRightTv;
     @Bind(R.id.vg)
     ViewGroup vg;
+    @Bind(R.id.h_vg)
+    HFrameLayout hVg;
 
     @Override
     public Integer getDefLayoutResId() {
@@ -41,7 +50,13 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
                 .setText(nameTv, "金额")
                 .setText(detailEt, bean.getAmount())
                 .setImage(photoIv, bean.getPhoto())
-                .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt, null, bean::setAmount));
+                .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt, null, bean::setAmount))
+                .setOnClickListener(toLeftTv, view -> photoIv.setRotationBy(-90))
+                .setOnClickListener(toRightTv, view -> photoIv.setRotationBy(90))
+                .execute(() -> {
+                   hVg.setListenOnClickListener(SoftInputUtil::hidSoftInput);
+                   api.ee("-------------------------------------------------");
+                });
     }
 
 }

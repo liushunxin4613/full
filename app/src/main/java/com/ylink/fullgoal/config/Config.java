@@ -2,8 +2,10 @@ package com.ylink.fullgoal.config;
 
 import com.ylink.fullgoal.api.api.RouteApi;
 
+import static com.ylink.fullgoal.config.ComConfig.CS;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.XG;
+import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_CS;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_QR;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_XG;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_DCL;
@@ -22,9 +24,9 @@ public class Config {
 
     //配置
     public final static String VERSION = VERSION_V2;//版本
-    public final static boolean TEMPLATE_FULL = false;//template下载方式
+    public final static boolean TEMPLATE_FULL = true;//template下载方式
     public final static boolean DEBUG = false;//debug模式是否开启5
-    public final static boolean LOCAL = false;//本地模式是否开启
+    final static boolean LOCAL = false;//本地模式是否开启
     public final static boolean TEST = true;//测试模式是否开启
     public final static boolean SIMULATE_HTTP = false;//模拟模式是否开启
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
@@ -74,6 +76,7 @@ public class Config {
     public final static String[][] BILL_TYPE_TITLES = {
             {"报销确认", QR},
             {"报销修改", XG},
+            {"初始化报销", CS},
     };
     public final static String[][] DATES = {
             {"当天", "1"},
@@ -88,6 +91,8 @@ public class Config {
             {REIMBURSE_LIST_QUERY_RETURN_STATUS_QR, QR},
             //经办人修改
             {REIMBURSE_LIST_QUERY_RETURN_STATUS_XG, XG},
+            //初始化任务
+            {REIMBURSE_LIST_QUERY_RETURN_STATUS_CS, CS},
     };
 
     public final static String XG1 = "申请特批";

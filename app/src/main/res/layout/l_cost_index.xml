@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
@@ -36,12 +37,38 @@
         android:layout_height="1.0px"
         android:background="@color/ccC" />
 
-    <com.ylink.fullgoal.view.MViewPager
-        android:id="@+id/view_pager"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="never"
-        android:scrollbars="none" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/c_left_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:src="@mipmap/c_left"
+            tools:ignore="ContentDescription" />
+
+        <com.ylink.fullgoal.view.MViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            tools:background="@color/gray" />
+
+        <ImageView
+            android:id="@+id/c_right_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:src="@mipmap/c_right"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
 
 </LinearLayout>

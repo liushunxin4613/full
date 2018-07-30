@@ -24,4 +24,5 @@
     <string name="jiedian">节点</string>
     <string name="shenpiyj">审批意见</string>
     <string name="baoxiaolx">报销类型</string>
+    <string name="changantpsc">(长按图片删除)</string>
 </resources>

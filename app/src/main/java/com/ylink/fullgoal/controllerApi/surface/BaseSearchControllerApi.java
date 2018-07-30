@@ -34,11 +34,11 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         super(controller);
     }
 
-    private String getKeyword() {
+    protected String getKeyword() {
         return keyword;
     }
 
-    private void setKeyword(String keyword) {
+    protected void setKeyword(String keyword) {
         this.keyword = keyword;
     }
 

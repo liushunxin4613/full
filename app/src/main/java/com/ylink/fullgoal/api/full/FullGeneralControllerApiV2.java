@@ -104,7 +104,7 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
                     item.getRuleName(), item.getRuleRemark())));
         }
         //GridBean 添加票据
-        addVgBean(null, newGridBean(FILTER_YB));
+        addVgBean("票据", newGridBean(FILTER_YB));
         /*//添加流程
         if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
             addVgBean(data -> {

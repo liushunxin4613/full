@@ -10,6 +10,7 @@ public interface ILoadImageApi<T extends ILoadImageApi> extends IApi {
 
     /**
      * 驱动
+     *
      * @param <R> R
      * @return 驱动
      */
@@ -17,18 +18,21 @@ public interface ILoadImageApi<T extends ILoadImageApi> extends IApi {
 
     /**
      * 默认图片
+     *
      * @return 图片资源
      */
     Integer getDefaultRes();
 
     /**
      * 异常图片
+     *
      * @return 图片资源
      */
     Integer getErrorRes();
 
     /**
      * 是否缓存
+     *
      * @param enable true为是,false为否
      * @return 本身
      */
@@ -36,6 +40,7 @@ public interface ILoadImageApi<T extends ILoadImageApi> extends IApi {
 
     /**
      * 初始化
+     *
      * @param map map
      * @return 本身
      */
@@ -43,20 +48,42 @@ public interface ILoadImageApi<T extends ILoadImageApi> extends IApi {
 
     /**
      * 负载
+     *
      * @param path path
-     * @param iv iv
+     * @param iv   iv
      * @return 本身
      */
     T load(Object path, ImageView iv);
 
     /**
-     *
      * 负载
+     *
      * @param path path
-     * @param iv iv
-     * @param api api
+     * @param iv   iv
+     * @param api  api
      * @return 本身
      */
     T load(Object path, ImageView iv, ICallbackApi api);
+
+    /**
+     * 负载
+     *
+     * @param path   path
+     * @param iv     iv
+     * @param rotate rotate
+     * @return 本身
+     */
+    T load(Object path, ImageView iv, float rotate);
+
+    /**
+     * 负载
+     *
+     * @param path   path
+     * @param iv     iv
+     * @param rotate rotate
+     * @param api    api
+     * @return 本身
+     */
+    T load(Object path, ImageView iv, float rotate, ICallbackApi api);
 
 }

@@ -898,10 +898,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 if (asset != null) {
                     Method method = asset.getClass().getMethod("addAssetPath", String.class);
                     int cookie = (Integer) method.invoke(asset, dir.getPath());
+                    ii("dir", dir.getPath());
                     return asset.openXmlResourceParser(cookie, xml);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
         return null;
@@ -914,7 +915,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 return getContext().getResources().getAssets()
                         .openXmlResourceParser(xml);
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
         return null;
@@ -1215,6 +1216,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T setImage(ImageView iv, Object path) {
         viewApi().setImage(iv, path);
+        return getThis();
+    }
+
+    @Override
+    public T setImage(ImageView iv, Object path, float rotate) {
+        viewApi().setImage(iv, path, rotate);
         return getThis();
     }
 
@@ -1880,6 +1887,18 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T load(Object path, ImageView iv, ICallbackApi api) {
         loadImageApi().load(path, iv, api);
+        return getThis();
+    }
+
+    @Override
+    public T load(Object path, ImageView iv, float rotate) {
+        loadImageApi().load(path, iv, rotate);
+        return getThis();
+    }
+
+    @Override
+    public T load(Object path, ImageView iv, float rotate, ICallbackApi api) {
+        loadImageApi().load(path, iv, rotate, api);
         return getThis();
     }
 

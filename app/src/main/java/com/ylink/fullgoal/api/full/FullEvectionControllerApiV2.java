@@ -3,14 +3,16 @@ package com.ylink.fullgoal.api.full;
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.CoreController;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.bean.ChuchaiBean;
+import com.ylink.fullgoal.bean.DiaoyanBean;
 import com.ylink.fullgoal.bean.IconTvHBean;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
-import com.ylink.fullgoal.bean.ProjectBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
-import com.ylink.fullgoal.bean.XCJPBean;
+import com.ylink.fullgoal.bean.TvHintBean;
+import com.ylink.fullgoal.bean.XiechengBean;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.CtripTicketsController;
 import com.ylink.fullgoal.cr.surface.DepartmentController;
@@ -62,7 +64,7 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
 
     @Override
     protected String getBTitle() {
-        return "一般费用报销";
+        return "出差费用报销";
     }
 
     @Override
@@ -126,12 +128,10 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             }
             ArrayList<String> filterData = new ArrayList<>();
             execute(list, fg -> {
-                data.add(getExecute(fg, item -> new XCJPBean(item.getAmount(),
-                        String.format("%s天", item.getDates()),
-                        item.getWorkName(), String.format("%s 开", item.getStartDate()),
-                        String.format("%s 到", item.getEndDate()), item.getDestination(),
-                        (bean, view) -> initVgApiBean("出差申请单",
-                                () -> vos(DVo::getTrave, obj -> obj.remove(item, this))))));
+                data.add(getExecute(fg, item -> new ChuchaiBean(item.getCode(), item.getAmount(),
+                        item.getDestination(), item.getDates(), item.getStartDate(), item.getEndDate(),
+                        item.getWorkName(), (bean, view) -> initVgApiBean("出差申请单",
+                        () -> vos(DVo::getTrave, obj -> obj.remove(item, this))))));
                 filterData.add(fg.getAmount());
             });
             if (isEnable()) {
@@ -149,10 +149,10 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             ArrayList<String> filterData = new ArrayList<>();
             execute(list, fg -> {
                 filterData.add(fg.getProjectCode());
-                data.add(getExecute(fg, item -> (new ProjectBean(item.getStockName(), item.getEndTime(),
-                        item.getStockCode(), item.getStatus(), item.getType(), item.getReportInfo(),
+                data.add(getExecute(fg, item -> new DiaoyanBean(item.getStockCode(), item.getStockName(), item.getType(),
+                        item.getStatus(), item.getUploadTime(), item.getEndTime(), item.getReportInfo(),
                         (bean, view) -> initVgApiBean("调研报告",
-                                () -> vos(DVo::getReport, obj -> obj.remove(item, this)))))));
+                                () -> vos(DVo::getReport, obj -> obj.remove(item, this))))));
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加投研报告", (bean, view)
@@ -169,15 +169,15 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             List<CtripTicketsFg> ctripData = vor(DVo::getCtrip, CtripTicketsController::getViewBean);
             List<ImageVo> imageData = vor(DVo::getImageList, obj -> obj.getFilterDBData(FILTER_CCJPF));
             if (!(!isEnable() && TextUtils.isEmpty(ctripData) && TextUtils.isEmpty(imageData))) {
-                data.add(new TvBean("车船机票费报销"));
+                data.add(new TvHintBean("车船机票费报销"));
             }
             ArrayList<String> filterData = new ArrayList<>();
             execute(ctripData, fg -> {
                 filterData.add(fg.getFlightNumber());
-                data.add(getExecute(fg, item -> new XCJPBean(item.getCrew(), item.getTicket(),
-                        item.getFlightNumber(), String.format("%s 开", item.getArrivelTime()),
-                        String.format("%s 到", item.getArrivelTime()),
-                        String.format("%s - %s", item.getDeparture(), item.getDestination()),
+                data.add(getExecute(fg, item -> new XiechengBean(item.getFlightNumber(),
+                        item.getDeparture(), item.getDestination(), item.getCrew(),
+                        item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(),
+                        item.getArrivelDate(), item.getArrivelTime(),
                         (bean, view) -> initVgApiBean("携程机票",
                                 () -> vos(DVo::getCtrip, obj -> obj.remove(item, this))))));
             });
