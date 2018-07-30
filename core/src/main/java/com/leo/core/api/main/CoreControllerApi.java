@@ -1328,12 +1328,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T execute(IAction action) {
-        viewApi().execute(action);
-        return getThis();
-    }
-
-    @Override
     public String encode(Object obj) {
         return showApi().encode(obj);
     }
@@ -2010,8 +2004,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> T execute(B bean) {
-        parseApi().execute(bean);
+    public <B> T parse(B bean) {
+        parseApi().parse(bean);
         return getThis();
     }
 
@@ -2187,6 +2181,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public File getRootDir() {
         return dirApi().getRootDir();
+    }
+
+    @Override
+    public T execute(IAction action) {
+        return super.execute(action);
     }
 
 }

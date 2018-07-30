@@ -20,6 +20,7 @@ public class ApplicationtFg {
     private String serialNo;
     private String billType;
     private String status;
+    private String fkApprovalNum;
 
     public String getAmount() {
         return amount;
@@ -68,4 +69,13 @@ public class ApplicationtFg {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getFkApprovalNum() {
+        return fkApprovalNum;
+    }
+
+    public void setFkApprovalNum(String fkApprovalNum) {
+        this.fkApprovalNum = fkApprovalNum;
+    }
+
 }

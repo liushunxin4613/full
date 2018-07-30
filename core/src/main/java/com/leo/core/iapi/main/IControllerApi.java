@@ -614,6 +614,13 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     T statusBar(boolean dark);
 
     /**
+     * 执行
+     * @param action action
+     * @return 本身
+     */
+    T execute(IAction action);
+
+    /**
      * 执行数据
      *
      * @param obj    obj

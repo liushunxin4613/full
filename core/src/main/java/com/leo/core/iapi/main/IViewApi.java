@@ -248,12 +248,4 @@ public interface IViewApi<T extends IViewApi> extends IApi {
      */
     T setLayoutParams(View view, ViewGroup.LayoutParams params);
 
-    /**
-     * 设置viewBean
-     *
-     * @param action action
-     * @return 本身
-     */
-    T execute(IAction action);
-
 }

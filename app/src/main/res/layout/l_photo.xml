@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/vg"
-        layout="@layout/l_h_money"
+        layout="@layout/l_h_money_v1"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -23,7 +23,7 @@
             android:background="@color/cc0"
             android:scaleType="fitCenter"
             android:visibility="invisible"
-            tools:src="@mipmap/test_photo" />
+            tools:src="@mipmap/banner" />
 
         <ImageView
             android:id="@+id/to_left_tv"

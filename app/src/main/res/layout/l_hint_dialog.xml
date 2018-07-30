@@ -48,19 +48,6 @@
         android:paddingRight="@dimen/x48">
 
         <TextView
-            android:id="@+id/confirm_tv"
-            style="@style/padding"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:maxLines="1"
-            android:textColor="@color/EE4433"
-            android:textSize="@dimen/tv"
-            tools:ignore="InefficientWeight,RtlHardcoded"
-            tools:text="确认" />
-
-        <TextView
             android:id="@+id/cancel_tv"
             style="@style/padding"
             android:layout_width="match_parent"
@@ -72,6 +59,19 @@
             android:textSize="@dimen/tv"
             tools:ignore="InefficientWeight,RtlHardcoded"
             tools:text="取消" />
+
+        <TextView
+            android:id="@+id/confirm_tv"
+            style="@style/padding"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/EE4433"
+            android:textSize="@dimen/tv"
+            tools:ignore="InefficientWeight,RtlHardcoded"
+            tools:text="确认" />
 
     </LinearLayout>
 

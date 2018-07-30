@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IReturnoAction;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.SoftInputUtil;
 
@@ -31,6 +30,14 @@ public class MViewPager extends ViewPager {
     public MViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    public void toLeft(){
+        onToLeft();
+    }
+
+    public void toRight(){
+        onToRight();
     }
 
     private void init() {
@@ -102,9 +109,8 @@ public class MViewPager extends ViewPager {
         return this;
     }
 
-    public MViewPager setHorizontalApi(IReturnoAction<Boolean> action) {
+    public void setHorizontalApi(IReturnoAction<Boolean> action) {
         this.horizontalAction = action;
-        return this;
     }
 
     @SuppressLint("ClickableViewAccessibility")

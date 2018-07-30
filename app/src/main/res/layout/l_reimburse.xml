@@ -19,7 +19,82 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.0px"
+            android:background="#E3E6E8" />
+
         <LinearLayout
+            android:id="@+id/alter_vg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/sqtp_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_bottom"
+                android:drawablePadding="4dp"
+                android:drawableTop="@mipmap/pz"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:text="@string/shengqingtp"
+                android:textSize="@dimen/tv1" />
+
+            <TextView
+                android:id="@+id/wbyl_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_bottom"
+                android:drawablePadding="4dp"
+                android:drawableTop="@mipmap/by"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:text="@string/wobuyl"
+                android:textSize="@dimen/tv1" />
+
+            <TextView
+                android:id="@+id/xgtj_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_bottom"
+                android:drawablePadding="4dp"
+                android:drawableTop="@mipmap/xg"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:text="@string/xiugaitj"
+                android:textSize="@dimen/tv1" />
+
+            <TextView
+                android:id="@+id/qxbx_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_bottom"
+                android:drawablePadding="4dp"
+                android:drawableTop="@mipmap/qx"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:text="@string/quxiaobc"
+                android:textSize="@dimen/tv1" />
+
+        </LinearLayout>
+
+
+        <!--<LinearLayout
             android:id="@+id/alter_vg"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x148"
@@ -69,7 +144,8 @@
                 android:src="@mipmap/icon_qxbx"
                 tools:ignore="ContentDescription" />
 
-        </LinearLayout>
+        </LinearLayout>-->
+
     </LinearLayout>
 
 </LinearLayout>

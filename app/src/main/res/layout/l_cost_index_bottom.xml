@@ -14,7 +14,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1.0px"
-        android:background="@color/ccC" />
+        android:background="@color/ccC"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/delete_tv"

@@ -25,9 +25,9 @@ public class InhibitionRuleBean extends ApiBean<InhibitionRuleBean> {
         if(!TextUtils.isEmpty(state)){
             switch (state){
                 case STATE_RED:
-                    return R.mipmap.icon_red;
+                    return R.mipmap.jin;
                 case STATE_YELLOW:
-                    return R.mipmap.icon_yellow;
+                    return R.mipmap.jing;
             }
         }
         return null;

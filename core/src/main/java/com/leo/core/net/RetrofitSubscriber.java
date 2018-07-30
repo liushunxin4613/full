@@ -30,39 +30,39 @@ public class RetrofitSubscriber<T extends RetrofitSubscriber, B> extends MsgSubs
 
     @Override
     public void onCompleted() {
-        execute(new Completed());
+        parse(new Completed());
     }
 
     @Override
     public void onError(Throwable e) {
         if (e instanceof ConnectException || e instanceof NoRouteToHostException) {
-            execute("网络异常", HttpError.ERROR_CONNECT, e);
+            parse("网络异常", HttpError.ERROR_CONNECT, e);
         } else if (e instanceof HttpException) {
-            execute("服务器异常", HttpError.ERROR_HTTP, e);
+            parse("服务器异常", HttpError.ERROR_HTTP, e);
         } else if (e instanceof SocketTimeoutException) {
-            execute("连接超时", HttpError.ERROR_SOCKET_TIME_OUT, e);
+            parse("连接超时", HttpError.ERROR_SOCKET_TIME_OUT, e);
         } else {
-            execute("数据异常", HttpError.ERROR_DATA, e);
+            parse("数据异常", HttpError.ERROR_DATA, e);
         }
     }
 
     @Override
     public void onNext(B next) {
         if (next == null) {
-            execute("next数据为空", HttpError.ERROR_DATA_NULL, new NullPointerException("onNext数据为空"));
+            parse("next数据为空", HttpError.ERROR_DATA_NULL, new NullPointerException("onNext数据为空"));
         } else {
-            execute(next);
+            parse(next);
         }
     }
 
-    private void execute(Object obj) {
+    private void parse(Object obj) {
         if (obj != null && api != null) {
-            api.execute(obj);
+            api.parse(obj);
         }
     }
 
-    private void execute(String message, int code, Throwable e) {
-        execute(new Exceptions<>(message, code, e));
+    private void parse(String message, int code, Throwable e) {
+        parse(new Exceptions<>(message, code, e));
     }
 
 }

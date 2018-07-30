@@ -5,13 +5,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.leo.core.bean.Bol;
 import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.OnBVDialogClickListener;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.JavaTypeUtil;
@@ -31,6 +32,7 @@ import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.core.DoubleController;
+import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
@@ -84,14 +86,14 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private final static int PHOTO_REQUEST_CAMERA = 0x101;
 
-    @Bind(R.id.sqtp_iv)
-    ImageView sqtpIv;
-    @Bind(R.id.wbyl_iv)
-    ImageView wbylIv;
-    @Bind(R.id.xgtj_iv)
-    ImageView xgtjIv;
-    @Bind(R.id.qxbx_iv)
-    ImageView qxbxIv;
+    @Bind(R.id.sqtp_tv)
+    TextView sqtpTv;
+    @Bind(R.id.wbyl_tv)
+    TextView wbylTv;
+    @Bind(R.id.xgtj_tv)
+    TextView xgtjTv;
+    @Bind(R.id.qxbx_tv)
+    TextView qxbxTv;
     @Bind(R.id.alter_vg)
     LinearLayout alterVg;
     @Bind(R.id.content_vg)
@@ -227,7 +229,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                         vos(DVo::getCostIndex, obj -> obj.update(money));
                         Map<String, Object> map = getSubmitMap();
                         if (!TextUtils.isEmpty(map)) {
-                            if(getVo().getIsShare().is()){
+                            if (getVo().getIsShare().is()) {
                                 routeApi().costIndex(m -> m.put(DATA_QR, encode(map)));
                             } else {
                                 api().submitReimburse(map);
@@ -236,19 +238,19 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     });
                     break;
                 case XG:
-                    setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpIv, v -> {
+                    setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpTv, v -> {
                         //申请特批
                         vos(DVo::getLogo, obj -> obj.initDB(XG1));
                         submit();
-                    }).setOnClickListener(wbylIv, v -> {
+                    }).setOnClickListener(wbylTv, v -> {
                         //我不要了
                         vos(DVo::getLogo, obj -> obj.initDB(XG2));
                         submit();
-                    }).setOnClickListener(xgtjIv, v -> {
+                    }).setOnClickListener(xgtjTv, v -> {
                         //修改提交
                         vos(DVo::getLogo, obj -> obj.initDB(XG3));
                         submit();
-                    }).setOnClickListener(qxbxIv, v -> {
+                    }).setOnClickListener(qxbxTv, v -> {
                         //取消报销
                         vos(DVo::getLogo, obj -> obj.initDB(XG4));
                         submit();
@@ -319,29 +321,38 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     //私有的
 
+    private void dialog(String detail, String confirm, String cancel,
+                        OnBVDialogClickListener<HintDialogBean> confirmListener,
+                        OnBVDialogClickListener<HintDialogBean> cancelListener) {
+        if (TextUtils.check(detail, confirm, confirmListener)) {
+            HintDialogBean dialogBean = new HintDialogBean("温馨提示", detail, confirm,
+                    cancel, confirmListener, cancelListener);
+            SurfaceControllerApi api = getDialogControllerApi(getActivity(),
+                    SurfaceControllerApi.class, dialogBean.getApiType());
+            api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
+                Window window = api.getDialog().getWindow();
+                if (window != null) {
+                    window.setGravity(Gravity.CENTER);
+                    WindowManager.LayoutParams lp = window.getAttributes();
+                    IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
+                    lp.width = (int) (display.getX() * 0.8);
+                    window.setAttributes(lp);
+                }
+            });
+        }
+    }
+
     private void again() {
-        HintDialogBean dialogBean = new HintDialogBean("温馨提示", "是否需要添加新的报销", "是",
+        dialog("是否需要添加新的报销", "是",
                 "否", (bean, v, dialog) -> {
-            dialog.dismiss();
-            vos(DVo::getImageList, AddController::clear);
-            vos(DVo::getSerialNo, SerialNoController::clear);
-            notifyDataChanged();
-        }, (bean, v, dialog) -> {
-            dialog.dismiss();
-            getActivity().finish();
-        });
-        SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
-                dialogBean.getApiType());
-        api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
-            Window window = api.getDialog().getWindow();
-            if (window != null) {
-                window.setGravity(Gravity.CENTER);
-                WindowManager.LayoutParams lp = window.getAttributes();
-                IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
-                lp.width = (int) (display.getX() * 0.8);
-                window.setAttributes(lp);
-            }
-        });
+                    dialog.dismiss();
+                    vos(DVo::getImageList, AddController::clear);
+                    vos(DVo::getSerialNo, SerialNoController::clear);
+                    notifyDataChanged();
+                }, (bean, v, dialog) -> {
+                    dialog.dismiss();
+                    getActivity().finish();
+                });
     }
 
     private List<GridPhotoBean> getPhotoGridBeanData(int type, List<ImageVo> data) {
@@ -364,10 +375,31 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 提交数据
      */
     private void submit() {
-        Map<String, Object> map = getSubmitMap();
-        if (!TextUtils.isEmpty(map)) {
-            api().submitReimburse(map);
+        checkAction(() -> {
+            Map<String, Object> map = getSubmitMap();
+            if (!TextUtils.isEmpty(map)) {
+                api().submitReimburse(map);
+            }
+        });
+    }
+
+    private void checkAction(IAction action) {
+        if (TextUtils.equals(vor(DVo::getCostIndex, CostIndexController::getCostName),
+                "其他招待（办公）")) {
+            double money = vor(DVo::getMoney, DoubleController::getdouble);
+            if (money > 3000) {
+                dialog("您的报销金额超过三千元,请关联招待申请单", "确认", null, (bean, v, dialog)
+                        -> dialog.dismiss(), null);
+                return;
+            } else if (money > 10000) {
+                dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "确认", null, (bean, v, dialog) -> {
+                    dialog.dismiss();
+                    execute(action);
+                }, null);
+                return;
+            }
         }
+        execute(action);
     }
 
     private Map<String, Object> getSubmitMap() {
@@ -466,8 +498,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             dialog.dismiss();
             if (bean.getObj() instanceof ImageVo) {
                 ImageVo vo = (ImageVo) bean.getObj();
-                api().imageDelete(vord(DVo::getSerialNo), vo.getImageID(),
-                        vo.getAmount(), vo.getKey(), vo.getImageID());
+                if (TextUtils.check(vo.getImageID())) {
+                    api().imageDelete(vord(DVo::getSerialNo), vo.getImageID(),
+                            vo.getAmount(), vo.getKey(), vo.getImageID());
+                } else {
+                    vos(DVo::getImageList, obj -> obj.remove(vo.getPath()));
+                }
             }
             notifyDataChanged();
         });

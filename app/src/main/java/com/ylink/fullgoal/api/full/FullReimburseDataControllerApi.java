@@ -19,6 +19,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.IndicatorControllerApi;
 import com.ylink.fullgoal.bean.CCSQDBean;
+import com.ylink.fullgoal.bean.CCSQDBeanV1;
 import com.ylink.fullgoal.bean.DateArrayBean;
 import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IndicatorBean;
@@ -151,10 +152,29 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             if (!TextUtils.isEmpty(applicationtData)) {
                 api.clear().showContentView();
                 execute(applicationtData, obj -> addVgBean(api, data -> {
-                    data.add(new CCSQDBean(obj.getSerialNo(), obj.getBillType(),
-                            "报销批次号", "报销类型"));
-                    data.add(new CCSQDBean(obj.getFillDate(), obj.getStatus(),
-                            "时间", "状态"));
+                    if (!TextUtils.isEmpty(obj.getStatus())) {
+                        switch (obj.getStatus()) {
+                            case "初始化任务":
+                                data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
+                                        obj.getStatus(), null));
+                                data.add(new CCSQDBean("时间", obj.getFillDate(), "报销类型",
+                                        obj.getBillType(), null));
+                                break;
+                            case "金额确认":
+                            case "修改任务":
+                                data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
+                                        obj.getStatus(), null));
+                                data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
+                                        R.color.EE4433, null));
+                                break;
+                            default:
+                                data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销单号",
+                                        obj.getFkApprovalNum(), null));
+                                data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
+                                        R.color.EE4433, null));
+                                break;
+                        }
+                    }
                     data.add(new TvHTv3Bean("事由", obj.getCause()));
                 }, vg -> vg.setOnClickListener(v -> {
                     //暂不使用

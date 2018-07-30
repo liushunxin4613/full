@@ -27,6 +27,6 @@ public interface IParseApi<T extends IParseApi> extends IPathMsgApi<T> {
 
     T clearParse();
 
-    <B> T execute(B bean);
+    <B> T parse(B bean);
 
 }

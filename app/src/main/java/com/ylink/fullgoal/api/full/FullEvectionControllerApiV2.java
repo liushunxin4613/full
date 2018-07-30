@@ -130,8 +130,12 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             execute(list, fg -> {
                 data.add(getExecute(fg, item -> new ChuchaiBean(item.getCode(), item.getAmount(),
                         item.getDestination(), item.getDates(), item.getStartDate(), item.getEndDate(),
-                        item.getWorkName(), (bean, view) -> initVgApiBean("出差申请单",
-                        () -> vos(DVo::getTrave, obj -> obj.remove(item, this))))));
+                        item.getWorkName(), (bean, view) -> {
+                    if (isEnable()) {
+                        initVgApiBean("出差申请单", ()
+                                -> vos(DVo::getTrave, obj -> obj.remove(item, this)));
+                    }
+                })));
                 filterData.add(fg.getAmount());
             });
             if (isEnable()) {
@@ -151,8 +155,12 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
                 filterData.add(fg.getProjectCode());
                 data.add(getExecute(fg, item -> new DiaoyanBean(item.getStockCode(), item.getStockName(), item.getType(),
                         item.getStatus(), item.getUploadTime(), item.getEndTime(), item.getReportInfo(),
-                        (bean, view) -> initVgApiBean("调研报告",
-                                () -> vos(DVo::getReport, obj -> obj.remove(item, this))))));
+                        (bean, view) -> {
+                            if (isEnable()) {
+                                initVgApiBean("调研报告",
+                                        () -> vos(DVo::getReport, obj -> obj.remove(item, this)));
+                            }
+                        })));
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加投研报告", (bean, view)
@@ -178,8 +186,12 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
                         item.getDeparture(), item.getDestination(), item.getCrew(),
                         item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(),
                         item.getArrivelDate(), item.getArrivelTime(),
-                        (bean, view) -> initVgApiBean("携程机票",
-                                () -> vos(DVo::getCtrip, obj -> obj.remove(item, this))))));
+                        (bean, view) -> {
+                            if (isEnable()) {
+                                initVgApiBean("携程机票",
+                                        () -> vos(DVo::getCtrip, obj -> obj.remove(item, this)));
+                            }
+                        })));
             });
             if (isEnable()) {
                 data.add(new IconTvHBean("添加携程机票", (bean, view)

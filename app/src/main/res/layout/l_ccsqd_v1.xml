@@ -33,29 +33,16 @@
         tools:text="FGMC-P2018-00021" />
 
     <TextView
-        android:id="@+id/end_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:includeFontPadding="false"
-        android:maxLines="1"
-        android:textColor="@color/tv"
-        android:textSize="@dimen/tv2"
-        tools:ignore="RelativeOverlap,RtlHardcoded"
-        tools:text="至2018-03-06" />
-
-    <TextView
         android:id="@+id/detail_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/start_tv"
-        android:layout_marginTop="4dp"
+        android:layout_centerVertical="true"
         android:includeFontPadding="false"
         android:maxLines="1"
         android:textColor="@color/tv"
-        android:textSize="@dimen/tv1"
+        android:textSize="@dimen/tv_big"
         tools:ignore="RelativeOverlap,RtlHardcoded"
-        tools:text="3天" />
+        tools:text="修改任务" />
 
 </RelativeLayout>

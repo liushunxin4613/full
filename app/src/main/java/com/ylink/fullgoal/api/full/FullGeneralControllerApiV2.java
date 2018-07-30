@@ -106,7 +106,7 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
         //GridBean 添加票据
         addVgBean("票据", newGridBean(FILTER_YB));
         /*//添加流程
-        if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
+        if (!isEnable() && !TextUtils.isEmpty(getVo().getProcessData())) {
             addVgBean(data -> {
                 data.add(new TvH4Bean());
                 execute(vo.getProcessData(), item -> data.add(new TvH4Bean(item.getUser(),

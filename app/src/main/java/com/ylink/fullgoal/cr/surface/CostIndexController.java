@@ -60,6 +60,10 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
         return vor(CostFg::getCostCode);
     }
 
+    public String getCostName(){
+        return vor(CostFg::getCostIndex);
+    }
+
     @Override
     public CostFg getUB(String... args) {
         return super.getUB(args);

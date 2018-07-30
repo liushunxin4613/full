@@ -4,18 +4,18 @@ import android.view.View;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IBindControllerApi;
-import com.ylink.fullgoal.bi.CCSQDBi;
+import com.ylink.fullgoal.bi.CCSQDBiV1;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBiBean;
 
 /**
  * 出差申请单
  */
-public class CCSQDBean extends SurfaceBiBean<CCSQDBean> {
+public class CCSQDBeanV1 extends SurfaceBiBean<CCSQDBeanV1> {
 
     @Override
-    protected IBindControllerApi<SurfaceControllerApi, CCSQDBean> newDefApi() {
-        return new CCSQDBi();
+    protected IBindControllerApi<SurfaceControllerApi, CCSQDBeanV1> newDefApi() {
+        return new CCSQDBiV1();
     }
 
     private transient View.OnClickListener onClickListener;
@@ -27,15 +27,15 @@ public class CCSQDBean extends SurfaceBiBean<CCSQDBean> {
 
     private String start;
     private String name;
-    private String end;
     private String detail;
+    private transient Integer colorResId;
 
-    public CCSQDBean(String start, String name, String end, String detail,
-                     OnBVClickListener<CCSQDBean> listener) {
+    public CCSQDBeanV1(String start, String name, String detail, Integer resId,
+                       OnBVClickListener<CCSQDBeanV1> listener) {
         this.start = start;
         this.name = name;
-        this.end = end;
         this.detail = detail;
+        this.colorResId = resId;
         this.onClickListener = getOnBVClickListener(listener);
     }
 
@@ -67,12 +67,12 @@ public class CCSQDBean extends SurfaceBiBean<CCSQDBean> {
         this.start = start;
     }
 
-    public String getEnd() {
-        return end;
+    public Integer getColorResId() {
+        return colorResId;
     }
 
-    public void setEnd(String end) {
-        this.end = end;
+    public void setColorResId(Integer colorResId) {
+        this.colorResId = colorResId;
     }
 
 }

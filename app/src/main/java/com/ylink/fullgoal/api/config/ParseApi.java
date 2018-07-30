@@ -135,7 +135,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     @Override
-    public <B> T execute(B bean) {
+    public <B> T parse(B bean) {
         if (bean instanceof String) {
             onString((String) bean);
         } else if (bean instanceof ResponseBody) {

@@ -1,7 +1,9 @@
 package com.ylink.fullgoal.api.full;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -77,6 +79,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     EditText taxEt;
     @Bind(R.id.none_tax_money_et)
     EditText noneTaxMoneyEt;
+    @Bind(R.id.c_left_iv)
+    ImageView cLeftIv;
+    @Bind(R.id.c_right_iv)
+    ImageView cRightIv;
 
     private int maxHeight;
     private int minHeight;
@@ -156,6 +162,8 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                 .setRightTv("确认", v -> submit());
 //                .setOnClickListener(nameTv, v -> routeApi().search(SearchVo.COST_INDEX))
 //                .setOnClickListener(searchVg, v -> routeApi().search(SearchVo.COST_INDEX));
+        setOnClickListener(cLeftIv, v -> getViewPager().toLeft())
+                .setOnClickListener(cRightIv, v -> getViewPager().toRight());
         HelperUtil.addMoneyTextChangedListener(detailEt, null, this::updateAllMoney);
         HelperUtil.addMoneyTextChangedListener(taxEt, null, this::updateTaxAmount);
         HelperUtil.addMoneyTextChangedListener(noneTaxMoneyEt, null, this::updateExTaxAmount);
@@ -166,9 +174,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                 ee("dataMap", dataMap);
                 serialNo = (String) dataMap.get(SERIAL_NO);
                 Object obj = vr(dataMap, map -> map.get("budgetDepartment"));
-                if(obj instanceof Map){
+                if (obj instanceof Map) {
                     obj = ((Map) obj).get("departmentCode");
-                    if(obj instanceof String){
+                    if (obj instanceof String) {
                         department = (String) obj;
                     }
                 }
@@ -406,9 +414,11 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         });
     }
 
+    @SuppressLint("ResourceAsColor")
     private RecycleControllerApi getRecycleControllerApi() {
         RecycleControllerApi api = getViewControllerApi(RecycleControllerApi.class,
                 R.layout.l_cost_index_bottom);
+        api.setColorBg(api.getRecyclerView(), R.color.white);
         double allMoney = getAllMoney();
         double itemMax = allMoney - getOtherMoney(api);
         CostIndexVo vo = new CostIndexVo(itemMax, allMoney);

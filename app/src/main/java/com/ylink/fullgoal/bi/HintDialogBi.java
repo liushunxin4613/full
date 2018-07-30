@@ -1,8 +1,10 @@
 package com.ylink.fullgoal.bi;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.TextView;
 
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.HintDialogBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
@@ -35,7 +37,9 @@ public class HintDialogBi extends SurfaceBi<HintDialogBi, HintDialogBean> {
                 .setText(cancelTv, bean.getCancel())
                 .execute(() -> bean.setDialog(api.getDialog()))
                 .setOnClickListener(confirmTv, bean.getConfirmOnClickListener())
-                .setOnClickListener(cancelTv, bean.getCancelOnClickListener());
+                .setOnClickListener(cancelTv, bean.getCancelOnClickListener())
+                .setVisibility(confirmTv, TextUtils.isEmpty(bean.getCancel())
+                        ? View.GONE : View.VISIBLE);
     }
 
 }

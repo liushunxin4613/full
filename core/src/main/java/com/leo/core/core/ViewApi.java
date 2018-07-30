@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
-import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IVgRunApi;
 import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.ResUtil;
@@ -228,14 +227,6 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     public T setLayoutParams(View view, ViewGroup.LayoutParams params) {
         if (checkView(view)) {
             view.setLayoutParams(params);
-        }
-        return getThis();
-    }
-
-    @Override
-    public T execute(IAction action) {
-        if (action != null) {
-            action.execute();
         }
         return getThis();
     }

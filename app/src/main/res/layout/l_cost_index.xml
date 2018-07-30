@@ -35,7 +35,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1.0px"
-        android:background="@color/ccC" />
+        android:background="@color/bg" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,9 +45,8 @@
         <ImageView
             android:id="@+id/c_left_iv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:padding="8dp"
             android:src="@mipmap/c_left"
             tools:ignore="ContentDescription" />
 
@@ -56,16 +55,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/white"
             android:overScrollMode="never"
-            android:scrollbars="none"
-            tools:background="@color/gray" />
+            android:scrollbars="none" />
 
         <ImageView
             android:id="@+id/c_right_iv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:padding="8dp"
             android:src="@mipmap/c_right"
             tools:ignore="ContentDescription" />
 

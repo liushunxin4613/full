@@ -9,6 +9,7 @@ import com.ylink.fullgoal.fg.ImageFg;
 import com.ylink.fullgoal.vo.ImageVo;
 import java.util.List;
 
+import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.getMoneyString;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE_MONEY;
@@ -52,6 +53,18 @@ public class ImageListController<T extends ImageListController> extends AddContr
     protected void notifyDataChanged() {
         super.notifyDataChanged();
         executeNon(onCom, api -> api.onCom(0, UPDATE_MONEY, getMoneyString(sum())));
+    }
+
+    public void remove(String path){
+        if(check(path)){
+            executeBol(getData(), item -> {
+                if(TextUtils.equals(item.getPath(), path)){
+                    getData().remove(item);
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 
     public void updateMoney(ImageVo imageVo) {

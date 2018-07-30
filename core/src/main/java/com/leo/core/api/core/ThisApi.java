@@ -1,6 +1,6 @@
 package com.leo.core.api.core;
 
-import com.leo.core.api.main.CoreControllerApi;
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IPositionAction;
@@ -26,6 +26,13 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
     @Override
     public T getThis() {
         return (T) this;
+    }
+
+    public T execute(IAction action){
+        if(action != null){
+            action.execute();
+        }
+        return getThis();
     }
 
     protected <A> T execute(int count, boolean sequence, IReturnAction<Integer, A> ra,

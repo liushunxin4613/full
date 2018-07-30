@@ -50,13 +50,11 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
                 .setText(nameTv, "金额")
                 .setText(detailEt, bean.getAmount())
                 .setImage(photoIv, bean.getPhoto())
-                .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt, null, bean::setAmount))
+                .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt,
+                        null, bean::setAmount))
                 .setOnClickListener(toLeftTv, view -> photoIv.setRotationBy(-90))
                 .setOnClickListener(toRightTv, view -> photoIv.setRotationBy(90))
-                .execute(() -> {
-                   hVg.setListenOnClickListener(SoftInputUtil::hidSoftInput);
-                   api.ee("-------------------------------------------------");
-                });
+                .execute(() -> hVg.setListenOnClickListener(SoftInputUtil::hidSoftInput));
     }
 
 }

@@ -12,10 +12,6 @@ import java.io.File;
 import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
-import static com.leo.core.util.TextUtils.count;
-import static com.ylink.fullgoal.config.Config.VERSION;
-import static com.ylink.fullgoal.config.Config.VERSION_APP;
-import static com.ylink.fullgoal.config.Config.VERSION_V2;
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;

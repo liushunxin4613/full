@@ -81,11 +81,11 @@ public class HintDialogBean extends BaseDialogBean<HintDialogBean> {
         this.cancel = cancel;
     }
 
-    public void setConfirmOnClickListener(View.OnClickListener confirmOnClickListener) {
+    private void setConfirmOnClickListener(View.OnClickListener confirmOnClickListener) {
         this.confirmOnClickListener = confirmOnClickListener;
     }
 
-    public void setCancelOnClickListener(View.OnClickListener cancelOnClickListener) {
+    private void setCancelOnClickListener(View.OnClickListener cancelOnClickListener) {
         this.cancelOnClickListener = cancelOnClickListener;
     }
 
