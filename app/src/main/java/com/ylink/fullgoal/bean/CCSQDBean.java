@@ -20,11 +20,6 @@ public class CCSQDBean extends SurfaceBiBean<CCSQDBean> {
 
     private transient View.OnClickListener onClickListener;
 
-    @Override
-    protected String getDefaultKeyword() {
-        return getName();
-    }
-
     private String start;
     private String name;
     private String end;

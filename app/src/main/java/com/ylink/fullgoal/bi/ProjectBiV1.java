@@ -1,7 +1,10 @@
 package com.ylink.fullgoal.bi;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -24,10 +27,19 @@ public class ProjectBiV1 extends OnClickBi<ProjectBiV1, ProjectBeanV1> {
     TextView tv3;
     @Bind(R.id.tv4)
     TextView tv4;
+    @Bind(R.id.vg0)
+    LinearLayout vg0;
+    @Bind(R.id.root_vg)
+    RelativeLayout rootVg;
 
     @Override
     public Integer getDefLayoutResId() {
         return R.layout.l_project_v1;
+    }
+
+    @Override
+    protected View getRootVg() {
+        return rootVg;
     }
 
     @Override

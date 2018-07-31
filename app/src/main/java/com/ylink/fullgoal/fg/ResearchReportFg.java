@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 投研报告
  */
-public class ResearchReportFg{
+public class ResearchReportFg implements IApiCodeApi {
+
+    @Override
+    public String getApiCode() {
+        return getStockCode();
+    }
 
     /**
      * endTime : 2018-05-26

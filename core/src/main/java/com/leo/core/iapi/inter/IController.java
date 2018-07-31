@@ -2,7 +2,7 @@ package com.leo.core.iapi.inter;
 
 import android.support.annotation.NonNull;
 
-import com.leo.core.iapi.core.IApi;
+import com.leo.core.iapi.api.IApiCodeApi;
 
 import java.lang.reflect.Type;
 
@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
  * <blockquote/>
  * 不能有构造方法
  */
-public interface IController<T extends IController, DB, UB> extends IApi {
+public interface IController<T extends IController, DB, UB> extends IApiCodeApi {
 
     /**
      * 初始化field

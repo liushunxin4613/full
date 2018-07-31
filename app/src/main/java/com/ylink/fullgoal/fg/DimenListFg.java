@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 渠道分摊信息
  */
-public class DimenListFg {
+public class DimenListFg implements IApiCodeApi {
+
+    @Override
+    public String getApiCode() {
+        return getCode();
+    }
 
     /**
      * code : 00001

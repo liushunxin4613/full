@@ -119,6 +119,20 @@ public class RouteApi extends CoreRouteApi {
     /**
      * 搜索页面
      */
+    public void searchValue(String search, String value) {
+        search(search, null, value, null);
+    }
+
+    /**
+     * 搜索页面
+     */
+    public void searchKV(String search, String kv) {
+        search(search, kv, kv, null);
+    }
+
+    /**
+     * 搜索页面
+     */
     public void search(String search, List<String> filterData) {
         search(search, null, null, filterData);
     }
@@ -185,7 +199,8 @@ public class RouteApi extends CoreRouteApi {
     }
 
     @Override
-    protected Class<? extends IControllerApi> getViewApiClz(@NonNull String module, @NonNull String viewApi) {
+    protected Class<? extends IControllerApi> getViewApiClz(@NonNull String module,
+                                                            @NonNull String viewApi) {
         return null;
     }
 
@@ -193,14 +208,18 @@ public class RouteApi extends CoreRouteApi {
      * 一般费用报销
      */
     public void general(String state, String serialNo) {
-        route(VERSION, "surface/general", null, map -> map.put(STATE, state).put(SERIAL_NO, serialNo));
+        route(VERSION, "surface/general", null, map
+                -> map.put(STATE, state)
+                .put(SERIAL_NO, serialNo));
     }
 
     /**
      * 出差费用报销
      */
     public void evection(String state, String serialNo) {
-        route(VERSION, "surface/evection", null, map -> map.put(STATE, state).put(SERIAL_NO, serialNo));
+        route(VERSION, "surface/evection", null, map
+                -> map.put(STATE, state)
+                .put(SERIAL_NO, serialNo));
     }
 
     /**
@@ -256,15 +275,21 @@ public class RouteApi extends CoreRouteApi {
      */
     public void searchApply(String search, String key, String value) {
         onSearch();
-        route(MODULE, "surface/searchApply", null, map -> map.put(SEARCH, search).put(KEY, key).put(VALUE, value));
+        route(MODULE, "surface/searchApply", null, map
+                -> map.put(SEARCH, search)
+                .put(KEY, key)
+                .put(VALUE, value));
     }
 
     /**
      * 搜索申请单内容
      */
-    public void searchApplyContent(String search, String key) {
+    public void searchApplyContent(String search, String key, String value) {
         onSearch();
-        route(MODULE, "surface/searchApplyContent", null, map -> map.put(SEARCH, search).put(KEY, key));
+        route(MODULE, "surface/searchApplyContent", null, map
+                -> map.put(SEARCH, search)
+                .put(KEY, key)
+                .put(VALUE, value));
     }
 
 }

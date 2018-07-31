@@ -12,6 +12,11 @@ public class XiechengBean extends OnClickBean<XiechengBean> {
         return new XiechengBi();
     }
 
+    @Override
+    public String getFilter() {
+        return getCode();
+    }
+
     private String code;
     private String startPlace;
     private String endPlace;

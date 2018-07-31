@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.api.surface;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -71,6 +72,14 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         String name = intent.getStringExtra("name");
         String cookieStr = intent.getStringExtra("cookieStr");
         String portalPac = intent.getStringExtra("portalPac");
+
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            for (String key : bundle.keySet()) {
+                ee(key, bundle.get(key));
+            }
+        }
+
         if (TextUtils.check(userId, username)) {//TODO 测试用
             initUser(new UserBean(name, cookie, userId, username, cookieStr, portalPac));
         }

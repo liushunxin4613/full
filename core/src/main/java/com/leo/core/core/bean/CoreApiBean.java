@@ -19,7 +19,7 @@ public abstract class CoreApiBean<T extends CoreApiBean, A extends IControllerAp
     private transient Object apiId = TextUtils.getRandom();
     private transient IControllerApi api;
     private transient boolean enable = true;
-    private transient String keyword;
+    private transient String apiCode;
     private transient String filter;
     private transient XmlResourceParser parser;
 
@@ -50,14 +50,14 @@ public abstract class CoreApiBean<T extends CoreApiBean, A extends IControllerAp
     }
 
     @Override
-    public String getKeyword() {
-        if (keyword != null) {
-            return keyword;
+    public String getApiCode() {
+        if (apiCode != null) {
+            return apiCode;
         }
-        return getDefaultKeyword();
+        return getDefaultApiCode();
     }
 
-    protected String getDefaultKeyword() {
+    protected String getDefaultApiCode() {
         return null;
     }
 
@@ -66,8 +66,8 @@ public abstract class CoreApiBean<T extends CoreApiBean, A extends IControllerAp
         return filter;
     }
 
-    public T setKeyword(String keyword) {
-        this.keyword = keyword;
+    public T setApiCode(String apiCode) {
+        this.apiCode = apiCode;
         return (T) this;
     }
 

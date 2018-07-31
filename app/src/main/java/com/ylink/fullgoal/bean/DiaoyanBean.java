@@ -12,6 +12,11 @@ public class DiaoyanBean extends OnClickBean<DiaoyanBean> {
         return new DiaoyanBi();
     }
 
+    @Override
+    public String getFilter() {
+        return getCode();
+    }
+
     private String code;
     private String name;
     private String type;

@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 员工
  */
-public class UserFg {
+public class UserFg implements IApiCodeApi{
+
+    @Override
+    public String getApiCode() {
+        return getUserCode();
+    }
 
     /**
      * userCode : 0

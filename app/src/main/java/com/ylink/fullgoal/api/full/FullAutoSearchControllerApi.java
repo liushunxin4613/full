@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -17,10 +16,8 @@ import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.config.MVCFactoryV1;
 import com.ylink.fullgoal.config.Node;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
-import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 
@@ -95,21 +92,11 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
 
     private void onData(String path, String params, List list) {
         if (!TEMPLATE_FULL) {
-            MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list, d
-                    -> initDataAction(data -> execute(d, item -> {
-                item.setOnClickListener((bean, view) -> finishActivity(new SearchVo<>(getSearch(),
-                        getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String, String>>>() {
-                })));
-                data.add(item);
-            })));
+            MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
+                    getThis(), d -> initDataAction(data -> execute(d, data::add)));
         } else {
-            MVCFactoryV1.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list, d
-                    -> initDataAction(data -> execute(d, item -> {
-                item.setOnClickListener((bean, view) -> finishActivity(new SearchVo<>(getSearch(),
-                        getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String, String>>>() {
-                })));
-                data.add(item);
-            })));
+            MVCFactoryV1.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
+                    getThis(), d -> initDataAction(data -> execute(d, data::add)));
         }
     }
 

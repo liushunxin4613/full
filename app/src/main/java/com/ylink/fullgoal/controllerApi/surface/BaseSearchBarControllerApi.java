@@ -120,7 +120,7 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
         if (bean instanceof LineBean) {
             return false;
         } else if (bean instanceof IKeywordApi) {
-            String key = ((IKeywordApi) bean).getKeyword();
+            String code = ((IKeywordApi) bean).getApiCode();
             String fk = ((IKeywordApi) bean).getFilter();
             if (!TextUtils.isEmpty(getFilterData())) {
                 for (String filter : getFilterData()) {

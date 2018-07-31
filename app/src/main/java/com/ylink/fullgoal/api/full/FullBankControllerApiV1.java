@@ -54,7 +54,8 @@ public class FullBankControllerApiV1<T extends FullBankControllerApiV1, C> exten
             if (!TextUtils.isEmpty(fg.getBankCardtList2())) {
                 clear().showContentView();
                 execute(fg.getBankCardtList2(), bank
-                        -> add(find(new BankBean(bank.getBankNo(), TextUtils.isEmpty(adapterDataApi()
+                        -> add(find(new BankBean(bank.getBankNo(),
+                        TextUtils.isEmpty(adapterDataApi()
                         .getData()), (bean, view) -> {
                     getActivity().finish();
                     api().submitBankV1(bank.getBankNo(), bank.getBankName());

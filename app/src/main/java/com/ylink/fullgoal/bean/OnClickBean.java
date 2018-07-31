@@ -7,6 +7,7 @@ import com.ylink.fullgoal.core.SurfaceBiBean;
 
 public class OnClickBean<T extends OnClickBean> extends SurfaceBiBean<T> {
 
+    private transient boolean selected;
     private transient View.OnClickListener onClickListener;
 
     public OnClickBean(OnBVClickListener<T> listener) {
@@ -15,6 +16,14 @@ public class OnClickBean<T extends OnClickBean> extends SurfaceBiBean<T> {
 
     public View.OnClickListener getOnClickListener() {
         return onClickListener;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
 }

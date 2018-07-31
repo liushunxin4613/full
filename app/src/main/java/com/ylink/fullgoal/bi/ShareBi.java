@@ -1,11 +1,12 @@
 package com.ylink.fullgoal.bi;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.DepartmentBean;
 import com.ylink.fullgoal.bean.ShareBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
@@ -17,10 +18,17 @@ public class ShareBi extends OnClickBi<ShareBi, ShareBean> {
     ImageView iconIv;
     @Bind(R.id.tv0)
     TextView tv0;
+    @Bind(R.id.root_vg)
+    RelativeLayout rootVg;
 
     @Override
     public Integer getDefLayoutResId() {
         return R.layout.l_share;
+    }
+
+    @Override
+    protected View getRootVg() {
+        return rootVg;
     }
 
     @Override

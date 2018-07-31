@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 项目
  */
-public class ProjectFg{
+public class ProjectFg implements IApiCodeApi {
+
+    @Override
+    public String getApiCode() {
+        return getProjectCode();
+    }
 
     /**
      * amount : 1000

@@ -8,8 +8,6 @@ import com.ylink.fullgoal.bi.ImageVoBi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBiBean;
 
-import java.io.File;
-
 public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener {
 
     @Override

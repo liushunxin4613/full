@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 出差申请单
  */
-public class TravelFormFg {
+public class TravelFormFg implements IApiCodeApi {
+
+    @Override
+    public String getApiCode() {
+        return getCode();
+    }
 
     /**
      * amount : 1000

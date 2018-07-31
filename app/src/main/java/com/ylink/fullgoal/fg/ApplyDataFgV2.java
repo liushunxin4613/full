@@ -29,6 +29,13 @@ public class ApplyDataFgV2 {
         return null;
     }
 
+    public String getApiCode(){
+        if(check(getMap())){
+            return getMap().get("extension2");
+        }
+        return null;
+    }
+
     public ApplyFgV2 getKey() {
         return key;
     }

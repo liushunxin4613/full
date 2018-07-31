@@ -46,4 +46,9 @@ public class ProjectController<T extends ProjectController> extends BaseStringCo
         return super.getOnUBKey(key);
     }
 
+    @Override
+    public String getApiCode() {
+        return vor(ProjectFg::getProjectCode);
+    }
+
 }

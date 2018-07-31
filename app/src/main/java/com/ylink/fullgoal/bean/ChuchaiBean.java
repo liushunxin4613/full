@@ -12,6 +12,11 @@ public class ChuchaiBean extends OnClickBean<ChuchaiBean> {
         return new ChuchaiBi();
     }
 
+    @Override
+    public String getFilter() {
+        return getCode();
+    }
+
     private String code;
     private String amount;
     private String place;

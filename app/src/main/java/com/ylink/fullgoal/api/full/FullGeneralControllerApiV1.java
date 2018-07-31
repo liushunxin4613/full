@@ -10,7 +10,6 @@ import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHTvIconMoreBean;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.CostIndexValueController;
-import com.ylink.fullgoal.cr.surface.DepartmentController;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.UserController;
 import com.ylink.fullgoal.fg.ApplyDataFgV1;
@@ -83,7 +82,7 @@ public class FullGeneralControllerApiV1<T extends FullGeneralControllerApiV1, C>
                     -> vos(DVo::getBudgetDepartment, CoreController::clear)));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject),
                     "请选择项目", (bean, view) -> routeApi().search(SearchVo.PROJECT,
-                    (String) vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentCode)),
+                    vorc(DVo::getBudgetDepartment)),
                     (bean, view) -> vos(DVo::getProject, CoreController::clear)));
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreBean("费用指标",
                     vorv(DVo::getCostIndex), "请选择费用指标", (bean, view)

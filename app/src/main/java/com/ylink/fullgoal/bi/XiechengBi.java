@@ -1,8 +1,10 @@
 package com.ylink.fullgoal.bi;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -29,10 +31,17 @@ public class XiechengBi extends OnClickBi<XiechengBi, XiechengBean> {
     TextView tv4;
     @Bind(R.id.tv5)
     TextView tv5;
+    @Bind(R.id.root_vg)
+    RelativeLayout rootVg;
 
     @Override
     public Integer getDefLayoutResId() {
         return R.layout.l_xiecheng;
+    }
+
+    @Override
+    protected View getRootVg() {
+        return rootVg;
     }
 
     @Override

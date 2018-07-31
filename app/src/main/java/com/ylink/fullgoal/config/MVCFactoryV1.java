@@ -2,6 +2,7 @@ package com.ylink.fullgoal.config;
 
 import android.content.res.XmlResourceParser;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.api.VsApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
@@ -12,11 +13,14 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.vo.ConfigV1Vo;
 import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.controllerApi.core.ControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
 import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.vo.SearchVo;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.leo.core.util.TextUtils.checkParams;
 
@@ -98,13 +102,14 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
         });
     }
 
-    public void onData(String path, String params, List list, IObjAction<List<ViewBean>> action) {
-        if (TextUtils.check(path, list, action, getVo()) && TextUtils.check(getVo().getViewList())) {
+    public void onData(String path, String params, List list, BaseSearchControllerApi api,
+                       IObjAction<List<ViewBean>> action) {
+        if (TextUtils.check(path, list, action, api, getVo()) && TextUtils.check(getVo().getViewList())) {
             api().ii("path", path);
             api().ii("params", params);
             executeBol(getVo().getViewList(), vo -> {
                 if (TextUtils.equals(path, vo.getPath()) && checkParams(params, vo.getParams())) {
-                    action.execute(getVBData(vo.getXml(), vo.getList(), list));
+                    action.execute(getVBData(vo.getXml(), vo.getList(), list, api));
                     return true;
                 }
                 return false;
@@ -150,11 +155,15 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
         api().add(root, clz, action);
     }
 
-    private List<ViewBean> getVBData(String xml, List<TemplateVo> templateData, List list) {
+    private List<ViewBean> getVBData(String xml, List<TemplateVo> templateData, List list,
+                                     BaseSearchControllerApi api) {
         if (TextUtils.check(xml, templateData, list)) {
             List<ViewBean> data = new ArrayList<>();
             execute(list, item -> executeNon(new ViewBean(xml, getXmlResourceParser(xml),
-                    templateData, item), data::add));
+                    templateData, item, (bean, view) -> api.finishActivity(new SearchVo<>(
+                    api.getSearch(), api.getKey(), bean.getMap(),
+                    new TypeToken<SearchVo<Map<String, String>>>() {
+                    }))), data::add));
             return data;
         }
         return null;

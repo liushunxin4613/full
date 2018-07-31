@@ -23,7 +23,8 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
         return DepartmentFg.class;
     }
 
-    public String getDepartmentCode(){
+    @Override
+    public String getApiCode() {
         return vor(DepartmentFg::getDepartmentCode);
     }
 

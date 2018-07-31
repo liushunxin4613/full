@@ -384,7 +384,8 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             if (!empty) {
                 addVgBean(api, data -> {
                     MoneyBean blBean = new MoneyBean("分摊比例", getCostRatio(api));
-                    MoneyBean moneyBean = new MoneyBean("金额", getSMoneyString(getCostMoney(api)),
+                    double m = getCostMoney(api);
+                    MoneyBean moneyBean = new MoneyBean("金额", getSMoneyString(m),
                             getVo().getRestMoney(api), (bean, text) -> {
                         if (TextUtils.isEmpty(text)) {
                             bean.setMax(getVo().getRestMoney(api));

@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 部门
  */
-public class DepartmentFg {
+public class DepartmentFg implements IApiCodeApi{
+
+    @Override
+    public String getApiCode() {
+        return getDepartmentCode();
+    }
 
     /**
      * departmentCode : 0

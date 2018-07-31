@@ -413,6 +413,14 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
+    protected <S, A extends IController> String vorc(IReturnAction<S, A> action) {
+        A obj = vor(action);
+        if (check(obj)) {
+            return obj.getApiCode();
+        }
+        return null;
+    }
+
     protected void ee(String name, IObjAction<MMap<String, Object>> action){
         ee(name, map(action));
     }

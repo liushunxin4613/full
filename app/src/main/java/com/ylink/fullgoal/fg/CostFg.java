@@ -1,6 +1,13 @@
 package com.ylink.fullgoal.fg;
 
-public class CostFg {
+import com.leo.core.iapi.api.IApiCodeApi;
+
+public class CostFg implements IApiCodeApi {
+
+    @Override
+    public String getApiCode() {
+        return getCostCode();
+    }
 
     private String costCode;//费用指标编号
     private String costIndex;//费用指标名称

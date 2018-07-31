@@ -20,11 +20,6 @@ public class XCJPBean extends SurfaceBiBean<XCJPBean> {
 
     private transient View.OnClickListener onClickListener;
 
-    @Override
-    protected String getDefaultKeyword() {
-        return getType();
-    }
-
     private String name;
     private String detail;
     private String type;

@@ -1,12 +1,13 @@
 package com.ylink.fullgoal.bi;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.ChuchaiBean;
 import com.ylink.fullgoal.bean.DiaoyanBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
@@ -30,10 +31,17 @@ public class DiaoyanBi extends OnClickBi<DiaoyanBi, DiaoyanBean> {
     TextView tv4;
     @Bind(R.id.tv5)
     TextView tv5;
+    @Bind(R.id.root_vg)
+    RelativeLayout rootVg;
 
     @Override
     public Integer getDefLayoutResId() {
         return R.layout.l_diaoyan;
+    }
+
+    @Override
+    protected View getRootVg() {
+        return rootVg;
     }
 
     @Override

@@ -4,24 +4,23 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.bi.OnClickBi;
 import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.ylink.fullgoal.core.SurfaceBi;
 
 import java.util.Map;
 
-public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
+public class ViewBi extends OnClickBi<ViewBi, ViewBean> {
 
     @Override
     public Integer getDefLayoutResId() {
         ViewBean bean = bean();
         if (bean != null) {
-            if(TextUtils.isEmpty(bean.getApiXmlResourceParser())
-                    && TextUtils.check(bean.getXml())){
+            if (TextUtils.isEmpty(bean.getApiXmlResourceParser())
+                    && TextUtils.check(bean.getXml())) {
                 switch (bean.getXml()) {
                     case "l_apply_v1.xml":
                         return R.layout.l_apply_v1;
@@ -34,15 +33,18 @@ public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
                 }
             }
         }
-        LogUtil.ee(this, "无事");
         return null;
+    }
+
+    @Override
+    protected View getRootVg() {
+        return findView("root_vg", "root_vg");
     }
 
     @Override
     public void updateBind(@NonNull SurfaceControllerApi api, @NonNull ViewBean bean) {
         super.updateBind(api, bean);
         execute(bean.getData(), this::onVo);
-        api.setOnClickListener(bean.getOnClickListener());
     }
 
     private Map<String, String> getMap() {
@@ -53,16 +55,25 @@ public class ViewBi extends SurfaceBi<ViewBi, ViewBean> {
         return vr(getMap(), obj -> obj.get(key));
     }
 
+    private View findView(String id, String tag) {
+        View view = null;
+        if (TextUtils.check(id)) {
+            view = api().findViewById(ResUtil.getIdentifier(id, "id"));
+        }
+        if (view != null) {
+            return view;
+        } else if (TextUtils.check(tag)) {
+            return api().findViewWithTag(tag);
+        }
+        return null;
+    }
+
     private void onVo(TemplateVo vo) {
         if (TextUtils.check(vo.getVId())) {
-            int id = ResUtil.getIdentifier(vo.getVId(), "id");
-            View view = api().findViewById(id);
-            if (view == null && TextUtils.check(vo.getTag())) {
-                view = api().findViewWithTag(vo.getTag());
-            }
+            View view = findView(vo.getVId(), vo.getTag());
             if (view instanceof TextView) {
                 TextView tv = (TextView) view;
-                api().ii(String.format("tag: %s, id: %s", vo.getTag(), Integer.toHexString(tv.getId())));
+//                api().ii(String.format("tag: %s, id: %s", vo.getTag(), Integer.toHexString(tv.getId())));
 //                api().ii(String.format("text: %s", tv.getText().toString()));
                 if (TextUtils.check(vo.getFormat())) {
                     String format = vo.getFormat();

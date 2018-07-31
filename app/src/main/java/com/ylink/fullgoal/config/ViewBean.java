@@ -5,16 +5,16 @@ import android.view.View;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IBindControllerApi;
-import com.leo.core.util.LogUtil;
+import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.bean.OnClickBean;
 import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.ylink.fullgoal.core.SurfaceBiBean;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewBean extends SurfaceBiBean<ViewBean> {
+public class ViewBean extends OnClickBean<ViewBean> {
 
     @Override
     protected IBindControllerApi<SurfaceControllerApi, ViewBean> newDefApi() {
@@ -25,9 +25,10 @@ public class ViewBean extends SurfaceBiBean<ViewBean> {
     private Map<String, String> map;
 
     private transient String xml;
-    private transient View.OnClickListener onClickListener;
 
-    ViewBean(String xml, XmlResourceParser parser, List<TemplateVo> data, Object obj) {
+    ViewBean(String xml, XmlResourceParser parser, List<TemplateVo> data, Object obj,
+             OnBVClickListener<ViewBean> listener) {
+        super(listener);
         this.xml = xml;
         this.data = data;
         this.map = new LinkedHashMap<>();
@@ -35,6 +36,9 @@ public class ViewBean extends SurfaceBiBean<ViewBean> {
         if (obj instanceof Map) {
             execute((Map) obj, (key, value) -> {
                 if (key instanceof String && value instanceof String) {
+                    if(TextUtils.equals(key, "extension2")){//编号
+                        setApiCode((String) value);
+                    }
                     this.map.put((String) key, (String) value);
                 }
             });
@@ -47,14 +51,6 @@ public class ViewBean extends SurfaceBiBean<ViewBean> {
 
     public Map<String, String> getMap() {
         return map;
-    }
-
-    public View.OnClickListener getOnClickListener() {
-        return onClickListener;
-    }
-
-    public void setOnClickListener(OnBVClickListener<ViewBean> listener) {
-        this.onClickListener = getOnBVClickListener(listener);
     }
 
     public String getXml() {

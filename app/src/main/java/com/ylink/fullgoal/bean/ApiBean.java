@@ -14,11 +14,6 @@ import com.ylink.fullgoal.core.SurfaceBiBean;
 
 public abstract class ApiBean<T extends ApiBean> extends SurfaceBiBean<T> {
 
-    @Override
-    protected String getDefaultKeyword() {
-        return getName();
-    }
-
     //不做引入处理
     private transient View.OnClickListener onClickListener;
     private transient TextView textView;

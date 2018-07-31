@@ -16,7 +16,8 @@ public class PersonBean extends OnClickBean<PersonBean> {
     private String phone;
     private String department;
 
-    public PersonBean(String name, String phone, String department, OnBVClickListener<PersonBean> listener) {
+    public PersonBean(String name, String phone, String department,
+                      OnBVClickListener<PersonBean> listener) {
         super(listener);
         this.name = name;
         this.phone = phone;

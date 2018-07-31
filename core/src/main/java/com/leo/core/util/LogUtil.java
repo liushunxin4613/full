@@ -2,6 +2,10 @@ package com.leo.core.util;
 
 import com.leo.core.api.api.LogApi;
 import com.leo.core.iapi.api.ILogApi;
+import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.other.MMap;
+
+import java.util.HashMap;
 
 public class LogUtil {
 
@@ -56,4 +60,13 @@ public class LogUtil {
     public static void ee(Object in, Object... args) {
         getApi().ee(in, args);
     }
+
+    public static void ee(Object in, IObjAction<MMap<String, Object>> action) {
+        if (action != null) {
+            MMap<String, Object> mMap = new MMap<>();
+            action.execute(mMap.map(new HashMap<>()));
+            getApi().ee(in,  mMap.map());
+        }
+    }
+
 }

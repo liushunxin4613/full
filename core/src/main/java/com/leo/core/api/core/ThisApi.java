@@ -115,6 +115,11 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getExecute(in, null, api);
     }
 
+    protected <A> A retExecute(A a, IObjAction<A> action){
+        executeNon(a, action);
+        return a;
+    }
+
     protected <A> A no(A a, A def) {
         return a == null ? def : a;
     }

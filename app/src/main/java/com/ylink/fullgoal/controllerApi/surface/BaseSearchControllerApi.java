@@ -2,6 +2,8 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.bean.Completed;
+import com.leo.core.core.bean.CoreApiBean;
+import com.leo.core.iapi.api.IApiCodeApi;
 import com.leo.core.iapi.api.IKeywordApi;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.other.Transformer;
@@ -11,6 +13,7 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.LineBean;
+import com.ylink.fullgoal.bean.OnClickBean;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.config.ViewBean;
 import com.ylink.fullgoal.fg.DataFg;
@@ -25,6 +28,7 @@ import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
 public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> extends RecycleControllerApi<T, C> {
 
     private String key;
+    private String value;
     private String search;
     private String keyword;
     private String searchTitle;
@@ -50,6 +54,14 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         this.key = key;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public String getSearch() {
         return search;
     }
@@ -70,9 +82,9 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         return filterData;
     }
 
-    private void setFilterData(String filterData) {
-        this.filterData = decode(filterData, TypeToken
-                .getParameterized(List.class, String.class));
+    private void setFilterData(String text) {
+        this.filterData = decode(text, TypeToken
+                .getParameterized(List.class, String.class).getType());
     }
 
     @Override
@@ -96,6 +108,7 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
             executeNon(bundle.getString(Config.SEARCH_TITLE), this::setSearchTitle);
             executeNon(bundle.getString(Config.SEARCH), this::setSearch);
             executeNon(bundle.getString(Config.KEY), this::setKey);
+            executeNon(bundle.getString(Config.VALUE), this::setValue);
             executeNon(bundle.getString(Config.FILTERS), this::setFilterData);
         });
     }
@@ -120,11 +133,15 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         if (bean instanceof LineBean) {
             return false;
         } else if (bean instanceof IKeywordApi) {
-            String key = ((IKeywordApi) bean).getKeyword();
             String fk = ((IKeywordApi) bean).getFilter();
+            String apiCode = ((IKeywordApi) bean).getApiCode();
+            if (bean instanceof OnClickBean) {
+                ((OnClickBean) bean).setSelected(TextUtils.equals(apiCode, getValue()));
+            }
             if (!TextUtils.isEmpty(getFilterData())) {
                 for (String filter : getFilterData()) {
-                    if (!TextUtils.isEmpty(filter) && !TextUtils.isEmpty(fk)
+                    if (!TextUtils.isEmpty(filter)
+                            && !TextUtils.isEmpty(fk)
                             && fk.contains(filter)) {
                         return false;
                     }
@@ -149,7 +166,8 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
     protected void search(String keyword) {
         setKeyword(keyword);
         adapterDataApi().setHelper((adapter, api, list)
-                -> Observable.create((Observable.OnSubscribe<List<IApiBean>>) subscriber -> {
+                -> Observable.create((Observable.
+                OnSubscribe<List<IApiBean>>) subscriber -> {
             List<IApiBean> data = new ArrayList<>();
             execute(list, obj -> {
                 if (isFilter(obj, keyword)) {
@@ -163,6 +181,12 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
             api.setFilterData(data);
             adapter.notifyDataSetChanged();
         })).notifyDataSetChanged();
+    }
+
+    protected void addDataOfCode(List<IApiBean> data, IApiCodeApi api, CoreApiBean bean) {
+        if (TextUtils.checkNull(data, api, bean)) {
+            data.add(bean.setApiCode(api.getApiCode()));
+        }
     }
 
     private String getSearchValue(String key) {

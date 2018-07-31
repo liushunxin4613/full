@@ -5,7 +5,6 @@ import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
-import com.ylink.fullgoal.cr.surface.DepartmentController;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.fg.RuleFg;
@@ -59,9 +58,8 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
                     (bean, view) -> routeApi().search(SearchVo.BUDGET_DEPARTMENT), (bean, view)
                     -> vos(DVo::getBudgetDepartment, CoreController::clear)));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreBean("项目", vorv(DVo::getProject), "请选择项目",
-                    (bean, view) -> routeApi().search(SearchVo.PROJECT, (String) vor(DVo::getBudgetDepartment,
-                            DepartmentController::getDepartmentCode)), (bean, view)
-                    -> vos(DVo::getProject, CoreController::clear)));
+                    (bean, view) -> routeApi().search(SearchVo.PROJECT, vorc(DVo::getBudgetDepartment)),
+                    (bean, view) -> vos(DVo::getProject, CoreController::clear)));
             checkAdd(data, vorv(DVo::getContractPayment), new TvH2MoreBean("合同付款申请单",
                     vorv(DVo::getContractPayment), "请选择合同付款申请单",
                     (bean, view) -> routeApi().search(SearchVo.CONTRACT_BILL), (bean, view)

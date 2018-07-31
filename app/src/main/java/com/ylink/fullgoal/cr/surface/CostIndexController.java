@@ -53,10 +53,11 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
 
     @Override
     public String getViewBean() {
-        return vor(CostFg::getCostIndex);
+        return getCostName();
     }
 
-    public String getCostCode(){
+    @Override
+    public String getApiCode() {
         return vor(CostFg::getCostCode);
     }
 

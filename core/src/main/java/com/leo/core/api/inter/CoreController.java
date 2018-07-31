@@ -104,6 +104,11 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
         throw new NullPointerException("getNoneUB()返回值不能为空");
     }
 
+    @Override
+    public String getApiCode() {
+        return null;
+    }
+
     /**
      * 获取UB类型
      */

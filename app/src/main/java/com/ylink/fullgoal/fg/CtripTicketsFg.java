@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 携程机票
  */
-public class CtripTicketsFg {
+public class CtripTicketsFg implements IApiCodeApi {
+
+    @Override
+    public String getApiCode() {
+        return getFlightNumber();
+    }
 
     /**
      * arrivelDate : 2018-05-25

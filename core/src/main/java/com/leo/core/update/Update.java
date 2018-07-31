@@ -3,8 +3,6 @@ package com.leo.core.update;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.leo.core.util.LogUtil;
-
 public class Update {
 
 	private Thread thread;
@@ -26,7 +24,6 @@ public class Update {
 
 	public void update() {
 		if (thread == null || !thread.isAlive()) {
-			LogUtil.ee(this, "------- update --------");
 			thread = newThread();
 			if (thread != null) {
 				thread.start();

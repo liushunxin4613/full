@@ -1,9 +1,16 @@
 package com.ylink.fullgoal.fg;
 
+import com.leo.core.iapi.api.IApiCodeApi;
+
 /**
  * 申请单内容
  */
-public class ApplyContentFgV1 {
+public class ApplyContentFgV1 implements IApiCodeApi {
+
+    @Override
+    public String getApiCode() {
+        return getCode();
+    }
 
     /**
      * applyCode : 001

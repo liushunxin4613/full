@@ -1,7 +1,9 @@
 package com.ylink.fullgoal.bi;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ylink.fullgoal.R;
@@ -16,10 +18,17 @@ public class DepartmentBi extends OnClickBi<DepartmentBi, DepartmentBean> {
     ImageView iconIv;
     @Bind(R.id.tv0)
     TextView tv0;
+    @Bind(R.id.root_vg)
+    RelativeLayout rootVg;
 
     @Override
     public Integer getDefLayoutResId() {
         return R.layout.l_department;
+    }
+
+    @Override
+    protected View getRootVg() {
+        return rootVg;
     }
 
     @Override

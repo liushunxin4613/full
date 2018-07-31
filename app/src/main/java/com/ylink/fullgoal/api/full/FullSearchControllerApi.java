@@ -142,15 +142,16 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     private void initAdds() {
         //员工列表
         addList(UserFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new PersonBean(item.getUserName(), item.getUserCode(), item.getUserDepartment(), (bean, view)
-                -> finishActivity(new SearchVo<>(getSearch(), item)))))));
+                -> addDataOfCode(data, item, new PersonBean(item.getUserName(),
+                item.getUserCode(), item.getUserDepartment(),
+                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //部门列表
         addList(DepartmentFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new DepartmentBean(item.getDepartmentName(), (bean, view)
+                -> addDataOfCode(data, item, new DepartmentBean(item.getDepartmentName(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //项目列表
         addList(ProjectFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ProjectBeanV1(item.getProjectName(), item.getProjectCode(),
+                -> addDataOfCode(data, item, new ProjectBeanV1(item.getProjectName(), item.getProjectCode(),
                 item.getStatus(), item.getLeader(), item.getLeadDepartment(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         /*//合同付款申请单列表
@@ -165,32 +166,32 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
         //费用指标列表
         addList(CostFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ShareBean(item.getCostIndex(), (bean, view)
+                -> addDataOfCode(data, item, new ShareBean(item.getCostIndex(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), item)))))));
         //费用指标维度列表
         addList(DimenListFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ShareBean(item.getName(), (bean, view)
+                -> addDataOfCode(data, item, new ShareBean(item.getName(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), getExecute(decode(getKey(),
                 DimenFg.class), DimenFg::getCode), item)))))));
         //申请单内容
         addList(DataFgV1.class, ApplyContentFgV1.class, (path, what, msg, list) -> initDataAction(data
-                -> execute(list, item -> data.add(new TvBean(item.getName(), (bean, view)
+                -> execute(list, item -> addDataOfCode(data, item, new TvBean(item.getName(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), getKey(), item)))))));
         //出差申请单
         addList(TravelFormFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ChuchaiBean(item.getCode(), item.getAmount(), item.getDestination(),
+                -> addDataOfCode(data, item, new ChuchaiBean(item.getCode(), item.getAmount(), item.getDestination(),
                 item.getDates(), item.getStartDate(), item.getEndDate(), item.getWorkName(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
                 .setFilter(item.getAmount())))));
         //投研报告列表
         addList(ResearchReportFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new DiaoyanBean(item.getStockCode(), item.getStockName(), item.getType(),
+                -> addDataOfCode(data, item, new DiaoyanBean(item.getStockCode(), item.getStockName(), item.getType(),
                 item.getStatus(), item.getUploadTime(), item.getEndTime(), item.getReportInfo(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
                 .setFilter(item.getProjectCode())))));
         //携程机票列表
         addList(CtripTicketsFg.class, (path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new XiechengBean(item.getFlightNumber(), item.getDeparture(), item.getDestination(),
+                -> addDataOfCode(data, item, new XiechengBean(item.getFlightNumber(), item.getDeparture(), item.getDestination(),
                 item.getCrew(), item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(), item.getArrivelDate(),
                 item.getArrivelTime(), (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
                 .setFilter(item.getFlightNumber())))));
