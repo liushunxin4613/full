@@ -130,6 +130,10 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         post(url, path, action, WHAT_DEFAULT, tag);
     }
 
+    public void post(String url, String path, IObjAction<Map<String, Object>> action, int what) {
+        post(url, path, action, what, null);
+    }
+
     protected IObjAction<Map<String, Object>> g(IObjAction<Map<String, Object>> action) {
         Map<String, Object> mp;
         executeNon(mp = new HashMap<>(), action);

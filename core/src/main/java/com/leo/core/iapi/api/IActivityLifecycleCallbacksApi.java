@@ -14,4 +14,5 @@ public interface IActivityLifecycleCallbacksApi extends IApi, Application.Activi
     int getCount();
     Activity getItem(int position);
     void finishActivity(Object obj);
+    void finishAllActivity();
 }

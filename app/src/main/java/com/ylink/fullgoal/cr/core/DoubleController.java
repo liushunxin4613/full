@@ -28,11 +28,6 @@ public abstract class DoubleController<T extends DoubleController> extends BaseC
     }
 
     @Override
-    public Class<Double> getClz() {
-        return Double.class;
-    }
-
-    @Override
     public String getViewBean() {
         return getDBMoney();
     }
@@ -67,11 +62,6 @@ public abstract class DoubleController<T extends DoubleController> extends BaseC
     @Override
     protected String getNoneUB() {
         return "";
-    }
-
-    @Override
-    protected Class<String> getUBClz() {
-        return null;
     }
 
 }

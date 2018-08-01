@@ -53,6 +53,7 @@ import static com.leo.core.util.TextUtils.toJSONMap;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.Config.COST_LIST;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
+import static com.ylink.fullgoal.config.Config.MAIN_APP;
 import static com.ylink.fullgoal.config.Config.MONEY;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_DIMENSION_LIST;
@@ -90,9 +91,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private int miniSpeed = 0;
     private int miniWidth = 120;
     private String serialNo;
-    private BasePagerAdapter<RecycleControllerApi> adapter;
-    private Map<String, Object> dataMap;
+    private String mainApp;
     private String department;
+    private Map<String, Object> dataMap;
+    private BasePagerAdapter<RecycleControllerApi> adapter;
 
     public FullCostIndexControllerApi(C controller) {
         super(controller);
@@ -168,6 +170,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         HelperUtil.addMoneyTextChangedListener(taxEt, null, this::updateTaxAmount);
         HelperUtil.addMoneyTextChangedListener(noneTaxMoneyEt, null, this::updateExTaxAmount);
         executeBundle(bundle -> {
+            mainApp = bundle.getString(MAIN_APP);
             String text = bundle.getString(DATA_QR);
             dataMap = toJSONMap(text);
             if (!TextUtils.isEmpty(dataMap)) {
@@ -200,8 +203,12 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         break;
                     case FULL_REIMBURSE_SUBMIT://报销确认
                         show("报销确认成功");
-                        activityLifecycleApi().remove(SurfaceActivity.class,
-                                BaseControllerApiActivity::finish);
+                        if (TextUtils.equals(mainApp, MAIN_APP)) {
+                            activityLifecycleApi().finishAllActivity();
+                        } else {
+                            activityLifecycleApi().remove(SurfaceActivity.class,
+                                    BaseControllerApiActivity::finish);
+                        }
                         break;
                 }
             } else {

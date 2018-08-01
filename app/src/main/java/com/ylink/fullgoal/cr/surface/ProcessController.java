@@ -21,16 +21,6 @@ public class ProcessController<T extends ProcessController> extends BaseStringCo
     }
 
     @Override
-    protected Class<ProcessFg> getUBClz() {
-        return ProcessFg.class;
-    }
-
-    @Override
-    public Class<ProcessFg> getClz() {
-        return ProcessFg.class;
-    }
-
-    @Override
     public String getViewBean() {
         return vor(ProcessFg::getCause);
     }

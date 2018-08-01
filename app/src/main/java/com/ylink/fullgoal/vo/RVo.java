@@ -25,6 +25,7 @@ public class RVo extends MessageBackFg implements IGet<DVo> {
             vo.getReport().initDB(getReport());
             vo.getTrave().initDB(getTravel());
             vo.getRuleList().initDB(getRuleList());
+            vo.getTaskNode().initDB(getTaskNode());
             //新加 2018-07-24 20:51
             vo.getIsShare().initDB(TextUtils.equals(getIsShare(), "需要分摊"));
             if (vo instanceof DVoV1) {

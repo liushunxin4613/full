@@ -32,11 +32,6 @@ public class CtripTicketsController<T extends CtripTicketsController> extends Ad
     }
 
     @Override
-    protected Class<CtripTicketsFg> getClz() {
-        return CtripTicketsFg.class;
-    }
-
-    @Override
     protected String getOnUBKey(String key) {
         switch (key){
             case CC:

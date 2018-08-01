@@ -6,12 +6,14 @@ import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.net.UrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.config.ComConfig;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import java.io.File;
 import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
+import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
@@ -144,6 +146,15 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void queryMessageBack(String serialNo) {
         post(ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)));
+    }
+
+    /**
+     * 报销确认请求数据
+     *
+     * @param serialNo 报销批次号
+     */
+    public void queryNoShowLoadingMessageBack(String serialNo) {
+        post(ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)), SHOW_LOADING_NO);
     }
 
     /**

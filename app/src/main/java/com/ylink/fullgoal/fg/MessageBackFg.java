@@ -42,6 +42,19 @@ public class MessageBackFg extends StatusCodeFg {
     private String isShare;
     //申请单
     private List<Map<String, String>> apply;
+    //报销类型
+    private String billType;
+    //报销状态
+    private String taskType;
+    private String fillDate;
+    private String first;
+    private String reportName;
+    private String serialNo;
+    private String sessionId;
+    private String sbumitFlag;
+    private String message;
+    //审核节点
+    private List<NodeFg> taskNode;
 
     public UserFg getAgent() {
         return agent;
@@ -169,6 +182,86 @@ public class MessageBackFg extends StatusCodeFg {
 
     public void setApply(List<Map<String, String>> apply) {
         this.apply = apply;
+    }
+
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
+    public String getFillDate() {
+        return fillDate;
+    }
+
+    public void setFillDate(String fillDate) {
+        this.fillDate = fillDate;
+    }
+
+    public String getFirst() {
+        return first;
+    }
+
+    public void setFirst(String first) {
+        this.first = first;
+    }
+
+    public String getReportName() {
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
+    }
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getSbumitFlag() {
+        return sbumitFlag;
+    }
+
+    public void setSbumitFlag(String sbumitFlag) {
+        this.sbumitFlag = sbumitFlag;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<NodeFg> getTaskNode() {
+        return taskNode;
+    }
+
+    public void setTaskNode(List<NodeFg> taskNode) {
+        this.taskNode = taskNode;
     }
 
 }

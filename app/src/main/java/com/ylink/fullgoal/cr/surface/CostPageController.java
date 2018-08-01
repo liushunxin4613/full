@@ -50,16 +50,6 @@ public class CostPageController<T extends CostPageController> extends MapControl
     }
 
     @Override
-    protected Class<CostIndexVo> getClz() {
-        return CostIndexVo.class;
-    }
-
-    @Override
-    protected Class<List<Map<String, Object>>> getUBClz() {
-        return null;
-    }
-
-    @Override
     public Map<IControllerApi, CostIndexVo> getViewBean() {
         return super.getViewBean();
     }

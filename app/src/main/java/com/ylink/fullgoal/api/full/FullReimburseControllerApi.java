@@ -69,6 +69,8 @@ import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.ComConfig.XQ;
 import static com.ylink.fullgoal.config.Config.BILL_TYPE_TITLES;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
+import static com.ylink.fullgoal.config.Config.JSON;
+import static com.ylink.fullgoal.config.Config.MAIN_APP;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
 import static com.ylink.fullgoal.config.Config.XG1;
@@ -101,6 +103,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private String state;
     private String title;
+    private String mainApp;
 
     protected FullReimburseControllerApi(C controller) {
         super(controller);
@@ -108,6 +111,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     public String getState() {
         return state;
+    }
+
+    public String getMainApp() {
+        return mainApp;
     }
 
     protected String getTitle() {
@@ -178,11 +185,19 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                                     break;
                                 case QR://经办人确认
                                     show("报销确认成功");
-                                    getActivity().finish();
+                                    if (TextUtils.equals(getMainApp(), MAIN_APP)) {
+                                        activityLifecycleApi().finishAllActivity();
+                                    } else {
+                                        getActivity().finish();
+                                    }
                                     break;
                                 case XG://经办人修改
                                     show("报销修改成功");
-                                    getActivity().finish();
+                                    if (TextUtils.equals(getMainApp(), MAIN_APP)) {
+                                        activityLifecycleApi().finishAllActivity();
+                                    } else {
+                                        getActivity().finish();
+                                    }
                                     break;
                             }
                         }
@@ -206,6 +221,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         super.initView();
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
+            mainApp = bundle.getString(MAIN_APP);
+            String json = bundle.getString(JSON);
             vos(DVo::getFirst, obj -> obj.initDB(state));
             String serialNo = bundle.getString(SERIAL_NO);
             vos(DVo::getSerialNo, obj -> obj.initDB(serialNo));
@@ -216,6 +233,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 if (!TextUtils.isEmpty(serialNo)) {
                     hideContentView();
                     api().queryMessageBack(serialNo);
+                } else if (!TextUtils.isEmpty(json)) {
+                    parseApi().init(FULL_REIMBURSE_QUERY, -1, null).parse(json);
                 }
             }
             setTitle(title);
@@ -230,7 +249,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                         Map<String, Object> map = getSubmitMap();
                         if (!TextUtils.isEmpty(map)) {
                             if (getVo().getIsShare().is()) {
-                                routeApi().costIndex(m -> m.put(DATA_QR, encode(map)));
+                                routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
+                                        .put(MAIN_APP, getMainApp()));
                             } else {
                                 api().submitReimburse(map);
                             }

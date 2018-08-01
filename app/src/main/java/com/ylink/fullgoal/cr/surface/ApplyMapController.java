@@ -58,16 +58,6 @@ public class ApplyMapController<T extends ApplyMapController> extends BaseMapCon
     }
 
     @Override
-    protected Class<ApplyDataFgV1> getClz() {
-        return null;
-    }
-
-    @Override
-    protected Class<List<ApplyDataFgV1>> getUBClz() {
-        return null;
-    }
-
-    @Override
     public <VB> VB getViewBean() {
         return null;
     }

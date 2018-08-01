@@ -17,6 +17,8 @@ import rx.Observable;
 
 import static com.leo.core.util.TextUtils.getHashMap;
 import static com.leo.core.util.TextUtils.getUriParams;
+import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
+import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_YES;
 import static com.ylink.fullgoal.config.Config.SIMULATE_HTTP;
 
 public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
@@ -43,7 +45,7 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
                 m.put("url", url);
                 m.put("params", params);
             }), new RetrofitSubscriber<>(controllerApi().parseApi().copy()).init(path, what, tag));
-            showLoading(path);
+            showLoading(what, path);
             return false;
         }
         return true;
@@ -53,12 +55,21 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
     protected <B> void onObservable(@NonNull Observable<B> observable, String startUrl, String path,
                                     Map<String, String> map, int what, String tag) {
         super.onObservable(observable, startUrl, path, map, what, tag);
-        showLoading(path);
+        showLoading(what, path);
     }
 
-    private void showLoading(String path) {
-        if (TextUtils.getListData(UrlConfig.LOADING_DIALOGS).contains(path)) {
-            showLoading();
+    private void showLoading(int what, String path) {
+        switch (what) {
+            case SHOW_LOADING_YES:
+                showLoading();
+                break;
+            case SHOW_LOADING_NO:
+                break;
+            default:
+                if (TextUtils.getListData(UrlConfig.LOADING_DIALOGS).contains(path)) {
+                    showLoading();
+                }
+                break;
         }
     }
 

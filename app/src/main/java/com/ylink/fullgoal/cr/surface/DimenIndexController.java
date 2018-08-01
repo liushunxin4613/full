@@ -23,14 +23,4 @@ public class DimenIndexController<T extends DimenIndexController> extends BaseSt
         return vor(DimenListFg::getName);
     }
 
-    @Override
-    protected Class<DimenListFg> getClz() {
-        return DimenListFg.class;
-    }
-
-    @Override
-    protected Class<DimenListFg> getUBClz() {
-        return null;
-    }
-
 }

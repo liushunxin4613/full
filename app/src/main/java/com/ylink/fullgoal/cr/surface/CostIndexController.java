@@ -47,11 +47,6 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
     }
 
     @Override
-    public Class<CostFg> getClz() {
-        return CostFg.class;
-    }
-
-    @Override
     public String getViewBean() {
         return getCostName();
     }
@@ -74,11 +69,6 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
     @Override
     protected CostFg getNoneUB() {
         return null;
-    }
-
-    @Override
-    protected Class<CostFg> getUBClz() {
-        return CostFg.class;
     }
 
     public T update(List<DimenFg> data) {

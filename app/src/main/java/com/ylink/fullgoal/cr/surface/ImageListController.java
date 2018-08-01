@@ -149,9 +149,4 @@ public class ImageListController<T extends ImageListController> extends AddContr
         return super.getFilterDB(args);
     }
 
-    @Override
-    protected Class<ImageVo> getClz() {
-        return ImageVo.class;
-    }
-
 }

@@ -9,10 +9,11 @@ import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.ImageBeanD1;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.fg.MessageBackFg;
 import com.ylink.fullgoal.fg.StatusFg;
 
 import static com.ylink.fullgoal.config.ComConfig.FQ;
-import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.Config.FULL_STATUS;
 
 /**
  * 主View视图
@@ -25,9 +26,47 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     }
 
     @Override
+    public void init(Bundle savedInstanceState) {
+        super.init(savedInstanceState);
+        add(MessageBackFg.class, (path, what, msg, bean) -> {
+            if (TextUtils.check(bean.getBillType(), bean.getTaskType())) {
+                String state = getValue(FULL_STATUS, bean.getTaskType(), bean.getTaskType());
+                switch (bean.getBillType()) {
+                    case "427"://一般报销
+                        routeApi().generalMain(state, encode(bean));
+                        break;
+                    case "428"://出差报销
+                        routeApi().evectionMain(state, encode(bean));
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String taskId = intent.getStringExtra("taskId");
+        String cookie = intent.getStringExtra("cookie");
+        String userId = intent.getStringExtra("userId");
+        String username = intent.getStringExtra("username");
+        String name = intent.getStringExtra("name");
+        String cookieStr = intent.getStringExtra("cookieStr");
+        String portalPac = intent.getStringExtra("portalPac");
+        if (TextUtils.check(userId, username)) {//TODO 测试用
+            initUser(new UserBean(taskId, name, cookie, userId,
+                    username, cookieStr, portalPac));
+        }
+        api().SSO(getCastgc());
+        ii("user", getUser());
+        if (TextUtils.check(taskId)) {
+            api().queryNoShowLoadingMessageBack(taskId);
+        }
+    }
+
+    @Override
     public void initView() {
         super.initView();
-        onAppData();
         hideBackIv().setTitle("富国基金个人报销平台");
         add(new ImageBeanD1(R.mipmap.banner));
         addSmallVgBeanD1(new IconTvMoreBean(R.mipmap.m1, "一般费用报销", (bean, view) -> routeApi().general(FQ)),
@@ -61,30 +100,6 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         super.initData();
         add(StatusFg.class, (path, what, msg, bean) -> ii(String.format("SSO认证%s",
                 bean.isSuccess() ? "成功" : "失败")));
-    }
-
-    //被调用
-    private void onAppData() {
-        Intent intent = getActivity().getIntent();
-        String cookie = intent.getStringExtra("cookie");
-        String userId = intent.getStringExtra("userId");
-        String username = intent.getStringExtra("username");
-        String name = intent.getStringExtra("name");
-        String cookieStr = intent.getStringExtra("cookieStr");
-        String portalPac = intent.getStringExtra("portalPac");
-
-        Bundle bundle = intent.getExtras();
-        if (bundle != null) {
-            for (String key : bundle.keySet()) {
-                ee(key, bundle.get(key));
-            }
-        }
-
-        if (TextUtils.check(userId, username)) {//TODO 测试用
-            initUser(new UserBean(name, cookie, userId, username, cookieStr, portalPac));
-        }
-        api().SSO(getCastgc());
-        ii("user", getUser());
     }
 
 }

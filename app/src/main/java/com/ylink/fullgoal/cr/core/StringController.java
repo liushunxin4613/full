@@ -15,11 +15,6 @@ public abstract class StringController<T extends StringController> extends BaseS
     }
 
     @Override
-    public Class<String> getClz() {
-        return String.class;
-    }
-
-    @Override
     public String getViewBean() {
         return getDB();
     }
@@ -49,11 +44,6 @@ public abstract class StringController<T extends StringController> extends BaseS
     @Override
     protected String getNoneUB() {
         return "";
-    }
-
-    @Override
-    protected Class<String> getUBClz() {
-        return null;
     }
 
 }

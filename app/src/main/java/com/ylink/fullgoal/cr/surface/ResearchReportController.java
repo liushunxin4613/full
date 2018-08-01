@@ -32,11 +32,6 @@ public class ResearchReportController<T extends ResearchReportController> extend
     }
 
     @Override
-    protected Class<ResearchReportFg> getClz() {
-        return ResearchReportFg.class;
-    }
-
-    @Override
     protected String getOnUBKey(String key) {
         switch (key){
             case CC:

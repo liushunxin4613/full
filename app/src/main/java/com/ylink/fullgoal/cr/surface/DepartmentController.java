@@ -19,11 +19,6 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
     }
 
     @Override
-    protected Class<DepartmentFg> getUBClz() {
-        return DepartmentFg.class;
-    }
-
-    @Override
     public String getApiCode() {
         return vor(DepartmentFg::getDepartmentCode);
     }
@@ -37,11 +32,6 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
             }
             return super.getOnUBKey(key);
         });
-    }
-
-    @Override
-    public Class<DepartmentFg> getClz() {
-        return DepartmentFg.class;
     }
 
     @Override

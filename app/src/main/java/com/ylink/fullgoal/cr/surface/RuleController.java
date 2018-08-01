@@ -32,11 +32,6 @@ public class RuleController<T extends RuleController> extends AddController<T, R
     }
 
     @Override
-    protected Class<RuleFg> getClz() {
-        return RuleFg.class;
-    }
-
-    @Override
     public List<RuleFg> getViewBean() {
         return super.getViewBean();
     }

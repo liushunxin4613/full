@@ -15,14 +15,4 @@ public class ApplyContentController<T extends ApplyContentController> extends Ba
         return null;
     }
 
-    @Override
-    protected Class<ApplyContentFgV1> getClz() {
-        return null;
-    }
-
-    @Override
-    protected Class<ApplyContentFgV1> getUBClz() {
-        return null;
-    }
-
 }

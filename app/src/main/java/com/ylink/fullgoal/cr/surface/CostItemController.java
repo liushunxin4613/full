@@ -35,11 +35,6 @@ public class CostItemController<T extends CostItemController> extends MapControl
     }
 
     @Override
-    protected Class<DimenListFg> getClz() {
-        return DimenListFg.class;
-    }
-
-    @Override
     public Map<String, DimenListFg> getMap() {
         return super.getMap();
     }
@@ -52,11 +47,6 @@ public class CostItemController<T extends CostItemController> extends MapControl
     @Override
     public List<ShareDimensionItemFg> getUB(String... args) {
         return super.getUB(args);
-    }
-
-    @Override
-    protected Class<List<ShareDimensionItemFg>> getUBClz() {
-        return null;
     }
 
     @Override

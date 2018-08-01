@@ -19,16 +19,6 @@ public class BooleanController<T extends BooleanController> extends BaseControll
     }
 
     @Override
-    protected Class<Boolean> getClz() {
-        return null;
-    }
-
-    @Override
-    protected Class<Boolean> getUBClz() {
-        return null;
-    }
-
-    @Override
     public <VB> VB getViewBean() {
         return null;
     }

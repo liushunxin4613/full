@@ -119,11 +119,15 @@ public class Config {
     public static int MAIN_FRAGMENT_INDEX = 0;//主页面默认Fragment
 
     //固定键值
+    public final static String TAG = "tag";
     public final static String STATE = "state";
     public final static String SERIAL_NO = "serialNo";
+    public final static String JSON = "json";
+    public final static String MAIN_APP = "mainApp";
     public final static String COST = "cost";
     public final static String COST_LIST = "cost";
     public final static String SEARCH = "search";
+    public final static String SEARCH_EVECTION = "searchEvection";
     public final static String SEARCH_TITLE = "searchTitle";
     public final static String FILTERS = "filters";
     public final static String KEY = "key";

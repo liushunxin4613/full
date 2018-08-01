@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.leo.core.iapi.api.IApiCodeApi;
 
-import java.lang.reflect.Type;
-
 /**
  * 业务逻辑处理层
  * <br/>
@@ -85,11 +83,5 @@ public interface IController<T extends IController, DB, UB> extends IApiCodeApi 
      */
     @NonNull
     UB getSafeUB(String... args);
-
-    /**
-     * 获取DB的class
-     * @return clz
-     */
-    Type getType();
 
 }

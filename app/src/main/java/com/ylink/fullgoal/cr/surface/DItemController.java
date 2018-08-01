@@ -19,16 +19,6 @@ public class DItemController<T extends DItemController> extends MapController<T,
     }
 
     @Override
-    protected Class<DItemVo> getClz() {
-        return null;
-    }
-
-    @Override
-    protected Class<Map<String, Object>> getUBClz() {
-        return null;
-    }
-
-    @Override
     protected Map<String, Object> getOnUB(String key) {
         return vr(getMap().get(key), vo -> vo.getCheckMap());
     }

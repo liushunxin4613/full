@@ -11,6 +11,7 @@ import static com.ylink.fullgoal.config.Config.CASTGC;
  */
 public class UserBean {
 
+    private String taskId;
     private String name;
     private String cookie;
     private String userId;
@@ -18,8 +19,9 @@ public class UserBean {
     private String cookieStr;
     private String portalPac;
 
-    public UserBean(String name, String cookie, String userId, String username, String cookieStr,
-                    String portalPac) {
+    public UserBean(String taskId, String name, String cookie, String userId, String username,
+                    String cookieStr, String portalPac) {
+        this.taskId = taskId;
         this.name = name;
         this.cookie = cookie;
         this.userId = userId;
@@ -28,7 +30,7 @@ public class UserBean {
         this.portalPac = portalPac;
     }
 
-    public String getCastgc(){
+    public String getCastgc() {
         if (!TextUtils.isEmpty(cookieStr)) {
             Map<String, String> map = TextUtils.parse(cookieStr);
             if (!TextUtils.isEmpty(map)) {
@@ -36,6 +38,14 @@ public class UserBean {
             }
         }
         return null;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
     public String getName() {

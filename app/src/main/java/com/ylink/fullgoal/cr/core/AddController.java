@@ -71,11 +71,6 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
         return new ArrayList<>();
     }
 
-    @Override
-    protected Class<List<DB>> getUBClz() {
-        return null;
-    }
-
     public List<DB> getData() {
         return data;
     }

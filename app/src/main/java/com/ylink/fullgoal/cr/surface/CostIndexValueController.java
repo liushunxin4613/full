@@ -24,16 +24,6 @@ public class CostIndexValueController<T extends CostIndexValueController> extend
     }
 
     @Override
-    protected Class<List<ApplyDataFgV1>> getClz() {
-        return null;
-    }
-
-    @Override
-    protected Class<String> getUBClz() {
-        return null;
-    }
-
-    @Override
     public String getViewBean() {
         StringBuilder builder = new StringBuilder();
         execute(getDB(), obj -> {

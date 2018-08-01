@@ -22,16 +22,6 @@ public class ProjectController<T extends ProjectController> extends BaseStringCo
     }
 
     @Override
-    protected Class<ProjectFg> getUBClz() {
-        return ProjectFg.class;
-    }
-
-    @Override
-    public Class<ProjectFg> getClz() {
-        return ProjectFg.class;
-    }
-
-    @Override
     public String getViewBean() {
         return vor(ProjectFg::getProjectName);
     }

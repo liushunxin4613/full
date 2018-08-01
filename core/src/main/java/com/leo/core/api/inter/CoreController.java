@@ -88,31 +88,14 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
         return ub;
     }
 
-    /**
-     * 当UB为空时,safeUB的处理
-     */
-    @NonNull
     protected UB getNoneUB(){
-        Class<UB> clz = getUBClz();
-        if(clz != null){
-            try {
-                return clz.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        throw new NullPointerException("getNoneUB()返回值不能为空");
+        return null;
     }
 
     @Override
     public String getApiCode() {
         return null;
     }
-
-    /**
-     * 获取UB类型
-     */
-    protected abstract Class<UB> getUBClz();
 
     /**
      * 默认上传参数

@@ -10,15 +10,18 @@ import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
+import com.ylink.fullgoal.bean.TvH4Bean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
 import com.ylink.fullgoal.bean.TvHintBean;
 import com.ylink.fullgoal.bean.XiechengBean;
 import com.ylink.fullgoal.cr.surface.CtripTicketsController;
+import com.ylink.fullgoal.cr.surface.NodeController;
 import com.ylink.fullgoal.cr.surface.ResearchReportController;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.TravelFormController;
 import com.ylink.fullgoal.fg.ApplyDataFgV1;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
+import com.ylink.fullgoal.fg.NodeFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.RuleFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
@@ -94,8 +97,8 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
                     (bean, view) -> vos(DVo::getProject, CoreController::clear)));
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreBean("费用指标",
                     vorv(DVo::getCostIndex), "请选择费用指标",
-                    (bean, view) -> routeApi().search(SearchVo.COST_INDEX, vorc(DVo::getReimbursement),
-                            vorc(DVo::getCostIndex)),
+                    (bean, view) -> routeApi().searchEvection(SearchVo.COST_INDEX,
+                            vorc(DVo::getReimbursement), vorc(DVo::getCostIndex)),
                     (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
             checkAdd(data, vorv(DVoV1::getApply), new TvH2MoreBean("申请单",
                     vorv(DVoV1::getApply), "请选择申请单", (bean, view)
@@ -188,13 +191,15 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             }
         });
         //添加流程
-        /*if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
+        //添加流程
+        List<NodeFg> nodeData = vor(DVo::getTaskNode, NodeController::getViewBean);
+        if (!isEnable() && !TextUtils.isEmpty(nodeData)) {
             addVgBean(data -> {
                 data.add(new TvH4Bean());
-                execute(vo.getProcessData(), item -> data.add(new TvH4Bean(item.getUser(),
-                        item.getNode(), item.getApprovalOpinion(), item.getTime())));
+                execute(nodeData, item -> data.add(new TvH4Bean(item.getName(),
+                        item.getNode(), item.getOpinion(), item.getProcessTime())));
             });
-        }*/
+        }
     }
 
 }

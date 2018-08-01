@@ -2,12 +2,16 @@ package com.ylink.fullgoal.api.full;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.CoreController;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.bean.InhibitionRuleBean;
 import com.ylink.fullgoal.bean.TvH2Bean;
 import com.ylink.fullgoal.bean.TvH2MoreBean;
+import com.ylink.fullgoal.bean.TvH4Bean;
 import com.ylink.fullgoal.bean.TvHEt3Bean;
+import com.ylink.fullgoal.cr.surface.NodeController;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.fg.ApplyDataFgV1;
+import com.ylink.fullgoal.fg.NodeFg;
 import com.ylink.fullgoal.fg.RuleFg;
 import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.vo.DVoV1;
@@ -102,14 +106,15 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
         }
         //GridBean 添加票据
         addVgBean("票据", newGridBean(FILTER_YB));
-        /*//添加流程
-        if (!isEnable() && !TextUtils.isEmpty(getVo().getProcessData())) {
+        //添加流程
+        List<NodeFg> nodeData = vor(DVo::getTaskNode, NodeController::getViewBean);
+        if (!isEnable() && !TextUtils.isEmpty(nodeData)) {
             addVgBean(data -> {
                 data.add(new TvH4Bean());
-                execute(vo.getProcessData(), item -> data.add(new TvH4Bean(item.getUser(),
-                        item.getNode(), item.getApprovalOpinion(), item.getTime())));
+                execute(nodeData, item -> data.add(new TvH4Bean(item.getName(),
+                        item.getNode(), item.getOpinion(), item.getProcessTime())));
             });
-        }*/
+        }
     }
 
 }

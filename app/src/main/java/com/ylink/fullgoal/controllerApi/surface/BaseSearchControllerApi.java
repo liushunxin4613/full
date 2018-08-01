@@ -28,6 +28,7 @@ import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
 public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> extends RecycleControllerApi<T, C> {
 
     private String key;
+    private String tag;
     private String value;
     private String search;
     private String keyword;
@@ -44,6 +45,14 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
 
     protected void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getKey() {
@@ -110,6 +119,7 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
             executeNon(bundle.getString(Config.KEY), this::setKey);
             executeNon(bundle.getString(Config.VALUE), this::setValue);
             executeNon(bundle.getString(Config.FILTERS), this::setFilterData);
+            executeNon(bundle.getString(Config.TAG), this::setTag);
         });
     }
 
@@ -135,7 +145,10 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         } else if (bean instanceof IKeywordApi) {
             String fk = ((IKeywordApi) bean).getFilter();
             String apiCode = ((IKeywordApi) bean).getApiCode();
+            ee("bean", bean);
             if (bean instanceof OnClickBean) {
+                ee("apiCode", apiCode);
+                ee("getValue()", getValue());
                 ((OnClickBean) bean).setSelected(TextUtils.equals(apiCode, getValue()));
             }
             if (!TextUtils.isEmpty(getFilterData())) {

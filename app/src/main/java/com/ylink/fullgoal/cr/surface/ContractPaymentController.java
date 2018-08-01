@@ -3,7 +3,6 @@ package com.ylink.fullgoal.cr.surface;
 import com.ylink.fullgoal.cr.core.BaseStringController;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
 
-import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 
 /**
@@ -22,18 +21,8 @@ public class ContractPaymentController<T extends ContractPaymentController> exte
     }
 
     @Override
-    protected Class<ContractPaymentFg> getUBClz() {
-        return ContractPaymentFg.class;
-    }
-
-    @Override
     public String getViewBean() {
         return vor(ContractPaymentFg::getName);
-    }
-
-    @Override
-    public Class<ContractPaymentFg> getClz() {
-        return ContractPaymentFg.class;
     }
 
     @Override

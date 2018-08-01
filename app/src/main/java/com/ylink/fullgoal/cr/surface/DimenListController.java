@@ -30,9 +30,4 @@ public class DimenListController<T extends DimenListController> extends AddContr
         return null;
     }
 
-    @Override
-    protected Class<DimenFg> getClz() {
-        return DimenFg.class;
-    }
-
 }

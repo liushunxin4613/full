@@ -3,11 +3,9 @@ package com.leo.core.bean;
 import android.support.annotation.NonNull;
 
 import com.leo.core.api.api.VsApi;
-import com.leo.core.config.PatternConfig;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IReturnEntryAction;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 
@@ -38,22 +36,6 @@ public class NewFieldBean extends VsApi<NewFieldBean> {
             }
             return null;
         });
-    }
-
-    public String toCheckString() {
-        return LogUtil.getLog(getFieldMap((key, obj) -> {
-            if (obj instanceof IController) {
-                IController c = (IController) obj;
-                String type = null;
-                if (c.getType() != null) {
-                    type = c.getType().toString();
-                    type = PatternConfig.getPattern(type, PatternConfig.JAVA_TYPE_SIMPLE);
-                }
-                return new Entry(key, new ControllerBean(type,
-                        c.getDB(), c.getViewBean(), new Entry(c.getUBKey(), c.getUB())));
-            }
-            return null;
-        }));
     }
 
     protected void initNewFields() {

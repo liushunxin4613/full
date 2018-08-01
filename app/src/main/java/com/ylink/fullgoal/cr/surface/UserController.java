@@ -19,11 +19,6 @@ public class UserController<T extends UserController> extends BaseStringControll
     }
 
     @Override
-    protected Class<UserFg> getUBClz() {
-        return UserFg.class;
-    }
-
-    @Override
     protected String getOnUBKey(String key) {
         return toField(field -> {
             switch (field) {
@@ -34,11 +29,6 @@ public class UserController<T extends UserController> extends BaseStringControll
             }
             return super.getOnUBKey(key);
         });
-    }
-
-    @Override
-    public Class<UserFg> getClz() {
-        return UserFg.class;
     }
 
     @Override

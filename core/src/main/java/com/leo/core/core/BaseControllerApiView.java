@@ -82,6 +82,9 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
             Bundle savedInstanceState = new Bundle();
             controllerApi().onCreateView(LayoutInflater.from(getContext()), this,
                     savedInstanceState);
+            if(controllerApi().getActivity() != null){
+                controllerApi().onNewIntent(controllerApi().getActivity().getIntent());
+            }
             if (attrs != null && controllerApi().getStyleableRes() != null) {
                 TypedArray a = getContext().obtainStyledAttributes(attrs, controllerApi()
                         .getStyleableRes());

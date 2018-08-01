@@ -25,6 +25,7 @@ import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
 import com.ylink.fullgoal.fg.ApplyContentFgV1;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
+import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DataFgV1;
 import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.DimenFg;
@@ -37,9 +38,11 @@ import com.ylink.fullgoal.vo.SearchVo;
 
 import butterknife.Bind;
 
+import static com.ylink.fullgoal.config.Config.SEARCH_EVECTION;
 import static com.ylink.fullgoal.config.Config.VERSION;
 import static com.ylink.fullgoal.config.Config.VERSION_APP;
 import static com.ylink.fullgoal.config.Config.VERSION_V2;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_COST_INDEX_DATA;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 import static com.ylink.fullgoal.vo.SearchVo.BUDGET_DEPARTMENT;
@@ -219,13 +222,22 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     api().queryProcessData();
                     break;
                 case COST_INDEX://费用指标
-                    switch (VERSION) {
-                        case VERSION_APP:
-                            api().queryCostIndexData();
-                            break;
-                        case VERSION_V2:
-                            api().queryCostIndexData(getKey());
-                            break;
+                    if (TextUtils.equals(getTag(), SEARCH_EVECTION)) {
+                        DataFg dataFg = new DataFg();
+                        dataFg.setCostIndextList(TextUtils.getListData(
+                                new CostFg("84f83358-32c0-440e-81bf-2c8d955e8439", "差旅费"),
+                                new CostFg("494765e5-ed5d-4a7f-a78b-e9b6b598a27e", "职工教育经费")));
+                        parseApi().init(PATH_QUERY_COST_INDEX_DATA, -1, null).parse(encode(dataFg));
+                        search(getKeyword());
+                    } else {
+                        switch (VERSION) {
+                            case VERSION_APP:
+                                api().queryCostIndexData();
+                                break;
+                            case VERSION_V2:
+                                api().queryCostIndexData(getKey());
+                                break;
+                        }
                     }
                     break;
                 case APPLY_CONTENT://申请单内容

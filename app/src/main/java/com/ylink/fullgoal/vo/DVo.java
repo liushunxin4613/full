@@ -16,6 +16,7 @@ import com.ylink.fullgoal.cr.surface.FirstController;
 import com.ylink.fullgoal.cr.surface.ImageListController;
 import com.ylink.fullgoal.cr.surface.LogoController;
 import com.ylink.fullgoal.cr.surface.MoneyController;
+import com.ylink.fullgoal.cr.surface.NodeController;
 import com.ylink.fullgoal.cr.surface.ProcessController;
 import com.ylink.fullgoal.cr.surface.ProjectController;
 import com.ylink.fullgoal.cr.surface.ResearchReportController;
@@ -79,6 +80,8 @@ public class DVo extends NewFieldBean {
     private RuleController ruleList;
     //是否能分摊
     private transient BooleanController isShare;
+    //审核节点
+    private NodeController taskNode;
 
     @Override
     protected boolean isOther(@NonNull Field field) {
@@ -271,6 +274,14 @@ public class DVo extends NewFieldBean {
 
     public void setIsShare(BooleanController isShare) {
         this.isShare = isShare;
+    }
+
+    public NodeController getTaskNode() {
+        return taskNode;
+    }
+
+    public void setTaskNode(NodeController taskNode) {
+        this.taskNode = taskNode;
     }
 
 }

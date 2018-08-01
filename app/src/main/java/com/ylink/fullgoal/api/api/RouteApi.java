@@ -32,11 +32,15 @@ import java.util.List;
 import cn.com.fullgoal.pt0001.MainActivity;
 
 import static com.ylink.fullgoal.config.Config.FILTERS;
+import static com.ylink.fullgoal.config.Config.JSON;
 import static com.ylink.fullgoal.config.Config.KEY;
+import static com.ylink.fullgoal.config.Config.MAIN_APP;
 import static com.ylink.fullgoal.config.Config.SEARCH;
+import static com.ylink.fullgoal.config.Config.SEARCH_EVECTION;
 import static com.ylink.fullgoal.config.Config.SEARCH_TITLE;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
+import static com.ylink.fullgoal.config.Config.TAG;
 import static com.ylink.fullgoal.config.Config.VALUE;
 import static com.ylink.fullgoal.config.Config.VERSION;
 
@@ -223,6 +227,26 @@ public class RouteApi extends CoreRouteApi {
     }
 
     /**
+     * 一般费用报销
+     */
+    public void generalMain(String state, String json) {
+        route(VERSION, "surface/general", null, map
+                -> map.put(STATE, state)
+                .put(MAIN_APP, MAIN_APP)
+                .put(JSON, json));
+    }
+
+    /**
+     * 出差费用报销
+     */
+    public void evectionMain(String state, String json) {
+        route(VERSION, "surface/evection", null, map
+                -> map.put(STATE, state)
+                .put(MAIN_APP, MAIN_APP)
+                .put(JSON, json));
+    }
+
+    /**
      * 报销列表查询
      */
     public void queryReimburse() {
@@ -268,6 +292,19 @@ public class RouteApi extends CoreRouteApi {
                 .put(KEY, key)
                 .put(VALUE, value)
                 .put(FILTERS, controllerApi().encode(filterData)));
+    }
+
+    /**
+     * 搜索页面
+     */
+    public void searchEvection(String search, String key, String value) {
+        onSearch();
+        route(MODULE, "surface/search", null, map
+                -> map.put(SEARCH_TITLE, search)
+                .put(SEARCH, search)
+                .put(KEY, key)
+                .put(VALUE, value)
+                .put(TAG, SEARCH_EVECTION));
     }
 
     /**

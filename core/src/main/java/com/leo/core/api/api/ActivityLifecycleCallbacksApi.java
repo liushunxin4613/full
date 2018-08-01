@@ -67,6 +67,13 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
     }
 
     @Override
+    public void finishAllActivity() {
+        while (getActivityStack().empty()){
+            executeNon(getActivityStack().pop(), Activity::finish);
+        }
+    }
+
+    @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         getActivityStack().add(activity);
     }

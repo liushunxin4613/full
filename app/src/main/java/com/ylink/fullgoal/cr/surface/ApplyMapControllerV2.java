@@ -82,16 +82,6 @@ public class ApplyMapControllerV2<T extends ApplyMapControllerV2> extends BaseMa
     }
 
     @Override
-    protected Class<ApplyDataFgV2> getClz() {
-        return null;
-    }
-
-    @Override
-    protected Class<List<Map<String, String>>> getUBClz() {
-        return null;
-    }
-
-    @Override
     public String getViewBean() {
         StringBuilder builder = new StringBuilder();
         execute(getMap(), (key, value) -> {

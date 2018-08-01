@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.leo.core.util.LogUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.ShareBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;

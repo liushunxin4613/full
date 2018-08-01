@@ -1934,9 +1934,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 View child = vg.getChildAt(i);
                 if (child instanceof BaseControllerApiView) {
                     executeNon(((BaseControllerApiView) child).controllerApi(), api);
-                } else {
-                    executeViewControllerApi(child, api);
                 }
+                executeViewControllerApi(child, api);
             }
         }
     }
