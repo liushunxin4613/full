@@ -5,7 +5,7 @@ import com.leo.core.iapi.api.IApiCodeApi;
 /**
  * 员工
  */
-public class UserFg implements IApiCodeApi{
+public class UserFg implements IApiCodeApi {
 
     @Override
     public String getApiCode() {

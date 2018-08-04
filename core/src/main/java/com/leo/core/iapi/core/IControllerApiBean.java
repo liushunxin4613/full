@@ -2,12 +2,13 @@ package com.leo.core.iapi.core;
 
 import android.content.res.XmlResourceParser;
 
+import com.leo.core.iapi.api.IApiCodeApi;
 import com.leo.core.iapi.main.IControllerApi;
 
 /**
  * 创建ControllerApiBean
  */
-public interface IControllerApiBean<P extends IControllerApi> extends IApi {
+public interface IControllerApiBean<P extends IControllerApi> extends IApiCodeApi {
 
     /**
      * 验证合法性
@@ -77,11 +78,6 @@ public interface IControllerApiBean<P extends IControllerApi> extends IApi {
      * @return api type
      */
     Integer getDefApiType();
-
-    /**
-     * 编号,数据对比使用[可用于标记和过滤]
-     */
-    String getApiCode();
 
     /**
      * 初始化搜索
