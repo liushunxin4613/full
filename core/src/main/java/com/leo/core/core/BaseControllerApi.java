@@ -78,7 +78,8 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
 
     @Override
     public HttpApi newHttpApi() {
-        return new HttpApi(getThis(), newTransformer());
+//        return new HttpApi(getThis(), newTransformer());
+        return new HttpApi(getThis(), Transformer.getInstance());
     }
 
     @Override
@@ -233,12 +234,12 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
 
     @Override
     public <B, M> Observable.Transformer<B, M> newTransformer() {
-        return new Transformer();
+        return Transformer.getInstance();
     }
 
     @Override
     public <B> MsgSubscriber<T, B> newSubscriber() {
-        return new RetrofitSubscriber(parseApi().copy());
+        return new RetrofitSubscriber(getThis());
     }
 
     @Override

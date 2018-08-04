@@ -10,6 +10,8 @@ public final class HttpError {
     public final static int ERROR_DATA_METHOD = 0x1195;//数据解析方法异常
     public final static int ERROR_STRING_ENCODE = 0x1196;//string编码转换异常
     public final static int ERROR_DATA = 0x1197;//数据异常
+    public final static int ERROR_NO_ROUTE_TO_HOST = 0x1198;//没有到主机的路由
+    public final static int ERROR_JSON_ERROR = 0x1199;//不是json数据参数
 
     private int what;
     private String msg;

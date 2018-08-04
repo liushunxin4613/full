@@ -41,6 +41,7 @@ import static com.ylink.fullgoal.config.Config.SEARCH_TITLE;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
 import static com.ylink.fullgoal.config.Config.TAG;
+import static com.ylink.fullgoal.config.Config.TITLE;
 import static com.ylink.fullgoal.config.Config.VALUE;
 import static com.ylink.fullgoal.config.Config.VERSION;
 
@@ -208,21 +209,31 @@ public class RouteApi extends CoreRouteApi {
         return null;
     }
 
+    public void general(String state, String serialNo) {
+        general(state, null, serialNo);
+    }
+
     /**
      * 一般费用报销
      */
-    public void general(String state, String serialNo) {
+    public void general(String state, String title, String serialNo) {
         route(VERSION, "surface/general", null, map
                 -> map.put(STATE, state)
+                .put(TITLE, title)
                 .put(SERIAL_NO, serialNo));
+    }
+
+    public void evection(String state, String serialNo) {
+        evection(state, null, serialNo);
     }
 
     /**
      * 出差费用报销
      */
-    public void evection(String state, String serialNo) {
+    public void evection(String state, String title, String serialNo) {
         route(VERSION, "surface/evection", null, map
                 -> map.put(STATE, state)
+                .put(TITLE, title)
                 .put(SERIAL_NO, serialNo));
     }
 

@@ -32,8 +32,16 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public <A> T initDepartment(A department) {
+        if(department instanceof DepartmentFg){
+            saveData("department", department);
+        }
+        return getThis();
+    }
+
+    @Override
     public String getDepartmentCode() {
-        return getDepartment().getDepartmentCode();
+        return vr(getDepartment(), DepartmentFg::getDepartmentCode);
     }
 
     @Override
@@ -43,14 +51,14 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public String getUId() {
-        return no(vr(getUser(), UserBean::getUserId), "xijiong");
-//        return vr(getUser(), UserBean::getUserId);
+//        return no(vr(getUser(), UserBean::getUserId), "xijiong");
+        return vr(getUser(), UserBean::getUserId);
     }
 
     @Override
     public String getUserName() {
-        return no(vr(getUser(), UserBean::getUsername), "溪炯");
-//        return vr(getUser(), UserBean::getUsername);
+//        return no(vr(getUser(), UserBean::getUsername), "溪炯");
+        return vr(getUser(), UserBean::getUsername);
     }
 
     @Override
@@ -60,7 +68,8 @@ public class UserApi<T extends UserApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public DepartmentFg getDepartment() {
-        return new DepartmentFg("f43368e1-8bd5-4ee3-aa51-2006c0489f1b", "固定收益投资部");
+//        return new DepartmentFg("f43368e1-8bd5-4ee3-aa51-2006c0489f1b", "固定收益投资部");
+        return getBean("department", DepartmentFg.class);
     }
 
 }

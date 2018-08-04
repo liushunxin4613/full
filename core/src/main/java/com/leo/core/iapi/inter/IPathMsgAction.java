@@ -3,5 +3,5 @@ package com.leo.core.iapi.inter;
 import com.leo.core.iapi.core.IApi;
 
 public interface IPathMsgAction<B> extends IApi {
-    void execute(String path, int what, String msg, B bean);
+    void execute(String name, String path, int what, String msg, B bean);
 }

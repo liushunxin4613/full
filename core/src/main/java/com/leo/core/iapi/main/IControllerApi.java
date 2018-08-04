@@ -601,6 +601,11 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void notifyDataChanged();
 
     /**
+     * 开始网络请求
+     */
+    void onStartHttpRequest();
+
+    /**
      * 执行
      */
     T executeBundle(IObjAction<Bundle> api);

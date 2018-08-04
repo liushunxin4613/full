@@ -4,7 +4,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import com.leo.core.iapi.inter.IGet;
 import com.leo.core.iapi.inter.IGetAction;
 import com.leo.core.iapi.inter.ITextAction;
 
@@ -44,12 +43,16 @@ public class HelperUtil {
             }
         } else if (posDot == 0) {
             text.insert(0, "0");
+            return;
         }
-        if (get != null && get.get() != null) {
-            float f = JavaTypeUtil.getfloat(temp, 0);
-            if (f > get.get() && !TextUtils.isEmpty(temp)) {
-                text.delete(temp.length() - 1, temp.length());
-                return;
+        if (get != null) {
+            Double gg = get.get();
+            if(gg != null){
+                double f = JavaTypeUtil.getdouble(temp, 0);
+                if (f > gg && !TextUtils.isEmpty(temp)) {
+                    text.delete(temp.length() - 1, temp.length());
+                    return;
+                }
             }
         }
         if (action != null) {

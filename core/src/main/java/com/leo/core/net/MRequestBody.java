@@ -19,13 +19,15 @@ public class MRequestBody extends RequestBody implements IProgressListener {
     private boolean once;
     private RequestBody mRequestBody;
     private IProgressListener mListener;
+    private Handler handler;
 
     MRequestBody(RequestBody requestBody, IProgressListener listener) {
         this.mRequestBody = requestBody;
         this.mListener = listener;
+        this.handler = new Handler(Looper.getMainLooper());
     }
 
-    public RequestBody getRequestBody(){
+    public RequestBody getRequestBody() {
         return mRequestBody;
     }
 
@@ -54,8 +56,7 @@ public class MRequestBody extends RequestBody implements IProgressListener {
                 @Override
                 public void write(Buffer source, long byteCount) throws IOException {
                     super.write(source, byteCount);
-                    new Handler(Looper.getMainLooper()).post(()
-                            -> onLoading(sum += byteCount, contentLength()));
+                    handler.post(() -> onLoading(sum += byteCount, contentLength()));
                 }
             });
             mRequestBody.writeTo(bufferedSink);//写入

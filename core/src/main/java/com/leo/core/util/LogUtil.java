@@ -6,6 +6,7 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.other.MMap;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class LogUtil {
 
@@ -64,7 +65,7 @@ public class LogUtil {
     public static void ee(Object in, IObjAction<MMap<String, Object>> action) {
         if (action != null) {
             MMap<String, Object> mMap = new MMap<>();
-            action.execute(mMap.map(new HashMap<>()));
+            action.execute(mMap.map(new LinkedHashMap<>()));
             getApi().ee(in,  mMap.map());
         }
     }

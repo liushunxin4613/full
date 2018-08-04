@@ -92,6 +92,10 @@ public class DVo extends NewFieldBean {
         initNewFields();
     }
 
+    public void clear(){
+        initNewFields();
+    }
+
     public FirstController getFirst() {
         return first;
     }

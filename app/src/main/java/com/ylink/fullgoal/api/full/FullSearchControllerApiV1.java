@@ -36,7 +36,7 @@ public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> e
 
     private void initAdds() {
         //申请单
-        addList(DataFgV1.class, ApplyFgV1.class, (path, what, msg, list) -> initDataAction(list));
+        addList(DataFgV1.class, ApplyFgV1.class, (fieldName, path, what, msg, list) -> initDataAction(list));
     }
 
     private void initDataAction(List<ApplyFgV1> list) {

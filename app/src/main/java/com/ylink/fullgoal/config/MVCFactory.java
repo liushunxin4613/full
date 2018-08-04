@@ -59,12 +59,12 @@ public class MVCFactory extends VsApi<MVCFactory> {
     public void start() {
         String[] args = getConfigDir().list();
         api().ii("args", args);
-        add(ConfigVo.class, (path, what, msg, vo) -> {
+        add(ConfigVo.class, (fieldName, path, what, msg, vo) -> {
             if (vo.isSuccess()) {
                 execute(vo.getConfigList(), fileVo -> onFileVo(args, fileVo));
             }
         });
-        add(ResponseBody.class, (path, what, fileName, body) -> {
+        add(ResponseBody.class, (fieldName, path, what, fileName, body) -> {
             if (TextUtils.check(path, fileName)) {
                 File file = new File(getConfigDir(), fileName);
                 if (FileUtil.writeFile(file.getPath(), body.byteStream())) {

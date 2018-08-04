@@ -1,9 +1,6 @@
 package com.ylink.fullgoal.controllerApi.surface;
 
 import com.google.gson.reflect.TypeToken;
-import com.leo.core.bean.Completed;
-import com.leo.core.core.bean.CoreApiBean;
-import com.leo.core.iapi.api.IApiCodeApi;
 import com.leo.core.iapi.api.IKeywordApi;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.other.Transformer;
@@ -13,13 +10,12 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.LineBean;
-import com.ylink.fullgoal.bean.OnClickBean;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.config.ViewBean;
-import com.ylink.fullgoal.fg.DataFg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import rx.Observable;
 
@@ -126,10 +122,6 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
     @Override
     public void initData() {
         super.initData();
-        //消息标志
-        add(DataFg.class, (path, what, msg, bean) -> showView(bean.isSuccess()));
-        //完成
-        add(Completed.class, (path, what, msg, bean) -> search(getKeyword()));
         query();
     }
 
@@ -139,22 +131,15 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
     protected void query() {
     }
 
-    private boolean isFilter(IApiBean bean, String keyword) {
+    private boolean isFilter(IApiBean bean, IApiBean old, String keyword) {
         if (bean instanceof LineBean) {
-            return false;
+            return !(old instanceof LineBean);
         } else if (bean instanceof IKeywordApi) {
+            String code = ((IKeywordApi) bean).getApiCode();
             String fk = ((IKeywordApi) bean).getFilter();
-            String apiCode = ((IKeywordApi) bean).getApiCode();
-            ee("bean", bean);
-            if (bean instanceof OnClickBean) {
-                ee("apiCode", apiCode);
-                ee("getValue()", getValue());
-                ((OnClickBean) bean).setSelected(TextUtils.equals(apiCode, getValue()));
-            }
             if (!TextUtils.isEmpty(getFilterData())) {
                 for (String filter : getFilterData()) {
-                    if (!TextUtils.isEmpty(filter)
-                            && !TextUtils.isEmpty(fk)
+                    if (!TextUtils.isEmpty(filter) && !TextUtils.isEmpty(fk)
                             && fk.contains(filter)) {
                         return false;
                     }
@@ -182,24 +167,19 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
                 -> Observable.create((Observable.
                 OnSubscribe<List<IApiBean>>) subscriber -> {
             List<IApiBean> data = new ArrayList<>();
+            AtomicReference<IApiBean> old = new AtomicReference<>();
             execute(list, obj -> {
-                if (isFilter(obj, keyword)) {
+                if (isFilter(obj, old.get(), keyword)) {
                     data.add(obj);
-                    data.add(new LineBean());
+                    old.set(obj);
                 }
             });
-            subscriber.onNext(data);
-            subscriber.onCompleted();
-        }).compose(new Transformer<>()).subscribe(data -> {
             api.setFilterData(data);
-            adapter.notifyDataSetChanged();
-        })).notifyDataSetChanged();
-    }
-
-    protected void addDataOfCode(List<IApiBean> data, IApiCodeApi api, CoreApiBean bean) {
-        if (TextUtils.checkNull(data, api, bean)) {
-            data.add(bean.setApiCode(api.getApiCode()));
-        }
+            subscriber.onNext(null);
+            subscriber.onCompleted();
+        }).compose(Transformer.getInstance())
+                .subscribe(obj -> adapter.notifyDataSetChanged()))
+                .notifyDataSetChanged();
     }
 
     private String getSearchValue(String key) {

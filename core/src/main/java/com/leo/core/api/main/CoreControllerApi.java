@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
+import com.leo.core.bean.ParseBean;
 import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
@@ -670,7 +671,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public T dialogShow() {
-        if (isDialog() && !getDialog().isShowing() && !getActivity().isFinishing()) {
+        if (isDialog() && !getDialog().isShowing()
+                && !getActivity().isFinishing()) {
             getDialog().show();
         }
         return getThis();
@@ -923,6 +925,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void notifyDataChanged() {
+    }
+
+    @Override
+    public void onStartHttpRequest() {
     }
 
     @Override
@@ -1424,15 +1430,15 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> T setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
+    public <B> void setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
         httpApi().setNewSubscriber(newSubscriber);
-        return getThis();
     }
 
     @Override
-    public <B> T observable(Observable<B> observable) {
+    public <B> T observable(B bean, String startUrl, String path, Map<String, String> map,
+                            int what, String tag) {
         httpApi().setNewSubscriber(newSubscriber());
-        httpApi().observable(observable);
+        httpApi().observable(bean, startUrl, path, map, what, tag);
         return getThis();
     }
 
@@ -1816,6 +1822,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public <A> T initDepartment(A department) {
+        userApi().initDepartment(department);
+        return getThis();
+    }
+
+    @Override
     public <B> B getUser() {
         return (B) userApi().getUser();
     }
@@ -2009,37 +2021,62 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public List<ParseBean> getParseData() {
+        return parseApi().getParseData();
+    }
+
+    @Override
     public T init(String path, int what, String tag) {
         parseApi().init(path, what, tag);
         return getThis();
     }
 
     @Override
-    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public <B> void get(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                        int what, String tag) {
+        api().get(url, obj, path, action, what, tag);
+    }
+
+    @Override
+    public <B> void post(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                         int what, String tag) {
+        api().post(url, obj, path, action, what, tag);
+    }
+
+    @Override
+    public <B> void jsonPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                             int what, String tag) {
+        api().jsonPost(url, obj, path, action, what, tag);
+    }
+
+    @Override
+    public <B> void bodyPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                             int what, String tag, IProgressListener listener) {
+        api().bodyPost(url, obj, path, action, what, tag, listener);
+    }
+
+    @Override
+    public void get(String url, String path, IObjAction<Map<String, Object>> action, int what,
                  String tag) {
         api().get(url, path, action, what, tag);
-        return getThis();
     }
 
     @Override
-    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void post(String url, String path, IObjAction<Map<String, Object>> action, int what,
                   String tag) {
         api().post(url, path, action, what, tag);
-        return getThis();
     }
 
     @Override
-    public T jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
                       String tag) {
         api().jsonPost(url, path, action, what, tag);
-        return getThis();
     }
 
     @Override
-    public T bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
                       String tag, IProgressListener listener) {
         api().bodyPost(url, path, action, what, tag, listener);
-        return getThis();
     }
 
     @Override

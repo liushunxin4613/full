@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingBottom="8dp">
 
-    <LinearLayout
+    <RelativeLayout
         style="@style/padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,20 +18,32 @@
 
         <TextView
             android:id="@+id/name_tv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
             tools:ignore="RtlHardcoded"
             tools:text="会议费" />
 
-        <EditText
+        <TextView
             android:id="@+id/detail_et"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv"
+            tools:ignore="LabelFor,RelativeOverlap,RtlHardcoded"
+            tools:text="20000.00" />
+
+        <!--<EditText
+            android:id="@+id/detail_et"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@null"
             android:gravity="center"
             android:inputType="numberDecimal"
@@ -39,9 +51,9 @@
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
             tools:ignore="LabelFor,RtlHardcoded"
-            tools:text="20000.00" />
+            tools:text="20000.00" />-->
 
-        <TextView
+        <!--<TextView
             android:id="@+id/type_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -51,9 +63,9 @@
             android:textColor="@color/EE4433"
             android:textSize="@dimen/tv"
             tools:ignore="RtlHardcoded"
-            tools:text="需要分摊" />
+            tools:text="需要分摊" />-->
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <include layout="@layout/v_line" />
 
@@ -108,7 +120,7 @@
         android:orientation="horizontal"
         android:weightSum="3">
 
-        <EditText
+        <!--<EditText
             android:id="@+id/tax_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -119,9 +131,9 @@
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"
             tools:ignore="LabelFor,RtlHardcoded"
-            tools:text="3500.00" />
+            tools:text="3500.00" />-->
 
-        <EditText
+        <!--<EditText
             android:id="@+id/none_tax_money_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -129,6 +141,31 @@
             android:background="@null"
             android:gravity="center"
             android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv"
+            tools:ignore="LabelFor,RtlHardcoded"
+            tools:text="16500.00" />-->
+
+        <TextView
+            android:id="@+id/tax_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:maxLines="1"
+            android:textColor="@color/tv"
+            android:textSize="@dimen/tv"
+            tools:ignore="LabelFor,RtlHardcoded"
+            tools:text="3500.00" />
+
+        <TextView
+            android:id="@+id/none_tax_money_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/tv"
             android:textSize="@dimen/tv"

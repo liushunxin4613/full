@@ -58,7 +58,7 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
         String[] args = getConfigDir().list();
         api().ii(String.format("dir: %s, list: %s", getConfigDir().getPath(),
                 LogUtil.getLog((Object) args)));
-        add(DataFg.class, byte[].class, (path, what, fileName, bytes) -> {
+        add(DataFg.class, byte[].class, (fieldName, path, what, fileName, bytes) -> {
             if (TextUtils.check(path, fileName)) {
                 File file = new File(getConfigDir(), fileName);
                 if (FileUtil.writeFile(file.getPath(), bytes)) {

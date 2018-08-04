@@ -22,6 +22,11 @@ public class RunUtil {
         return getExecute(a, null, api);
     }
 
+    public static <A> A getExecute(IObjAction<A> api, A a) {
+        executeNon(a, api);
+        return a;
+    }
+
     public static void execute(IAction action) {
         if (action != null) {
             action.execute();

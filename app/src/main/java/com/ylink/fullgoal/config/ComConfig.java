@@ -14,6 +14,7 @@ public class ComConfig {
     public final static String LB = "列表";
     public final static String FQ = "发起";
     public final static String CS = "初始";
+    public final static String ZD = "自动";
     public final static String QR = "确认";
     public final static String XG = "修改";
     public final static String XQ = "详情";

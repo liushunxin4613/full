@@ -1,5 +1,7 @@
 package cn.com.fullgoal.pt0001;
 
+import android.content.Intent;
+
 import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.iapi.main.IControllerApi;
@@ -16,4 +18,8 @@ public class MainActivity<T extends MainActivity, C extends IControllerApi> exte
                 .setRootViewClzApi(MainViewControllerApi.class);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
 }

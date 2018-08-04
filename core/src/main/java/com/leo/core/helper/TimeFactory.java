@@ -27,23 +27,23 @@ public class TimeFactory {
         actionApi = new ActionApi();
     }
 
-    private synchronized long currentTimeMillis() {
+    private long currentTimeMillis() {
         return System.currentTimeMillis();
     }
 
-    private synchronized void initTime() {
+    private void initTime() {
         this.time = currentTimeMillis();
     }
 
-    private synchronized long interval() {
+    private long interval() {
         return time == 0 ? 0 : currentTimeMillis() - time;
     }
 
-    public synchronized void start() {
+    public void start() {
         initTime();
     }
 
-    public synchronized void check(long interval, IAction action) {
+    public void check(long interval, IAction action) {
         if (interval >= 0 && action != null) {
             long offset = interval - interval();
             actionApi.addUI(offset > 0 ? offset : 0, action);

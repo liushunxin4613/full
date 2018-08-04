@@ -131,7 +131,7 @@ public class CharacterParserFactory {
                 int lowByte = 256 + bytes[1];
                 return (256 * hightByte + lowByte) - 256 * 256;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return 0;
     }
@@ -139,7 +139,7 @@ public class CharacterParserFactory {
     /**
      * 单字解析
      */
-    public String convert(String str) {
+    private String convert(String str) {
         String result = null;
         int ascii = getChsAscii(str);
         if (ascii > 0 && ascii < 160) {

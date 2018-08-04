@@ -31,7 +31,7 @@ public class VgBi extends BaseVgBi<VgBi, VgBean> {
 
     @Override
     protected List<BaseBiBean> getData(VgBean bean) {
-        return bean.getLineData();
+        return bean.isNoLine() ? bean.getData() : bean.getLineData();
     }
 
     @Override

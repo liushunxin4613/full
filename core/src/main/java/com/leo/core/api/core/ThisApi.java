@@ -15,6 +15,7 @@ import com.leo.core.util.TextUtils;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,6 +105,10 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getThis();
     }
 
+    public <A> A getOExecute(IObjAction<A> api, A a) {
+        return RunUtil.getExecute(api, a);
+    }
+
     protected <A, B> B getExecute(A in, B def, IReturnAction<A, B> api) {
         if (in != null && api != null) {
             return api.execute(in);
@@ -175,7 +180,7 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
     protected <K, V> Map<K, V> map(IObjAction<MMap<K, V>> action) {
         if (action != null) {
             MMap<K, V> mMap = new MMap<>();
-            action.execute(mMap.map(new HashMap<>()));
+            action.execute(mMap.map(new LinkedHashMap<>()));
             return mMap.map();
         }
         return null;
@@ -184,7 +189,7 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
     protected <K, V> Map<K, V> map(Class<K> k, Class<V> v, IObjAction<MMap<K, V>> action) {
         if (TextUtils.check(k, v, action)) {
             MMap<K, V> mMap = new MMap<>();
-            action.execute(mMap.map(new HashMap<>()));
+            action.execute(mMap.map(new LinkedHashMap<>()));
             return mMap.map();
         }
         return null;

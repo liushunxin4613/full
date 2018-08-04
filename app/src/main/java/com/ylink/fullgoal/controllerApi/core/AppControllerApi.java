@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 
+import com.blankj.utilcode.util.Utils;
 import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.MainManage;
 import com.leo.core.net.RetrofitFactory;
@@ -37,6 +38,7 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MainManage.init(getApplication());//主
+        Utils.init(getApplication());
         getApplication().registerActivityLifecycleCallbacks(activityLifecycleApi());
         LogUtil.openLog();//log
         NetUtils.init(getApplication());

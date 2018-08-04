@@ -5,9 +5,14 @@ import com.leo.core.iapi.main.IOnCom;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.core.AddController;
+import com.ylink.fullgoal.fg.CostFg;
+import com.ylink.fullgoal.fg.ImageDetailFg;
 import com.ylink.fullgoal.fg.ImageFg;
 import com.ylink.fullgoal.vo.ImageVo;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.getMoneyString;
@@ -55,10 +60,10 @@ public class ImageListController<T extends ImageListController> extends AddContr
         executeNon(onCom, api -> api.onCom(0, UPDATE_MONEY, getMoneyString(sum())));
     }
 
-    public void remove(String path){
-        if(check(path)){
+    public void remove(String path) {
+        if (check(path)) {
             executeBol(getData(), item -> {
-                if(TextUtils.equals(item.getPath(), path)){
+                if (TextUtils.equals(item.getPath(), path)) {
                     getData().remove(item);
                     return true;
                 }
@@ -117,10 +122,10 @@ public class ImageListController<T extends ImageListController> extends AddContr
         return getThis();
     }
 
-    public void onError(String msg){
-        if(!TextUtils.isEmpty(msg)){
+    public void onError(String msg) {
+        if (!TextUtils.isEmpty(msg)) {
             execute(getData(), obj -> {
-                if(TextUtils.equals(obj.getPhoto(), msg)){
+                if (TextUtils.equals(obj.getPhoto(), msg)) {
                     obj.onError(true);
                 }
             });
@@ -147,6 +152,34 @@ public class ImageListController<T extends ImageListController> extends AddContr
     @Override
     public ImageVo getFilterDB(IBolAction<ImageVo>... args) {
         return super.getFilterDB(args);
+    }
+
+    public void updateCostFg(CostFg cost) {
+        if (TextUtils.check(cost)) {
+            Map<String, Double> map = new LinkedHashMap<>();
+            execute(getData(), item -> {
+                ImageDetailFg detail = item.getDetail();
+                if (TextUtils.check(item.getImageType(), detail)) {
+                    switch (item.getImageType()) {
+                        case "增值税专用发票":
+                            map.put("amount", JavaTypeUtil.getdouble(detail.getNoTaxInvoice(), 0)
+                                    + JavaTypeUtil.getdouble(map.get("amount"), 0));
+                            break;
+                        default:
+                            map.put("amount", JavaTypeUtil.getdouble(item.getAmount(), 0)
+                                    + JavaTypeUtil.getdouble(map.get("amount"), 0));
+                            break;
+                    }
+                    map.put("invoiceTax", JavaTypeUtil.getdouble(detail.getInvoiceTax(), 0)
+                            + JavaTypeUtil.getdouble(map.get("invoiceTax"), 0));
+                    map.put("noTaxInvoice", JavaTypeUtil.getdouble(detail.getNoTaxInvoice(), 0)
+                            + JavaTypeUtil.getdouble(map.get("noTaxInvoice"), 0));
+                }
+            });
+            cost.setAmount(TextUtils.getMoneyString(map.get("amount")));
+            cost.setTaxAmount(TextUtils.getMoneyString(map.get("invoiceTax")));
+            cost.setExTaxAmount(TextUtils.getMoneyString(map.get("noTaxInvoice")));
+        }
     }
 
 }

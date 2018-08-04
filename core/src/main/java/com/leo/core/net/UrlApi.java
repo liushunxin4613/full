@@ -17,6 +17,8 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.Observable;
 
+import static com.leo.core.config.Config.APP_JSON;
+
 public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements IUrlApi<T> {
 
     private final static int WHAT_DEFAULT = -1;
@@ -44,39 +46,72 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         return new MRequestBody(builder.build(), listener);
     }
 
-    private <B> void observable(String url, String path, Map<String, String> map, int what,
+    private <B> void observable(String url, B obj, String path, Map<String, String> map, int what,
                                 String tag, IUrlAction<Api, Observable<B>> action) {
-        controllerApi().observable(action.execute(getApi(url), url, path, map), url, path, map,
-                what, tag);
+        if (TextUtils.check(url)) {
+            Observable<B> observable = null;
+            if (url.startsWith(APP_JSON)) {//json模拟数据
+                observable = Observable.create(subscriber -> {
+                    subscriber.onNext(obj);
+                    subscriber.onCompleted();
+                });
+            } else if (action != null) {
+                observable = action.execute(getApi(url), url, path, map);
+            }
+            if (observable != null) {
+                controllerApi().observable(observable, url, path, map, what, tag);
+            }
+        }
     }
 
     @Override
-    public T get(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
-        observable(url, path, getActionMap(action), what, tag, (a, u, p, m) -> a.get(p, m));
-        return getThis();
+    public <B> void get(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                        int what, String tag) {
+        observable(url, obj, path, getActionMap(action), what, tag, null);
     }
 
     @Override
-    public T post(String url, String path, IObjAction<Map<String, Object>> action, int what, String tag) {
-        observable(url, path, getActionMap(action), what, tag, (a, u, p, m) -> a.post(p, m));
-        return getThis();
+    public <B> void post(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                         int what, String tag) {
+        observable(url, obj, path, getActionMap(action), what, tag, null);
     }
 
+    @Override
+    public <B> void jsonPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                             int what, String tag) {
+        observable(url, obj, path, getActionMap(action), what, tag, null);
+    }
 
     @Override
-    public T jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
-                      String tag) {
-        observable(url, path, getActionMap(action), what, tag, (a, u, p, m) -> a.jsonPost(p,
+    public <B> void bodyPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+                             int what, String tag, IProgressListener listener) {
+        observable(url, obj, path, getActionMap(action), what, tag, null);
+    }
+
+    @Override
+    public void get(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                    String tag) {
+        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.get(p, m));
+    }
+
+    @Override
+    public void post(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                     String tag) {
+        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.post(p, m));
+    }
+
+    @Override
+    public void jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                         String tag) {
+        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.jsonPost(p,
                 createJsonBody(m)));
-        return getThis();
     }
 
     @Override
-    public T bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
-                      String tag, IProgressListener listener) {
-        observable(url, path, getActionMap(action), what, tag, (a, u, p, m) -> a.bodyPost(p,
+    public void bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+                         String tag, IProgressListener listener) {
+        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.bodyPost(p,
                 createBody(m, listener)));
-        return getThis();
     }
 
     @Override
@@ -97,9 +132,18 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         return new HashMap<>();
     }
 
+    //******************************************* JSON *******************************************
+
+    public void post(String url, String path, String json) {
+        post(url, json, path, null, WHAT_DEFAULT, null);
+    }
+
+    //******************************************* HTTP *******************************************
+
     protected void postParams(String url, String path, IObjAction<Map<String, Object>> action) {
         Map<String, String> map = getActionMap(action);
-        observable(url, path, map, WHAT_DEFAULT, LogUtil.getLog(false, map), (a, u, p, m) -> a.post(p, m));
+        observable(url, null, path, map, WHAT_DEFAULT, LogUtil.getLog(false, map), (a, u, p, m)
+                -> a.post(p, m));
     }
 
     public void get(String url, String path, String tag) {

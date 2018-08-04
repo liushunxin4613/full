@@ -43,6 +43,7 @@ import butterknife.Bind;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.getListData;
+import static com.ylink.fullgoal.config.ComConfig.CS;
 import static com.ylink.fullgoal.config.Config.D1;
 import static com.ylink.fullgoal.config.Config.D2;
 import static com.ylink.fullgoal.config.Config.D3;
@@ -155,6 +156,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                     if (!TextUtils.isEmpty(obj.getStatus())) {
                         switch (obj.getStatus()) {
                             case "初始化任务":
+                            case "自动审核":
                                 data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
                                         obj.getStatus(), null));
                                 data.add(new CCSQDBean("时间", obj.getFillDate(), "报销类型",
@@ -178,15 +180,15 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                     data.add(new TvHTv3Bean("事由", obj.getCause()));
                 }, vg -> vg.setOnClickListener(v -> {
                     //暂不使用
-                    String state = getValue(FULL_STATUS, obj.getStatus(), obj.getStatus());
+                    String state = getValue(FULL_STATUS, obj.getStatus(), CS);
                     if (!TextUtils.isEmpty(obj.getSerialNo()) && !TextUtils.isEmpty(state)
                             && !TextUtils.isEmpty(obj.getBillType())) {
                         switch (obj.getBillType()) {
                             case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB://一般报销
-                                routeApi().general(state, obj.getSerialNo());
+                                routeApi().general(state, obj.getStatus(), obj.getSerialNo());
                                 break;
                             case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC://出差报销
-                                routeApi().evection(state, obj.getSerialNo());
+                                routeApi().evection(state, obj.getStatus(), obj.getSerialNo());
                                 break;
                         }
                     }
@@ -195,6 +197,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 api.showNullView(true);
             }
         }
+        api.dismissLoading();
     }
 
     private RecycleControllerApi getRecycleControllerApi(String name) {
@@ -203,7 +206,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         controllerApi.setText(controllerApi.findViewById(R.id.null_tv), "您还没有相关的报销");
         controllerApi.setNullView(controllerApi.findViewById(R.id.null_vg));
         add(name, controllerApi);
-        add(controllerApi, DataFg.class, (path, what, msg, bean)
+        add(controllerApi, DataFg.class, (fieldName, path, what, msg, bean)
                 -> initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList()));
         controllerApi.hideViews();
         return controllerApi;
@@ -303,7 +306,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api,
                            IObjAction<VgBean> vgAction) {
         if (controllerApi != null && api != null) {
-            executeNon(controllerApi.addVgBean(api), vgAction);
+            executeNon(controllerApi.addVgBean(api, true), vgAction);
             controllerApi.notifyDataSetChanged();
         }
     }

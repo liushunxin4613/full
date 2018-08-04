@@ -4,6 +4,10 @@ public class Config {
 
     //系统配置
 
+    //app json模拟
+    public final static String APP_JSON = "app://json/";
+    public final static String APP_XML = "app://xml/";
+
     //超时时间(单位:秒)
     public final static int TIME_OUT_SECONDS = 15;
 

@@ -15,7 +15,6 @@ import java.util.Map;
 
 import rx.Observable;
 
-import static com.leo.core.util.TextUtils.getHashMap;
 import static com.leo.core.util.TextUtils.getUriParams;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_YES;
@@ -41,10 +40,12 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
             String params = getUriParams(map);
             LogUtil.ii(this, "url: " + url);
             LogUtil.ii(this, "params: " + params);
-            AuxiliaryFactory.getInstance().postSimulate(getHashMap(m -> {
+            /*observable(controllerApi().encode(map(m -> m.put("url", url).put("params", params))),
+                    AuxiliaryFactory.getInstance().getRootUrl(), "simulate", map, what, tag);*/
+            AuxiliaryFactory.getInstance().postSimulate(map(m -> {
                 m.put("url", url);
                 m.put("params", params);
-            }), new RetrofitSubscriber<>(controllerApi().parseApi().copy()).init(path, what, tag));
+            }), new RetrofitSubscriber<>(controllerApi()).init(path, what, tag));
             showLoading(what, path);
             return false;
         }

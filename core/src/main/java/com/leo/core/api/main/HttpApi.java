@@ -80,14 +80,17 @@ public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
-    public <B> T setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
+    public <B> void setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
         this.newSubscriber = newSubscriber;
-        return getThis();
     }
 
     @Override
-    public <B> T observable(Observable<B> observable) {
-        observable(observable, null, null, null, -1, null);
+    public <B> T observable(B bean, String startUrl, String path, Map<String, String> map, int what,
+                            String tag) {
+        observable(Observable.create((Observable.OnSubscribe<B>) subscriber -> {
+            subscriber.onNext(bean);
+            subscriber.onCompleted();
+        }), startUrl, path, map, what, tag);
         return getThis();
     }
 
@@ -106,7 +109,7 @@ public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implemen
     }
 
     protected <B> void onObservable(@NonNull Observable<B> observable, String startUrl, String path,
-                                       Map<String, String> map, int what, String tag) {
+                                    Map<String, String> map, int what, String tag) {
         MsgSubscriber<T, B> subscriber = subscriber();
         subscriber.init(path, what, tag);
         observable.compose(transformer()).subscribe((Subscriber) subscriber);

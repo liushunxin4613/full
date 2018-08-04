@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.leo.core.api.main.DataApi;
+import com.leo.core.bean.Completed;
 import com.leo.core.iapi.api.IRecycleApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IShowDataApi;
@@ -101,6 +102,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     @Override
     public T notifyDataSetChanged() {
+        super.notifyDataChanged();
         adapterDataApi().notifyDataSetChanged();
         return getThis();
     }
@@ -108,6 +110,13 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     @Override
     public View getContentView() {
         return getRecyclerView();
+    }
+
+    @Override
+    public void initAddAction() {
+        super.initAddAction();
+        add(Completed.class, (fieldName, path, what, msg, bean)
+                -> vs(adapterDataApi(), DataApi::openEmptyListen));
     }
 
     @Override
@@ -140,6 +149,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
             execute(getLineData(data), this::add);
         }
         notifyDataSetChanged();
+        dismissLoading();
     }
 
     protected List<IApiBean> getLineData(List<? extends IApiBean> data) {
@@ -239,12 +249,17 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         }
     }
 
-    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api) {
+    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api){
+        return addVgBean(api, false);
+    }
+
+    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api, boolean noLine) {
         if (api != null) {
             List<BaseBiBean> data = new ArrayList<>();
             api.execute(data);
             if (!TextUtils.isEmpty(data)) {
                 VgBean vb = new VgBean(data);
+                vb.setNoLine(noLine);
                 add(vb);
                 return vb;
             }

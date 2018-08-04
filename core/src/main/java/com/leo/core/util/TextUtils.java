@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -256,15 +255,6 @@ public class TextUtils {
             Collections.addAll(set, args);
         }
         return set;
-    }
-
-    public static <K, V> Map<K, V> getHashMap(IObjAction<Map<K, V>> action) {
-        if (action != null) {
-            Map<K, V> map;
-            action.execute(map = new HashMap<>());
-            return map;
-        }
-        return null;
     }
 
     /**

@@ -50,7 +50,7 @@ public class FullBankControllerApiV1<T extends FullBankControllerApiV1, C> exten
         setTitle("选择银行卡");
         setText(nullTv, "你还没有相关的银行卡信息");
         beanMap = new HashMap<>();
-        add(DataFg.class, (path, what, msg, fg) -> {
+        add(DataFg.class, (fieldName, path, what, msg, fg) -> {
             if (!TextUtils.isEmpty(fg.getBankCardtList2())) {
                 clear().showContentView();
                 execute(fg.getBankCardtList2(), bank
@@ -64,8 +64,9 @@ public class FullBankControllerApiV1<T extends FullBankControllerApiV1, C> exten
             } else {
                 showNullView(true);
             }
+            dismissLoading();
         });
-        add(String.class, (path, what, bankCode, text) -> executeNon(TextUtils.toJSONMap(text), map -> {
+        add(String.class, (fieldName, path, what, bankCode, text) -> executeNon(TextUtils.toJSONMap(text), map -> {
             BankBean bean = beanMap.get(bankCode);
             if (bean != null) {
                 String bankName = "银行卡";

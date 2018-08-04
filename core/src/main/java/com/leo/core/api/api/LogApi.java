@@ -144,26 +144,30 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
         return false;
     }
 
-    private void log(boolean ii, String tag, String msg) {
+    private void log(boolean ii, String tag, String mm) {
         if (!TextUtils.isEmpty(tag)) {
             int max = 1024 * 3;
-            if (msg == null) {
-                msg = "";
-            }
-            int length = msg.length();
-            int num = length / max;
-            num += (length % max == 0 && length != 0) ? 0 : 1;
-            int start;
-            int end;
-            for (int j = 0; j < num; j++) {
-                start = j * max;
-                end = (j == num - 1) ? length : (j + 1) * max;
-                if (ii) {
-                    Log.i(tag, msg.substring(start, end));
-                } else {
-                    Log.e(tag, msg.substring(start, end));
+            int length = mm.length();
+            new Thread(() -> {
+                String msg = mm;
+                if (msg == null) {
+                    msg = "";
                 }
-            }
+                int num = length / max;
+                num += (length % max == 0 && length != 0) ? 0 : 1;
+                num = num > 3 ? 3 : num;//最高限度9
+                int start;
+                int end;
+                for (int j = 0; j < num; j++) {
+                    start = j * max;
+                    end = (j == num - 1) ? length : (j + 1) * max;
+                    if (ii) {
+                        Log.i(tag, msg.substring(start, end));
+                    } else {
+                        Log.e(tag, msg.substring(start, end));
+                    }
+                }
+            }).start();
         }
     }
 

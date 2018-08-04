@@ -48,7 +48,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
                 vo.getImageID(), vo.getAmount())));
         setVisibility(getRightTv(), bol ? View.VISIBLE : View.INVISIBLE);
         initViewPager();
-        add(ImageFg.class, (path, what, msg, bean) -> {
+        add(ImageFg.class, (fieldName, path, what, msg, bean) -> {
             if (bean.isSuccess()) {
                 finishActivity(vo);
             } else {

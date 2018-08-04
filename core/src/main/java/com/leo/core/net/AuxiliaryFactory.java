@@ -62,7 +62,7 @@ public class AuxiliaryFactory {
     private void post(String path, Map<String, Object> map, Subscriber<String> subscriber) {
         if (check(api, path, map)) {
             api.post(path, get(mp -> mp.putAll(map)))
-                    .compose(new Transformer())
+                    .compose(Transformer.getInstance())
                     .subscribe(new Subscriber<ResponseBody>() {
                         @Override
                         public void onCompleted() {

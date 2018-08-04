@@ -28,6 +28,15 @@ public interface IUserApi<T extends IUserApi> extends IApi {
     <A> T initUser(A user);
 
     /**
+     * 初始化department
+     *
+     * @param department department
+     * @param <A>  A
+     * @return 本身
+     */
+    <A> T initDepartment(A department);
+
+    /**
      * 获取user
      *
      * @param <A> A

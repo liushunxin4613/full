@@ -17,6 +17,7 @@ import com.ylink.fullgoal.fg.DataFg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import rx.Observable;
 
@@ -104,9 +105,9 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
     public void initData() {
         super.initData();
         //消息标志
-        add(DataFg.class, (path, what, msg, bean) -> showView(bean.isSuccess()));
+        add(DataFg.class, (fieldName, path, what, msg, bean) -> showView(bean.isSuccess()));
         //完成
-        add(Completed.class, (path, what, msg, bean) -> search(getKeyword()));
+        add(Completed.class, (fieldName, path, what, msg, bean) -> search(getKeyword()));
         query();
     }
 
@@ -116,9 +117,9 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
     protected void query() {
     }
 
-    private boolean isFilter(IApiBean bean, String keyword) {
+    private boolean isFilter(IApiBean bean, IApiBean old, String keyword) {
         if (bean instanceof LineBean) {
-            return false;
+            return !(old instanceof LineBean);
         } else if (bean instanceof IKeywordApi) {
             String code = ((IKeywordApi) bean).getApiCode();
             String fk = ((IKeywordApi) bean).getFilter();
@@ -151,18 +152,19 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
         adapterDataApi().setHelper((adapter, api, list)
                 -> Observable.create((Observable.OnSubscribe<List<IApiBean>>) subscriber -> {
             List<IApiBean> data = new ArrayList<>();
+            AtomicReference<IApiBean> old = new AtomicReference<>();
             execute(list, obj -> {
-                if (isFilter(obj, keyword)) {
+                if (isFilter(obj, old.get(), keyword)) {
                     data.add(obj);
-                    data.add(new LineBean());
+                    old.set(obj);
                 }
             });
-            subscriber.onNext(data);
-            subscriber.onCompleted();
-        }).compose(new Transformer<>()).subscribe(data -> {
             api.setFilterData(data);
-            adapter.notifyDataSetChanged();
-        })).notifyDataSetChanged();
+            subscriber.onNext(null);
+            subscriber.onCompleted();
+        }).compose(Transformer.getInstance())
+                .subscribe(obj -> adapter.notifyDataSetChanged()))
+                .notifyDataSetChanged();
     }
 
     private String getSearchValue(String key) {

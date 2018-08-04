@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.bean;
 
-import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IBindControllerApi;
 import com.ylink.fullgoal.bi.TvHintBi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
@@ -12,12 +11,15 @@ public class TvHintBean extends ApiBean<TvHintBean> {
         return new TvHintBi();
     }
 
-    public TvHintBean(String name) {
+    private transient boolean show;
+
+    public TvHintBean(String name, boolean show) {
         super(name);
+        this.show = show;
     }
 
-    public TvHintBean(String name, OnBVClickListener<TvHintBean> listener) {
-        super(name, listener);
+    public boolean isShow() {
+        return show;
     }
 
 }

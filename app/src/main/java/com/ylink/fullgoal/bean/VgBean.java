@@ -20,6 +20,7 @@ public class VgBean extends SurfaceBiBean<VgBean> {
     }
 
     private int type;
+    private boolean noLine;
     private List<BaseBiBean> data;
     private transient View.OnClickListener onClickListener;
 
@@ -87,6 +88,14 @@ public class VgBean extends SurfaceBiBean<VgBean> {
     public VgBean setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
         return this;
+    }
+
+    public boolean isNoLine() {
+        return noLine;
+    }
+
+    public void setNoLine(boolean noLine) {
+        this.noLine = noLine;
     }
 
 }

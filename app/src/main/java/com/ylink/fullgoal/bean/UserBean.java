@@ -18,6 +18,10 @@ public class UserBean {
     private String username;
     private String cookieStr;
     private String portalPac;
+    private String level;
+
+    public UserBean() {
+    }
 
     public UserBean(String taskId, String name, String cookie, String userId, String username,
                     String cookieStr, String portalPac) {
@@ -94,6 +98,14 @@ public class UserBean {
 
     public void setPortalPac(String portalPac) {
         this.portalPac = portalPac;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 
 }

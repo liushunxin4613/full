@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_vg"
-    style="@style/padding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
     android:tag="root_vg">
 
     <ImageView
@@ -16,7 +18,7 @@
         tools:ignore="ContentDescription,HardcodedText" />
 
     <TextView
-        android:id="@id/tv0"
+        android:id="@+id/tv0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -26,14 +28,14 @@
         android:maxLines="1"
         android:tag="tv0"
         android:textColor="#000000"
-        android:textSize="@dimen/tv2"
+        android:textSize="12sp"
         tools:text="流水号 FG-2018-01-22" />
 
     <TextView
-        android:id="@id/tv1"
+        android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv0"
+        android:layout_below="@+id/tv0"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
@@ -42,14 +44,14 @@
         android:maxLines="1"
         android:tag="tv1"
         android:textColor="#000000"
-        android:textSize="@dimen/tv2"
+        android:textSize="12sp"
         tools:text="张三" />
 
     <TextView
-        android:id="@id/tv2"
+        android:id="@+id/tv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv0"
+        android:layout_below="@+id/tv0"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
         android:maxLines="1"
@@ -57,22 +59,22 @@
         android:paddingStart="50dp"
         android:tag="tv2"
         android:textColor="#000000"
-        android:textSize="@dimen/tv2"
+        android:textSize="12sp"
         tools:ignore="RelativeOverlap,RtlSymmetry"
         tools:text="信息技术部" />
 
     <TextView
-        android:id="@id/tv3"
+        android:id="@+id/tv3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/tv0"
+        android:layout_below="@+id/tv0"
         android:layout_marginTop="4dp"
         android:maxLines="1"
         android:tag="tv3"
         android:textColor="#000000"
-        android:textSize="@dimen/tv2"
+        android:textSize="12sp"
         tools:ignore="RelativeOverlap"
         tools:text="2018-02-21 发起" />
 
@@ -80,12 +82,12 @@
         android:id="@+id/vg0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/icon_iv"
+        android:layout_below="@+id/icon_iv"
         android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@id/tv4"
+            android:id="@+id/tv4"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:background="@drawable/l_kuang_shape"
@@ -93,12 +95,12 @@
             android:maxLines="1"
             android:tag="tv4"
             android:textColor="#68ABFA"
-            android:textSize="@dimen/tv2"
+            android:textSize="12sp"
             tools:ignore="HardcodedText"
             tools:text="广告小礼品" />
 
         <TextView
-            android:id="@id/tv5"
+            android:id="@+id/tv5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -107,12 +109,12 @@
             android:paddingLeft="20dp"
             android:tag="tv5"
             android:textColor="#000000"
-            android:textSize="@dimen/tv2"
+            android:textSize="12sp"
             tools:ignore="RtlHardcoded,RtlSymmetry"
             tools:text="￥100.00" />
 
         <TextView
-            android:id="@id/tv6"
+            android:id="@+id/tv6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -121,12 +123,12 @@
             android:maxLines="1"
             android:tag="tv6"
             android:textColor="#000000"
-            android:textSize="@dimen/tv2"
+            android:textSize="12sp"
             tools:ignore="HardcodedText"
             tools:text="100件" />
 
         <TextView
-            android:id="@id/tv7"
+            android:id="@+id/tv7"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -135,39 +137,39 @@
             android:paddingLeft="20dp"
             android:tag="tv7"
             android:textColor="#000000"
-            android:textSize="@dimen/tv2"
+            android:textSize="12sp"
             tools:ignore="RtlHardcoded,RtlSymmetry"
             tools:text="2018-02-21 入库" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@id/tv8"
+        android:id="@+id/tv8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/vg0"
+        android:layout_below="@+id/vg0"
         android:layout_marginTop="4dp"
         android:maxLines="1"
         android:tag="tv8"
         android:text="用途"
         android:textColor="#000000"
-        android:textSize="@dimen/tv2"
+        android:textSize="12sp"
         tools:ignore="HardcodedText,RelativeOverlap" />
 
     <TextView
-        android:id="@id/tv9"
+        android:id="@+id/tv9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/vg0"
+        android:layout_below="@+id/vg0"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="4dp"
-        android:layout_toEndOf="@id/tv8"
-        android:layout_toRightOf="@id/tv8"
+        android:layout_toEndOf="@+id/tv8"
+        android:layout_toRightOf="@+id/tv8"
         android:maxLines="1"
         android:tag="tv9"
         android:textColor="#FF8040"
-        android:textSize="@dimen/tv2"
+        android:textSize="12sp"
         tools:ignore="HardcodedText,RelativeOverlap"
         tools:text="员工福利" />
 

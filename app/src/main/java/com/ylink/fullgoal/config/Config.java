@@ -5,9 +5,11 @@ import com.ylink.fullgoal.api.api.RouteApi;
 import static com.ylink.fullgoal.config.ComConfig.CS;
 import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.XG;
+import static com.ylink.fullgoal.config.ComConfig.ZD;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_CS;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_QR;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_XG;
+import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_ZD;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_DCL;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_SHZ;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_YQX;
@@ -91,8 +93,6 @@ public class Config {
             {REIMBURSE_LIST_QUERY_RETURN_STATUS_QR, QR},
             //经办人修改
             {REIMBURSE_LIST_QUERY_RETURN_STATUS_XG, XG},
-            //初始化任务
-            {REIMBURSE_LIST_QUERY_RETURN_STATUS_CS, CS},
     };
 
     public final static String XG1 = "申请特批";
@@ -121,6 +121,7 @@ public class Config {
     //固定键值
     public final static String TAG = "tag";
     public final static String STATE = "state";
+    public final static String TITLE = "title";
     public final static String SERIAL_NO = "serialNo";
     public final static String JSON = "json";
     public final static String MAIN_APP = "mainApp";

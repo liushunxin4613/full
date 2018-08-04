@@ -49,7 +49,7 @@ public class FullBankControllerApi<T extends FullBankControllerApi, C> extends R
         setTitle("选择银行卡");
         setText(nullTv, "你还没有相关的银行卡信息");
         bankFg = getBean(BANK, BankFg.class);
-        add(DataFg.class, (path, what, msg, fg) -> {
+        add(DataFg.class, (fieldName, path, what, msg, fg) -> {
             if (!TextUtils.isEmpty(fg.getBankCardtList2())) {
                 clear().showContentView();
                 addVgBean(data -> execute(find(fg.getBankCardtList2()), bank

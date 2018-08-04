@@ -7,6 +7,7 @@ import com.leo.core.iapi.api.ICheckApi;
 import com.leo.core.iapi.inter.IDataHelper;
 import com.leo.core.iapi.inter.IbooleanAction;
 import com.leo.core.iapi.main.IDataApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
     private List<D> data;
     private List<D> filterData;
     private IDataHelper<D> helper;
+    private boolean emptyListenEnable;
     private IbooleanAction emptyAction;
     private ICheckApi<ICheckApi, D> api;
     private RecyclerView.Adapter adapter;
@@ -49,6 +51,14 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
 
     public void setEmptyAction(IbooleanAction action) {
         this.emptyAction = action;
+    }
+
+    public void openEmptyListen(){
+        this.emptyListenEnable = true;
+    }
+
+    public void closeEmptyListen(){
+        this.emptyListenEnable = false;
     }
 
     public IDataHelper<D> getHelper() {
@@ -150,7 +160,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
     @Override
     public int getCount() {
         int count = getFilterData() == null ? 0 : getFilterData().size();
-        if (emptyAction != null) {
+        if (emptyListenEnable && emptyAction != null) {
             emptyAction.execute(count > 0);
         }
         return count;

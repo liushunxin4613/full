@@ -1,6 +1,7 @@
 package com.leo.core.iapi.api;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.bean.ParseBean;
 import com.leo.core.iapi.inter.IPathMsgAction;
 
 import java.util.List;
@@ -28,5 +29,7 @@ public interface IParseApi<T extends IParseApi> extends IPathMsgApi<T> {
     T clearParse();
 
     <B> T parse(B bean);
+
+    List<ParseBean> getParseData();
 
 }

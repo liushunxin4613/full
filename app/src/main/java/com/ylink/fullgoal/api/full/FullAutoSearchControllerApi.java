@@ -83,7 +83,7 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
     }
 
     private void initAdds() {
-        add(String.class, (path, what, msg, response)
+        add(String.class, (fieldName, path, what, msg, response)
                 -> JsonHelper.newBuilder()
                 .add(List.class, (parent, list) -> onData(path, msg, list),
                         new Node("applyCodeResult2"))
@@ -98,6 +98,7 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
             MVCFactoryV1.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
                     getThis(), d -> initDataAction(data -> execute(d, data::add)));
         }
+        dismissLoading();
     }
 
     @Override

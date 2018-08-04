@@ -6,12 +6,21 @@ import rx.schedulers.Schedulers;
 
 public class Transformer<T> implements Observable.Transformer<T, T> {
 
-    private Observable.Transformer<T, T> transformer;
-
-    public Transformer() {
+    private static Transformer instance;
+    public static Transformer getInstance(){
+        if(instance == null){
+            synchronized (Transformer.class){
+                if(instance == null){
+                    instance = new Transformer();
+                }
+            }
+        }
+        return instance;
     }
 
-    public Transformer(Observable.Transformer<T, T> transformer) {
+    private Observable.Transformer<T, T> transformer;
+
+    public void init(Observable.Transformer<T, T> transformer) {
         this.transformer = transformer;
     }
 

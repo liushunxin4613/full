@@ -1,19 +1,26 @@
 package com.ylink.fullgoal.api.config;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.core.ThisApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.DataEmpty;
+import com.leo.core.bean.HttpError;
 import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.GsonDecodeUtil;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
+import com.leo.core.bean.ParseBean;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,17 +28,25 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 
 import static com.leo.core.util.TextUtils.check;
+import static com.leo.core.util.TextUtils.checkNull;
 import static com.leo.core.util.TextUtils.getListData;
 
 public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseApi<T> {
 
+    private String path;
     private int what;
     private String msg;
-    private String path;
     private Map<Type, Map<Type, List<IPathMsgAction>>> map;
+    private Handler handler;
 
     public ParseApi() {
         map = new HashMap<>();
+        handler = new Handler(Looper.getMainLooper());
+    }
+
+    @Override
+    public List<ParseBean> getParseData() {
+        return null;
     }
 
     private Map<Type, Map<Type, List<IPathMsgAction>>> getMap() {
@@ -148,22 +163,35 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         return getThis();
     }
 
+    /**
+     * 防止String解析非根节点的类数据
+     * @param type 类型
+     * @return 是否后加数据
+     */
     private boolean checkRootType(Type type) {
         return type != null && !TextUtils.equals(type, ResponseBody.class)
                 && !TextUtils.equals(type, String.class)
                 && !TextUtils.equals(type, Completed.class)
+                && !TextUtils.equals(type, DataEmpty.class)
                 && !TextUtils.equals(type, Exceptions.class);
     }
 
     /**
      * 核心解析对象数据
      *
+     * @param name 参数名
      * @param obj  传出对象
      * @param data 传出回调
      */
-    private void onItem(Object obj, List<IPathMsgAction> data) {
-        if (check(obj, data)) {
-            execute(data, action -> action.execute(no(path), what, no(msg), obj));
+    private void onItem(String name, Object obj, List<IPathMsgAction> data) {
+        if (TextUtils.checkNull(obj) && TextUtils.check(data)) {
+            execute(data, action -> executeAction(name, action, obj));
+        }
+    }
+
+    private void executeAction(String name, IPathMsgAction action, Object obj) {
+        if (TextUtils.check(action) && TextUtils.checkNull(obj)) {
+            handler.post(() -> action.execute(name, no(path), what, no(msg), obj));
         }
     }
 
@@ -174,11 +202,18 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      */
     private void onString(String text) {
         onObj(text, String.class);
-        execute(getMap(), (type, map) -> {
-            if (checkRootType(type)) {
-                onData(GsonDecodeUtil.decode(text, type), type, map);
+        if (TextUtils.check(getMap())) {
+            if (TextUtils.isNotJsonString(text)) {
+                onExceptions(new Exceptions("数据格式异常", HttpError.ERROR_JSON_ERROR,
+                        new RuntimeException("数据格式异常")));
+            } else {
+                execute(getMap(), (type, map) -> {
+                    if (checkRootType(type)) {
+                        onData(null, GsonDecodeUtil.decode(text, type), type, map);
+                    }
+                });
             }
-        });
+        }
     }
 
     /**
@@ -188,29 +223,32 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      */
     private void onObj(Object obj, Class clz) {
         if (check(obj, clz) && clz.isInstance(obj)) {
-            onData(obj, clz, getMap().get(clz));
+            onData(null, obj, clz, getMap().get(clz));
         }
     }
 
     /**
      * 递归遍历处理
      *
+     * @param name 参数名
      * @param obj  传入对象
      * @param type 传入对象类型
      * @param map  传入对象可能对应map
      */
-    private void onData(Object obj, Type type, Map<Type, List<IPathMsgAction>> map) {
-        if (check(obj, map)) {
-            onItem(obj, map.get(type));
+    private void onData(String name, Object obj, Type type, Map<Type, List<IPathMsgAction>> map) {
+        if (checkNull(obj) && check(map)) {
+            onItem(name, obj, map.get(type));
             Class clz = obj.getClass();
             if (obj instanceof List) {
                 if (!TextUtils.isEmpty(obj)) {
                     Class itemClz = getDataItemType((List) obj);
                     if (itemClz != null) {
-                        onItem(obj, map.get(TypeToken.getParameterized(List.class, itemClz).getType()));
-                    } else {
-                        onItem(new DataEmpty(), map.get(DataEmpty.class));
+                        onItem(name, obj, map.get(TypeToken.getParameterized(List.class, itemClz)
+                                .getType()));
                     }
+                } else {
+                    LogUtil.ee(this, m -> m.put("name", name).put("obj", obj).put("type", type.toString()));
+                    onItem(name, new DataEmpty(), map.get(DataEmpty.class));
                 }
             } else if (checkClz(clz)) {
                 execute(clz.getDeclaredFields(), field -> {
@@ -221,7 +259,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                             field.setAccessible(true);
                             Object item = field.get(obj);
                             if (item != null) {
-                                onData(item, item.getClass(), map);
+                                onData(field.getName(), item, item.getClass(), map);
                             }
                         } catch (IllegalAccessException e) {
                             onExceptions(new Exceptions("解析异常", 101, e));

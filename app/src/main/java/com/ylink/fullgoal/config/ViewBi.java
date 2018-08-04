@@ -57,6 +57,19 @@ public class ViewBi extends OnClickBi<ViewBi, ViewBean> {
 
     private View findView(String id, String tag) {
         View view = null;
+        if (TextUtils.check(tag)) {
+            view = api().findViewWithTag(tag);
+        }
+        if (view != null) {
+            return view;
+        } else if (TextUtils.check(id)) {
+            return api().findViewById(ResUtil.getIdentifier(id, "id"));
+        }
+        return null;
+    }
+
+    /*private View findView(String id, String tag) {
+        View view = null;
         if (TextUtils.check(id)) {
             view = api().findViewById(ResUtil.getIdentifier(id, "id"));
         }
@@ -66,7 +79,7 @@ public class ViewBi extends OnClickBi<ViewBi, ViewBean> {
             return api().findViewWithTag(tag);
         }
         return null;
-    }
+    }*/
 
     private void onVo(TemplateVo vo) {
         if (TextUtils.check(vo.getVId())) {

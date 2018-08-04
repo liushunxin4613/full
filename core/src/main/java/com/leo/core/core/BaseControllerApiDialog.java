@@ -41,7 +41,7 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
         if (controllerApi == null) {
             throw new NullPointerException("newControllerApi 不能为空");
         }
-        controllerApi.setRootContainer((ViewGroup) getWindow()
+        controllerApi.setRootContainer(getWindow()
                 .getDecorView().findViewById(android.R.id.content));
     }
 

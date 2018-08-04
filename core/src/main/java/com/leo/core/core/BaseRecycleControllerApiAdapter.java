@@ -47,6 +47,12 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
     }
 
     @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.context = recyclerView.getContext();
+    }
+
+    @Override
     public Context getContext() {
         return context;
     }
@@ -96,10 +102,11 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         return viewType;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        IApiBean bean = getItem(sparseArray.get(viewType));
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int position = sparseArray.get(viewType);
+        IApiBean bean = getItem(position);
         if (bean == null) {
             throw new NullPointerException("bean不能为空");
         }

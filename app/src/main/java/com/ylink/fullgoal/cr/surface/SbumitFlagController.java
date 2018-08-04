@@ -4,6 +4,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.core.StringController;
 
 import static com.ylink.fullgoal.config.ComConfig.CC;
+import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.ComConfig.YB;
 
 /**
@@ -19,6 +20,7 @@ public class SbumitFlagController<T extends SbumitFlagController> extends String
         switch (key) {
             case YB:
             case CC:
+            case QR:
                 return "sbumitFlag";
         }
         return super.getOnUBKey(key);
@@ -26,8 +28,8 @@ public class SbumitFlagController<T extends SbumitFlagController> extends String
 
     @Override
     public String getUB(String... args) {
-        if (!TextUtils.isEmpty(getDB())) {
-            return "3";
+        if (TextUtils.isEmpty(getDB())) {
+            return "2";
         }
         return super.getUB(args);
     }

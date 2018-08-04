@@ -2,10 +2,9 @@ package com.ylink.fullgoal.api.full;
 
 import android.annotation.SuppressLint;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.adapter.BasePagerAdapter;
@@ -14,7 +13,6 @@ import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.other.Number;
-import com.leo.core.util.HelperUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -54,7 +52,6 @@ import static com.ylink.fullgoal.config.ComConfig.QR;
 import static com.ylink.fullgoal.config.Config.COST_LIST;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
 import static com.ylink.fullgoal.config.Config.MAIN_APP;
-import static com.ylink.fullgoal.config.Config.MONEY;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_DIMENSION_LIST;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
@@ -70,16 +67,14 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     LinearLayout searchVg;
     @Bind(R.id.name_tv)
     TextView nameTv;
-    @Bind(R.id.type_tv)
-    TextView typeTv;
     @Bind(R.id.yet_complete_tv)
     TextView yetCompleteTv;
     @Bind(R.id.detail_et)
-    EditText detailEt;
+    TextView detailTv;
     @Bind(R.id.tax_et)
-    EditText taxEt;
+    TextView taxTv;
     @Bind(R.id.none_tax_money_et)
-    EditText noneTaxMoneyEt;
+    TextView noneTaxMoneyTv;
     @Bind(R.id.c_left_iv)
     ImageView cLeftIv;
     @Bind(R.id.c_right_iv)
@@ -166,9 +161,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
 //                .setOnClickListener(searchVg, v -> routeApi().search(SearchVo.COST_INDEX));
         setOnClickListener(cLeftIv, v -> getViewPager().toLeft())
                 .setOnClickListener(cRightIv, v -> getViewPager().toRight());
-        HelperUtil.addMoneyTextChangedListener(detailEt, null, this::updateAllMoney);
-        HelperUtil.addMoneyTextChangedListener(taxEt, null, this::updateTaxAmount);
-        HelperUtil.addMoneyTextChangedListener(noneTaxMoneyEt, null, this::updateExTaxAmount);
+//      HelperUtil.addMoneyTextChangedListener(detailEt, null, this::updateAllMoney);
+//      HelperUtil.addMoneyTextChangedListener(taxEt, null, this::updateTaxAmount);
+//      HelperUtil.addMoneyTextChangedListener(noneTaxMoneyEt, null, this::updateExTaxAmount);
         executeBundle(bundle -> {
             mainApp = bundle.getString(MAIN_APP);
             String text = bundle.getString(DATA_QR);
@@ -183,16 +178,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         department = (String) obj;
                     }
                 }
-                CostFg cost = decode(encode(dataMap.get(COST_LIST)), CostFg.class);
-                if (cost != null) {
-                    cost.setAmount((String) dataMap.get(MONEY));
-                    cost.setTaxAmount("0");
-                    cost.setExTaxAmount("0");
-                    onCost(cost);
-                }
+                onCost(decode(encode(dataMap.get(COST_LIST)), CostFg.class));
             }
         });
-        add(DataFg.class, (path, what, msg, bean) -> {
+        add(DataFg.class, (fieldName, path, what, msg, bean) -> {
             if (bean.isSuccess()) {
                 switch (path) {
                     case FULL_DIMENSION_LIST://分摊维度列表
@@ -291,10 +280,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private void initCast() {
         vos(CostVo::getCost, CostIndexController::getDB, fg
                 -> setText(nameTv, fg.getCostIndex())
-                .setText(detailEt, fg.getAmount())
-                .setText(typeTv, fg.getShare())
-                .setText(taxEt, fg.getTaxAmount())
-                .setText(noneTaxMoneyEt, fg.getExTaxAmount())
+                .setText(detailTv, fg.getAmount())
+//                .setText(typeTv, fg.getShare())
+                .setText(taxTv, fg.getTaxAmount())
+                .setText(noneTaxMoneyTv, fg.getExTaxAmount())
                 .setText(yetCompleteTv, getVo().getOtherRatio()));
     }
 
@@ -406,19 +395,17 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                     data.add(blBean);
                     execute(list, item -> {
                         if (check(item.getCode(), item.getName())) {
-                            data.add(new TvH2MoreBean(item.getName(), getDimenValue(api, item.getCode()),
+                            addDataOfCode(data, item, new TvH2MoreBean(item.getName(), getDimenValue(api, item.getCode()),
                                     String.format("请选择%s", item.getName()), (bean, view) -> routeApi()
-                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item)), (bean, view)
-                                    -> {
-                                show("清除!!!");
-                                vs(getCostItemController(api), obj -> obj.remove(item.getCode()));
-                            }));
+                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item), item.getApiCode()), (bean, view)
+                                    -> vs(getCostItemController(api), obj -> obj.remove(item.getCode()))));
                         }
                     });
                 });
             }
             setVisibility(api.getRootView(), empty ? View.INVISIBLE : View.VISIBLE);
             api.notifyDataSetChanged();
+            dismissLoading();
         });
     }
 

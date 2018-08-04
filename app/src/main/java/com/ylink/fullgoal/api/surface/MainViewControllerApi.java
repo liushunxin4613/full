@@ -9,8 +9,10 @@ import com.ylink.fullgoal.bean.IconTvMoreBean;
 import com.ylink.fullgoal.bean.ImageBeanD1;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
+import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.MessageBackFg;
 import com.ylink.fullgoal.fg.StatusFg;
+import com.ylink.fullgoal.fg.UserFg;
 
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.Config.FULL_STATUS;
@@ -28,7 +30,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     @Override
     public void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        add(MessageBackFg.class, (path, what, msg, bean) -> {
+        add(MessageBackFg.class, (fieldName, path, what, msg, bean) -> {
             if (TextUtils.check(bean.getBillType(), bean.getTaskType())) {
                 String state = getValue(FULL_STATUS, bean.getTaskType(), bean.getTaskType());
                 switch (bean.getBillType()) {
@@ -38,6 +40,25 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                     case "428"://出差报销
                         routeApi().evectionMain(state, encode(bean));
                         break;
+                }
+            }
+        });
+        add(StatusFg.class, (fieldName, path, what, msg, bean) -> ii(String.format("SSO认证%s",
+                bean.isSuccess() ? "成功" : "失败")));
+        addList(UserFg.class, (fieldName, path, what, msg, list) -> {
+            if (TextUtils.check(list)) {
+                UserFg fg = list.get(0);
+                if (TextUtils.check(fg)) {
+                    UserBean bean = getUser();
+                    if (bean == null) {
+                        bean = new UserBean();
+                    }
+                    bean.setUserId(fg.getUserCode());
+                    bean.setUsername(fg.getUserName());
+                    bean.setLevel(fg.getUserlevel());
+                    initUser(bean);
+                    initDepartment(new DepartmentFg(fg.getUserDepartmentCode(),
+                            fg.getUserDepartment()));
                 }
             }
         });
@@ -54,6 +75,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         String cookieStr = intent.getStringExtra("cookieStr");
         String portalPac = intent.getStringExtra("portalPac");
         if (TextUtils.check(userId, username)) {//TODO 测试用
+            api().queryUserName(userId);
             initUser(new UserBean(taskId, name, cookie, userId,
                     username, cookieStr, portalPac));
         }
@@ -93,13 +115,6 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
 
     private void clickTestEvection() {
 //        routeApi().evection(QR, "20180725xijiong6000821");
-    }
-
-    @Override
-    public void initData() {
-        super.initData();
-        add(StatusFg.class, (path, what, msg, bean) -> ii(String.format("SSO认证%s",
-                bean.isSuccess() ? "成功" : "失败")));
     }
 
 }

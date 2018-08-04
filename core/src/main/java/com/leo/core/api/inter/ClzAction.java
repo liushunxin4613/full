@@ -1,7 +1,6 @@
 package com.leo.core.api.inter;
 
 import com.leo.core.iapi.inter.IMapAction;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.util.Map;
@@ -17,7 +16,8 @@ public class ClzAction<A> {
     }
 
     public void execute(Map map, Object obj) {
-        if (TextUtils.check(obj, clz, action)
+        if (TextUtils.checkNull(obj) &&
+                TextUtils.check(clz, action)
                 && clz.isInstance(obj)) {
             action.execute(map, (A) obj);
         }

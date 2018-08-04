@@ -77,6 +77,8 @@ public class UrlConfig {
     final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_XG = "修改任务";
     //初始化任务
     final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_CS = "初始化任务";
+    //自动审核
+    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_ZD = "自动审核";
 
     //报销请求类型参数(REIMBURSE_QUERY_BILL_TYPE)
 

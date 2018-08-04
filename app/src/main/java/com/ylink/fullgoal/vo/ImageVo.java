@@ -7,6 +7,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.bi.ImageVoBi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBiBean;
+import com.ylink.fullgoal.fg.ImageDetailFg;
 
 public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener {
 
@@ -61,6 +62,8 @@ public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener
     private String imageURL;
     private String invoiceUse;
     private String serialNo;
+    private String imageType;
+    private ImageDetailFg detail;
     private Object photo;
     private transient String path;
     private transient boolean show;
@@ -139,6 +142,22 @@ public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener
 
     public void setInvoiceUse(String invoiceUse) {
         this.invoiceUse = invoiceUse;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
+    public ImageDetailFg getDetail() {
+        return detail;
+    }
+
+    public void setDetail(ImageDetailFg detail) {
+        this.detail = detail;
     }
 
     //************************ 私有的 ************************

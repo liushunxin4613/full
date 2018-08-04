@@ -6,12 +6,14 @@ import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.net.UrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.config.ComConfig;
+import com.ylink.fullgoal.fg.CostFg;
+import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.vo.ImageVo;
 
 import java.io.File;
 import java.util.Map;
 
+import static com.leo.core.config.Config.APP_JSON;
 import static com.leo.core.util.TextUtils.check;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
@@ -58,6 +60,16 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     }
 
     /**
+     * 获取员工信息
+     */
+    public void queryUserName(String agent) {
+        if(TextUtils.check(agent)){
+            post(ROOT_URL, PATH_QUERY_USER_DATA, g(map -> map.put("agent", agent)),
+                    SHOW_LOADING_NO);
+        }
+    }
+
+    /**
      * 获取部门信息
      */
     public void queryDepartmentData() {
@@ -96,11 +108,23 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 获取费用指标
      */
-    public void queryCostIndexData(String reimbursement) {
-        if (TextUtils.check(reimbursement)) {
+    public void queryJsonCostIndexData() {
+        DataFg dataFg = new DataFg();
+        dataFg.setCostIndextList(TextUtils.getListData(
+                new CostFg("84f83358-32c0-440e-81bf-2c8d955e8439", "差旅费"),
+                new CostFg("494765e5-ed5d-4a7f-a78b-e9b6b598a27e", "职工教育经费")));
+        post(APP_JSON, PATH_QUERY_COST_INDEX_DATA, controllerApi().encode(dataFg));
+    }
+
+    /**
+     * 获取费用指标
+     */
+    public void queryCostIndexData(String params) {
+        Map<String, Object> paramsMap = TextUtils.toJSONMap(params);
+        if (TextUtils.check(paramsMap)) {
             post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA, g(map -> {
-                map.put("reimbursement", reimbursement);
-                map.put("depertation", controllerApi().getDepartmentCode());
+                map.put("reimbursement", paramsMap.get("reimbursement"));
+                map.put("depertation", paramsMap.get("budgetDepartment"));
             }));
         }
     }
@@ -108,11 +132,12 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 获取出差申请单
      */
-    public void queryTravelFormData(String reimbursement) {
-        if (TextUtils.check(reimbursement)) {
+    public void queryTravelFormData(String params) {
+        Map<String, Object> paramsMap = TextUtils.toJSONMap(params);
+        if (TextUtils.check(paramsMap)) {
             post(ROOT_URL, PATH_QUERY_TRAVEL_FORM_DATA, g(map -> {
-                map.put("reimbursement", reimbursement);
-                map.put("budgetDepartment", controllerApi().getDepartmentCode());
+                map.put("reimbursement", paramsMap.get("reimbursement"));
+                map.put("budgetDepartment", paramsMap.get("budgetDepartment"));
             }));
         }
     }
@@ -120,11 +145,12 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 获取投研报告
      */
-    public void queryResearchReportData(String reimbursement) {
-        if (TextUtils.check(reimbursement)) {
+    public void queryResearchReportData(String params) {
+        Map<String, Object> paramsMap = TextUtils.toJSONMap(params);
+        if (TextUtils.check(paramsMap)) {
             post(ROOT_URL, PATH_QUERY_RESEARCH_REPORT_DATA, g(map -> {
-                map.put("reimbursement", reimbursement);
-                map.put("departmentCode", controllerApi().getDepartmentCode());
+                map.put("reimbursement", paramsMap.get("reimbursement"));
+                map.put("departmentCode", paramsMap.get("budgetDepartment"));
             }));
         }
     }
@@ -150,11 +176,19 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 报销确认请求数据
+     */
+    public void queryJsonMessageBack(String json) {
+        post(APP_JSON, PATH_QUERY_MESSAGE_BACK_DATA, json);
+    }
+
+    /**
+     * 报销确认请求数据
      *
      * @param serialNo 报销批次号
      */
     public void queryNoShowLoadingMessageBack(String serialNo) {
-        post(ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)), SHOW_LOADING_NO);
+        post(ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)),
+                SHOW_LOADING_NO);
     }
 
     /**
@@ -308,12 +342,13 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     /**
      * 申请单查询
      */
-    public void queryApply(String costCode) {
-        if (check(costCode)) {
+    public void queryApply(String params) {
+        Map<String, Object> paramsMap = TextUtils.toJSONMap(params);
+        if (TextUtils.check(paramsMap)) {
             post(DEBUG_URL, "ApplyCompensation", map -> {
-                map.put("agent", api().getUId());
-                map.put("departmentCode", api().getDepartmentCode());
-                map.put("costCode", costCode);
+                map.put("agent", paramsMap.get("reimbursement"));
+                map.put("departmentCode", paramsMap.get("budgetDepartment"));
+                map.put("costCode", paramsMap.get("cost"));
             });
         }
     }
@@ -356,9 +391,9 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     public void queryApply(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
             postParams(ROOT_URL, PATH_QUERY_APPLY, g(map -> {
-                map.put("departmentCode", jsonMap.get("departmentCode"));
+                map.put("departmentCode", jsonMap.get("budgetDepartment"));
                 map.put("reimbursement", jsonMap.get("reimbursement"));
-                map.put("costIndexCode", jsonMap.get("costIndexCode"));
+                map.put("costIndexCode", jsonMap.get("cost"));
             }));
             /*postParams(DEBUG_URL, "ApplyCompensation", map -> {
                 map.put("departmentCode", jsonMap.get("departmentCode"));
@@ -374,9 +409,9 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     public void queryApplyContent(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
             postParams(ROOT_URL, PATH_QUERY_APPLY_CONTENT, g(map -> {
-                map.put("departmentCode", jsonMap.get("departmentCode"));
+                map.put("departmentCode", jsonMap.get("budgetDepartment"));
                 map.put("reimbursement", jsonMap.get("reimbursement"));
-                map.put("costIndexCode", jsonMap.get("costIndexCode"));
+                map.put("costIndexCode", jsonMap.get("cost"));
                 map.put("applyType", jsonMap.get("applyType"));
             }));
             /*postParams(DEBUG_URL, "ApplyContentCompensation", map -> {

@@ -18,7 +18,7 @@
         tools:ignore="RtlHardcoded"
         tools:text="事由" />
 
-    <EditText
+    <com.ylink.fullgoal.view.HEditText
         android:id="@+id/detail_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +26,7 @@
         android:layout_toRightOf="@+id/name_tv"
         android:background="@null"
         android:gravity="left"
+        android:maxLines="3"
         android:minLines="3"
         android:textColor="@color/tv"
         android:textColorHint="@color/tv1"

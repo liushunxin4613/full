@@ -63,20 +63,25 @@ public interface IHttpApi<T extends IHttpApi> {
     /**
      * 设置setSubscriber
      *
-     * @param newSubscriber newSubscriber
      * @param <B>           <B>
-     * @return 本身
+     * @param newSubscriber newSubscriber
      */
-    <B> T setNewSubscriber(MsgSubscriber<T, B> newSubscriber);
+    <B> void setNewSubscriber(MsgSubscriber<T, B> newSubscriber);
 
     /**
      * 观察
      *
-     * @param observable observable
-     * @param <B>        B
+     * @param bean     bean
+     * @param startUrl startUrl
+     * @param path     path
+     * @param map      map
+     * @param what     what
+     * @param tag      tag
+     * @param <B>      <B>
      * @return 本身
      */
-    <B> T observable(Observable<B> observable);
+    <B> T observable(B bean, String startUrl, String path,
+                     Map<String, String> map, int what, String tag);
 
     /**
      * 观察
@@ -90,7 +95,7 @@ public interface IHttpApi<T extends IHttpApi> {
      * @param <B>        <B>
      * @return 本身
      */
-    <B> T observable(Observable<B> observable, String startUrl, String path, Map<String, String> map,
-                     int what, String tag);
+    <B> T observable(Observable<B> observable, String startUrl, String path,
+                     Map<String, String> map, int what, String tag);
 
 }

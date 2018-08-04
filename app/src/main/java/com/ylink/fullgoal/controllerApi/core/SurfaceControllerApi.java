@@ -9,10 +9,12 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.main.CoreControllerApi;
-import com.leo.core.bean.Completed;
+import com.leo.core.bean.DataEmpty;
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.core.bean.CoreApiBean;
 import com.leo.core.helper.TimeFactory;
+import com.leo.core.iapi.api.IApiCodeApi;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -43,6 +45,7 @@ import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.ComConfig.SHOW;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.Config.FIELDS;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 
 @SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
@@ -53,7 +56,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         this.dialogApi = api;
     }
 
-    private LoadingDialogControllerApi getDialogApi() {
+    private final LoadingDialogControllerApi getDialogApi() {
         return dialogApi;
     }
 
@@ -81,7 +84,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    private void dismissLoading() {
+    public void dismissLoading() {
         getTimeFactory().check(500, () -> {
             executeNon(getDialogApi(), CoreControllerApi::dismiss);
             if (this instanceof ContentControllerApi) {
@@ -93,20 +96,34 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     @Override
     public void initAddAction() {
         super.initAddAction();
-        add(Completed.class, (path, what, msg, bean) -> dismissLoading());
-        add(Exceptions.class, (path, what, msg, bean) -> {
+        add(Exceptions.class, (fieldName, path, what, msg, bean) -> {
             if (this instanceof ContentControllerApi) {
-                ((ContentControllerApi) this).showContentView();
+                if (TextUtils.check(path)) {
+                    switch (path) {
+                        case FULL_REIMBURSE_QUERY://报销请求
+                            ((ContentControllerApi) this).showErrorView();
+                            break;
+                        default:
+                            ((ContentControllerApi) this).showContentView();
+                            break;
+                    }
+                }
             }
             dismissLoading();
         });
-        add(Exceptions.class, (path, what, msg, bean) -> {
+        add(Exceptions.class, (fieldName, path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(bean.getMessage())) {
                 ToastUtil.show(this, bean.getMessage());
             }
         });
-        add(DataFg.class, (path, what, msg, bean) -> {
-            if(!bean.isSuccess()){
+        add(DataEmpty.class, (fieldName, path, what, msg, bean) -> {
+            if(this instanceof ContentControllerApi){
+                ((ContentControllerApi) this).showNullView(true);
+            }
+            dismissLoading();
+        });
+        add(DataFg.class, (fieldName, path, what, msg, bean) -> {
+            if (!bean.isSuccess()) {
                 ToastUtil.show(this, bean.getMessage());
             }
         });
@@ -154,13 +171,13 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 .controllerApi();
     }
 
-    public <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz,
-                                                               Integer layoutResId) {
+    protected <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz,
+                                                                  Integer layoutResId) {
         return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(activity,
                 clz, layoutResId).controllerApi();
     }
 
-    public <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz) {
+    private <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz) {
         return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(activity,
                 clz, null).controllerApi();
     }
@@ -189,6 +206,12 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
      */
     protected <B> void addList(Class<B> clz, IPathMsgAction<List<B>> action) {
         addList(DataFg.class, clz, action);
+    }
+
+    protected void addDataOfCode(List data, IApiCodeApi api, CoreApiBean bean) {
+        if (TextUtils.checkNull(data, api, bean)) {
+            data.add(bean.setApiCode(api.getApiCode()));
+        }
     }
 
     public int getResTvColor(CharSequence text) {
@@ -421,7 +444,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected void ee(String name, IObjAction<MMap<String, Object>> action){
+    protected void ee(String name, IObjAction<MMap<String, Object>> action) {
         ee(name, map(action));
     }
 

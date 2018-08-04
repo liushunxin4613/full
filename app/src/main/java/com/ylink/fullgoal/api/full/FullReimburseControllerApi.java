@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leo.core.api.inter.CoreController;
 import com.leo.core.bean.Bol;
 import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
@@ -73,6 +74,7 @@ import static com.ylink.fullgoal.config.Config.JSON;
 import static com.ylink.fullgoal.config.Config.MAIN_APP;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
 import static com.ylink.fullgoal.config.Config.STATE;
+import static com.ylink.fullgoal.config.Config.TITLE;
 import static com.ylink.fullgoal.config.Config.XG1;
 import static com.ylink.fullgoal.config.Config.XG2;
 import static com.ylink.fullgoal.config.Config.XG3;
@@ -113,7 +115,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         return state;
     }
 
-    public String getMainApp() {
+    private String getMainApp() {
         return mainApp;
     }
 
@@ -159,21 +161,21 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     @Override
     public void initAddAction() {
         super.initAddAction();
-        add(Exceptions.class, (path, what, msg, bean) -> vos(DVo::getImageList, obj
+        add(Exceptions.class, (fieldName, path, what, msg, bean) -> vos(DVo::getImageList, obj
                 -> obj.onError(msg)));
-        add(String.class, (path, what, msg, text) -> {
+        add(String.class, (fieldName, path, what, msg, text) -> {
             if (TextUtils.equals(path, FULL_IMAGE_UPLOAD) && TextUtils.isNotJsonString(text)) {
                 vos(DVo::getImageList, obj -> obj.onError(msg));
             }
         });
-        add(ImageFg.class, (path, what, msg, bean) -> {
+        add(ImageFg.class, (fieldName, path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(msg)) {
                 vos(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
                 vos(DVo::getSbumitFlag, SbumitFlagController::open);
                 vos(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
             }
         });
-        add(DataFg.class, (path, what, msg, bean) -> {
+        add(DataFg.class, (fieldName, path, what, msg, bean) -> {
             if (bean.isSuccess()) {
                 switch (path) {
                     case FULL_REIMBURSE_SUBMIT://报销提交
@@ -205,12 +207,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 }
             }
         });
-        add(RVo.class, (path, what, msg, bean) -> {
+        add(RVo.class, (fieldName, path, what, msg, bean) -> {
             switch (path) {
                 case FULL_REIMBURSE_QUERY://报销获取
                     bean.get(getVo());
-                    showContentView();
                     notifyDataChanged();
+                    showContentView();
+                    dismissLoading();
                     break;
             }
         });
@@ -221,6 +224,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         super.initView();
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
+            title = bundle.getString(TITLE);
             mainApp = bundle.getString(MAIN_APP);
             String json = bundle.getString(JSON);
             vos(DVo::getFirst, obj -> obj.initDB(state));
@@ -229,12 +233,14 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             if (TextUtils.equals(state, FQ)) {
                 title = getBTitle();
             } else {
-                title = getKey(BILL_TYPE_TITLES, state, state);
+                if(TextUtils.isEmpty(title)){
+                    title = getKey(BILL_TYPE_TITLES, state, state);
+                }
                 if (!TextUtils.isEmpty(serialNo)) {
                     hideContentView();
                     api().queryMessageBack(serialNo);
                 } else if (!TextUtils.isEmpty(json)) {
-                    parseApi().init(FULL_REIMBURSE_QUERY, -1, null).parse(json);
+                    api().queryJsonMessageBack(json);
                 }
             }
             setTitle(title);
@@ -249,6 +255,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                         Map<String, Object> map = getSubmitMap();
                         if (!TextUtils.isEmpty(map)) {
                             if (getVo().getIsShare().is()) {
+                                //更新分摊金额
+                                vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
+                                        CostIndexController::getDB)));
                                 routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
                                         .put(MAIN_APP, getMainApp()));
                             } else {
@@ -337,6 +346,15 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             api.execute(data);
             execute(data, item -> item.setEnable(isEnable()));
         });
+    }
+
+    String getParams() {
+        return encode(map(map -> map.put("reimbursement",
+                vor(DVo::getReimbursement, CoreController::getApiCode))
+                .put("budgetDepartment", vor(DVo::getBudgetDepartment,
+                        CoreController::getApiCode))
+                .put("cost", vor(DVo::getCostIndex,
+                        CoreController::getApiCode))));
     }
 
     //私有的
@@ -464,7 +482,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     protected void addVgBean(String title, GridBean bean) {
         if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
             if (!TextUtils.isEmpty(title)) {
-                addVgBean(new TvHintBean(title), bean);
+                addVgBean(new TvHintBean(title, isEnable()), bean);
             } else {
                 addVgBean(bean);
             }
@@ -540,10 +558,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     /**
-     * 不为详情
+     * 不为详情和初始
      */
     boolean isEnable() {
-        return !(TextUtils.equals(state, XQ) || TextUtils.equals(state, CS));
+        return !(TextUtils.equals(state, XQ)
+                || TextUtils.equals(state, CS));
     }
 
     /**
@@ -557,7 +576,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 不为发起
      */
     boolean isNoneInitiateEnable() {
-        return !(TextUtils.equals(state, FQ) || TextUtils.equals(state, CS));
+        return !(TextUtils.equals(state, FQ)
+                || TextUtils.equals(state, CS));
     }
 
     protected <B> B getEnable(B a, B b) {

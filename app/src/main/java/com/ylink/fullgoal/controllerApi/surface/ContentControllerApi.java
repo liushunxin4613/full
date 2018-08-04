@@ -94,6 +94,7 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
     }
 
     public void renewViews() {
+        ee("renewViews show", show);
         switch (show) {
             case SHOW_CONTENT:
                 showContentView();

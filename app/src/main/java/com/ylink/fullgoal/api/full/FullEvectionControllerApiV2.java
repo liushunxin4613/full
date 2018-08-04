@@ -98,14 +98,11 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreBean("费用指标",
                     vorv(DVo::getCostIndex), "请选择费用指标",
                     (bean, view) -> routeApi().searchEvection(SearchVo.COST_INDEX,
-                            vorc(DVo::getReimbursement), vorc(DVo::getCostIndex)),
+                            getParams(), vorc(DVo::getCostIndex)),
                     (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
             checkAdd(data, vorv(DVoV1::getApply), new TvH2MoreBean("申请单",
                     vorv(DVoV1::getApply), "请选择申请单", (bean, view)
-                    -> routeApi().searchApply(SearchVo.APPLY, encode(map(map
-                            -> map.put("departmentCode", vorc(DVo::getBudgetDepartment))
-                            .put("reimbursement", vorc(DVo::getReimbursement))
-                            .put("costIndexCode", vorc(DVo::getCostIndex)))),
+                    -> routeApi().searchApply(SearchVo.APPLY, getParams(),
                     encode(getVo().getApply())), (bean, view) -> vos(DVoV1::getApply, CoreController::clear)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
@@ -137,7 +134,7 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             })), bean -> filterData.add(bean.getFilter()))));
             if (isEnable()) {
                 data.add(new IconTvHBean("添加出差申请单", (bean, view)
-                        -> routeApi().search(SearchVo.BUSINESS, vorc(DVo::getReimbursement), filterData)));
+                        -> routeApi().search(SearchVo.BUSINESS, getParams(), filterData)));
             }
         });
         //VgBean 投研报告
@@ -157,7 +154,7 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             })), bean -> filterData.add(bean.getFilter()))));
             if (isEnable()) {
                 data.add(new IconTvHBean("添加投研报告", (bean, view)
-                        -> routeApi().search(SearchVo.REPORT, vorc(DVo::getReimbursement), filterData)));
+                        -> routeApi().search(SearchVo.REPORT, getParams(), filterData)));
             }
         });
         //GridBean 交通费报销
@@ -169,7 +166,7 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
             List<CtripTicketsFg> ctripData = vor(DVo::getCtrip, CtripTicketsController::getViewBean);
             List<ImageVo> imageData = vor(DVo::getImageList, obj -> obj.getFilterDBData(FILTER_CCJPF));
             if (!(!isEnable() && TextUtils.isEmpty(ctripData) && TextUtils.isEmpty(imageData))) {
-                data.add(new TvHintBean("车船机票费报销"));
+                data.add(new TvHintBean("车船机票费报销", isEnable()));
             }
             List<String> filterData = new ArrayList<>();
             execute(ctripData, fg -> data.add(retExecute(getExecute(fg, item -> new XiechengBean(
