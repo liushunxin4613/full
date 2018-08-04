@@ -15,7 +15,7 @@ import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 
-public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiAdapter,
+public class BaseRecycleControllerApiAdapterV1<T extends BaseRecycleControllerApiAdapterV1,
         C extends IControllerApi> extends RecyclerView.Adapter<ViewHolder>
         implements Adapter<T>, IAFVApi<T, C> {
 
@@ -26,7 +26,7 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
     private SparseArray<Integer> sparseArray;
 
     @SuppressLint("UseSparseArrays")
-    public BaseRecycleControllerApiAdapter(IControllerApi superControllerApi) {
+    public BaseRecycleControllerApiAdapterV1(IControllerApi superControllerApi) {
         if (superControllerApi == null) {
             throw new NullPointerException("superControllerApi 不能为空");
         }

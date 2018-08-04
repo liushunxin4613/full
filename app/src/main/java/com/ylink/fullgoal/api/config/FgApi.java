@@ -17,6 +17,7 @@ import static com.leo.core.config.Config.APP_JSON;
 import static com.leo.core.util.TextUtils.check;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_APPEAL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLICATION_FORM_DATA;
@@ -63,7 +64,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * 获取员工信息
      */
     public void queryUserName(String agent) {
-        if(TextUtils.check(agent)){
+        if (TextUtils.check(agent)) {
             post(ROOT_URL, PATH_QUERY_USER_DATA, g(map -> map.put("agent", agent)),
                     SHOW_LOADING_NO);
         }
@@ -448,5 +449,15 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
         }
     }
 
+    // >>> ****************************** 2018-07-25 14:12 ****************************** >>>
+
+    /**
+     * 申诉
+     */
+    public void appeal(String serialNo) {
+        if (TextUtils.check(serialNo)) {
+            post(ROOT_URL, FULL_APPEAL, g(map -> map.put("serialNo", serialNo)));
+        }
+    }
 
 }

@@ -15,7 +15,7 @@ public interface IApiBean<A extends IControllerApi, AA extends IControllerApi> e
      * 验证合法性
      * @return true:合法;false:不合法;
      */
-    boolean checkApi();
+    boolean apiCheck();
 
     /**
      * XmlResourceParser

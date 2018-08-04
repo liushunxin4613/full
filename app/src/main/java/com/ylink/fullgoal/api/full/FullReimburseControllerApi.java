@@ -33,6 +33,7 @@ import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.core.DoubleController;
+import com.ylink.fullgoal.cr.core.StringController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
@@ -79,6 +80,7 @@ import static com.ylink.fullgoal.config.Config.XG1;
 import static com.ylink.fullgoal.config.Config.XG2;
 import static com.ylink.fullgoal.config.Config.XG3;
 import static com.ylink.fullgoal.config.Config.XG4;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_APPEAL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
@@ -176,35 +178,40 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
         });
         add(DataFg.class, (fieldName, path, what, msg, bean) -> {
-            if (bean.isSuccess()) {
-                switch (path) {
-                    case FULL_REIMBURSE_SUBMIT://报销提交
-                        if (!TextUtils.isEmpty(getState())) {
-                            switch (getState()) {
-                                case FQ://经办人发起
+            switch (path) {
+                case FULL_REIMBURSE_SUBMIT://报销提交
+                    if (bean.isSuccess() && !TextUtils.isEmpty(getState())) {
+                        switch (getState()) {
+                            case FQ://经办人发起
 //                                    show("报销成功");
-                                    again();
-                                    break;
-                                case QR://经办人确认
-                                    show("报销确认成功");
-                                    if (TextUtils.equals(getMainApp(), MAIN_APP)) {
-                                        activityLifecycleApi().finishAllActivity();
-                                    } else {
-                                        getActivity().finish();
-                                    }
-                                    break;
-                                case XG://经办人修改
-                                    show("报销修改成功");
-                                    if (TextUtils.equals(getMainApp(), MAIN_APP)) {
-                                        activityLifecycleApi().finishAllActivity();
-                                    } else {
-                                        getActivity().finish();
-                                    }
-                                    break;
-                            }
+                                again();
+                                break;
+                            case QR://经办人确认
+                                show("报销确认成功");
+                                if (TextUtils.equals(getMainApp(), MAIN_APP)) {
+                                    activityLifecycleApi().finishAllActivity();
+                                } else {
+                                    getActivity().finish();
+                                }
+                                break;
+                            case XG://经办人修改
+                                show("报销修改成功");
+                                if (TextUtils.equals(getMainApp(), MAIN_APP)) {
+                                    activityLifecycleApi().finishAllActivity();
+                                } else {
+                                    getActivity().finish();
+                                }
+                                break;
                         }
-                        break;
-                }
+                    }
+                    break;
+                case FULL_APPEAL://申诉任务
+                    if (bean.isSuccess()) {
+                        getActivity().finish();
+                    } else {
+                        show(bean.getMessage());
+                    }
+                    break;
             }
         });
         add(RVo.class, (fieldName, path, what, msg, bean) -> {
@@ -233,7 +240,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             if (TextUtils.equals(state, FQ)) {
                 title = getBTitle();
             } else {
-                if(TextUtils.isEmpty(title)){
+                if (TextUtils.isEmpty(title)) {
                     title = getKey(BILL_TYPE_TITLES, state, state);
                 }
                 if (!TextUtils.isEmpty(serialNo)) {
@@ -267,6 +274,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     });
                     break;
                 case XG:
+                    setRightTv("申诉", v -> api().appeal(vor(DVo::getSerialNo, StringController::getDB)));
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpTv, v -> {
                         //申请特批
                         vos(DVo::getLogo, obj -> obj.initDB(XG1));

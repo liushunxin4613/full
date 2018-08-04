@@ -30,8 +30,8 @@ public abstract class CoreApiBean<T extends CoreApiBean, A extends IControllerAp
     public abstract Integer getApiType();
 
     @Override
-    public boolean checkApi() {
-        return getApiXmlResourceParser() != null || getApiType() != null;
+    public boolean apiCheck() {
+        return getApiXmlResourceParser() == null && getApiType() == null;
     }
 
     @Override

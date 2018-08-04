@@ -48,6 +48,8 @@ public class UrlConfig {
     public final static String FULL_REIMBURSE_QUERY_LIST = "Application_form.action";
     //分摊维度列表
     public final static String FULL_DIMENSION_LIST = "Dimension_list.action";
+    //申诉
+    public final static String FULL_APPEAL = "Complaint_task.action";
 
     //参数
 
