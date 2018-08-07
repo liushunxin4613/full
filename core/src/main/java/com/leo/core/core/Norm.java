@@ -1,36 +1,35 @@
-package com.leo.core.core.bean;
+package com.leo.core.core;
 
 import android.content.res.XmlResourceParser;
+import android.view.ViewGroup;
 
-import com.leo.core.api.api.VsApi;
-import com.leo.core.iapi.core.IControllerApiBean;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.IControllerApi;
 
 /**
- * 创建和处理IControllerApi
+ * 创建和处理Norm
  */
-public class ControllerApiBean<P extends IControllerApi> extends VsApi implements IControllerApiBean<P> {
+public class Norm<T extends Norm, P extends IControllerApi> extends MNApi<T, P> implements INorm<P> {
 
-    private transient Object apiId;
+    private transient String apiCode;
+    private transient ViewGroup group;
     private transient Integer apiType;
     private transient String apiSearch;
-    private transient P parentControllerApi;
     private transient IControllerApi controllerApi;
     private transient XmlResourceParser xmlResourceParser;
 
     @Override
-    public boolean apiCheck() {
-        return getApiType() != null || getApiXmlResourceParser() != null;
+    public ViewGroup getViewGroup() {
+        return group;
     }
 
     @Override
-    public void setParentControllerApi(P parentControllerApi) {
-        this.parentControllerApi = parentControllerApi;
+    public void setViewGroup(ViewGroup group) {
+        this.group = group;
     }
 
     @Override
-    public P parentControllerApi() {
-        return parentControllerApi;
+    public void onCreateViewGroup(IControllerApi api) {
     }
 
     @Override
@@ -58,29 +57,23 @@ public class ControllerApiBean<P extends IControllerApi> extends VsApi implement
     }
 
     @Override
-    public Object getApiId() {
-        if (apiId == null) {
-            apiId = hashCode();
-        }
-        return apiId;
-    }
-
-    @Override
     public Integer getApiType() {
-        if (apiType == null) {
-            return getDefApiType();
-        }
         return apiType;
     }
 
     @Override
-    public Integer getDefApiType() {
-        return null;
+    public void setApiType(Integer apiType) {
+        this.apiType = apiType;
+    }
+
+    @Override
+    public void setApiCode(String apiCode) {
+        this.apiCode = apiCode;
     }
 
     @Override
     public String getApiCode() {
-        return null;
+        return apiCode;
     }
 
     @Override

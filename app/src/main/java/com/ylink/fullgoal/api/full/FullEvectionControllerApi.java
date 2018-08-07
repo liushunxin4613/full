@@ -54,7 +54,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
 
     @Override
     protected void onData() {
-        //VgBean 基本信息组
+        /*//VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
@@ -83,8 +83,8 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
         //禁止规则
         if (isAlterEnable()) {
             List<RuleFg> data = vor(DVo::getRuleList, RuleController::getViewBean);
-            execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(), item.getRuleName(),
-                    item.getRuleRemark())));
+            *//*execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(), item.getRuleName(),
+                    item.getRuleRemark())));*//*
         }
         //VgBean 出差申请单
         addVgBean(data -> {
@@ -154,7 +154,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             if (!(!isEnable() && TextUtils.isEmpty(imageData))) {
                 data.add(newGridBean(FILTER_CCJPF, imageData));
             }
-        });
+        });*/ //TODO
         //添加流程
         /*if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
             addVgBean(data -> {

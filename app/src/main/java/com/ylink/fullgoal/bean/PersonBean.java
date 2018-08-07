@@ -1,16 +1,10 @@
 package com.ylink.fullgoal.bean;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
-import com.leo.core.iapi.main.IBindControllerApi;
-import com.ylink.fullgoal.bi.PersonBi;
+import com.ylink.fullgoal.viewBean.OnClickBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
-public class PersonBean extends OnClickBean<PersonBean> {
-
-    @Override
-    protected IBindControllerApi<SurfaceControllerApi, PersonBean> newDefApi() {
-        return new PersonBi();
-    }
+public class PersonBean extends OnClickBean<PersonBean, SurfaceControllerApi> {
 
     private String name;
     private String phone;

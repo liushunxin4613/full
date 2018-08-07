@@ -68,7 +68,7 @@ public class FullGeneralControllerApiV1<T extends FullGeneralControllerApiV1, C>
 
     @Override
     protected void onData() {
-        //VgBean 基本信息组
+        /*//VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
@@ -108,7 +108,7 @@ public class FullGeneralControllerApiV1<T extends FullGeneralControllerApiV1, C>
                     item.getRuleName(), item.getRuleRemark())));
         }
         //GridBean 添加票据
-        addVgBean(null, newGridBean(FILTER_YB));
+        addVgBean(null, newGridBean(FILTER_YB));*/ //TODO
         /*//添加流程
         if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
             addVgBean(data -> {

@@ -4,13 +4,12 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.ImageBeanD1;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceBi;
 
 import butterknife.Bind;
 
-public class ImageBiD1 extends SurfaceBi<ImageBiD1, ImageBeanD1> {
+public class ImageBiD1 extends SurfaceBi {
 
     @Bind(R.id.image)
     ImageView image;
@@ -20,10 +19,10 @@ public class ImageBiD1 extends SurfaceBi<ImageBiD1, ImageBeanD1> {
         return R.layout.l_image_d1;
     }
 
-    @Override
+    /*@Override
     public void updateBind(@NonNull SurfaceControllerApi api, @NonNull ImageBeanD1 bean) {
         super.updateBind(api, bean);
         api.setImage(image, bean.getRes());
-    }
+    }*/
 
 }

@@ -268,11 +268,11 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             public void onDrawerStateChanged(int newState) {
             }
         });
-        api.add(new IconBean((bean, view)
+        /*api.add(new IconBean((bean, view)
                 -> drawerLayout.closeDrawer(gravity)))
                 .add(dateArrayBean)
                 .add(typeBean)
-                .notifyDataSetChanged();
+                .notifyDataSetChanged();*/ //TODO
     }
 
     @SuppressLint("RtlHardcoded")
@@ -306,7 +306,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api,
                            IObjAction<VgBean> vgAction) {
         if (controllerApi != null && api != null) {
-            executeNon(controllerApi.addVgBean(api, true), vgAction);
+//            executeNon(controllerApi.addVgBean(api, true), vgAction); //TODO
             controllerApi.notifyDataSetChanged();
         }
     }

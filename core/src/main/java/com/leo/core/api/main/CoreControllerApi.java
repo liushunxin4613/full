@@ -39,6 +39,7 @@ import com.leo.core.iapi.api.IDirApi;
 import com.leo.core.iapi.api.IRouteApi;
 import com.leo.core.iapi.api.IVosApi;
 import com.leo.core.iapi.api.IVsApi;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IActionApi;
 import com.leo.core.iapi.api.ICallbackApi;
@@ -72,7 +73,6 @@ import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.iapi.main.INewApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.iapi.main.IViewApi;
-import com.leo.core.iapi.main.IViewApiBean;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.StatusBarUtil;
 import com.leo.core.util.TextUtils;
@@ -824,11 +824,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public synchronized <B> T onBindViewHolder(B bean, int position) {
-        if (bean instanceof IViewApiBean) {
-            ((IViewApiBean) bean).onBindApi(getThis());
-        }
-        return getThis();
+    public void onNorm(INorm norm, int position) {
     }
 
     @Override

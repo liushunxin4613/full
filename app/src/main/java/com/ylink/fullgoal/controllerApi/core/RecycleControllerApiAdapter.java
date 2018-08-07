@@ -10,9 +10,4 @@ public class RecycleControllerApiAdapter<T extends RecycleControllerApiAdapter,
         super(superControllerApi);
     }
 
-    @Override
-    public IControllerApi<C, T> newControllerApi() {
-        return new SurfaceControllerApi(this);
-    }
-
 }

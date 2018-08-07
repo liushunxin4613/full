@@ -8,40 +8,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.leo.core.iapi.main.IApiBean;
-import com.leo.core.other.Transformer;
 import com.leo.core.update.IRunAction;
 import com.leo.core.update.Update;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.ChuchaiBean;
-import com.ylink.fullgoal.bean.DepartmentBean;
-import com.ylink.fullgoal.bean.DiaoyanBean;
-import com.ylink.fullgoal.bean.PersonBean;
-import com.ylink.fullgoal.bean.ProjectBeanV1;
-import com.ylink.fullgoal.bean.ShareBean;
-import com.ylink.fullgoal.bean.TvBean;
-import com.ylink.fullgoal.bean.XiechengBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
-import com.ylink.fullgoal.fg.ApplyContentFgV1;
-import com.ylink.fullgoal.fg.CostFg;
-import com.ylink.fullgoal.fg.CtripTicketsFg;
-import com.ylink.fullgoal.fg.DataFgV1;
-import com.ylink.fullgoal.fg.DepartmentFg;
 import com.ylink.fullgoal.fg.DimenFg;
-import com.ylink.fullgoal.fg.DimenListFg;
-import com.ylink.fullgoal.fg.ProjectFg;
-import com.ylink.fullgoal.fg.ResearchReportFg;
-import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
-import com.ylink.fullgoal.vo.SearchVo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
-import rx.Observable;
 
 import static com.ylink.fullgoal.config.Config.SEARCH_EVECTION;
 import static com.ylink.fullgoal.config.Config.VERSION;
@@ -88,7 +64,10 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     @Override
     public void initAddAction() {
         super.initAddAction();
-        //员工列表
+        addList(UserFg.class, (name, path, what, msg, bean) -> {
+
+        });
+        /*//员工列表
         addList(UserFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> addDataOfCode(data, item, new PersonBean(item.getUserName(),
                 item.getUserCode(), item.getUserDepartment(),
@@ -101,7 +80,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         addList(ProjectFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> addDataOfCode(data, item, new ProjectBeanV1(item.getProjectName(), item.getProjectCode(),
                 item.getStatus(), item.getLeader(), item.getLeadDepartment(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
+                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
         /*//合同付款申请单列表
         addList(ContractPaymentFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> data.add(new ProjectBean(item.getName(), item.getApplicationDate(),
@@ -112,16 +91,16 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 -> data.add(new ProjectBean(item.getApplicant(), item.getDate(),
                 item.getApplyDepartment(), null, item.getAdvAmount(), item.getCause(),
                 (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
-        //费用指标列表
+        /*//费用指标列表
         addList(CostFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> addDataOfCode(data, item, new ShareBean(item.getCostIndex(), (bean, view)
-                -> finishActivity(new SearchVo<>(getSearch(), item)))))));
+                -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
         //费用指标维度列表
         /*addList(DimenListFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
                 -> addDataOfCode(data, item, new ShareBean(item.getName(), (bean, view)
                 -> finishActivity(new SearchVo<>(getSearch(), getExecute(decode(getKey(),
                 DimenFg.class), DimenFg::getCode), item)))))));*/
-        addList(DimenListFg.class, (fieldName, path, what, msg, list) -> Observable.create(subscriber -> {
+        /*addList(DimenListFg.class, (fieldName, path, what, msg, list) -> Observable.create(subscriber -> {
             List<IApiBean> itemData = new ArrayList<>();
             execute(list, item -> addDataOfCode(itemData, item, new ShareBean(item.getName(),
                     (bean, view) -> finishActivity(new SearchVo<>(getSearch(), getExecute(
@@ -153,7 +132,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 -> addDataOfCode(data, item, new XiechengBean(item.getFlightNumber(), item.getDeparture(), item.getDestination(),
                 item.getCrew(), item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(), item.getArrivelDate(),
                 item.getArrivelTime(), (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
-                .setFilter(item.getFlightNumber())))));
+                .setFilter(item.getFlightNumber())))));*/
     }
 
     @Override

@@ -52,12 +52,12 @@ public class FullBankControllerApi<T extends FullBankControllerApi, C> extends R
         add(DataFg.class, (fieldName, path, what, msg, fg) -> {
             if (!TextUtils.isEmpty(fg.getBankCardtList2())) {
                 clear().showContentView();
-                addVgBean(data -> execute(find(fg.getBankCardtList2()), bank
+                /*addVgBean(data -> execute(find(fg.getBankCardtList2()), bank
                         -> data.add(new TvH2SBean(bank.getBankName(), bank.getBankNo(),
                         TextUtils.isEmpty(data), (bean, view) -> {
                     saveData(BANK, bank);
                     getActivity().finish();
-                }))));
+                }))));*/ //TODO
                 notifyDataSetChanged();
             } else {
                 showNullView(true);

@@ -9,21 +9,21 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
+import com.leo.core.iapi.core.IMNApi;
+import com.leo.core.iapi.core.IModel;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.Adapter;
-import com.leo.core.iapi.main.IAFVApi;
-import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 
 public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiAdapter,
-        C extends IControllerApi> extends RecyclerView.Adapter<ViewHolder>
-        implements Adapter<T>, IAFVApi<T, C> {
+        C extends IControllerApi> extends RecyclerView.Adapter<ViewHolder> implements
+        Adapter<BaseRecycleControllerApiAdapter>{
 
     private Context context;
-    private IControllerApi superControllerApi;
-    private IControllerApi controllerApi;
-    private DataApi<DataApi, IApiBean> dataApi;
+    private DataApi<DataApi, IMNApi> dataApi;
     private SparseArray<Integer> sparseArray;
+    private IControllerApi superControllerApi;
 
     @SuppressLint("UseSparseArrays")
     public BaseRecycleControllerApiAdapter(IControllerApi superControllerApi) {
@@ -31,25 +31,24 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
             throw new NullPointerException("superControllerApi 不能为空");
         }
         this.superControllerApi = superControllerApi;
-        dataApi = new DataApi<>().setAdapter(this);
+        sparseArray = new SparseArray<>();
+        dataApi = new DataApi<>()
+                .setAdapter(this);
         dataApi.setApi(obj -> {
-            if (obj.apiCheck()) {
-                return true;
-            }
-            for (IApiBean bean : dataApi.getData()) {
-                if (bean != null && TextUtils.equals(bean.getApiId(), obj.getApiId())) {
+            for (IMNApi model : dataApi.getData()) {
+                if (model != null && TextUtils.equals(
+                        model.getApiId(), obj.getApiId())) {
                     return true;
                 }
             }
             return false;
         });
-        sparseArray = new SparseArray<>();
     }
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        this.context = recyclerView.getContext();
+        context = recyclerView.getContext();
     }
 
     @Override
@@ -57,28 +56,19 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         return context;
     }
 
-    @Override
-    public IControllerApi<C, T> controllerApi() {
-        if (controllerApi == null) {
-            setControllerApi(newControllerApi());
-        }
-        return controllerApi;
+    private void put(int viewType, int position) {
+        sparseArray.put(viewType, position);
     }
 
-    @Override
-    public void setControllerApi(IControllerApi<C, T> api) {
-        controllerApi = api;
-        if (controllerApi == null) {
-            throw new NullPointerException("newControllerApi 不能为空");
-        }
+    private Integer getPosition(int viewType) {
+        return sparseArray.get(viewType);
     }
 
-    @Override
-    public IControllerApi<C, T> newControllerApi() {
-        return null;
+    private IControllerApi getSuperControllerApi() {
+        return superControllerApi;
     }
 
-    public DataApi<DataApi, IApiBean> dataApi() {
+    public DataApi<DataApi, IMNApi> dataApi() {
         return dataApi;
     }
 
@@ -87,40 +77,55 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         return dataApi().getCount();
     }
 
-    public IApiBean getItem(int position) {
+    public IMNApi getItem(int position) {
         return dataApi().getItem(position);
     }
 
     @Override
     public int getItemViewType(int position) {
-        IApiBean bean = getItem(position);
-        if (bean == null) {
-            throw new NullPointerException("bean不能为空");
+        IMNApi mnApi = getItem(position);
+        if (mnApi == null) {
+            throw new NullPointerException("mnApi不能为空");
+        } else {
+            int viewType = mnApi.getApiId() instanceof Integer
+                    ? (int) mnApi.getApiId() : mnApi.hashCode();
+            put(viewType, position);
+            return viewType;
         }
-        int viewType = bean.hashCode();
-        sparseArray.put(viewType, position);
-        return viewType;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int position = sparseArray.get(viewType);
-        IApiBean bean = getItem(position);
-        if (bean == null) {
-            throw new NullPointerException("bean不能为空");
+        IMNApi mnApi = getItem(getPosition(viewType));
+        if (mnApi == null) {
+            throw new NullPointerException("mnApi不能为空");
         }
-        if (bean.apiCheck()) {
-            throw new NullPointerException("bean.checkApi()不通过");
+        INorm norm = null;
+        if (mnApi instanceof INorm) {
+            norm = (INorm) mnApi;
+            norm.setParentControllerApi(getSuperControllerApi());
+            norm.setController(this);
+            norm.initControllerApi();
+        } else if (mnApi instanceof IModel) {
+            IModel model = (IModel) mnApi;
+            if (model.norm() == null) {//初始化
+                model.setParentControllerApi(getSuperControllerApi());
+                model.setController(this);
+                model.initNorm();
+            }
+            norm = model.norm();
         }
-        IControllerApi api = bean.getControllerApi(superControllerApi);
-        if (api == null) {
-            throw new NullPointerException("api不能为空");
+        if (norm == null) {
+            throw new NullPointerException("norm不能为空");
         }
+        if (norm.controllerApi() == null) {
+            throw new NullPointerException("norm.controllerApi()不能为空");
+        }
+        IControllerApi api = norm.controllerApi();
         api.setRootContainer(parent);
-        api.setRootXmlResourceParser(bean.getApiXmlResourceParser());
-        api.setRootViewResId(bean.getApiType());
-        api.initController(this);
+        api.setRootXmlResourceParser(norm.getApiXmlResourceParser());
+        api.setRootViewResId(norm.getApiType());
         api.onCreateView(LayoutInflater.from(getContext()), parent, null);
         api.onViewCreated(api.getRootView(), null);
         return new ViewHolder(api.getRootView(), api);
@@ -129,9 +134,15 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         IControllerApi api = holder.controllerApi();
-        if (api != null) {
-            api.onBindViewHolder(getItem(position), position);
+        if (api == null) {
+            throw new NullPointerException("api不能为空");
         }
+        IMNApi mnApi = getItem(position);
+        if (mnApi == null) {
+            throw new NullPointerException("mnApi不能为空");
+        }
+        api.onNorm(mnApi instanceof INorm ? (INorm) mnApi : mnApi instanceof IModel
+                ? ((IModel) mnApi).norm() : null, position);
     }
 
 }

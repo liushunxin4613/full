@@ -2,7 +2,6 @@ package com.ylink.fullgoal.api.full;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchBarControllerApi;
 import com.ylink.fullgoal.cr.surface.ApplyMapControllerV2;
 import com.ylink.fullgoal.fg.ApplyDataFgV2;
@@ -16,7 +15,6 @@ import java.util.Map;
 
 import static com.leo.core.util.TextUtils.getJsonStringValue;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY;
-import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 
 public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> extends BaseSearchBarControllerApi<T, C> {
 
@@ -69,12 +67,12 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
     }
 
     private void initActionData() {
-        initDataAction(data -> execute(getDataMap(), (key, value) -> data.add(new TvH2MoreBean(
+        /*initDataAction(data -> execute(getDataMap(), (key, value) -> data.add(new TvH2MoreBean(
                 vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName), value.getViewValue(),
                 String.format("请选择%s", vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName)),
                 (bean, view) -> routeApi().searchApplyContent(APPLY_CONTENT, encode(map(getMap(), m
                         -> m.put("applyType", key))), value.getApiCode()), (bean, view)
-                -> value.setMap(null)))));
+                -> value.setMap(null)))));*/ //TODO
     }
 
     @Override

@@ -358,7 +358,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
 
     private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api) {
         if (controllerApi != null && api != null) {
-            controllerApi.addVgBean(api);
+//            controllerApi.addVgBean(api); //TODO
             controllerApi.notifyDataSetChanged();
         }
     }

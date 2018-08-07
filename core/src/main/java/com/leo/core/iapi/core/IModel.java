@@ -1,44 +1,27 @@
 package com.leo.core.iapi.core;
 
-import com.leo.core.iapi.api.IApiCodeApi;
-import com.leo.core.iapi.main.IControllerApi;
-
 /**
  * 数据
  */
-public interface IModel<C extends IControllerApi> extends IApiCodeApi {
+public interface IModel extends IMNApi {
 
     /**
-     * 设置api
-     *
-     * @param api api
+     * 初始化norm
      */
-    void setControllerApi(C api);
-
-    /**
-     * api
-     *
-     * @return api
-     */
-    C controllerApi();
-
-    /**
-     * 初始化apiBean
-     */
-    void initControllerApiBean();
+    void initNorm();
 
     /**
      * 设置apiBean
      *
-     * @param apiBean apiBean
+     * @param norm norm
      */
-    void setControllerApiBean(IControllerApiBean apiBean);
+    void setNorm(INorm norm);
 
     /**
      * apiBean
      *
      * @return apiBean
      */
-    IControllerApiBean controllerApiBean();
+    INorm norm();
 
 }

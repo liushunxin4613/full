@@ -1,16 +1,8 @@
 package com.ylink.fullgoal.bi;
 
-import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+public class PersonBi{
 
-import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.PersonBean;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-
-import butterknife.Bind;
+/*
 
 public class PersonBi extends OnClickBi<PersonBi, PersonBean> {
 
@@ -42,5 +34,6 @@ public class PersonBi extends OnClickBi<PersonBi, PersonBean> {
                 .setText(tv1, bean.getPhone())
                 .setText(tv2, bean.getDepartment());
     }
+*/
 
 }

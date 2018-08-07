@@ -7,7 +7,6 @@ import com.leo.core.iapi.api.ICheckApi;
 import com.leo.core.iapi.inter.IDataHelper;
 import com.leo.core.iapi.inter.IbooleanAction;
 import com.leo.core.iapi.main.IDataApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.RunUtil;
 
 import java.util.ArrayList;

@@ -41,14 +41,14 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
 
     @Override
     protected void onData() {
-        //VgBean 基本信息组
+        /*//VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean(vorv(DVo::getAgent), vorv(DVo::getDepartment)));
-            /*checkAdd(data, vorv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
+            *//*checkAdd(data, vorv(DVo::getReimbursement), new TvHTvIconMoreBean(R.mipmap.test_icon_user,
                     "报销人", vorv(DVo::getReimbursement), "请输入报销人", (bean, view)
                     -> routeApi().search(SearchVo.REIMBURSEMENT), text
-                    -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));*/
+                    -> vos(DVo::getReimbursement, UserController::getDB, db -> db.setUserName(text))));*//*
             checkAdd(data, vorv(DVo::getReimbursement), new TvH2MoreBean("报销人",
                     vorv(DVo::getReimbursement), "请选择报销人",
                     (bean, view) -> routeApi().search(SearchVo.REIMBURSEMENT), (bean, view)
@@ -82,11 +82,11 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
         //禁止规则
         if (isAlterEnable()) {
             List<RuleFg> data = vor(DVo::getRuleList, RuleController::getViewBean);
-            execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(), item.getRuleName(),
-                    item.getRuleRemark())));
+            *//*execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(), item.getRuleName(),
+                    item.getRuleRemark())));*//*
         }
         //GridBean 添加票据
-        addVgBean(null, newGridBean(FILTER_YB));
+        addVgBean(null, newGridBean(FILTER_YB));*/ //TODO
         /*//添加流程
         if (!isEnable() && !TextUtils.isEmpty(vo.getProcessData())) {
             addVgBean(data -> {

@@ -60,7 +60,7 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
 
     @Override
     protected void onData() {
-        //VgBean 基本信息组
+        /*//VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean("经办人", vorv(DVo::getAgent)));
@@ -98,20 +98,20 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
         //禁止规则
         if (isAlterEnable()) {
             List<RuleFg> data = vor(DVo::getRuleList, RuleController::getViewBean);
-            execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(),
-                    item.getRuleName(), item.getRuleRemark())));
+            *//*execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(),
+                    item.getRuleName(), item.getRuleRemark())));*//* //TODO
         }
         //GridBean 添加票据
         addVgBean("票据", newGridBean(FILTER_YB));
         //添加流程
         List<NodeFg> nodeData = vor(DVo::getTaskNode, NodeController::getViewBean);
         if (!isEnable() && !TextUtils.isEmpty(nodeData)) {
-            addVgBean(data -> {
+            *//*addVgBean(data -> { //TODO
                 data.add(new TvH4Bean());
                 execute(nodeData, item -> data.add(new TvH4Bean(item.getName(),
                         item.getNode(), item.getOpinion(), item.getProcessTime())));
-            });
-        }
+            });*//*
+        }*///TODO
     }
 
 }

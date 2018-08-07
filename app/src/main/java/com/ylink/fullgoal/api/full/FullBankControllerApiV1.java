@@ -53,13 +53,13 @@ public class FullBankControllerApiV1<T extends FullBankControllerApiV1, C> exten
         add(DataFg.class, (fieldName, path, what, msg, fg) -> {
             if (!TextUtils.isEmpty(fg.getBankCardtList2())) {
                 clear().showContentView();
-                execute(fg.getBankCardtList2(), bank
+                /*execute(fg.getBankCardtList2(), bank//TODO
                         -> add(find(new BankBean(bank.getBankNo(),
                         TextUtils.isEmpty(adapterDataApi()
                         .getData()), (bean, view) -> {
                     getActivity().finish();
                     api().submitBankV1(bank.getBankNo(), bank.getBankName());
-                }))));
+                }))));*/
                 notifyDataSetChanged();
             } else {
                 showNullView(true);

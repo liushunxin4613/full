@@ -76,7 +76,7 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
 
     @Override
     protected void onData() {
-        //VgBean 基本信息组
+        /*//VgBean 基本信息组
         addVgBean(data -> {
             //经办人、部门
             data.add(new TvH2Bean("经办人", vorv(DVo::getAgent)));
@@ -196,7 +196,7 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
                 execute(nodeData, item -> data.add(new TvH4Bean(item.getName(),
                         item.getNode(), item.getOpinion(), item.getProcessTime())));
             });
-        }
+        }*/ //TODO
     }
 
 }

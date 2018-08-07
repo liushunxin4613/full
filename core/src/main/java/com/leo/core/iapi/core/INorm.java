@@ -1,33 +1,32 @@
 package com.leo.core.iapi.core;
 
 import android.content.res.XmlResourceParser;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.leo.core.iapi.api.IApiCodeApi;
 import com.leo.core.iapi.main.IControllerApi;
 
 /**
- * 创建ControllerApiBean
+ * 创建规范
  */
-public interface IControllerApiBean<P extends IControllerApi> extends IApiCodeApi {
+public interface INorm<P extends IControllerApi> extends IMNApi<P> {
 
     /**
-     * 验证合法性
-     *
-     * @return true:合法;false:不合法;
+     * 父容器
      */
-    boolean apiCheck();
+    ViewGroup getViewGroup();
 
     /**
-     * 设置parentControllerApi
+     * 设置ViewGroup
+     * @param group group
      */
-    void setParentControllerApi(P parentControllerApi);
+    void setViewGroup(ViewGroup group);
 
     /**
-     * 基类parentControllerApi
-     *
-     * @return parentControllerApi
+     * 当创建父容器时
+     * @param api api
      */
-    P parentControllerApi();
+    void onCreateViewGroup(IControllerApi api);
 
     /**
      * 创建controllerApi[可在adapter中处理]
@@ -73,11 +72,11 @@ public interface IControllerApiBean<P extends IControllerApi> extends IApiCodeAp
     Integer getApiType();
 
     /**
-     * api type
+     * 设置apiType
      *
-     * @return api type
+     * @param apiType apiType
      */
-    Integer getDefApiType();
+    void setApiType(Integer apiType);
 
     /**
      * 初始化搜索
@@ -95,5 +94,10 @@ public interface IControllerApiBean<P extends IControllerApi> extends IApiCodeAp
      * api search[用于搜索处理]
      */
     String getApiSearch();
+
+    /**
+     * 设置apiCode
+     */
+    void setApiCode(String apiCode);
 
 }

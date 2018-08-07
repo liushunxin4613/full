@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IAttachApi;
@@ -267,12 +268,14 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 返回根视图container
+     *
      * @return container
      */
     ViewGroup getRootContainer();
 
     /**
      * 设置根视图container
+     *
      * @param container container
      * @return 本身
      */
@@ -332,7 +335,8 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @param savedInstanceState 存储信息
      */
     @Nullable
-    View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
+    View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                      @Nullable Bundle savedInstanceState);
 
     /**
      * onCreateView 后立即调用
@@ -493,13 +497,12 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void attachBaseContext(Context base);
 
     /**
-     * 执行单个holder
+     * 执行单个norm
      *
-     * @param bean     bean
+     * @param norm     norm
      * @param position position
-     * @param <B>      B
      */
-    <B> T onBindViewHolder(B bean, int position);
+    void onNorm(INorm norm, int position);
 
     /**
      * 测量view的大学
@@ -533,7 +536,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * 查找资源
      *
      * @param tag 资源tag
-     * @param <V>   view泛型
+     * @param <V> view泛型
      * @return view
      */
     <V extends View> V findViewWithTag(Object tag);
@@ -562,9 +565,10 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 启动activity
-     * @param intent intent
+     *
+     * @param intent      intent
      * @param requestCode requestCode
-     * @param options options
+     * @param options     options
      */
     void onStartActivityForResult(Intent intent, int requestCode, @Nullable Bundle options);
 
@@ -582,6 +586,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 获取布局文件
+     *
      * @param dir dir
      * @param xml xml
      * @return XmlResourceParser
@@ -590,6 +595,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 获取布局文件
+     *
      * @param xml xml
      * @return XmlResourceParser
      */
@@ -620,6 +626,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 执行
+     *
      * @param action action
      * @return 本身
      */

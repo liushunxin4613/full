@@ -154,12 +154,12 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
             List<IApiBean> data = new ArrayList<>();
             AtomicReference<IApiBean> old = new AtomicReference<>();
             execute(list, obj -> {
-                if (isFilter(obj, old.get(), keyword)) {
+                /*if (isFilter(obj, old.get(), keyword)) {
                     data.add(obj);
                     old.set(obj);
-                }
+                }*/ //TODO
             });
-            api.setFilterData(data);
+//            api.setFilterData(data); //TODO
             subscriber.onNext(null);
             subscriber.onCompleted();
         }).compose(Transformer.getInstance())

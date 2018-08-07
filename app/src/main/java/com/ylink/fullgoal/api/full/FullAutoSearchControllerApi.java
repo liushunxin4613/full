@@ -91,13 +91,13 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
     }
 
     private void onData(String path, String params, List list) {
-        if (!TEMPLATE_FULL) {
+        /*if (!TEMPLATE_FULL) {//TODO
             MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
                     getThis(), d -> initDataAction(data -> execute(d, data::add)));
         } else {
             MVCFactoryV1.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
                     getThis(), d -> initDataAction(data -> execute(d, data::add)));
-        }
+        }*/
         dismissLoading();
     }
 

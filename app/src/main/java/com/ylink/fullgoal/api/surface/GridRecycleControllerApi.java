@@ -57,7 +57,7 @@ public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> ext
             if (action != null) {
                 action.execute(item);
             }
-            add(item);
+//            add(item); //TODO
         });
         notifyDataSetChanged();
     }

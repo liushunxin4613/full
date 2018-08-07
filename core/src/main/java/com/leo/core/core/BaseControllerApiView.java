@@ -166,7 +166,6 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
         try {
             super.onLayout(changed, left, top, right, bottom);
         } catch (Exception e) {
-            LogUtil.ee(this, "controllerApi: " + controllerApi().getClass().getName());
             e.printStackTrace();
         }
         execute(controllerApi(), api -> api.onLayout(changed, left, top, right, bottom));

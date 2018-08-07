@@ -84,11 +84,12 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
     }
 
     private SurfaceControllerApi getSurfaceControllerApi(ImageVo vo, int position) {
-        return (SurfaceControllerApi) getViewControllerApi(SurfaceControllerApi.class, vo.getApiType())
-                .onBindViewHolder(vo.setShow(bol), position);
+        SurfaceControllerApi api = getViewControllerApi(SurfaceControllerApi.class, vo.getApiType());
+//        api.onNorm(vo.setShow(bol), position); //TODO
+        return api;
     }
 
-    private void initTitle(int position){
+    private void initTitle(int position) {
         setTitle(String.format("票据(%d/%d)", position + 1, count(data)));
     }
 

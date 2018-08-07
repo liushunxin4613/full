@@ -6,18 +6,14 @@ import android.view.View;
 
 import com.leo.core.api.main.DataApi;
 import com.leo.core.bean.Completed;
+import com.leo.core.core.BaseRecycleControllerApiAdapter;
 import com.leo.core.iapi.api.IRecycleApi;
+import com.leo.core.iapi.core.IMNApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IShowDataApi;
-import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.util.SoftInputUtil;
-import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.LineBean;
-import com.ylink.fullgoal.bean.VgBean;
-import com.ylink.fullgoal.bean.VgBeanD1;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
-import com.ylink.fullgoal.core.BaseBiBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +30,9 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    private RecycleControllerApiAdapter adapter;
     private RecyclerView.LayoutManager manager;
-    private DataApi<DataApi, IApiBean> dataApi;
+    private DataApi<DataApi, IMNApi> dataApi;
+    private BaseRecycleControllerApiAdapter adapter;
 
     public RecycleControllerApi(C controller) {
         super(controller);
@@ -76,7 +72,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
                 throw new NullPointerException("newRecycleAdapter不能为空");
             }
         }
-        return adapter;
+        return (RecycleControllerApiAdapter) adapter;
     }
 
     @Override
@@ -85,7 +81,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     }
 
     @Override
-    public DataApi<DataApi, IApiBean> adapterDataApi() {
+    public DataApi<DataApi, IMNApi> adapterDataApi() {
         if (dataApi == null) {
             dataApi = newAdapterDataApi();
             if (dataApi == null) {
@@ -96,7 +92,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     }
 
     @Override
-    public DataApi<DataApi, IApiBean> newAdapterDataApi() {
+    public DataApi<DataApi, IMNApi> newAdapterDataApi() {
         return getRecycleAdapter() == null ? null : getRecycleAdapter().dataApi();
     }
 
@@ -141,28 +137,15 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         });
     }
 
-    protected void initDataAction(IObjAction<List<IApiBean>> action) {
+    protected void initDataAction(IObjAction<List<IMNApi>> action) {
         clear();
         if (action != null) {
-            List<IApiBean> data;
+            List<IMNApi> data;
             action.execute(data = new ArrayList<>());
-            execute(getLineData(data), this::add);
+            execute(data, this::add);
         }
         notifyDataSetChanged();
         dismissLoading();
-    }
-
-    protected List<IApiBean> getLineData(List<? extends IApiBean> data) {
-        if (!TextUtils.isEmpty(data)) {
-            List<IApiBean> dat = new ArrayList<>();
-            int count = TextUtils.count(data);
-            for (int i = 0; i < count; i++) {
-                dat.add(data.get(i));
-                dat.add(new LineBean());
-            }
-            return dat;
-        }
-        return null;
     }
 
     public T clear() {
@@ -170,7 +153,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    public boolean check(IApiBean bean) {
+    public boolean check(IMNApi bean) {
         return adapterDataApi().check(bean);
     }
 
@@ -178,78 +161,48 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return adapterDataApi().getCount();
     }
 
-    public IApiBean getItem(int position) {
+    public IMNApi getItem(int position) {
         return adapterDataApi().getItem(position);
     }
 
-    public T add(IApiBean bean) {
+    public T add(IMNApi bean) {
         adapterDataApi().add(bean);
         return getThis();
     }
 
-    public T addAll(List<IApiBean> data) {
+    public T addAll(List<IMNApi> data) {
         adapterDataApi().addAll(data);
         return getThis();
     }
 
-    public T replaceAll(List<IApiBean> data) {
+    public T replaceAll(List<IMNApi> data) {
         clear().addAll(data);
-        return getThis();
-    }
-
-    public <B extends IApiBean> T addLineAll(List<B> data, boolean end, IObjAction<B> api) {
-        if (!TextUtils.isEmpty(data)) {
-            for (B bean : data) {
-                if (!check(bean)) {
-                    if (!end && getCount() > 0) {
-                        add(new LineBean());
-                    }
-                    if (api != null) {
-                        api.execute(bean);
-                    }
-                    add(bean);
-                    if (end) {
-                        add(new LineBean());
-                    }
-                }
-            }
-        }
-        return getThis();
-    }
-
-    public <B extends IApiBean> T replaceLineAll(List<B> data, boolean end) {
-        replaceApiAll(data, end, null);
-        return getThis();
-    }
-
-    public <B extends IApiBean> T replaceApiAll(List<B> data, boolean end, IObjAction<B> api) {
-        clear().addLineAll(data, end, api);
         return getThis();
     }
 
     //私有的
 
-    protected T addSmallVgBean(BaseBiBean... args) {
+    /*protected T addSmallVgBean(BaseBiBean... args) {
         if (!TextUtils.isEmpty(args)) {
             add(new VgBean(TextUtils.getListData(args), LineBean.SMALL));
         }
         return getThis();
-    }
+    }*/
 
-    protected T addSmallVgBeanD1(BaseBiBean... args) {
+    /*protected T addSmallVgBeanD1(BaseBiBean... args) {
         if (!TextUtils.isEmpty(args)) {
             add(new VgBeanD1(TextUtils.getListData(args), LineBean.SMALL));
         }
         return getThis();
-    }
+    }*/
 
-    protected void addVgBean(BaseBiBean... args) {
+    /*protected void addVgBean(BaseBiBean... args) {
         if (!TextUtils.isEmpty(args)) {
             add(new VgBean(TextUtils.getListData(args)));
         }
-    }
+    }*/
 
-    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api){
+    /*public VgBean addVgBean(IObjAction<List<BaseBiBean>> api){
         return addVgBean(api, false);
     }
 
@@ -265,6 +218,6 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
             }
         }
         return null;
-    }
+    }*/
 
 }

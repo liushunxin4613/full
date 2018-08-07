@@ -168,13 +168,13 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
                 OnSubscribe<List<IApiBean>>) subscriber -> {
             List<IApiBean> data = new ArrayList<>();
             AtomicReference<IApiBean> old = new AtomicReference<>();
-            execute(list, obj -> {
+            /*execute(list, obj -> {//TODO
                 if (isFilter(obj, old.get(), keyword)) {
                     data.add(obj);
                     old.set(obj);
                 }
             });
-            api.setFilterData(data);
+            api.setFilterData(data);*/
             subscriber.onNext(null);
             subscriber.onCompleted();
         }).compose(Transformer.getInstance())

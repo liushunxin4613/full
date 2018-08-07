@@ -12,7 +12,6 @@ import com.leo.core.api.inter.CoreController;
 import com.leo.core.bean.Bol;
 import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
-import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.OnBVDialogClickListener;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.DisneyUtil;
@@ -23,14 +22,10 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.bean.HintDialogBean;
-import com.ylink.fullgoal.bean.TvBean;
-import com.ylink.fullgoal.bean.TvHintBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
-import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.StringController;
@@ -348,13 +343,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         });
     }
 
-    @Override
+    /*@Override //TODO
     public VgBean addVgBean(IObjAction<List<BaseBiBean>> api) {
         return super.addVgBean(data -> {
             api.execute(data);
             execute(data, item -> item.setEnable(isEnable()));
         });
-    }
+    }*/
 
     String getParams() {
         return encode(map(map -> map.put("reimbursement",
@@ -375,7 +370,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     cancel, confirmListener, cancelListener);
             SurfaceControllerApi api = getDialogControllerApi(getActivity(),
                     SurfaceControllerApi.class, dialogBean.getApiType());
-            api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
+//            api.dialogShow().onNorm(dialogBean, 0); //TODO
+            execute(() -> {
                 Window window = api.getDialog().getWindow();
                 if (window != null) {
                     window.setGravity(Gravity.CENTER);
@@ -469,7 +465,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         if (!TextUtils.isEmpty(title)) {
             RecycleControllerApi api = getDialogControllerApi(getActivity(), RecycleControllerApi.class,
                     R.layout.l_dialog);
-            api.execute(() -> api.add(new TvBean("删除", (b, v) -> {
+            /*api.execute(() -> api.add(new TvBean("删除", (b, v) -> {//TODO
                 api.dismiss();
                 execute(action);
             })).notifyDataSetChanged()).dialogShow()
@@ -483,17 +479,17 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                             lp.width = DisneyUtil.getScreenDisplay().getX();
                             window.setAttributes(lp);
                         }
-                    });
+                    });*/
         }
     }
 
     protected void addVgBean(String title, GridBean bean) {
         if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
-            if (!TextUtils.isEmpty(title)) {
+            /*if (!TextUtils.isEmpty(title)) {//TODO
                 addVgBean(new TvHintBean(title, isEnable()), bean);
             } else {
                 addVgBean(bean);
-            }
+            }*/
         }
     }
 
@@ -555,7 +551,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         });
         SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
                 db.getApiType());
-        api.dialogShow().onBindViewHolder(db, 0);
+//        api.dialogShow().onNorm(db, 0); //TODO
         Window window = api.getDialog().getWindow();
         if (window != null) {
             WindowManager.LayoutParams lp = window.getAttributes();
