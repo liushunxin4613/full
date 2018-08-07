@@ -6,6 +6,14 @@ public class RuleFg {
 	private String ruleRemark;//规则信息
 	private String triLevel;//警告级别
 
+	public RuleFg() {
+	}
+
+	public RuleFg(String triLevel, String ruleRemark) {
+		this.ruleRemark = ruleRemark;
+		this.triLevel = triLevel;
+	}
+
 	public String getRuleName() {
 		return ruleName;
 	}

@@ -37,6 +37,7 @@ import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_RESEARCH_REPORT_DAT
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_TRAVEL_FORM_DATA;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_USER_DATA;
 
+@SuppressWarnings("ALL")
 public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     private final static boolean SERVER = true;
@@ -87,6 +88,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 获取合同申请单
+     *  &废弃
      */
     public void queryContractPaymentData() {
         post(ROOT_URL, PATH_QUERY_CONTRACT_PAYMENT_DATA);
@@ -94,6 +96,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 获取招待申请单
+     *  &废弃
      */
     public void queryProcessData() {
         post(ROOT_URL, PATH_QUERY_PROCESS_DATA);
@@ -101,6 +104,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 获取费用指标
+     *  &废弃
      */
     public void queryCostIndexData() {
         post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA, g());
@@ -108,6 +112,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 获取费用指标
+     *  #出差申请单使用
      */
     public void queryJsonCostIndexData() {
         DataFg dataFg = new DataFg();
@@ -194,6 +199,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 银行卡请求数据
+     *  &废弃
      */
     public void queryBank() {
         post(ROOT_URL, PATH_QUERY_BANK_DATA);
@@ -216,6 +222,16 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
             map.put("costIndex", costIndex);
             map.put("department", department);
         }));
+    }
+
+    /**
+     * 分摊维度内容列表
+     */
+    public void queryIsDimensionList(String costIndex, String department) {
+        post(ROOT_URL, PATH_QUERY_DIMENSION_DATA, g(map -> {
+            map.put("costIndex", costIndex);
+            map.put("department", department);
+        }), SHOW_LOADING_NO);
     }
 
     /**
@@ -295,7 +311,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void submitReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {
-            api().ii("任务", map);
+            api().ii("报销数据", map);
             post(ROOT_URL, FULL_REIMBURSE_SUBMIT, g(mp -> mp.putAll(map)));
         }
     }
@@ -342,6 +358,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 申请单查询
+     *   &废弃
      */
     public void queryApply(String params) {
         Map<String, Object> paramsMap = TextUtils.toJSONMap(params);
@@ -356,6 +373,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
 
     /**
      * 申请单查询
+     *   &废弃
      */
     public void queryApplyContent(String applyCode) {
         if (check(applyCode)) {

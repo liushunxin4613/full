@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.full;
 
-import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.CoreController;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.bean.ChuchaiBean;
@@ -19,7 +18,6 @@ import com.ylink.fullgoal.cr.surface.NodeController;
 import com.ylink.fullgoal.cr.surface.ResearchReportController;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.TravelFormController;
-import com.ylink.fullgoal.fg.ApplyDataFgV1;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.NodeFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
@@ -68,13 +66,6 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
     }
 
     @Override
-    public void onResume() {
-        execute(getFinish(), new TypeToken<SearchVo<List<ApplyDataFgV1>>>() {
-        }, vo -> vor(DVoV1::getCostIndexValue, obj -> obj.initDB(vo.getObj())));
-        super.onResume();
-    }
-
-    @Override
     protected void onData() {
         //VgBean 基本信息组
         addVgBean(data -> {
@@ -113,9 +104,14 @@ public class FullEvectionControllerApiV2<T extends FullEvectionControllerApiV2, 
         });
         //禁止规则
         if (isAlterEnable()) {
-            List<RuleFg> data = vor(DVo::getRuleList, RuleController::getViewBean);
-            execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(),
-                    item.getRuleName(), item.getRuleRemark())));
+            List<RuleFg> fgData = vor(DVo::getRuleList, RuleController::getViewBean);
+            addVgBean(data -> {
+                if(!TextUtils.isEmpty(fgData)){
+                    data.add(new TvHintBean("禁止规则", false));
+                    execute(fgData, item -> data.add(new InhibitionRuleBean(
+                            item.getTriLevel(), item.getRuleName(), item.getRuleRemark())));
+                }
+            });
         }
         //VgBean 出差申请单
         addVgBean(data -> {

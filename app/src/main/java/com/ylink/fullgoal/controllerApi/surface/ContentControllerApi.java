@@ -15,6 +15,7 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
 
     private View nullView;
     private View errorView;
+    private boolean isHideView;
     private int show = SHOW_NONE;
 
     public ContentControllerApi(C controller) {
@@ -89,21 +90,25 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
 
     @Override
     public T hideViews() {
+        isHideView = true;
         setVisibility(View.INVISIBLE, getContentView(), getNullView(), getErrorView());
         return getThis();
     }
 
-    public void renewViews() {
-        switch (show) {
-            case SHOW_CONTENT:
-                showContentView();
-                break;
-            case SHOW_NULL:
-                showNullView(true);
-                break;
-            case SHOW_ERROR:
-                showErrorView();
-                break;
+    public synchronized void renewViews() {
+        if(isHideView){
+            switch (show) {
+                case SHOW_CONTENT:
+                    showContentView();
+                    break;
+                case SHOW_NULL:
+                    showNullView(true);
+                    break;
+                case SHOW_ERROR:
+                    showErrorView();
+                    break;
+            }
+            isHideView = false;
         }
     }
 

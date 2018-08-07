@@ -20,7 +20,6 @@ import com.leo.core.bean.ParseBean;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,15 +28,14 @@ import okhttp3.ResponseBody;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.checkNull;
-import static com.leo.core.util.TextUtils.getListData;
 
 public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseApi<T> {
 
-    private String path;
     private int what;
     private String msg;
-    private Map<Type, Map<Type, List<IPathMsgAction>>> map;
+    private String path;
     private Handler handler;
+    private Map<String, ParseTypeBean> map;
 
     public ParseApi() {
         map = new HashMap<>();
@@ -49,7 +47,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         return null;
     }
 
-    private Map<Type, Map<Type, List<IPathMsgAction>>> getMap() {
+    private Map<String, ParseTypeBean> getMap() {
         return map;
     }
 
@@ -64,7 +62,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     @Override
     public T copy() {
         ParseApi<T> api = new ParseApi<>();
-        execute(getMap(), (key, value) -> api.getMap().put(key, value));
+        execute(getMap(), (key, value) -> api.getMap().put(key, value.copy()));
         return (T) api;
     }
 
@@ -130,17 +128,23 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private void mapAdd(Type root, Type type, IPathMsgAction action) {
         if (check(root, type, action)) {
-            Map<Type, List<IPathMsgAction>> rootMap = getMap().get(root);
-            if (rootMap != null && rootMap.get(type) != null) {
-                getMap().get(root).get(type).add(action);
-            } else if (rootMap != null) {
-                getMap().get(root).put(type, getListData(action));
+            String rootName = ParseTypeBean.getName(root);
+            String typeName = ParseTypeBean.getName(type);
+            if (getMap().get(rootName) == null) {
+                getMap().put(rootName, new ParseTypeBean(root, type, action));
             } else {
-                rootMap = new HashMap<>();
-                rootMap.put(type, getListData(action));
-                getMap().put(root, rootMap);
+                if (getMap().get(rootName).getMap().get(typeName) == null) {
+                    getMap().get(rootName).getMap().put(typeName,
+                            TextUtils.getListData(action));
+                } else {
+                    getMap().get(rootName).getMap().get(typeName).add(action);
+                }
             }
         }
+    }
+
+    private ParseTypeBean getParseTypeBean(String type) {
+        return getMap().get(type);
     }
 
     @Override
@@ -165,15 +169,17 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     /**
      * 防止String解析非根节点的类数据
-     * @param type 类型
+     *
+     * @param bean bean
      * @return 是否后加数据
      */
-    private boolean checkRootType(Type type) {
-        return type != null && !TextUtils.equals(type, ResponseBody.class)
-                && !TextUtils.equals(type, String.class)
-                && !TextUtils.equals(type, Completed.class)
-                && !TextUtils.equals(type, DataEmpty.class)
-                && !TextUtils.equals(type, Exceptions.class);
+    private boolean checkRootType(ParseTypeBean bean) {
+        return bean != null && bean.getType() != null
+                && !TextUtils.equals(bean.getType(), ResponseBody.class)
+                && !TextUtils.equals(bean.getType(), String.class)
+                && !TextUtils.equals(bean.getType(), Completed.class)
+                && !TextUtils.equals(bean.getType(), DataEmpty.class)
+                && !TextUtils.equals(bean.getType(), Exceptions.class);
     }
 
     /**
@@ -207,23 +213,36 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                 onExceptions(new Exceptions("数据格式异常", HttpError.ERROR_JSON_ERROR,
                         new RuntimeException("数据格式异常")));
             } else {
-                execute(getMap(), (type, map) -> {
-                    if (checkRootType(type)) {
-                        onData(null, GsonDecodeUtil.decode(text, type), type, map);
+                execute(getMap(), (type, bean) -> {
+                    if (checkRootType(bean)) {
+                        onData(null, GsonDecodeUtil.decode(text, bean.getType()),
+                                bean.getMap());
                     }
                 });
             }
         }
     }
 
+    private void print() {
+        Map<String, Object> map = new HashMap<>();
+        execute(getMap(), (key, value) -> {
+            Map<String, Object> cm = new HashMap<>();
+            execute(value.getMap(), (key1, value1) ->
+                    cm.put(key1, TextUtils.count(value1)));
+            map.put(key, cm);
+        });
+        LogUtil.ee(this, map);
+    }
+
     /**
      * 解出对象
-     *
-     * @param obj obj
      */
     private void onObj(Object obj, Class clz) {
         if (check(obj, clz) && clz.isInstance(obj)) {
-            onData(null, obj, clz, getMap().get(clz));
+            ParseTypeBean bean = getParseTypeBean(ParseTypeBean.getName(clz));
+            if (bean != null) {
+                onData(path, obj, bean.getMap());
+            }
         }
     }
 
@@ -232,40 +251,39 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      *
      * @param name 参数名
      * @param obj  传入对象
-     * @param type 传入对象类型
-     * @param map  传入对象可能对应map
      */
-    private void onData(String name, Object obj, Type type, Map<Type, List<IPathMsgAction>> map) {
+    private void onData(String name, Object obj, Map<String, List<IPathMsgAction>> map) {
         if (checkNull(obj) && check(map)) {
-            onItem(name, obj, map.get(type));
-            Class clz = obj.getClass();
             if (obj instanceof List) {
-                if (!TextUtils.isEmpty(obj)) {
+                if (TextUtils.count(obj) > 0) {
                     Class itemClz = getDataItemType((List) obj);
                     if (itemClz != null) {
-                        onItem(name, obj, map.get(TypeToken.getParameterized(List.class, itemClz)
-                                .getType()));
+                        onItem(name, obj, map.get(ParseTypeBean.getName(
+                                TypeToken.getParameterized(List.class, itemClz).getType())));
                     }
                 } else {
-                    LogUtil.ee(this, m -> m.put("name", name).put("obj", obj).put("type", type.toString()));
-                    onItem(name, new DataEmpty(), map.get(DataEmpty.class));
+                    onObj(new DataEmpty(), DataEmpty.class);
                 }
-            } else if (checkClz(clz)) {
-                execute(clz.getDeclaredFields(), field -> {
-                    if (!Modifier.isStatic(field.getModifiers())
-                            && !Modifier.isFinal(field.getModifiers())
-                            && checkClz(field.getType())) {
-                        try {
-                            field.setAccessible(true);
-                            Object item = field.get(obj);
-                            if (item != null) {
-                                onData(field.getName(), item, item.getClass(), map);
+            } else {
+                Class clz = obj.getClass();
+                onItem(name, obj, map.get(ParseTypeBean.getName(clz)));
+                if (checkClz(clz)) {
+                    execute(clz.getDeclaredFields(), field -> {
+                        if (!Modifier.isStatic(field.getModifiers())
+                                && !Modifier.isFinal(field.getModifiers())
+                                && checkClz(field.getType())) {
+                            try {
+                                field.setAccessible(true);
+                                Object item = field.get(obj);
+                                if (item != null) {
+                                    onData(field.getName(), item, map);
+                                }
+                            } catch (IllegalAccessException e) {
+                                onExceptions(new Exceptions("解析异常", 101, e));
                             }
-                        } catch (IllegalAccessException e) {
-                            onExceptions(new Exceptions("解析异常", 101, e));
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     }

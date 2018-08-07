@@ -15,8 +15,8 @@ public class InhibitionRuleBi extends BaseApiBi<InhibitionRuleBi, InhibitionRule
 
     @Bind(R.id.icon_iv)
     ImageView iconIv;
-    @Bind(R.id.name_tv)
-    TextView nameTv;
+//    @Bind(R.id.name_tv)
+//    TextView nameTv;
     @Bind(R.id.detail_tv)
     TextView detailTv;
 
@@ -29,7 +29,7 @@ public class InhibitionRuleBi extends BaseApiBi<InhibitionRuleBi, InhibitionRule
     public void updateBind(@NonNull SurfaceControllerApi api, @NonNull InhibitionRuleBean bean) {
         super.updateBind(api, bean);
         api.setImage(iconIv, bean.getIconResId())
-                .setText(nameTv, bean.getName())
+//                .setText(nameTv, bean.getName())
                 .setText(detailTv, bean.getDetail());
     }
 

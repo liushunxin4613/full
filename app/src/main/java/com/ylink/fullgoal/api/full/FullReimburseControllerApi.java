@@ -35,6 +35,7 @@ import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.StringController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
+import com.ylink.fullgoal.cr.surface.DepartmentController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
@@ -81,6 +82,7 @@ import static com.ylink.fullgoal.config.Config.XG2;
 import static com.ylink.fullgoal.config.Config.XG3;
 import static com.ylink.fullgoal.config.Config.XG4;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_APPEAL;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_DIMENSION_LIST;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
@@ -195,7 +197,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                                 }
                                 break;
                             case XG://经办人修改
-                                show("报销修改成功");
+                                String logo = vor(DVo::getLogo, StringController::getDB);
+                                show(String.format("%s成功", !TextUtils.isEmpty(logo)
+                                        ? logo : "报销修改"));
                                 if (TextUtils.equals(getMainApp(), MAIN_APP)) {
                                     activityLifecycleApi().finishAllActivity();
                                 } else {
@@ -211,6 +215,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     } else {
                         show(bean.getMessage());
                     }
+                    break;
+                case FULL_DIMENSION_LIST://分摊维度列表
+                    vos(DVo::getIsShare, obj -> obj.initDB(!TextUtils.isEmpty(bean.getDimen())));
                     break;
             }
         });
@@ -256,25 +263,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setRightTv("提交", v -> submit());
                     break;
                 case QR:
-                    setRightTv("确认", v -> {
-                        String money = vor(DVo::getMoney, DoubleController::getDBMoney);
-                        vos(DVo::getCostIndex, obj -> obj.update(money));
-                        Map<String, Object> map = getSubmitMap();
-                        if (!TextUtils.isEmpty(map)) {
-                            if (getVo().getIsShare().is()) {
-                                //更新分摊金额
-                                vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
-                                        CostIndexController::getDB)));
-                                routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
-                                        .put(MAIN_APP, getMainApp()));
-                            } else {
-                                api().submitReimburse(map);
-                            }
-                        }
-                    });
+                    setRightTv("确认", v -> confirm());
                     break;
                 case XG:
-                    setRightTv("申诉", v -> api().appeal(vor(DVo::getSerialNo, StringController::getDB)));
+                    setRightTv("申诉", v -> api().appeal(vor(DVo::getSerialNo,
+                            StringController::getDB)));
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpTv, v -> {
                         //申请特批
                         vos(DVo::getLogo, obj -> obj.initDB(XG1));
@@ -286,7 +279,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     }).setOnClickListener(xgtjTv, v -> {
                         //修改提交
                         vos(DVo::getLogo, obj -> obj.initDB(XG3));
-                        submit();
+                        confirm();
                     }).setOnClickListener(qxbxTv, v -> {
                         //取消报销
                         vos(DVo::getLogo, obj -> obj.initDB(XG4));
@@ -301,16 +294,43 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         vos(DVo::getReimbursement, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
         vos(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
         vos(DVo::getBudgetDepartment, obj -> obj.initDB(getDepartment()));
-//        ee("core", getVo().toCheckString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //报销人
-        executeSearch(UserFg.class, vo -> vos(DVo::getReimbursement, obj -> obj.initDB(vo.getObj())));
+        executeSearch(UserFg.class, vo -> {
+            UserFg fg = vo.getObj();
+            if(!TextUtils.equals(fg.getApiCode(), vorc(DVo::getReimbursement))){//code不同时修改相关数据
+                //清理费用指标数据后续
+                vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
+                vos(DVo::getIsShare, CoreController::clear);//清理是否分摊数据
+                //其他
+                vos(DVo::getTrave, CoreController::clear);//清理出差申请单数据
+                vos(DVo::getReport, CoreController::clear);//清理调研报告数据
+                vos(DVo::getCtrip, CoreController::clear);//清理携程机票数据
+                vos(DVoV1::getApply, CoreController::clear);//清理申请单数据
+                //重新处理部门数据
+                vos(DVo::getBudgetDepartment, obj -> obj.initDB(new DepartmentFg(
+                        fg.getUserDepartmentCode(), fg.getUserDepartment())));//更新部门数据
+                vos(DVo::getProject, CoreController::clear);//清理项目数据
+            }
+            vos(DVo::getReimbursement, obj -> obj.initDB(fg));
+        });
         //预算归属部门
-        executeSearch(DepartmentFg.class, vo -> vos(DVo::getBudgetDepartment, obj -> obj.initDB(vo.getObj())));
+        executeSearch(DepartmentFg.class, vo -> {
+            DepartmentFg fg = vo.getObj();
+            if(!TextUtils.equals(fg.getApiCode(), vorc(DVo::getBudgetDepartment))) {//code不同时修改相关数据
+                vos(DVo::getProject, CoreController::clear);//清理项目数据
+                vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
+                vos(DVo::getIsShare, CoreController::clear);//清理费用指标数据时,同清理是否分摊数据
+                vos(DVo::getTrave, CoreController::clear);//清理出差申请单数据
+                vos(DVo::getReport, CoreController::clear);//清理调研报告数据
+                vos(DVoV1::getApply, CoreController::clear);//清理申请单数据
+            }
+            vos(DVo::getBudgetDepartment, obj -> obj.initDB(vo.getObj()));
+        });
         //项目
         executeSearch(ProjectFg.class, vo -> vos(DVo::getProject, obj -> obj.initDB(vo.getObj())));
         //合同付款申请单
@@ -318,7 +338,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         //招待申请单
         executeSearch(ProcessFg.class, vo -> vos(DVo::getProcess, obj -> obj.initDB(vo.getObj())));
         //费用指标
-        executeSearch(CostFg.class, vo -> vos(DVo::getCostIndex, obj -> obj.initDB(vo.getObj())));
+        executeSearch(CostFg.class, vo -> {
+            CostFg fg = vo.getObj();
+            vos(DVo::getCostIndex, obj -> obj.initDB(fg));
+            api().queryIsDimensionList(fg.getCostCode(), vor(DVo::getBudgetDepartment,
+                    DepartmentController::getApiCode));//重定是否分摊数据
+            vos(DVoV1::getApply, CoreController::clear);//清理申请单数据
+        });
         //出差申请单
         executeSearch(TravelFormFg.class, vo -> vos(DVo::getTrave, obj -> obj.initDB(vo.getObj())));
         //调研报告
@@ -366,6 +392,23 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     //私有的
+
+    private void confirm() {
+        String money = vor(DVo::getMoney, DoubleController::getDBMoney);
+        vos(DVo::getCostIndex, obj -> obj.update(money));
+        Map<String, Object> map = getSubmitMap();
+        if (!TextUtils.isEmpty(map)) {
+            if (getVo().getIsShare().is()) {
+                //更新分摊金额
+                vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
+                        CostIndexController::getDB)));
+                routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
+                        .put(MAIN_APP, getMainApp()));
+            } else {
+                api().submitReimburse(map);
+            }
+        }
+    }
 
     private void dialog(String detail, String confirm, String cancel,
                         OnBVDialogClickListener<HintDialogBean> confirmListener,
