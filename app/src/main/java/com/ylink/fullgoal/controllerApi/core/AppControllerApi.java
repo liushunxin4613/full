@@ -19,8 +19,6 @@ import com.ylink.fullgoal.config.MVCFactoryV1;
 import com.ylink.fullgoal.factory.BankFactory;
 
 import static com.ylink.fullgoal.config.Config.TEMPLATE_FULL;
-import static com.ylink.fullgoal.config.Config.VERSION;
-import static com.ylink.fullgoal.config.Config.VERSION_V2;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
 
@@ -49,15 +47,10 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
                 -> new MaterialHeader(context));
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout)
                 -> new ClassicsFooter(context));
-        //版本处理
-        switch (VERSION) {
-            case VERSION_V2:
-                if (!TEMPLATE_FULL) {
-                    MVCFactory.getInstance().init(getThis()).start();
-                } else {
-                    MVCFactoryV1.getInstance().init(getThis()).start();
-                }
-                break;
+        if (!TEMPLATE_FULL) {
+            MVCFactory.getInstance().init(getThis()).start();
+        } else {
+            MVCFactoryV1.getInstance().init(getThis()).start();
         }
     }
 

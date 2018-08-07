@@ -12,18 +12,13 @@ import com.leo.core.other.MMap;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.api.full.FullAutoSearchControllerApi;
-import com.ylink.fullgoal.api.full.FullBankControllerApiV1;
+import com.ylink.fullgoal.api.full.FullBankControllerApi;
 import com.ylink.fullgoal.api.full.FullBillControllerApi;
 import com.ylink.fullgoal.api.full.FullCostIndexControllerApi;
 import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
-import com.ylink.fullgoal.api.full.FullEvectionControllerApiV2;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
-import com.ylink.fullgoal.api.full.FullGeneralControllerApiV1;
-import com.ylink.fullgoal.api.full.FullGeneralControllerApiV2;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.api.full.FullSearchControllerApi;
-import com.ylink.fullgoal.api.full.FullSearchControllerApiV1;
-import com.ylink.fullgoal.api.full.FullSearchControllerApiV2;
 import com.ylink.fullgoal.main.SurfaceActivity;
 
 import java.lang.reflect.Type;
@@ -48,11 +43,9 @@ import static com.ylink.fullgoal.config.Config.VERSION;
 public class RouteApi extends CoreRouteApi {
 
     public final static String MODULE_APP = "app";
-    public final static String MODULE_V1 = "v1";
-    public final static String MODULE_V2 = "v2";
 
     private final static String MODULE = MODULE_APP;
-    private final static String[] MODULE_ARGS = {MODULE_APP, MODULE_V1, MODULE_V2};
+    private final static String[] MODULE_ARGS = {MODULE_APP};
 
     public RouteApi(CoreControllerApi controllerApi) {
         super(controllerApi);
@@ -97,14 +90,14 @@ public class RouteApi extends CoreRouteApi {
      * 一般费用报销
      */
     public void general(String state) {
-        general(state, null);
+        general(state, null, null);
     }
 
     /**
      * 出差费用报销
      */
     public void evection(String state) {
-        evection(state, null);
+        evection(state, null, null);
     }
 
     /**
@@ -176,29 +169,23 @@ public class RouteApi extends CoreRouteApi {
     protected Class<? extends IControllerApi> getApiClz(@NonNull String module, @NonNull String api) {
         switch (api) {
             case "general"://一般费用普票报销
-                return getClz(module, FullGeneralControllerApi.class,
-                        FullGeneralControllerApiV1.class,
-                        FullGeneralControllerApiV2.class);
+                return FullGeneralControllerApi.class;
             case "evection"://出差费用普票报销
-                return getClz(module, FullEvectionControllerApi.class,
-                        FullEvectionControllerApi.class,
-                        FullEvectionControllerApiV2.class);
+                return FullEvectionControllerApi.class;
             case "queryReimburse"://报销列表查询
-                return getClz(module, FullReimburseDataControllerApi.class);
+                return FullReimburseDataControllerApi.class;
             case "selectBank"://选择银行卡
-                return getClz(module, FullBankControllerApiV1.class);
+                return FullBankControllerApi.class;
             case "costIndex"://费用指标
-                return getClz(module, FullCostIndexControllerApi.class);
+                return FullCostIndexControllerApi.class;
             case "bill"://票据
-                return getClz(module, FullBillControllerApi.class);
+                return FullBillControllerApi.class;
             case "search"://搜索
-                return getClz(module, FullSearchControllerApi.class,
-                        FullSearchControllerApiV1.class,
-                        FullSearchControllerApiV2.class);
+                return FullSearchControllerApi.class;
             case "searchApply"://搜索申请单
-                return getClz(module, FullSearchControllerApiV2.class);
+                return FullSearchControllerApi.class;
             case "searchApplyContent"://搜索申请单内容
-                return getClz(module, FullAutoSearchControllerApi.class);
+                return FullAutoSearchControllerApi.class;
         }
         return null;
     }
@@ -209,10 +196,6 @@ public class RouteApi extends CoreRouteApi {
         return null;
     }
 
-    public void general(String state, String serialNo) {
-        general(state, null, serialNo);
-    }
-
     /**
      * 一般费用报销
      */
@@ -221,10 +204,6 @@ public class RouteApi extends CoreRouteApi {
                 -> map.put(STATE, state)
                 .put(TITLE, title)
                 .put(SERIAL_NO, serialNo));
-    }
-
-    public void evection(String state, String serialNo) {
-        evection(state, null, serialNo);
     }
 
     /**

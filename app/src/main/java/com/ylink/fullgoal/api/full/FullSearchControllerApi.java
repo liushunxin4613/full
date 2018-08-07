@@ -22,7 +22,6 @@ import butterknife.Bind;
 import static com.ylink.fullgoal.config.Config.SEARCH_EVECTION;
 import static com.ylink.fullgoal.config.Config.VERSION;
 import static com.ylink.fullgoal.config.Config.VERSION_APP;
-import static com.ylink.fullgoal.config.Config.VERSION_V2;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 import static com.ylink.fullgoal.vo.SearchVo.BUDGET_DEPARTMENT;
@@ -223,14 +222,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     if (TextUtils.equals(getTag(), SEARCH_EVECTION)) {
                         api().queryJsonCostIndexData();
                     } else {
-                        switch (VERSION) {
-                            case VERSION_APP:
-                                api().queryCostIndexData();
-                                break;
-                            case VERSION_V2:
-                                api().queryCostIndexData(getKey());
-                                break;
-                        }
+                        api().queryCostIndexData(getKey());
                     }
                     break;
                 case APPLY_CONTENT://申请单内容

@@ -43,7 +43,11 @@ import butterknife.Bind;
 
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.getListData;
-import static com.ylink.fullgoal.config.ComConfig.CS;
+import static com.ylink.fullgoal.config.ComConfig.HZ;
+import static com.ylink.fullgoal.config.ComConfig.MQZ;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.QZ;
+import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.Config.D1;
 import static com.ylink.fullgoal.config.Config.D2;
 import static com.ylink.fullgoal.config.Config.D3;
@@ -152,47 +156,48 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             vs(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(true));
             if (!TextUtils.isEmpty(applicationtData)) {
                 api.clear().showContentView();
-                execute(applicationtData, obj -> addVgBean(api, data -> {
-                    if (!TextUtils.isEmpty(obj.getStatus())) {
-                        switch (obj.getStatus()) {
-                            case "初始化任务":
-                            case "自动审核":
-                                data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
-                                        obj.getStatus(), null));
-                                data.add(new CCSQDBean("时间", obj.getFillDate(), "报销类型",
-                                        obj.getBillType(), null));
-                                break;
-                            case "金额确认":
-                            case "修改任务":
-                                data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
-                                        obj.getStatus(), null));
-                                data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
-                                        R.color.EE4433, null));
-                                break;
-                            default:
-                                data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销单号",
-                                        obj.getFkApprovalNum(), null));
-                                data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
-                                        R.color.EE4433, null));
-                                break;
+                execute(applicationtData, obj -> {
+                    String state = getValue(FULL_STATUS, obj.getStatus(), HZ);
+                    addVgBean(api, data -> {
+                        if (!TextUtils.isEmpty(state)) {
+                            switch (state) {
+                                case QZ:
+                                    data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
+                                            obj.getStatus(), null));
+                                    data.add(new CCSQDBean("时间", obj.getFillDate(), "报销类型",
+                                            obj.getBillType(), null));
+                                    break;
+                                case QR://确认
+                                case XG://修改
+                                case MQZ://金额前置
+                                    data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
+                                            obj.getStatus(), null));
+                                    data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
+                                            R.color.EE4433, null));
+                                    break;
+                                default:
+                                    data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销单号",
+                                            obj.getFkApprovalNum(), null));
+                                    data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
+                                            R.color.EE4433, null));
+                                    break;
+                            }
                         }
-                    }
-                    data.add(new TvHTv3Bean("事由", obj.getCause()));
-                }, vg -> vg.setOnClickListener(v -> {
-                    //暂不使用
-                    String state = getValue(FULL_STATUS, obj.getStatus(), CS);
-                    if (!TextUtils.isEmpty(obj.getSerialNo()) && !TextUtils.isEmpty(state)
-                            && !TextUtils.isEmpty(obj.getBillType())) {
-                        switch (obj.getBillType()) {
-                            case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB://一般报销
-                                routeApi().general(state, obj.getStatus(), obj.getSerialNo());
-                                break;
-                            case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC://出差报销
-                                routeApi().evection(state, obj.getStatus(), obj.getSerialNo());
-                                break;
+                        data.add(new TvHTv3Bean("事由", obj.getCause()));
+                    }, vg -> vg.setOnClickListener(v -> {
+                        if (!TextUtils.isEmpty(obj.getSerialNo()) && !TextUtils.isEmpty(state)
+                                && !TextUtils.isEmpty(obj.getBillType())) {
+                            switch (obj.getBillType()) {
+                                case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB://一般报销
+                                    routeApi().general(state, obj.getStatus(), obj.getSerialNo());
+                                    break;
+                                case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC://出差报销
+                                    routeApi().evection(state, obj.getStatus(), obj.getSerialNo());
+                                    break;
+                            }
                         }
-                    }
-                })));
+                    }));
+                });
             } else {
                 api.showNullView(true);
             }

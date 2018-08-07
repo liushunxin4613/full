@@ -2,14 +2,10 @@ package com.ylink.fullgoal.config;
 
 import com.ylink.fullgoal.api.api.RouteApi;
 
-import static com.ylink.fullgoal.config.ComConfig.CS;
+import static com.ylink.fullgoal.config.ComConfig.MQZ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.QZ;
 import static com.ylink.fullgoal.config.ComConfig.XG;
-import static com.ylink.fullgoal.config.ComConfig.ZD;
-import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_CS;
-import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_QR;
-import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_XG;
-import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_RETURN_STATUS_ZD;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_DCL;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_SHZ;
 import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_LIST_QUERY_STATUS_YQX;
@@ -21,11 +17,9 @@ public class Config {
 
     //版本
     public final static String VERSION_APP = RouteApi.MODULE_APP;
-    public final static String VERSION_V1 = RouteApi.MODULE_V1;
-    public final static String VERSION_V2 = RouteApi.MODULE_V2;
 
     //配置
-    public final static String VERSION = VERSION_V2;//版本
+    public final static String VERSION = VERSION_APP;//版本
     public final static boolean TEMPLATE_FULL = true;//template下载方式
     public final static boolean DEBUG = false;//debug模式是否开启5
     final static boolean LOCAL = false;//本地模式是否开启
@@ -78,7 +72,6 @@ public class Config {
     public final static String[][] BILL_TYPE_TITLES = {
             {"报销确认", QR},
             {"报销修改", XG},
-            {"初始化报销", CS},
     };
     public final static String[][] DATES = {
             {"当天", "1"},
@@ -89,10 +82,15 @@ public class Config {
             {"一年", "6"},
     };
     public final static String[][] FULL_STATUS = {
-            //经办人确认
-            {REIMBURSE_LIST_QUERY_RETURN_STATUS_QR, QR},
-            //经办人修改
-            {REIMBURSE_LIST_QUERY_RETURN_STATUS_XG, XG},
+            //前置(无金额)
+            {"初始化任务", QZ},
+            {"自动审核", QZ},
+            //活动
+            {"金额确认", QR},
+            {"修改任务", XG},
+            //金额前置
+            {"申诉任务", MQZ},
+            //后置(有费控批次,和流程节点)
     };
 
     public final static String XG1 = "申请特批";
