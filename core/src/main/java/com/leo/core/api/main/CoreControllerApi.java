@@ -880,6 +880,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onStartActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        if(getRootView() != null){
+            getRootView().requestFocus();
+            getRootView().requestFocusFromTouch();
+        }
         getActivity().getIntent().putExtra(FINISH, (String) null);
     }
 

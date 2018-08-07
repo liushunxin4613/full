@@ -71,19 +71,6 @@ public class UrlConfig {
     //出差报销
     public final static String REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC = "出差报销";
 
-    //报销列表请求返回状态参数(REIMBURSE_LIST_QUERY_RETURN_STATUS)
-
-    //金额确认
-    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_QR = "金额确认";
-    //修改任务
-    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_XG = "修改任务";
-    //初始化任务
-    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_CS = "初始化任务";
-    //自动审核
-    final static String REIMBURSE_LIST_QUERY_RETURN_STATUS_ZD = "自动审核";
-
-    //报销请求类型参数(REIMBURSE_QUERY_BILL_TYPE)
-
     //一般费用报销
     final static String REIMBURSE_QUERY_BILL_TYPE_YB = "427";
     //出差费用报销

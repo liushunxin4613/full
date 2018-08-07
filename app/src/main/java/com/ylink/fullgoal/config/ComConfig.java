@@ -13,11 +13,11 @@ public class ComConfig {
     public final static String TP = "图片";
     public final static String LB = "列表";
     public final static String FQ = "发起";
-    public final static String CS = "初始";
-    public final static String ZD = "自动";
     public final static String QR = "确认";
     public final static String XG = "修改";
-    public final static String XQ = "详情";
+    public final static String QZ = "前置";
+    public final static String MQZ = "金额前置";
+    public final static String HZ = "后置";
     public final static String DQ = "单据";
 
     public final static int WHAT_DEFAULT = -1;//开启显示动画

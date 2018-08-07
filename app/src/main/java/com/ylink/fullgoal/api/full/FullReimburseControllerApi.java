@@ -1,5 +1,8 @@
 package com.ylink.fullgoal.api.full;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import com.leo.core.net.Exceptions;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
+import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
@@ -63,13 +67,14 @@ import java.util.Map;
 import butterknife.Bind;
 
 import static com.leo.core.util.TextUtils.getSetData;
-import static com.ylink.fullgoal.config.ComConfig.CS;
 import static com.ylink.fullgoal.config.ComConfig.FQ;
+import static com.ylink.fullgoal.config.ComConfig.HZ;
+import static com.ylink.fullgoal.config.ComConfig.MQZ;
 import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.QZ;
 import static com.ylink.fullgoal.config.ComConfig.TP;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE_MONEY;
 import static com.ylink.fullgoal.config.ComConfig.XG;
-import static com.ylink.fullgoal.config.ComConfig.XQ;
 import static com.ylink.fullgoal.config.Config.BILL_TYPE_TITLES;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
 import static com.ylink.fullgoal.config.Config.JSON;
@@ -302,7 +307,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         //报销人
         executeSearch(UserFg.class, vo -> {
             UserFg fg = vo.getObj();
-            if(!TextUtils.equals(fg.getApiCode(), vorc(DVo::getReimbursement))){//code不同时修改相关数据
+            if (!TextUtils.equals(fg.getApiCode(), vorc(DVo::getReimbursement))) {//code不同时修改相关数据
                 //清理费用指标数据后续
                 vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
                 vos(DVo::getIsShare, CoreController::clear);//清理是否分摊数据
@@ -321,7 +326,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         //预算归属部门
         executeSearch(DepartmentFg.class, vo -> {
             DepartmentFg fg = vo.getObj();
-            if(!TextUtils.equals(fg.getApiCode(), vorc(DVo::getBudgetDepartment))) {//code不同时修改相关数据
+            if (!TextUtils.equals(fg.getApiCode(), vorc(DVo::getBudgetDepartment))) {//code不同时修改相关数据
                 vos(DVo::getProject, CoreController::clear);//清理项目数据
                 vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
                 vos(DVo::getIsShare, CoreController::clear);//清理费用指标数据时,同清理是否分摊数据
@@ -609,26 +614,27 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     /**
-     * 不为详情和初始
+     * 数据是否可以修改
      */
     boolean isEnable() {
-        return !(TextUtils.equals(state, XQ)
-                || TextUtils.equals(state, CS));
+        return !(TextUtils.equals(state, QZ)
+                || TextUtils.equals(state, MQZ)
+                || TextUtils.equals(state, HZ));
     }
 
     /**
-     * 不为修改
+     * 是否为修改
      */
     boolean isAlterEnable() {
         return TextUtils.equals(state, XG);
     }
 
     /**
-     * 不为发起
+     * 是否有金额
      */
     boolean isNoneInitiateEnable() {
         return !(TextUtils.equals(state, FQ)
-                || TextUtils.equals(state, CS));
+                || TextUtils.equals(state, QZ));
     }
 
     protected <B> B getEnable(B a, B b) {
