@@ -1,26 +1,7 @@
 package com.ylink.fullgoal.api.full;
 
-import com.google.gson.reflect.TypeToken;
-import com.leo.core.api.inter.CoreController;
-import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.bean.InhibitionRuleBean;
-import com.ylink.fullgoal.bean.TvH2Bean;
-import com.ylink.fullgoal.bean.TvH2MoreBean;
-import com.ylink.fullgoal.bean.TvH4Bean;
-import com.ylink.fullgoal.bean.TvHEt3Bean;
-import com.ylink.fullgoal.cr.surface.NodeController;
-import com.ylink.fullgoal.cr.surface.RuleController;
-import com.ylink.fullgoal.fg.ApplyDataFgV1;
-import com.ylink.fullgoal.fg.NodeFg;
-import com.ylink.fullgoal.fg.RuleFg;
-import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.vo.DVoV1;
-import com.ylink.fullgoal.vo.SearchVo;
-
-import java.util.List;
-
 import static com.ylink.fullgoal.config.ComConfig.YB;
-import static com.ylink.fullgoal.vo.ImageVo.FILTER_YB;
 
 /**
  * 一般费用报销
@@ -49,13 +30,6 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
     @Override
     protected String getBTitle() {
         return "一般费用报销";
-    }
-
-    @Override
-    public void onResume() {
-        execute(getFinish(), new TypeToken<SearchVo<List<ApplyDataFgV1>>>() {
-        }, vo -> vor(DVoV1::getCostIndexValue, obj -> obj.initDB(vo.getObj())));
-        super.onResume();
     }
 
     @Override
@@ -97,9 +71,14 @@ public class FullGeneralControllerApiV2<T extends FullGeneralControllerApiV2, C>
         });
         //禁止规则
         if (isAlterEnable()) {
-            List<RuleFg> data = vor(DVo::getRuleList, RuleController::getViewBean);
-            *//*execute(data, item -> add(new InhibitionRuleBean(item.getTriLevel(),
-                    item.getRuleName(), item.getRuleRemark())));*//* //TODO
+            List<RuleFg> fgData = vor(DVo::getRuleList, RuleController::getViewBean);
+            addVgBean(data -> {
+                if(!TextUtils.isEmpty(fgData)){
+                    data.add(new TvHintBean("禁止规则", false));
+                    execute(fgData, item -> data.add(new InhibitionRuleBean(
+                            item.getTriLevel(), item.getRuleName(), item.getRuleRemark())));
+                }
+            });
         }
         //GridBean 添加票据
         addVgBean("票据", newGridBean(FILTER_YB));

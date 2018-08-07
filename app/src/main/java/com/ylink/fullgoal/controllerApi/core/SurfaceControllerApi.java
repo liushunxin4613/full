@@ -15,6 +15,7 @@ import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.core.bean.CoreApiBean;
 import com.leo.core.helper.TimeFactory;
 import com.leo.core.iapi.api.IApiCodeApi;
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -27,6 +28,7 @@ import com.leo.core.util.TextUtils;
 import com.leo.core.util.ToastUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.LoadingDialogControllerApi;
+import com.ylink.fullgoal.config.UrlConfig;
 import com.ylink.fullgoal.controllerApi.surface.ContentControllerApi;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.vo.SearchVo;
@@ -43,6 +45,8 @@ import java.util.Set;
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.count;
 import static com.ylink.fullgoal.config.ComConfig.SHOW;
+import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
+import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_YES;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.Config.FIELDS;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
@@ -97,19 +101,21 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     public void initAddAction() {
         super.initAddAction();
         add(Exceptions.class, (fieldName, path, what, msg, bean) -> {
-            if (this instanceof ContentControllerApi) {
-                if (TextUtils.check(path)) {
-                    switch (path) {
-                        case FULL_REIMBURSE_QUERY://报销请求
-                            ((ContentControllerApi) this).showErrorView();
-                            break;
-                        default:
-                            ((ContentControllerApi) this).showContentView();
-                            break;
+            checkView(what, path, () -> {
+                if (this instanceof ContentControllerApi) {
+                    if (TextUtils.check(path)) {
+                        switch (path) {
+                            case FULL_REIMBURSE_QUERY://报销请求
+                                ((ContentControllerApi) this).showErrorView();
+                                break;
+                            default:
+                                ((ContentControllerApi) this).showContentView();
+                                break;
+                        }
                     }
                 }
-            }
-            dismissLoading();
+                dismissLoading();
+            });
         });
         add(Exceptions.class, (fieldName, path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(bean.getMessage())) {
@@ -117,10 +123,12 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             }
         });
         add(DataEmpty.class, (fieldName, path, what, msg, bean) -> {
-            if(this instanceof ContentControllerApi){
-                ((ContentControllerApi) this).showNullView(true);
-            }
-            dismissLoading();
+            checkView(what, path, () -> {
+                if(this instanceof ContentControllerApi){
+                    ((ContentControllerApi) this).showNullView(true);
+                }
+                dismissLoading();
+            });
         });
         add(DataFg.class, (fieldName, path, what, msg, bean) -> {
             if (!bean.isSuccess()) {
@@ -228,6 +236,23 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getThis();
     }
 
+    private void checkView(int what, String path, IAction action){
+        if(action != null){
+            switch (what) {
+                case SHOW_LOADING_YES:
+                    execute(action);
+                    break;
+                case SHOW_LOADING_NO:
+                    break;
+                default:
+                    if (TextUtils.getListData(UrlConfig.LOADING_DIALOGS).contains(path)) {
+                        execute(action);
+                    }
+                    break;
+            }
+        }
+    }
+
     private Map<String, Object> getCheck(Object obj, Set<String> must, Set<String> all) {
         if (!TextUtils.isEmpty(all) && obj != null) {
             Map<String, Object> mp = new HashMap<>();
@@ -272,7 +297,11 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             Set<String> keys = map.keySet();
             for (String key : must) {
                 if (!TextUtils.isEmpty(key) && !keys.contains(getKey(key))) {
-                    show(String.format("%s(%s)不能为空", key, getKey(key)));
+                    if(TextUtils.equals(getKey(key), "serialNo")){
+                        show("票据不能为空");
+                    } else {
+                        show(String.format("%s(%s)不能为空", key, getKey(key)));
+                    }
                     return null;
                 }
             }

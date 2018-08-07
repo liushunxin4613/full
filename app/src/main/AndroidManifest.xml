@@ -21,7 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="cn.com.fullgoal.pt0001.MainActivity">
+        <activity
+            android:name="cn.com.fullgoal.pt0001.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <!--<data android:host="MainActivity" android:scheme="cn.com.fullgoal.pt0001"-->
@@ -29,7 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.SurfaceActivity" />
+        <activity
+            android:name=".main.SurfaceActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 拍照使用 -->
         <activity
