@@ -3,6 +3,7 @@ package com.leo.core.iapi.api;
 import android.widget.ImageView;
 
 import com.leo.core.iapi.core.IApi;
+import com.leo.core.iapi.inter.ImageAction;
 
 import java.util.Map;
 
@@ -58,12 +59,12 @@ public interface ILoadImageApi<T extends ILoadImageApi> extends IApi {
     /**
      * 负载
      *
-     * @param path path
-     * @param iv   iv
-     * @param api  api
+     * @param path   path
+     * @param iv     iv
+     * @param action action
      * @return 本身
      */
-    T load(Object path, ImageView iv, ICallbackApi api);
+    T load(Object path, ImageView iv, ImageAction action);
 
     /**
      * 负载
@@ -81,9 +82,9 @@ public interface ILoadImageApi<T extends ILoadImageApi> extends IApi {
      * @param path   path
      * @param iv     iv
      * @param rotate rotate
-     * @param api    api
+     * @param action action
      * @return 本身
      */
-    T load(Object path, ImageView iv, float rotate, ICallbackApi api);
+    T load(Object path, ImageView iv, float rotate, ImageAction action);
 
 }

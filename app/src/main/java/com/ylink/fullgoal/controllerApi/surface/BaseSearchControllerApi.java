@@ -10,6 +10,7 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.LineBean;
+import com.ylink.fullgoal.bean.OnClickBean;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.config.ViewBean;
 
@@ -135,7 +136,10 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         if (bean instanceof LineBean) {
             return !(old instanceof LineBean);
         } else if (bean instanceof IKeywordApi) {
-            String code = ((IKeywordApi) bean).getApiCode();
+            if(bean instanceof OnClickBean){
+                String code = ((IKeywordApi) bean).getApiCode();
+                ((OnClickBean) bean).setSelected(TextUtils.equals(code, getValue()));
+            }
             String fk = ((IKeywordApi) bean).getFilter();
             if (!TextUtils.isEmpty(getFilterData())) {
                 for (String filter : getFilterData()) {
@@ -155,6 +159,12 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         }
         return true;
     }
+
+    /*@Override
+    protected void initDataAction(IObjAction<List<IApiBean>> action) {
+        super.initDataAction(action);
+        search(getKeyword());
+    }*/ //TODO
 
     /**
      * 搜索

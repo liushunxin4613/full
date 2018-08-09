@@ -20,8 +20,6 @@ import com.ylink.fullgoal.fg.UserFg;
 import butterknife.Bind;
 
 import static com.ylink.fullgoal.config.Config.SEARCH_EVECTION;
-import static com.ylink.fullgoal.config.Config.VERSION;
-import static com.ylink.fullgoal.config.Config.VERSION_APP;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 import static com.ylink.fullgoal.vo.SearchVo.BUDGET_DEPARTMENT;
@@ -108,8 +106,10 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
             subscriber.onNext(null);
             subscriber.onCompleted();
         }).compose(Transformer.getInstance())
-                .subscribe(obj -> notifyDataSetChanged()
-                        .dismissLoading()));
+                .subscribe(obj -> {
+                    notifyDataSetChanged().dismissLoading();
+                    search(getKeyword());
+                }));
         //申请单内容
         addList(DataFgV1.class, ApplyContentFgV1.class, (fieldName, path, what, msg, list) -> initDataAction(data
                 -> execute(list, item -> addDataOfCode(data, item, new TvBean(item.getName(), (bean, view)

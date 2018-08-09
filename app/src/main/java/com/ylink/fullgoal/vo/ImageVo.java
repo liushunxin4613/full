@@ -65,7 +65,7 @@ public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener
     private String imageType;
     private ImageDetailFg detail;
     private Object photo;
-    private transient String path;
+    private String path;
     private transient boolean show;
     private transient boolean error;
     private transient int invoiceUseType;
@@ -134,6 +134,7 @@ public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+        this.setPhoto(imageURL);
     }
 
     public String getInvoiceUse() {
@@ -162,13 +163,17 @@ public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener
 
     //************************ 私有的 ************************
 
-    public Object getPhoto() {
+    public Object getBindPhoto() {
         if (photo instanceof Double) {
             photo = ((Double) photo).intValue();
         }
         if (photo == null) {
             return getImageURL();
         }
+        return photo;
+    }
+
+    public Object getPhoto(){
         return photo;
     }
 

@@ -19,6 +19,7 @@ import com.ylink.fullgoal.api.full.FullEvectionControllerApi;
 import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.api.full.FullSearchControllerApi;
+import com.ylink.fullgoal.api.full.FullSearchControllerApiV2;
 import com.ylink.fullgoal.main.SurfaceActivity;
 
 import java.lang.reflect.Type;
@@ -183,7 +184,7 @@ public class RouteApi extends CoreRouteApi {
             case "search"://搜索
                 return FullSearchControllerApi.class;
             case "searchApply"://搜索申请单
-                return FullSearchControllerApi.class;
+                return FullSearchControllerApiV2.class;
             case "searchApplyContent"://搜索申请单内容
                 return FullAutoSearchControllerApi.class;
         }

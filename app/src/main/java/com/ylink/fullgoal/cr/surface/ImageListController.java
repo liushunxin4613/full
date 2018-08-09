@@ -99,7 +99,7 @@ public class ImageListController<T extends ImageListController> extends AddContr
         if (!TextUtils.isEmpty(msg) && fg != null) {
             if (fg.isUpload()) {//上传
                 executeBol(getData(), item -> {
-                    if (TextUtils.equals(msg, item.getPhoto())) {
+                    if (TextUtils.equals(msg, item.getBindPhoto())) {
                         item.setImageID(fg.getImageId());
                         item.setSerialNo(fg.getSerialNo());
                         return true;
@@ -125,7 +125,7 @@ public class ImageListController<T extends ImageListController> extends AddContr
     public void onError(String msg) {
         if (!TextUtils.isEmpty(msg)) {
             execute(getData(), obj -> {
-                if (TextUtils.equals(obj.getPhoto(), msg)) {
+                if (TextUtils.equals(obj.getBindPhoto(), msg)) {
                     obj.onError(true);
                 }
             });
@@ -154,6 +154,11 @@ public class ImageListController<T extends ImageListController> extends AddContr
         return super.getFilterDB(args);
     }
 
+    /**
+     * 获取分摊金额
+     *
+     * @param cost cost
+     */
     public void updateCostFg(CostFg cost) {
         if (TextUtils.check(cost)) {
             Map<String, Double> map = new LinkedHashMap<>();
@@ -180,6 +185,19 @@ public class ImageListController<T extends ImageListController> extends AddContr
             cost.setTaxAmount(TextUtils.getMoneyString(map.get("invoiceTax")));
             cost.setExTaxAmount(TextUtils.getMoneyString(map.get("noTaxInvoice")));
         }
+    }
+
+    /**
+     * 是否是新含票据
+     */
+    public boolean isNewAddImage() {
+        for (ImageVo vo : getData()) {
+            if (vo != null && TextUtils
+                    .isEmpty(vo.getImageType())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -28,7 +28,6 @@
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
-        android:maxLines="1"
         android:paddingBottom="@dimen/y30"
         android:paddingLeft="@dimen/x48"
         android:paddingRight="@dimen/x48"

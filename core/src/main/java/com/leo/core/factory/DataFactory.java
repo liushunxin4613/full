@@ -8,7 +8,6 @@ import com.leo.core.util.ClassBindUtil;
 public class DataFactory<T extends DataFactory> extends ThisApi<T> {
 
     private static DataFactory instance;
-
     public static DataFactory getInstance() {
         if (instance == null) {
             synchronized (DataFactory.class) {

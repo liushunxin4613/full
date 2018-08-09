@@ -22,6 +22,14 @@ public class DimenListFg implements IApiCodeApi {
     private String dimen;
     private String dimenCode;
 
+    public DimenListFg() {
+    }
+
+    public DimenListFg(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
     public String getCode() {
         return code;
     }

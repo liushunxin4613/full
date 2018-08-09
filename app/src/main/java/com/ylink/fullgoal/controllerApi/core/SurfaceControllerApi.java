@@ -4,33 +4,42 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.bean.DataEmpty;
+import com.leo.core.bean.ParseCompleted;
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiView;
 import com.leo.core.core.bean.CoreApiBean;
 import com.leo.core.helper.TimeFactory;
 import com.leo.core.iapi.api.IApiCodeApi;
+import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IReturnAction;
+import com.leo.core.iapi.inter.OnBVDialogClickListener;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.net.Exceptions;
 import com.leo.core.other.MMap;
+import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.TextUtils;
 import com.leo.core.util.ToastUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.LoadingDialogControllerApi;
+import com.ylink.fullgoal.bean.HintDialogBean;
 import com.ylink.fullgoal.config.UrlConfig;
 import com.ylink.fullgoal.controllerApi.surface.ContentControllerApi;
 import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.vo.RVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.lang.reflect.Field;
@@ -50,6 +59,7 @@ import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_YES;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 import static com.ylink.fullgoal.config.Config.FIELDS;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_MESSAGE_BACK_DATA;
 
 @SuppressWarnings("ReturnInsideFinallyBlock")
 public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends ControllerApi<T, C> {
@@ -100,36 +110,48 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     @Override
     public void initAddAction() {
         super.initAddAction();
-        add(Exceptions.class, (fieldName, path, what, msg, bean) -> {
-            checkView(what, path, () -> {
-                if (this instanceof ContentControllerApi) {
-                    if (TextUtils.check(path)) {
-                        switch (path) {
-                            case FULL_REIMBURSE_QUERY://报销请求
-                                ((ContentControllerApi) this).showErrorView();
-                                break;
-                            default:
-                                ((ContentControllerApi) this).showContentView();
-                                break;
-                        }
+        add(Exceptions.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
+            if (this instanceof ContentControllerApi) {
+                if (TextUtils.check(path)) {
+                    switch (path) {
+                        case FULL_REIMBURSE_QUERY://报销请求
+                            ((ContentControllerApi) this).showErrorView();
+                            break;
+                        default:
+                            ((ContentControllerApi) this).showContentView();
+                            break;
                     }
                 }
-                dismissLoading();
-            });
-        });
+            }
+            dismissLoading();
+        }));
         add(Exceptions.class, (fieldName, path, what, msg, bean) -> {
             if (!TextUtils.isEmpty(bean.getMessage())) {
                 ToastUtil.show(this, bean.getMessage());
             }
         });
-        add(DataEmpty.class, (fieldName, path, what, msg, bean) -> {
-            checkView(what, path, () -> {
-                if(this instanceof ContentControllerApi){
-                    ((ContentControllerApi) this).showNullView(true);
+        add(DataEmpty.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
+            if (this instanceof ContentControllerApi) {
+                ((ContentControllerApi) this).showNullView(true);
+            }
+            dismissLoading();
+        }));
+        add(ParseCompleted.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
+            ii("ParseCompleted-->", bean.getData());
+            if(!TextUtils.isEmpty(path)){
+                switch (path){
+                    case PATH_QUERY_MESSAGE_BACK_DATA://报销确认
+                        if(!bean.contains(RVo.class)){
+                            if (this instanceof ContentControllerApi) {
+                                ((ContentControllerApi) this).showErrorView();
+                            }
+                            dismissLoading();
+                            show("数据解析异常");
+                        }
+                        break;
                 }
-                dismissLoading();
-            });
-        });
+            }
+        }));
         add(DataFg.class, (fieldName, path, what, msg, bean) -> {
             if (!bean.isSuccess()) {
                 ToastUtil.show(this, bean.getMessage());
@@ -216,6 +238,27 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         addList(DataFg.class, clz, action);
     }
 
+    protected void dialog(String detail, String confirm, String cancel,
+                        OnBVDialogClickListener<HintDialogBean> confirmListener,
+                        OnBVDialogClickListener<HintDialogBean> cancelListener) {
+        if (TextUtils.check(detail, confirm, confirmListener)) {
+            HintDialogBean dialogBean = new HintDialogBean("温馨提示", detail, confirm,
+                    cancel, confirmListener, cancelListener);
+            SurfaceControllerApi api = getDialogControllerApi(getActivity(),
+                    SurfaceControllerApi.class, dialogBean.getApiType());
+            /*api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
+                Window window = api.getDialog().getWindow();
+                if (window != null) {
+                    window.setGravity(Gravity.CENTER);
+                    WindowManager.LayoutParams lp = window.getAttributes();
+                    IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
+                    lp.width = (int) (display.getX() * 0.8);
+                    window.setAttributes(lp);
+                }
+            });*/ //TODO
+        }
+    }
+
     protected void addDataOfCode(List data, IApiCodeApi api, CoreApiBean bean) {
         if (TextUtils.checkNull(data, api, bean)) {
             data.add(bean.setApiCode(api.getApiCode()));
@@ -236,19 +279,32 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return getThis();
     }
 
-    private void checkView(int what, String path, IAction action){
-        if(action != null){
+    private void checkView(int what, String path, String fieldName, IAction action) {
+        if (action != null) {
+            boolean execute = false;
             switch (what) {
                 case SHOW_LOADING_YES:
-                    execute(action);
+                    execute = true;
                     break;
                 case SHOW_LOADING_NO:
                     break;
                 default:
                     if (TextUtils.getListData(UrlConfig.LOADING_DIALOGS).contains(path)) {
-                        execute(action);
+                        execute = true;
                     }
                     break;
+            }
+            if (TextUtils.check(path)) {
+                switch (path) {
+                    case "Dimension_information.action":
+                        if (!TextUtils.equals(fieldName, "dimenList")) {
+                            execute = false;
+                        }
+                        break;
+                }
+            }
+            if (execute) {
+                execute(action);
             }
         }
     }
@@ -297,7 +353,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             Set<String> keys = map.keySet();
             for (String key : must) {
                 if (!TextUtils.isEmpty(key) && !keys.contains(getKey(key))) {
-                    if(TextUtils.equals(getKey(key), "serialNo")){
+                    if (TextUtils.equals(getKey(key), "serialNo")) {
                         show("票据不能为空");
                     } else {
                         show(String.format("%s(%s)不能为空", key, getKey(key)));
