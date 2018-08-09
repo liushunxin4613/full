@@ -9,7 +9,7 @@ import com.ylink.fullgoal.norm.ImageNorm;
 
 import butterknife.Bind;
 
-public class ImageControllerApi<T extends ImageControllerApi, C> extends NormControllerApi<T, C, ImageNorm> {
+public class ImageControllerApi<C> extends NormControllerApi<ImageControllerApi, C, ImageNorm> {
 
     @Bind(R.id.image)
     ImageView image;

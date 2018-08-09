@@ -776,6 +776,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public ViewGroup onCreateViewGroup(ViewGroup group, @NonNull View rootView) {
+        return null;
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
@@ -791,7 +796,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public ViewGroup getRootContainer() {
+    public final ViewGroup getRootContainer() {
         return container;
     }
 
@@ -876,7 +881,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onStartActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
-        if(getRootView() != null){
+        if (getRootView() != null) {
             getRootView().requestFocus();
             getRootView().requestFocusFromTouch();
         }
@@ -959,7 +964,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        onCreateView(inflater(), null, savedInstanceState);
+        onCreateView(inflater(), getRootContainer(), savedInstanceState);
+        executeNon(onCreateViewGroup(getRootContainer(), getRootView()),
+                this::setRootView);
         if (getRootView() != null) {
             if (isActivity()) {
                 getActivity().setContentView(getRootView());
@@ -2069,25 +2076,25 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void get(String url, String path, IObjAction<Map<String, Object>> action, int what,
-                 String tag) {
+                    String tag) {
         api().get(url, path, action, what, tag);
     }
 
     @Override
     public void post(String url, String path, IObjAction<Map<String, Object>> action, int what,
-                  String tag) {
+                     String tag) {
         api().post(url, path, action, what, tag);
     }
 
     @Override
     public void jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
-                      String tag) {
+                         String tag) {
         api().jsonPost(url, path, action, what, tag);
     }
 
     @Override
     public void bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
-                      String tag, IProgressListener listener) {
+                         String tag, IProgressListener listener) {
         api().bodyPost(url, path, action, what, tag, listener);
     }
 

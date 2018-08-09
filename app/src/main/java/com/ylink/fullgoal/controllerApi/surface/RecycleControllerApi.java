@@ -9,11 +9,14 @@ import com.leo.core.bean.Completed;
 import com.leo.core.core.BaseRecycleControllerApiAdapter;
 import com.leo.core.iapi.api.IRecycleApi;
 import com.leo.core.iapi.core.IMNApi;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IShowDataApi;
 import com.leo.core.util.SoftInputUtil;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
+import com.ylink.fullgoal.norm.VgNorm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,11 +141,18 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     }
 
     protected void initDataAction(IObjAction<List<IMNApi>> action) {
-        clear();
         if (action != null) {
             List<IMNApi> data;
             action.execute(data = new ArrayList<>());
-            execute(data, this::add);
+            initActionData(data);
+        }
+    }
+
+    public <A extends IMNApi> void initActionData(List<A> data) {
+        clear();
+        if(!TextUtils.isEmpty(data)){
+            showContentView();
+            addAll((List<IMNApi>) data);
         }
         notifyDataSetChanged();
         dismissLoading();
@@ -182,42 +192,45 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     //私有的
 
-    /*protected T addSmallVgBean(BaseBiBean... args) {
+    protected T addSmallVgNorm(INorm... args) {
         if (!TextUtils.isEmpty(args)) {
-            add(new VgBean(TextUtils.getListData(args), LineBean.SMALL));
+            add(new VgNorm(TextUtils.getListData(args))
+                    .setLineLayoutResId(VgNorm.LINE_SMALL));
         }
         return getThis();
-    }*/
-
-    /*protected T addSmallVgBeanD1(BaseBiBean... args) {
-        if (!TextUtils.isEmpty(args)) {
-            add(new VgBeanD1(TextUtils.getListData(args), LineBean.SMALL));
-        }
-        return getThis();
-    }*/
-
-    /*protected void addVgBean(BaseBiBean... args) {
-        if (!TextUtils.isEmpty(args)) {
-            add(new VgBean(TextUtils.getListData(args)));
-        }
-    }*/
-
-    /*public VgBean addVgBean(IObjAction<List<BaseBiBean>> api){
-        return addVgBean(api, false);
     }
 
-    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api, boolean noLine) {
+    protected T addNoneSmallVgNorm(INorm... args) {
+        if (!TextUtils.isEmpty(args)) {
+            add(new VgNorm(TextUtils.getListData(args), VgNorm.LAYOUT_NONE_RES_ID)
+                    .setLineLayoutResId(VgNorm.LINE_SMALL));
+        }
+        return getThis();
+    }
+
+    protected T addVgNorm(INorm... args) {
+        if (!TextUtils.isEmpty(args)) {
+            add(new VgNorm(TextUtils.getListData(args))
+                    .setLineLayoutResId(VgNorm.LINE_SMALL));
+        }
+        return getThis();
+    }
+
+    public VgNorm addVgNorm(IObjAction<List<INorm>> api){
+        return addVgNorm(api, false);
+    }
+
+    public VgNorm addVgNorm(IObjAction<List<INorm>> api, boolean noLine) {
         if (api != null) {
-            List<BaseBiBean> data = new ArrayList<>();
+            List<INorm> data = new ArrayList<>();
             api.execute(data);
             if (!TextUtils.isEmpty(data)) {
-                VgBean vb = new VgBean(data);
-                vb.setNoLine(noLine);
+                VgNorm vb = new VgNorm(data).setLineLayoutResId(noLine ? VgNorm.LINE_NORMAL : null);
                 add(vb);
                 return vb;
             }
         }
         return null;
-    }*/
+    }
 
 }

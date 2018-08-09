@@ -57,10 +57,10 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
 
     private void initAdds() {
         //申请单
-        addList(DataFgV2.class, ApplyFgV2.class, (fieldName, path, what, msg, list) -> initDataAction(list));
+        addList(DataFgV2.class, ApplyFgV2.class, (fieldName, path, what, msg, list) -> initData(list));
     }
 
-    private void initDataAction(List<ApplyFgV2> list) {
+    private void initData(List<ApplyFgV2> list) {
         execute(list, item -> vos(ApplyVoV2::getApply, obj -> obj.initKey(item)));
         vos(ApplyVoV2::getApply, obj -> obj.insert(decode(getValue(), ApplyMapControllerV2.class)));
         initActionData();

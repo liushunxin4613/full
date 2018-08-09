@@ -3,8 +3,8 @@ package com.ylink.fullgoal.api.surface;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
 import com.ylink.fullgoal.R;
@@ -50,14 +50,14 @@ public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> ext
         getRecyclerView().addItemDecoration(new GridSpacingItemDecoration(space, edgeSpace));
     }
 
-    public void replaceAll(List<IApiBean> data, IObjAction<IApiBean> action) {
+    public void replaceAll(List<INorm> data, IObjAction<INorm> action) {
         getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         clear();
         execute(data, item -> {
             if (action != null) {
                 action.execute(item);
             }
-//            add(item); //TODO
+            add(item);
         });
         notifyDataSetChanged();
     }

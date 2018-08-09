@@ -20,6 +20,7 @@ import com.leo.core.core.bean.CoreApiBean;
 import com.leo.core.helper.TimeFactory;
 import com.leo.core.iapi.api.IApiCodeApi;
 import com.leo.core.iapi.api.IDisplayApi;
+import com.leo.core.iapi.core.IModel;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IMapAction;
@@ -35,10 +36,11 @@ import com.leo.core.util.TextUtils;
 import com.leo.core.util.ToastUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.LoadingDialogControllerApi;
-import com.ylink.fullgoal.bean.HintDialogBean;
 import com.ylink.fullgoal.config.UrlConfig;
 import com.ylink.fullgoal.controllerApi.surface.ContentControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.norm.HintDialogNorm;
 import com.ylink.fullgoal.vo.RVo;
 import com.ylink.fullgoal.vo.SearchVo;
 
@@ -138,10 +140,10 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }));
         add(ParseCompleted.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
             ii("ParseCompleted-->", bean.getData());
-            if(!TextUtils.isEmpty(path)){
-                switch (path){
+            if (!TextUtils.isEmpty(path)) {
+                switch (path) {
                     case PATH_QUERY_MESSAGE_BACK_DATA://报销确认
-                        if(!bean.contains(RVo.class)){
+                        if (!bean.contains(RVo.class)) {
                             if (this instanceof ContentControllerApi) {
                                 ((ContentControllerApi) this).showErrorView();
                             }
@@ -155,6 +157,13 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         add(DataFg.class, (fieldName, path, what, msg, bean) -> {
             if (!bean.isSuccess()) {
                 ToastUtil.show(this, bean.getMessage());
+            } else {
+                if (this instanceof RecycleControllerApi) {
+                    List<? extends IModel> data = getOnDataFg(fieldName, path, what, msg, bean);
+                    if (!TextUtils.isEmpty(data)) {
+                        ((RecycleControllerApi) this).initActionData(data);
+                    }
+                }
             }
         });
     }
@@ -239,24 +248,28 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     protected void dialog(String detail, String confirm, String cancel,
-                        OnBVDialogClickListener<HintDialogBean> confirmListener,
-                        OnBVDialogClickListener<HintDialogBean> cancelListener) {
+                          OnBVDialogClickListener<HintDialogNorm> confirmListener,
+                          OnBVDialogClickListener<HintDialogNorm> cancelListener) {
         if (TextUtils.check(detail, confirm, confirmListener)) {
-            HintDialogBean dialogBean = new HintDialogBean("温馨提示", detail, confirm,
+            HintDialogNorm norm = new HintDialogNorm("温馨提示", detail, confirm,
                     cancel, confirmListener, cancelListener);
             SurfaceControllerApi api = getDialogControllerApi(getActivity(),
-                    SurfaceControllerApi.class, dialogBean.getApiType());
-            /*api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
-                Window window = api.getDialog().getWindow();
-                if (window != null) {
-                    window.setGravity(Gravity.CENTER);
-                    WindowManager.LayoutParams lp = window.getAttributes();
-                    IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
-                    lp.width = (int) (display.getX() * 0.8);
-                    window.setAttributes(lp);
-                }
-            });*/ //TODO
+                    SurfaceControllerApi.class, norm.getApiType());
+            api.dialogShow().onNorm(norm, 0);
+            Window window = api.getDialog().getWindow();
+            if (window != null) {
+                window.setGravity(Gravity.CENTER);
+                WindowManager.LayoutParams lp = window.getAttributes();
+                IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
+                lp.width = (int) (display.getX() * 0.8);
+                window.setAttributes(lp);
+            }
         }
+    }
+
+    protected List<? extends IModel> getOnDataFg(String fieldName, String path, int what,
+                                                 String msg, DataFg fg) {
+        return null;
     }
 
     protected void addDataOfCode(List data, IApiCodeApi api, CoreApiBean bean) {

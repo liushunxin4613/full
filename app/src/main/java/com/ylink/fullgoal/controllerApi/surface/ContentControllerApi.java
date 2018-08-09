@@ -91,8 +91,21 @@ public class ContentControllerApi<T extends ContentControllerApi, C> extends Sur
     @Override
     public T hideViews() {
         isHideView = true;
+        initShow();
         setVisibility(View.INVISIBLE, getContentView(), getNullView(), getErrorView());
         return getThis();
+    }
+
+    private void initShow(){
+        if(show == SHOW_NONE){
+            if(getContentView() != null && getContentView().isShown()){
+                show = SHOW_CONTENT;
+            } else if(getNullView() != null && getNullView().isShown()){
+                show = SHOW_NULL;
+            } else if(getNullView() != null && getNullView().isShown()){
+                show = SHOW_ERROR;
+            }
+        }
     }
 
     public synchronized void renewViews() {

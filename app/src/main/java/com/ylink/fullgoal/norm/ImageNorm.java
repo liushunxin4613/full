@@ -5,7 +5,7 @@ import com.ylink.fullgoal.api.item.ImageControllerApi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceNorm;
 
-public class ImageNorm extends SurfaceNorm<ImageNorm, SurfaceControllerApi>{
+public class ImageNorm extends SurfaceNorm<ImageNorm, SurfaceControllerApi> {
 
     @Override
     protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {

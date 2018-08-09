@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.leo.core.api.main.DataApi;
@@ -126,8 +125,7 @@ public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiA
         api.setRootContainer(parent);
         api.setRootXmlResourceParser(norm.getApiXmlResourceParser());
         api.setRootViewResId(norm.getApiType());
-        api.onCreateView(LayoutInflater.from(getContext()), parent, null);
-        api.onViewCreated(api.getRootView(), null);
+        api.onCreate(null);
         return new ViewHolder(api.getRootView(), api);
     }
 

@@ -10,9 +10,8 @@ import com.leo.core.util.HelperUtil;
 import com.leo.core.util.RunUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.ylink.fullgoal.core.SurfaceNorm;
 
-public abstract class BaseTestNorm<T extends BaseTestNorm> extends SurfaceNorm<T, SurfaceControllerApi> {
+public abstract class BaseTestNorm<T extends BaseTestNorm> extends OnClickNorm<T, SurfaceControllerApi> {
 
     private String name;
     private String detail;

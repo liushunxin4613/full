@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.api.full;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,7 +19,6 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
-import com.ylink.fullgoal.bean.TvV2DialogBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
@@ -38,6 +38,11 @@ import com.ylink.fullgoal.fg.ProjectFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
+import com.ylink.fullgoal.norm.GridNorm;
+import com.ylink.fullgoal.norm.TvHintNorm;
+import com.ylink.fullgoal.norm.TvNorm;
+import com.ylink.fullgoal.norm.TvV2DialogNorm;
+import com.ylink.fullgoal.norm.VgNorm;
 import com.ylink.fullgoal.vo.ApplyVoV2;
 import com.ylink.fullgoal.vo.DVo;
 import com.ylink.fullgoal.vo.ImageVo;
@@ -300,7 +305,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         //报销人
         executeSearch(UserFg.class, vo -> {
             UserFg fg = vo.getObj();
-            /*if (!TextUtils.equals(fg.getApiCode(), vorc(DVo::getReimbursement))){//code不同时修改相关数据
+            if (!TextUtils.equals(fg.getApiCode(), vorc(DVo::getReimbursement))) {//code不同时修改相关数据
                 //清理费用指标数据后续
                 vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
                 vos(DVo::getIsShare, CoreController::clear);//清理是否分摊数据
@@ -313,7 +318,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 vos(DVo::getBudgetDepartment, obj -> obj.initDB(new DepartmentFg(
                         fg.getUserDepartmentCode(), fg.getUserDepartment())));//更新部门数据
                 vos(DVo::getProject, CoreController::clear);//清理项目数据
-            }*/ //TODO
+            }
             vos(DVo::getReimbursement, obj -> obj.initDB(fg));
         });
         //预算归属部门
@@ -367,14 +372,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
         });
     }
-
-    /*@Override //TODO
-    public VgBean addVgBean(IObjAction<List<BaseBiBean>> api) {
-        return super.addVgBean(data -> {
-            api.execute(data);
-            execute(data, item -> item.setEnable(isEnable()));
-        });
-    }*/
 
     String getParams() {
         return encode(map(map -> map.put("reimbursement",
@@ -488,7 +485,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         if (!TextUtils.isEmpty(title)) {
             RecycleControllerApi api = getDialogControllerApi(getActivity(), RecycleControllerApi.class,
                     R.layout.l_dialog);
-            /*api.execute(() -> api.add(new TvBean("删除", (b, v) -> {//TODO
+            api.execute(() -> api.add(new TvNorm("删除", (b, v) -> {
                 api.dismiss();
                 execute(action);
             })).notifyDataSetChanged()).dialogShow()
@@ -502,17 +499,17 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                             lp.width = DisneyUtil.getScreenDisplay().getX();
                             window.setAttributes(lp);
                         }
-                    });*/
+                    });
         }
     }
 
-    void addVgBean(String title, GridBean bean) {
-        if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
-            /*if (!TextUtils.isEmpty(title)) {//TODO
-                addVgBean(new TvHintBean(title, isEnable()), bean);
+    void addVgNorm(String title, GridNorm norm) {
+        if (norm != null && !(!isEnable() && TextUtils.isEmpty(norm.getData()))) {
+            if (!TextUtils.isEmpty(title)) {
+                addVgNorm(new TvHintNorm(title, isEnable()), norm);
             } else {
-                addVgBean(bean);
-            }*/
+                addVgNorm(norm);
+            }
         }
     }
 
@@ -549,7 +546,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * @return 是否同时响应点击
      */
     private boolean onGridPhotoLongClick(GridPhotoBean bean, View view) {
-        TvV2DialogBean db = new TvV2DialogBean("重新上传", "删除", bean.getObj() instanceof ImageVo
+        TvV2DialogNorm norm = new TvV2DialogNorm("重新上传", "删除", bean.getObj() instanceof ImageVo
                 && ((ImageVo) bean.getObj()).isError(), (item, v, dialog) -> {
             dialog.dismiss();
             if (bean.getObj() instanceof ImageVo) {
@@ -573,8 +570,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             notifyDataChanged();
         });
         SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
-                db.getApiType());
-//        api.dialogShow().onNorm(db, 0); //TODO
+                norm.getApiType());
+        api.dialogShow().onNorm(norm, 0);
         Window window = api.getDialog().getWindow();
         if (window != null) {
             WindowManager.LayoutParams lp = window.getAttributes();

@@ -246,6 +246,12 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     XmlResourceParser getRootXmlResourceParser();
 
     /**
+     * 创建根容器
+     * @param group 根视图
+     */
+    ViewGroup onCreateViewGroup(ViewGroup group, @NonNull View rootView);
+
+    /**
      * 返回根视图
      *
      * @return 根视图
