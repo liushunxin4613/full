@@ -2,6 +2,7 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.iapi.api.IKeywordApi;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.other.Transformer;
 import com.leo.core.search.SearchUtil;
@@ -10,6 +11,7 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.LineBean;
+import com.ylink.fullgoal.bean.OnClickBean;
 import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.config.ViewBean;
 
@@ -135,7 +137,10 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         if (bean instanceof LineBean) {
             return !(old instanceof LineBean);
         } else if (bean instanceof IKeywordApi) {
-            String code = ((IKeywordApi) bean).getApiCode();
+            if(bean instanceof OnClickBean){
+                String code = ((IKeywordApi) bean).getApiCode();
+                ((OnClickBean) bean).setSelected(TextUtils.equals(code, getValue()));
+            }
             String fk = ((IKeywordApi) bean).getFilter();
             if (!TextUtils.isEmpty(getFilterData())) {
                 for (String filter : getFilterData()) {
@@ -154,6 +159,12 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
             return SearchUtil.search(bean, keyword);
         }
         return true;
+    }
+
+    @Override
+    protected void initDataAction(IObjAction<List<IApiBean>> action) {
+        super.initDataAction(action);
+        search(getKeyword());
     }
 
     /**

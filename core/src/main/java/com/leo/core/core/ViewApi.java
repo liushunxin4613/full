@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
 import com.leo.core.iapi.api.IVgRunApi;
+import com.leo.core.iapi.inter.ImageAction;
 import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
@@ -89,9 +90,25 @@ public class ViewApi<T extends ViewApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
+    public T setImage(ImageView iv, Object path, ImageAction action) {
+        if (checkView(iv)) {
+            controllerApi().load(path, iv, action);
+        }
+        return getThis();
+    }
+
+    @Override
     public T setImage(ImageView iv, Object path, float rotate) {
         if (checkView(iv)) {
             controllerApi().load(path, iv, rotate);
+        }
+        return getThis();
+    }
+
+    @Override
+    public T setImage(ImageView iv, Object path, float rotate, ImageAction action) {
+        if (checkView(iv)) {
+            controllerApi().load(path, iv, rotate, action);
         }
         return getThis();
     }

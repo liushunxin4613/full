@@ -23,7 +23,7 @@ public class FillDateController<T extends FillDateController> extends StringCont
 
     @Override
     protected String getDefUB() {
-        return DateUtil.getNowTimeString();
+        return DateUtil.getFormatString(DateUtil.getNowDate(), "yyyyMMdd");
     }
 
 }

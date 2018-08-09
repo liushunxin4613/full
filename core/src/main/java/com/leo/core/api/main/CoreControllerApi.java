@@ -41,7 +41,6 @@ import com.leo.core.iapi.api.IVosApi;
 import com.leo.core.iapi.api.IVsApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IActionApi;
-import com.leo.core.iapi.api.ICallbackApi;
 import com.leo.core.iapi.api.IConfigApi;
 import com.leo.core.iapi.api.IDataApi;
 import com.leo.core.iapi.api.IDataTypeApi;
@@ -64,6 +63,7 @@ import com.leo.core.iapi.inter.ITAction;
 import com.leo.core.iapi.api.IUrlApi;
 import com.leo.core.iapi.api.IUserApi;
 import com.leo.core.iapi.api.IVgRunApi;
+import com.leo.core.iapi.inter.ImageAction;
 import com.leo.core.iapi.inter.OnAddListener;
 import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.main.Adapter;
@@ -1230,8 +1230,20 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public T setImage(ImageView iv, Object path, ImageAction action) {
+        viewApi().setImage(iv, path, action);
+        return getThis();
+    }
+
+    @Override
     public T setImage(ImageView iv, Object path, float rotate) {
         viewApi().setImage(iv, path, rotate);
+        return getThis();
+    }
+
+    @Override
+    public T setImage(ImageView iv, Object path, float rotate, ImageAction action) {
+        viewApi().setImage(iv, path, rotate, action);
         return getThis();
     }
 
@@ -1895,8 +1907,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T load(Object path, ImageView iv, ICallbackApi api) {
-        loadImageApi().load(path, iv, api);
+    public T load(Object path, ImageView iv, ImageAction action) {
+        loadImageApi().load(path, iv, action);
         return getThis();
     }
 
@@ -1907,8 +1919,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T load(Object path, ImageView iv, float rotate, ICallbackApi api) {
-        loadImageApi().load(path, iv, rotate, api);
+    public T load(Object path, ImageView iv, float rotate, ImageAction action) {
+        loadImageApi().load(path, iv, rotate, action);
         return getThis();
     }
 

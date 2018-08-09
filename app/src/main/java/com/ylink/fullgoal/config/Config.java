@@ -16,7 +16,7 @@ import static com.ylink.fullgoal.config.UrlConfig.REIMBURSE_QUERY_BILL_TYPE_YB;
 public class Config {
 
     //版本
-    public final static String VERSION_APP = RouteApi.MODULE_APP;
+    private final static String VERSION_APP = RouteApi.MODULE_APP;
 
     //配置
     public final static String VERSION = VERSION_APP;//版本
@@ -84,11 +84,11 @@ public class Config {
     public final static String[][] FULL_STATUS = {
             //前置(无金额)
             {"初始化任务", QZ},
-            {"自动审核", QZ},
             //活动
             {"金额确认", QR},
             {"修改任务", XG},
             //金额前置
+            {"自动审核", MQZ},
             {"申诉任务", MQZ},
             //后置(有费控批次,和流程节点)
     };

@@ -4,6 +4,8 @@ import com.leo.core.iapi.main.IOnCom;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.fg.TravelFormFg;
 
+import java.util.List;
+
 import static com.ylink.fullgoal.config.ComConfig.CC;
 
 /**
@@ -14,6 +16,11 @@ public class TravelFormController<T extends TravelFormController> extends AddCon
     @Override
     public T initDB(TravelFormFg fg) {
         return super.initDB(fg);
+    }
+
+    @Override
+    public List<TravelFormFg> getData() {
+        return super.getData();
     }
 
     @Override

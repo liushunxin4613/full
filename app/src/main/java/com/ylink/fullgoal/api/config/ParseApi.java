@@ -9,6 +9,7 @@ import com.leo.core.api.core.ThisApi;
 import com.leo.core.bean.Completed;
 import com.leo.core.bean.DataEmpty;
 import com.leo.core.bean.HttpError;
+import com.leo.core.bean.ParseCompleted;
 import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.net.Exceptions;
@@ -35,10 +36,12 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     private String msg;
     private String path;
     private Handler handler;
+    private ParseCompleted parseCompleted;
     private Map<String, ParseTypeBean> map;
 
     public ParseApi() {
         map = new HashMap<>();
+        parseCompleted = new ParseCompleted();
         handler = new Handler(Looper.getMainLooper());
     }
 
@@ -174,12 +177,17 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
      * @return 是否后加数据
      */
     private boolean checkRootType(ParseTypeBean bean) {
-        return bean != null && bean.getType() != null
-                && !TextUtils.equals(bean.getType(), ResponseBody.class)
-                && !TextUtils.equals(bean.getType(), String.class)
-                && !TextUtils.equals(bean.getType(), Completed.class)
-                && !TextUtils.equals(bean.getType(), DataEmpty.class)
-                && !TextUtils.equals(bean.getType(), Exceptions.class);
+        return bean != null && checkRootType(bean.getType());
+    }
+
+    private boolean checkRootType(Type type) {
+        return type != null
+                && !TextUtils.equals(type, ResponseBody.class)
+                && !TextUtils.equals(type, String.class)
+                && !TextUtils.equals(type, Completed.class)
+                && !TextUtils.equals(type, DataEmpty.class)
+                && !TextUtils.equals(type, ParseCompleted.class)
+                && !TextUtils.equals(type, Exceptions.class);
     }
 
     /**
@@ -198,6 +206,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     private void executeAction(String name, IPathMsgAction action, Object obj) {
         if (TextUtils.check(action) && TextUtils.checkNull(obj)) {
             handler.post(() -> action.execute(name, no(path), what, no(msg), obj));
+            parseCompleted.add(obj.getClass());
         }
     }
 
@@ -215,10 +224,13 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
             } else {
                 execute(getMap(), (type, bean) -> {
                     if (checkRootType(bean)) {
-                        onData(null, GsonDecodeUtil.decode(text, bean.getType()),
+                        onData(path, GsonDecodeUtil.decode(text, bean.getType()),
                                 bean.getMap());
                     }
                 });
+                if(!TextUtils.isEmpty(parseCompleted.getData())){
+                    onObj(parseCompleted, ParseCompleted.class);
+                }
             }
         }
     }
@@ -237,13 +249,17 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     /**
      * 解出对象
      */
-    private void onObj(Object obj, Class clz) {
+    private void onObj(String name, Object obj, Class clz) {
         if (check(obj, clz) && clz.isInstance(obj)) {
             ParseTypeBean bean = getParseTypeBean(ParseTypeBean.getName(clz));
             if (bean != null) {
-                onData(path, obj, bean.getMap());
+                onData(name, obj, bean.getMap());
             }
         }
+    }
+
+    private void onObj(Object obj, Class clz) {
+        onObj(path, obj, clz);
     }
 
     /**
@@ -262,7 +278,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                                 TypeToken.getParameterized(List.class, itemClz).getType())));
                     }
                 } else {
-                    onObj(new DataEmpty(), DataEmpty.class);
+                    onObj(name, new DataEmpty(), DataEmpty.class);
                 }
             } else {
                 Class clz = obj.getClass();

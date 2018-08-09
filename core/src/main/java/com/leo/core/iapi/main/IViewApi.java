@@ -9,9 +9,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.api.IVgRunApi;
 import com.leo.core.iapi.core.IApi;
+import com.leo.core.iapi.inter.ImageAction;
 
 public interface IViewApi<T extends IViewApi> extends IApi {
 
@@ -96,12 +96,31 @@ public interface IViewApi<T extends IViewApi> extends IApi {
     /**
      * 设置图片
      *
+     * @param iv   ImageView
+     * @param path 图片路径
+     * @return 媒介
+     */
+    T setImage(ImageView iv, Object path, ImageAction action);
+
+    /**
+     * 设置图片
+     *
      * @param iv     ImageView
      * @param path   图片路径
      * @param rotate 旋转
      * @return 媒介
      */
     T setImage(ImageView iv, Object path, float rotate);
+
+    /**
+     * 设置图片
+     *
+     * @param iv     ImageView
+     * @param path   图片路径
+     * @param rotate 旋转
+     * @return 媒介
+     */
+    T setImage(ImageView iv, Object path, float rotate, ImageAction action);
 
     /**
      * 设置icon是否隐藏

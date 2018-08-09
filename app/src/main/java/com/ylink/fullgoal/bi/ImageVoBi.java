@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leo.core.factory.ImageFactory;
 import com.leo.core.util.HelperUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -49,11 +50,16 @@ public class ImageVoBi extends SurfaceBi<ImageVoBi, ImageVo> {
                         View.INVISIBLE : View.VISIBLE, photoIv)
                 .setText(nameTv, "金额")
                 .setText(detailEt, bean.getAmount())
-                .setImage(photoIv, bean.getPhoto())
+                .setImage(photoIv, bean.getPhoto(), ImageFactory.getInstance().getRotate(bean.getPhoto()),
+                        (path, iv, rotate, success) -> ImageFactory.getInstance().save(path, rotate))
                 .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt,
                         null, bean::setAmount))
-                .setOnClickListener(toLeftTv, view -> photoIv.setRotationBy(-90))
-                .setOnClickListener(toRightTv, view -> photoIv.setRotationBy(90))
+                .setOnClickListener(toLeftTv, view -> api.setImage(photoIv, bean.getPhoto(),
+                        ImageFactory.getInstance().getRotate(bean.getPhoto(), -90),
+                        (path, iv, rotate, success) -> ImageFactory.getInstance().save(path, rotate)))
+                .setOnClickListener(toRightTv, view -> api.setImage(photoIv, bean.getPhoto(),
+                        ImageFactory.getInstance().getRotate(bean.getPhoto(), 90),
+                        (path, iv, rotate, success) -> ImageFactory.getInstance().save(path, rotate)))
                 .execute(() -> hVg.setListenOnClickListener(SoftInputUtil::hidSoftInput));
     }
 

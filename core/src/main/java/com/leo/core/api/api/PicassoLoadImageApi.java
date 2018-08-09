@@ -6,8 +6,8 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 import com.leo.core.api.core.ThisApi;
-import com.leo.core.iapi.api.ICallbackApi;
 import com.leo.core.iapi.api.ILoadImageApi;
+import com.leo.core.iapi.inter.ImageAction;
 import com.leo.core.util.TextUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -68,8 +68,8 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
     }
 
     @Override
-    public T load(Object path, ImageView iv, ICallbackApi api) {
-        load(path, iv, -1, api);
+    public T load(Object path, ImageView iv, ImageAction action) {
+        load(path, iv, -1, action);
         return getThis();
     }
 
@@ -80,7 +80,7 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
     }
 
     @Override
-    public T load(Object path, ImageView iv, float rotate, ICallbackApi api) {
+    public T load(Object path, ImageView iv, float rotate, ImageAction action) {
         if (iv != null) {
             RequestCreator rc = getRc(path);
             init(rc, rotate);
@@ -88,15 +88,15 @@ public class PicassoLoadImageApi<T extends PicassoLoadImageApi> extends ThisApi<
                 rc.into(iv, new Callback() {
                     @Override
                     public void onSuccess() {
-                        if (api != null) {
-                            api.onCall(CALLBACK_SUCCESS, path);
+                        if (action != null) {
+                            action.execute(path, iv, rotate, true);
                         }
                     }
 
                     @Override
                     public void onError() {
-                        if (api != null) {
-                            api.onCall(CALLBACK_SUCCESS, path);
+                        if (action != null) {
+                            action.execute(path, iv, rotate, false);
                         }
                     }
                 });

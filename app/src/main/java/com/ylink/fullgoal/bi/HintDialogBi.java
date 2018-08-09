@@ -38,7 +38,7 @@ public class HintDialogBi extends SurfaceBi<HintDialogBi, HintDialogBean> {
                 .execute(() -> bean.setDialog(api.getDialog()))
                 .setOnClickListener(confirmTv, bean.getConfirmOnClickListener())
                 .setOnClickListener(cancelTv, bean.getCancelOnClickListener())
-                .setVisibility(confirmTv, TextUtils.isEmpty(bean.getCancel())
+                .setVisibility(cancelTv, TextUtils.isEmpty(bean.getCancel())
                         ? View.GONE : View.VISIBLE);
     }
 

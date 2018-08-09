@@ -21,6 +21,11 @@ public class ApplyMapControllerV2<T extends ApplyMapControllerV2> extends BaseMa
         String, ApplyDataFgV2, List<Map<String, String>>> {
 
     @Override
+    public ApplyDataFgV2 getDB() {
+        return super.getDB();
+    }
+
+    @Override
     protected Map<String, ApplyDataFgV2> newMap() {
         return new LinkedHashMap<>();
     }
@@ -123,6 +128,12 @@ public class ApplyMapControllerV2<T extends ApplyMapControllerV2> extends BaseMa
                 return data;
         }
         return super.getOnUB(key);
+    }
+
+    public List<Map<String, String>> getListMap(){
+        List<Map<String, String>> data = new ArrayList<>();
+        execute(getMap(), (key, value) -> data.add(value.getMap()));
+        return data;
     }
 
 }

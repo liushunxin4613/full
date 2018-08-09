@@ -110,6 +110,13 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         return R.layout.l_cost_index;
     }
 
+    private String getDimenCode(RecycleControllerApi api, String code) {
+        if (check(api, code)) {
+            return vr(getCostItemController(api), obj -> obj.getValue(code), DimenListFg::getCode);
+        }
+        return null;
+    }
+
     private String getDimenValue(RecycleControllerApi api, String code) {
         if (check(api, code)) {
             return vr(getCostItemController(api), obj -> obj.getValue(code), DimenListFg::getName);
@@ -193,7 +200,13 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                     case FULL_REIMBURSE_SUBMIT://报销确认
                         show("报销确认成功");
                         if (TextUtils.equals(mainApp, MAIN_APP)) {
-                            activityLifecycleApi().finishAllActivity();
+                            dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
+                                dialog.dismiss();
+                                getActivity().finish();
+                            }, (bean1, v, dialog) -> {
+                                dialog.dismiss();
+                                activityLifecycleApi().finishAllActivity();
+                            });
                         } else {
                             activityLifecycleApi().remove(SurfaceActivity.class,
                                     BaseControllerApiActivity::finish);
@@ -337,6 +350,10 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private boolean checkToMore() {
         CostIndexVo vo = vor(CostVo::getPager, obj -> obj.getValue(getThisApi()));
         if (vo != null) {
+            if (vo.getMoney().getdouble() <= 0) {
+                show("你还没有分摊金额");
+                return true;
+            }
             Map<String, DimenListFg> map = vo.getItem().getMap();
             List<DimenFg> data = vor(CostVo::getDimenData, DimenListController::getViewBean);
             if (!TextUtils.isEmpty(data)) {
@@ -397,7 +414,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         if (check(item.getCode(), item.getName())) {
                             addDataOfCode(data, item, new TvH2MoreBean(item.getName(), getDimenValue(api, item.getCode()),
                                     String.format("请选择%s", item.getName()), (bean, view) -> routeApi()
-                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item), item.getApiCode()), (bean, view)
+                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item), getDimenCode(api, item.getCode())), (bean, view)
                                     -> vs(getCostItemController(api), obj -> obj.remove(item.getCode()))));
                         }
                     });
@@ -422,6 +439,26 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         if (!TextUtils.isEmpty(map)) {
             vo.getItem().getMap().putAll(map);
         }
+        /*else {
+            List<DimenFg> list = vor(CostVo::getDimenData, DimenListController::getData);
+            if (TextUtils.check(dataMap)) {
+                Object reimbursement = dataMap.get("reimbursement");
+                if (reimbursement instanceof Map) {
+                    ((Map) reimbursement).get("userCode");
+                }
+                execute(list, item -> {
+                    if (TextUtils.check(item) && TextUtils.check(item.getName())) {
+                        switch (item.getName()) {
+                            case "人员":
+                                vo.getItem().getMap().put(item.getCode(), new DimenListFg());
+                                break;
+                            case "部门":
+                                break;
+                        }
+                    }
+                });
+            }
+        }*/
         vos(CostVo::getPager, obj -> obj.initDB(api, vo));
         initAddVgBean(api);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {

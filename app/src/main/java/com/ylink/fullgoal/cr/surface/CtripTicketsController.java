@@ -4,6 +4,8 @@ import com.leo.core.iapi.main.IOnCom;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 
+import java.util.List;
+
 import static com.ylink.fullgoal.config.ComConfig.CC;
 
 /**
@@ -14,6 +16,11 @@ public class CtripTicketsController<T extends CtripTicketsController> extends Ad
     @Override
     public T initDB(CtripTicketsFg ctripTicketsFg) {
         return super.initDB(ctripTicketsFg);
+    }
+
+    @Override
+    public List<CtripTicketsFg> getData() {
+        return super.getData();
     }
 
     @Override

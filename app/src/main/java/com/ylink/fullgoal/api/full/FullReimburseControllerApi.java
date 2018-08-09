@@ -1,8 +1,5 @@
 package com.ylink.fullgoal.api.full;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +10,16 @@ import android.widget.TextView;
 
 import com.leo.core.api.inter.CoreController;
 import com.leo.core.bean.Bol;
-import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.iapi.inter.OnBVDialogClickListener;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
-import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.GridBean;
 import com.ylink.fullgoal.bean.GridPhotoBean;
-import com.ylink.fullgoal.bean.HintDialogBean;
 import com.ylink.fullgoal.bean.TvBean;
 import com.ylink.fullgoal.bean.TvHintBean;
 import com.ylink.fullgoal.bean.TvV2DialogBean;
@@ -35,13 +28,11 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.BaseBiBean;
-import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.StringController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.DepartmentController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
-import com.ylink.fullgoal.cr.surface.SerialNoController;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
@@ -55,7 +46,6 @@ import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
 import com.ylink.fullgoal.vo.ApplyVoV2;
 import com.ylink.fullgoal.vo.DVo;
-import com.ylink.fullgoal.vo.DVoV1;
 import com.ylink.fullgoal.vo.ImageVo;
 import com.ylink.fullgoal.vo.RVo;
 
@@ -190,7 +180,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     if (bean.isSuccess() && !TextUtils.isEmpty(getState())) {
                         switch (getState()) {
                             case FQ://经办人发起
-//                                    show("报销成功");
                                 again();
                                 break;
                             case QR://经办人确认
@@ -206,7 +195,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                                 show(String.format("%s成功", !TextUtils.isEmpty(logo)
                                         ? logo : "报销修改"));
                                 if (TextUtils.equals(getMainApp(), MAIN_APP)) {
-                                    activityLifecycleApi().finishAllActivity();
+                                    dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
+                                        dialog.dismiss();
+                                        getActivity().finish();
+                                    }, (bean1, v, dialog) -> {
+                                        dialog.dismiss();
+                                        activityLifecycleApi().finishAllActivity();
+                                    });
                                 } else {
                                     getActivity().finish();
                                 }
@@ -268,7 +263,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setRightTv("提交", v -> submit());
                     break;
                 case QR:
-                    setRightTv("确认", v -> confirm());
+                    setRightTv("确认", v -> submit());
                     break;
                 case XG:
                     setRightTv("申诉", v -> api().appeal(vor(DVo::getSerialNo,
@@ -284,7 +279,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     }).setOnClickListener(xgtjTv, v -> {
                         //修改提交
                         vos(DVo::getLogo, obj -> obj.initDB(XG3));
-                        confirm();
+                        submit();
                     }).setOnClickListener(qxbxTv, v -> {
                         //取消报销
                         vos(DVo::getLogo, obj -> obj.initDB(XG4));
@@ -293,7 +288,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     break;
             }
         });
-        //test
+    }
+
+    @Override
+    public void initData() {
+        super.initData();
         vos(DVo::getImageList, obj -> obj.setOnCom(this));
         vos(DVo::getAgent, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
         vos(DVo::getReimbursement, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
@@ -315,7 +314,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 vos(DVo::getTrave, CoreController::clear);//清理出差申请单数据
                 vos(DVo::getReport, CoreController::clear);//清理调研报告数据
                 vos(DVo::getCtrip, CoreController::clear);//清理携程机票数据
-                vos(DVoV1::getApply, CoreController::clear);//清理申请单数据
+                vos(DVo::getApply, CoreController::clear);//清理申请单数据
                 //重新处理部门数据
                 vos(DVo::getBudgetDepartment, obj -> obj.initDB(new DepartmentFg(
                         fg.getUserDepartmentCode(), fg.getUserDepartment())));//更新部门数据
@@ -332,7 +331,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 vos(DVo::getIsShare, CoreController::clear);//清理费用指标数据时,同清理是否分摊数据
                 vos(DVo::getTrave, CoreController::clear);//清理出差申请单数据
                 vos(DVo::getReport, CoreController::clear);//清理调研报告数据
-                vos(DVoV1::getApply, CoreController::clear);//清理申请单数据
+                vos(DVo::getApply, CoreController::clear);//清理申请单数据
             }
             vos(DVo::getBudgetDepartment, obj -> obj.initDB(vo.getObj()));
         });
@@ -348,7 +347,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             vos(DVo::getCostIndex, obj -> obj.initDB(fg));
             api().queryIsDimensionList(fg.getCostCode(), vor(DVo::getBudgetDepartment,
                     DepartmentController::getApiCode));//重定是否分摊数据
-            vos(DVoV1::getApply, CoreController::clear);//清理申请单数据
+            vos(DVo::getApply, CoreController::clear);//清理申请单数据
         });
         //出差申请单
         executeSearch(TravelFormFg.class, vo -> vos(DVo::getTrave, obj -> obj.initDB(vo.getObj())));
@@ -359,11 +358,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         //票据修改金额
         execute(getFinish(), ImageVo.class, vo -> vos(DVo::getImageList, obj -> obj.updateMoney(vo)));
         //申请单
-        executeSearch(ApplyVoV2.class, vo -> {
-            if (getVo() instanceof DVoV1) {
-                ((DVoV1) getVo()).setApply(vo.getObj().getApply());
-            }
-        });
+        executeSearch(ApplyVoV2.class, vo -> getVo().setApply(vo.getObj().getApply()));
         notifyDataChanged();
     }
 
@@ -398,50 +393,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     //私有的
 
-    private void confirm() {
-        String money = vor(DVo::getMoney, DoubleController::getDBMoney);
-        vos(DVo::getCostIndex, obj -> obj.update(money));
-        Map<String, Object> map = getSubmitMap();
-        if (!TextUtils.isEmpty(map)) {
-            if (getVo().getIsShare().is()) {
-                //更新分摊金额
-                vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
-                        CostIndexController::getDB)));
-                routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
-                        .put(MAIN_APP, getMainApp()));
-            } else {
-                api().submitReimburse(map);
-            }
-        }
-    }
-
-    private void dialog(String detail, String confirm, String cancel,
-                        OnBVDialogClickListener<HintDialogBean> confirmListener,
-                        OnBVDialogClickListener<HintDialogBean> cancelListener) {
-        if (TextUtils.check(detail, confirm, confirmListener)) {
-            HintDialogBean dialogBean = new HintDialogBean("温馨提示", detail, confirm,
-                    cancel, confirmListener, cancelListener);
-            SurfaceControllerApi api = getDialogControllerApi(getActivity(),
-                    SurfaceControllerApi.class, dialogBean.getApiType());
-            api.dialogShow().onBindViewHolder(dialogBean, 0).execute(() -> {
-                Window window = api.getDialog().getWindow();
-                if (window != null) {
-                    window.setGravity(Gravity.CENTER);
-                    WindowManager.LayoutParams lp = window.getAttributes();
-                    IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
-                    lp.width = (int) (display.getX() * 0.8);
-                    window.setAttributes(lp);
-                }
-            });
-        }
-    }
-
     private void again() {
         dialog("是否需要添加新的报销", "是",
                 "否", (bean, v, dialog) -> {
                     dialog.dismiss();
-                    vos(DVo::getImageList, AddController::clear);
-                    vos(DVo::getSerialNo, SerialNoController::clear);
+                    getVo().initNewFields();
+                    initData();
                     notifyDataChanged();
                 }, (bean, v, dialog) -> {
                     dialog.dismiss();
@@ -469,18 +426,38 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 提交数据
      */
     private void submit() {
+        vos(DVo::getSbumitFlag, obj -> obj.initDB(String.valueOf(getFlag())));
+        vos(DVo::getCostIndex, obj -> obj.update((String) vor(DVo::getMoney,
+                DoubleController::getDBMoney)));
+        Map<String, Object> map = getSubmitMap();
         checkAction(() -> {
-            Map<String, Object> map = getSubmitMap();
             if (!TextUtils.isEmpty(map)) {
-                api().submitReimburse(map);
+                if (getVo().getIsShare().is() && !getVo().getSbumitFlag().isOpen()) {
+                    vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
+                            CostIndexController::getDB)));//更新分摊金额
+                    routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
+                            .put(MAIN_APP, getMainApp()));
+                } else {
+                    api().submitReimburse(map);
+                }
             }
         });
+    }
+
+    private int getFlag() {
+        if (TextUtils.equals(state, FQ) || getVo().getImageList().isNewAddImage()) {
+            return 1;//新影像
+        } else if (vor(DVo::getSame, obj -> obj.equals(getVo().getInfoMap()))) {
+            return 2;//无任何修改
+        }
+        return 3;//有修改
     }
 
     private void checkAction(IAction action) {
         if (TextUtils.equals(vor(DVo::getCostIndex, CostIndexController::getCostName),
                 "其他招待（办公）")) {
             double money = vor(DVo::getMoney, DoubleController::getdouble);
+            ee("money", money);
             if (money > 3000) {
                 dialog("您的报销金额超过三千元,请关联招待申请单", "确认", null, (bean, v, dialog)
                         -> dialog.dismiss(), null);
@@ -535,7 +512,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         }
     }
 
-    protected void addVgBean(String title, GridBean bean) {
+    void addVgBean(String title, GridBean bean) {
         if (bean != null && !(!isEnable() && TextUtils.isEmpty(bean.getData()))) {
             if (!TextUtils.isEmpty(title)) {
                 addVgBean(new TvHintBean(title, isEnable()), bean);
@@ -555,7 +532,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     private GridPhotoBean newGridPhotoBean(List<ImageVo> data, ImageVo vo) {
-        return getExecute(vo, obj -> new GridPhotoBean(obj.getPhoto(), obj,
+        return getExecute(vo, obj -> new GridPhotoBean(obj.getBindPhoto(), obj,
                 (bean, view) -> onGridPhotoClick(data, vo),
                 this::onGridPhotoLongClick));
     }

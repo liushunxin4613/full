@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leo.core.factory.ImageFactory;
 import com.leo.core.queue.QueueFactory;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -36,7 +37,7 @@ public class GridPhotoBi extends SurfaceBi<GridPhotoBi, GridPhotoBean> {
     @Override
     public void updateBind(@NonNull SurfaceControllerApi api, @NonNull GridPhotoBean bean) {
         super.updateBind(api, bean);
-        api.setImage(iconIv, bean.getRes())
+        api.setImage(iconIv, bean.getRes(), ImageFactory.getInstance().getRotate(bean.getRes()))
                 .execute(() -> {
                     if (bean.getObj() instanceof ImageVo) {
                         ImageVo vo = (ImageVo) bean.getObj();

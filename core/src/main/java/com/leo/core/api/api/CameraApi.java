@@ -130,6 +130,8 @@ public class CameraApi extends DirApi implements ICameraApi {
                             photoFile);
                     ii("photoFile.getPath()", photoFile.getPath());
                     ii("photoFile", FileSizeUtil.getFormetFileSize(photoFile));*/
+                    /*String path = PhotoBitmapUtils.amendRotatePhoto(photoFile.getPath(),
+                            controllerApi().getContext());*/
                     Luban.with(controllerApi().getContext())
                             .load(photoFile)
                             .setTargetDir(getRootDir().getPath())
@@ -138,7 +140,6 @@ public class CameraApi extends DirApi implements ICameraApi {
                                 @Override
                                 public void onStart() {
                                 }
-
                                 @Override
                                 public void onSuccess(File lubanFile) {
                                     photoFile.delete();
@@ -148,7 +149,6 @@ public class CameraApi extends DirApi implements ICameraApi {
                                         action.execute(photoType, null, lubanFile);
                                     }
                                 }
-
                                 @Override
                                 public void onError(Throwable e) {
                                     e.printStackTrace();

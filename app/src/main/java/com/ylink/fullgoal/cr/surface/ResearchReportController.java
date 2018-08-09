@@ -4,6 +4,8 @@ import com.leo.core.iapi.main.IOnCom;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 
+import java.util.List;
+
 import static com.ylink.fullgoal.config.ComConfig.CC;
 
 /**
@@ -14,6 +16,11 @@ public class ResearchReportController<T extends ResearchReportController> extend
     @Override
     public T initDB(ResearchReportFg researchReportFg) {
         return super.initDB(researchReportFg);
+    }
+
+    @Override
+    public List<ResearchReportFg> getData() {
+        return super.getData();
     }
 
     @Override

@@ -13,7 +13,6 @@ import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.fg.NodeFg;
 import com.ylink.fullgoal.fg.RuleFg;
 import com.ylink.fullgoal.vo.DVo;
-import com.ylink.fullgoal.vo.DVoV1;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.util.List;
@@ -28,16 +27,6 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
 
     public FullGeneralControllerApi(C controller) {
         super(controller);
-    }
-
-    @Override
-    public DVoV1 getVo() {
-        return (DVoV1) super.getVo();
-    }
-
-    @Override
-    public DVoV1 newVo() {
-        return new DVoV1();
     }
 
     @Override
@@ -76,10 +65,10 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
                     (bean, view) -> routeApi().search(SearchVo.COST_INDEX, getParams(),
                             vorc(DVo::getCostIndex)),
                     (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
-            checkAdd(data, vorv(DVoV1::getApply), new TvH2MoreBean("申请单",
-                    vorv(DVoV1::getApply), "请选择申请单", (bean, view)
+            checkAdd(data, vorv(DVo::getApply), new TvH2MoreBean("申请单",
+                    vorv(DVo::getApply), "请选择申请单", (bean, view)
                     -> routeApi().searchApply(SearchVo.APPLY, getParams(),
-                    encode(getVo().getApply())), (bean, view) -> vos(DVoV1::getApply, CoreController::clear)));
+                    encode(getVo().getApply())), (bean, view) -> vos(DVo::getApply, CoreController::clear)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, vorv(DVo::getMoney), new TvH2Bean("金额", vorv(DVo::getMoney)));

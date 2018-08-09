@@ -38,7 +38,7 @@ public class NewFieldBean extends VsApi<NewFieldBean> {
         });
     }
 
-    protected void initNewFields() {
+    public void initNewFields() {
         initFields(field -> {
             try {
                 field.setAccessible(true);

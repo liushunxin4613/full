@@ -9,7 +9,7 @@ public class Config {
     public final static String APP_XML = "app://xml/";
 
     //超时时间(单位:秒)
-    public final static int TIME_OUT_SECONDS = 15;
+    public final static int TIME_OUT_SECONDS = 40;
 
     //其他
 
