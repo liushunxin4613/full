@@ -28,6 +28,28 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     }
 
     @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String taskId = intent.getStringExtra("taskId");
+        String cookie = intent.getStringExtra("cookie");
+        String userId = intent.getStringExtra("userId");
+        String username = intent.getStringExtra("username");
+        String name = intent.getStringExtra("name");
+        String cookieStr = intent.getStringExtra("cookieStr");
+        String portalPac = intent.getStringExtra("portalPac");
+        if (TextUtils.check(userId, username)) {//TODO 测试用
+            api().queryUserName(userId);
+            initUser(new UserBean(taskId, name, cookie, userId,
+                    username, cookieStr, portalPac));
+        }
+        api().SSO(getCastgc());
+        ii("user", getUser());
+        if (TextUtils.check(taskId)) {
+            api().queryNoShowLoadingMessageBack(taskId);
+        }
+    }
+
+    @Override
     public void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
         add(MessageBackFg.class, (fieldName, path, what, msg, bean) -> {
@@ -65,37 +87,15 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     }
 
     @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        String taskId = intent.getStringExtra("taskId");
-        String cookie = intent.getStringExtra("cookie");
-        String userId = intent.getStringExtra("userId");
-        String username = intent.getStringExtra("username");
-        String name = intent.getStringExtra("name");
-        String cookieStr = intent.getStringExtra("cookieStr");
-        String portalPac = intent.getStringExtra("portalPac");
-        if (TextUtils.check(userId, username)) {//TODO 测试用
-            api().queryUserName(userId);
-            initUser(new UserBean(taskId, name, cookie, userId,
-                    username, cookieStr, portalPac));
-        }
-        api().SSO(getCastgc());
-        ii("user", getUser());
-        if (TextUtils.check(taskId)) {
-            api().queryNoShowLoadingMessageBack(taskId);
-        }
-    }
-
-    @Override
     public void initView() {
         super.initView();
         hideBackIv().setTitle("富国基金个人报销平台");
         add(new ImageNorm(R.mipmap.banner));
-        add(new IconTvMoreNorm(R.mipmap.m1, "一般费用报销", (bean, view) -> routeApi().general(FQ)));
-        add(new IconTvMoreNorm(R.mipmap.m2, "出差费用报销", (bean, view) -> routeApi().evection(FQ)));
-        add(new IconTvMoreNorm(R.mipmap.m3, "报销列表查询", (bean, view) -> routeApi().queryReimburse()));
-        add(new IconTvMoreNorm(R.mipmap.m4, "选择银行卡号", (bean, view) -> routeApi().selectBank()));
-        notifyDataSetChanged();
+        addSmallVgNorm(new IconTvMoreNorm(R.mipmap.m1, "一般费用报销", (bean, view) -> routeApi().general(FQ)),
+                new IconTvMoreNorm(R.mipmap.m2, "出差费用报销", (bean, view) -> routeApi().evection(FQ)),
+                new IconTvMoreNorm(R.mipmap.m3, "报销列表查询", (bean, view) -> routeApi().queryReimburse()),
+                new IconTvMoreNorm(R.mipmap.m4, "选择银行卡号", (bean, view) -> routeApi().selectBank()))
+                .notifyDataSetChanged();
     }
 
 }

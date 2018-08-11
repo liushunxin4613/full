@@ -10,18 +10,19 @@ import android.widget.TextView;
 
 import com.leo.core.api.inter.CoreController;
 import com.leo.core.bean.Bol;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.GridBean;
-import com.ylink.fullgoal.bean.GridPhotoBean;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.core.SurfaceNorm;
 import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.StringController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
@@ -39,6 +40,7 @@ import com.ylink.fullgoal.fg.ResearchReportFg;
 import com.ylink.fullgoal.fg.TravelFormFg;
 import com.ylink.fullgoal.fg.UserFg;
 import com.ylink.fullgoal.norm.GridNorm;
+import com.ylink.fullgoal.norm.GridPhotoNorm;
 import com.ylink.fullgoal.norm.TvHintNorm;
 import com.ylink.fullgoal.norm.TvNorm;
 import com.ylink.fullgoal.norm.TvV2DialogNorm;
@@ -85,8 +87,6 @@ import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
  * 报销
  */
 public abstract class FullReimburseControllerApi<T extends FullReimburseControllerApi, C> extends RecycleBarControllerApi<T, C> {
-
-    private final static int PHOTO_REQUEST_CAMERA = 0x101;
 
     @Bind(R.id.sqtp_tv)
     TextView sqtpTv;
@@ -373,6 +373,18 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         });
     }
 
+    @Override
+    protected VgNorm addVgNorm(IObjAction<List<INorm>> api) {
+        return super.addVgNorm(data -> {
+            api.execute(data);
+            execute(data, item -> {
+                if (item instanceof SurfaceNorm) {
+                    ((SurfaceNorm) item).setEnable(isEnable());
+                }
+            });
+        });
+    }
+
     String getParams() {
         return encode(map(map -> map.put("reimbursement",
                 vor(DVo::getReimbursement, CoreController::getApiCode))
@@ -397,13 +409,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 });
     }
 
-    private List<GridPhotoBean> getPhotoGridBeanData(int type, List<ImageVo> data) {
-        List<GridPhotoBean> gridData = new ArrayList<>();
+    private List<GridPhotoNorm> getPhotoGridBeanData(int type, List<ImageVo> data) {
+        List<GridPhotoNorm> gridData = new ArrayList<>();
         execute(data, obj -> gridData.add(newGridPhotoBean(data, obj).setEnable(isEnable())
                 .setVisible(isNoneInitiateEnable())));
         if (isEnable()) {
-            gridData.add(new GridPhotoBean(R.mipmap.posting_add, null, (bean, view) ->
-                    //打开图片
+            gridData.add(new GridPhotoNorm(R.mipmap.posting_add, null, (bean, view) ->
                     cameraApi().openCamera(type, (what, msg, file, args) -> {
                         ImageVo vo = addPhoto(file.getPath(), what);
                         api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
@@ -513,17 +524,17 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         }
     }
 
-    GridBean newGridBean(int type) {
-        return new GridBean(getPhotoGridBeanData(type,
+    GridNorm newGridNorm(int type) {
+        return new GridNorm(getPhotoGridBeanData(type,
                 vor(DVo::getImageList, obj -> obj.getFilterDBData(type))));
     }
 
-    GridBean newGridBean(int type, List<ImageVo> data) {
-        return new GridBean(getPhotoGridBeanData(type, data));
+    GridNorm newGridNorm(int type, List<ImageVo> data) {
+        return new GridNorm(getPhotoGridBeanData(type, data));
     }
 
-    private GridPhotoBean newGridPhotoBean(List<ImageVo> data, ImageVo vo) {
-        return getExecute(vo, obj -> new GridPhotoBean(obj.getBindPhoto(), obj,
+    private GridPhotoNorm newGridPhotoBean(List<ImageVo> data, ImageVo vo) {
+        return getExecute(vo, obj -> new GridPhotoNorm(obj.getBindPhoto(), obj,
                 (bean, view) -> onGridPhotoClick(data, vo),
                 this::onGridPhotoLongClick));
     }
@@ -541,16 +552,16 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     /**
      * 图片长按
      *
-     * @param bean bean
-     * @param view view
+     * @param photoNorm photoNorm
+     * @param view      view
      * @return 是否同时响应点击
      */
-    private boolean onGridPhotoLongClick(GridPhotoBean bean, View view) {
-        TvV2DialogNorm norm = new TvV2DialogNorm("重新上传", "删除", bean.getObj() instanceof ImageVo
-                && ((ImageVo) bean.getObj()).isError(), (item, v, dialog) -> {
+    private boolean onGridPhotoLongClick(GridPhotoNorm photoNorm, View view) {
+        TvV2DialogNorm norm = new TvV2DialogNorm("重新上传", "删除", photoNorm.getObj() instanceof ImageVo
+                && ((ImageVo) photoNorm.getObj()).isError(), (item, v, dialog) -> {
             dialog.dismiss();
-            if (bean.getObj() instanceof ImageVo) {
-                ImageVo vo = (ImageVo) bean.getObj();
+            if (photoNorm.getObj() instanceof ImageVo) {
+                ImageVo vo = (ImageVo) photoNorm.getObj();
                 vo.onError(false);
                 api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
                         vo.getInvoiceUseType(), vord(DVo::getSerialNo),
@@ -558,8 +569,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
         }, (item, v, dialog) -> {
             dialog.dismiss();
-            if (bean.getObj() instanceof ImageVo) {
-                ImageVo vo = (ImageVo) bean.getObj();
+            if (photoNorm.getObj() instanceof ImageVo) {
+                ImageVo vo = (ImageVo) photoNorm.getObj();
                 if (TextUtils.check(vo.getImageID())) {
                     api().imageDelete(vord(DVo::getSerialNo), vo.getImageID(),
                             vo.getAmount(), vo.getKey(), vo.getImageID());
@@ -584,7 +595,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     /**
      * 数据是否可以修改
      */
-    private boolean isEnable() {
+    boolean isEnable() {
         return !(TextUtils.equals(state, QZ)
                 || TextUtils.equals(state, MQZ)
                 || TextUtils.equals(state, HZ));
@@ -600,7 +611,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     /**
      * 是否有金额
      */
-    private boolean isNoneInitiateEnable() {
+    boolean isNoneInitiateEnable() {
         return !(TextUtils.equals(state, FQ)
                 || TextUtils.equals(state, QZ));
     }

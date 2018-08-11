@@ -92,4 +92,5 @@ public class DiaoyanBean extends OnClickBean<DiaoyanBean> {
     public void setText(String text) {
         this.text = text;
     }
+
 }

@@ -202,7 +202,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     protected T addNoneSmallVgNorm(INorm... args) {
         if (!TextUtils.isEmpty(args)) {
-            add(new VgNorm(TextUtils.getListData(args), VgNorm.LAYOUT_NONE_RES_ID)
+            add(new VgNorm(TextUtils.getListData(args), VgNorm.LAYOUT_LINE_RES_ID)
                     .setLineLayoutResId(VgNorm.LINE_SMALL));
         }
         return getThis();
@@ -210,13 +210,13 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     protected T addVgNorm(INorm... args) {
         if (!TextUtils.isEmpty(args)) {
-            add(new VgNorm(TextUtils.getListData(args))
-                    .setLineLayoutResId(VgNorm.LINE_SMALL));
+            add(new VgNorm(TextUtils.getListData(args), VgNorm.LAYOUT_LINE_RES_ID)
+                    .setLineLayoutResId(VgNorm.LINE_NORMAL));
         }
         return getThis();
     }
 
-    public VgNorm addVgNorm(IObjAction<List<INorm>> api){
+    protected VgNorm addVgNorm(IObjAction<List<INorm>> api){
         return addVgNorm(api, false);
     }
 
@@ -225,7 +225,8 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
             List<INorm> data = new ArrayList<>();
             api.execute(data);
             if (!TextUtils.isEmpty(data)) {
-                VgNorm vb = new VgNorm(data).setLineLayoutResId(noLine ? VgNorm.LINE_NORMAL : null);
+                VgNorm vb = new VgNorm(data, VgNorm.LAYOUT_LINE_RES_ID)
+                        .setLineLayoutResId(noLine ? null : VgNorm.LINE_NORMAL);
                 add(vb);
                 return vb;
             }

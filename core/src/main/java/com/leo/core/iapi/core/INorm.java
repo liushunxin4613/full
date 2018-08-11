@@ -1,7 +1,6 @@
 package com.leo.core.iapi.core;
 
 import android.content.res.XmlResourceParser;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.leo.core.iapi.main.IControllerApi;
@@ -99,5 +98,15 @@ public interface INorm<P extends IControllerApi> extends IMNApi<P> {
      * 设置apiCode
      */
     void setApiCode(String apiCode);
+
+    /**
+     * 位置
+     */
+    int getPosition();
+
+    /**
+     * 设置位置
+     */
+    void setPosition(int position);
 
 }

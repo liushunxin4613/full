@@ -86,7 +86,7 @@ public class MVCFactoryV1 extends VsApi<MVCFactoryV1> {
         if (!TextUtils.check(getVo())) {
             return;
         }
-        api().ii("vo", getVo());
+//        api().ii("vo", getVo());
         execute(getVo().getFileList(), vo -> {
             File file = new File(getConfigDir(), vo.getFile());
             if (!file.exists()) {

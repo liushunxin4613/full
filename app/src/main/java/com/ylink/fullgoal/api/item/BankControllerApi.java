@@ -38,8 +38,7 @@ public class BankControllerApi<C> extends OnClickControllerApi<BankControllerApi
         setText(tv0, norm.getName())
                 .setText(tv1, norm.getDetail())
                 .setColorBg(rootVg, position > 0
-                        ? R.color.white : R.color.gray_light)
-                .setOnClickListener(norm.getOnClickListener());
+                        ? R.color.white : R.color.gray_light);
     }
 
 }

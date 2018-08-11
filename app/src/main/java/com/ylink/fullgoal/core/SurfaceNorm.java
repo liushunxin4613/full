@@ -8,6 +8,7 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public abstract class SurfaceNorm<T extends SurfaceNorm, P extends SurfaceControllerApi> extends CoreNorm<T, P> {
 
+    private transient boolean enable;
     private transient View.OnClickListener onClickListener;
 
     public View.OnClickListener getOnClickListener() {
@@ -16,6 +17,19 @@ public abstract class SurfaceNorm<T extends SurfaceNorm, P extends SurfaceContro
 
     public void setOnClickListener(OnBVClickListener<T> listener) {
         this.onClickListener = getOnBVClickListener(listener);
+    }
+
+    protected boolean isEnable() {
+        return enable;
+    }
+
+    public T setEnable(boolean enable) {
+        this.enable = enable;
+        return getThis();
+    }
+
+    protected <B> B getEnable(B a) {
+        return isEnable() ? a : null;
     }
 
 }

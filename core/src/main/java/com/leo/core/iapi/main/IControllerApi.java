@@ -511,6 +511,13 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void onNorm(INorm norm, int position);
 
     /**
+     * 获取
+     * @param <A> A
+     * @return A
+     */
+    <A extends INorm> A getNorm();
+
+    /**
      * 测量view的大学
      *
      * @param widthMeasureSpec  横向长度

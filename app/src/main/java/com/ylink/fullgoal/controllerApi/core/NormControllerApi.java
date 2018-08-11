@@ -14,7 +14,12 @@ public abstract class NormControllerApi<T extends NormControllerApi, C, N extend
     public void onNorm(INorm norm, int position) {
         super.onNorm(norm, position);
         if(norm != null){
-            onSafeNorm((N) norm, position);
+            norm.setPosition(position);
+            try {
+                onSafeNorm((N) norm, position);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 

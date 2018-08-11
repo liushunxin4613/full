@@ -2,19 +2,10 @@ package com.ylink.fullgoal.vo;
 
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.IbooleanAction;
-import com.leo.core.iapi.main.IBindControllerApi;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.bi.ImageVoBi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.ylink.fullgoal.core.SurfaceBiBean;
 import com.ylink.fullgoal.fg.ImageDetailFg;
 
-public class ImageVo extends SurfaceBiBean<ImageVo> implements IProgressListener {
-
-    @Override
-    protected IBindControllerApi<SurfaceControllerApi, ImageVo> newDefApi() {
-        return new ImageVoBi();
-    }
+public class ImageVo implements IProgressListener {
 
     public final static int FILTER_YB = 0;
     public final static int FILTER_JTF = 1;

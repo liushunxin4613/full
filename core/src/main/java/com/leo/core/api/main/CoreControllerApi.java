@@ -109,6 +109,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private Dialog dialog;
     private View rootView;
     private Adapter adapter;
+    private INorm norm;
 
     //api
     private IViewApi viewApi;
@@ -830,6 +831,12 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onNorm(INorm norm, int position) {
+        this.norm = norm;
+    }
+
+    @Override
+    public <A extends INorm> A getNorm() {
+        return (A) norm;
     }
 
     @Override

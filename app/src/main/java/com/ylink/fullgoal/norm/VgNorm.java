@@ -11,8 +11,8 @@ import java.util.List;
 
 public class VgNorm extends OnClickNorm<VgNorm, SurfaceControllerApi> {
 
-    private final static int LAYOUT_LINE_RES_ID = R.layout.l_vg;
-    public final static int LAYOUT_NONE_RES_ID = R.layout.l_vg_d1;
+    public final static int LAYOUT_LINE_RES_ID = R.layout.l_vg;
+    private final static int LAYOUT_NONE_RES_ID = R.layout.l_vg_d1;
     public final static int LINE_NORMAL = R.layout.v_line;
     public final static int LINE_SMALL = R.layout.v_line2;
 
@@ -25,7 +25,7 @@ public class VgNorm extends OnClickNorm<VgNorm, SurfaceControllerApi> {
     private Integer lineLayoutResId;
 
     public VgNorm(List<INorm> data) {
-        this.setData(data, LAYOUT_LINE_RES_ID);
+        this.setData(data, LAYOUT_NONE_RES_ID);
     }
 
     public VgNorm(List<INorm> data, int type) {
@@ -34,6 +34,14 @@ public class VgNorm extends OnClickNorm<VgNorm, SurfaceControllerApi> {
 
     public List<INorm> getData() {
         return data;
+    }
+
+    public int getCount(){
+        return TextUtils.count(getData());
+    }
+
+    public INorm getChildAt(int position){
+        return (position >= 0 && position < getCount()) ? getData().get(position) : null;
     }
 
     private void setData(List<INorm> data, int layoutResId) {

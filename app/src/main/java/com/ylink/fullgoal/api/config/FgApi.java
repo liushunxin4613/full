@@ -478,4 +478,12 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
         }
     }
 
+    // >>> ****************************** 2018-08-10 10:28 ****************************** >>>
+
+    public void queryTaskNode(String serialNo){
+        if(TextUtils.isEmpty(serialNo)){
+            post(ROOT_URL, "Task_node.action", g(map -> map.put("serialNo", serialNo)));
+        }
+    }
+
 }

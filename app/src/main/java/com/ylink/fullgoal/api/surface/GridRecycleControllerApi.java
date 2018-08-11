@@ -50,7 +50,7 @@ public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> ext
         getRecyclerView().addItemDecoration(new GridSpacingItemDecoration(space, edgeSpace));
     }
 
-    public void replaceAll(List<INorm> data, IObjAction<INorm> action) {
+    public void replaceAll(List<? extends INorm> data, IObjAction<INorm> action) {
         getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         clear();
         execute(data, item -> {

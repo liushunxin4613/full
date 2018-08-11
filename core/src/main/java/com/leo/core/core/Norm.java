@@ -11,6 +11,7 @@ import com.leo.core.iapi.main.IControllerApi;
  */
 public class Norm<T extends Norm, P extends IControllerApi> extends MNApi<T, P> implements INorm<P> {
 
+    private transient int position;
     private transient String apiCode;
     private transient ViewGroup group;
     private transient Integer apiType;
@@ -69,6 +70,16 @@ public class Norm<T extends Norm, P extends IControllerApi> extends MNApi<T, P> 
     @Override
     public void setApiCode(String apiCode) {
         this.apiCode = apiCode;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

@@ -15,17 +15,17 @@ public class GridNorm extends SurfaceNorm<GridNorm, SurfaceControllerApi> {
         return new GridControllerApi(controller);
     }
 
-    private List<INorm> data;
+    private List<? extends INorm> data;
 
-    public GridNorm(List<INorm> data) {
+    public GridNorm(List<? extends INorm> data) {
         this.data = data;
     }
 
-    public void setData(List<INorm> data) {
+    public void setData(List<? extends INorm> data) {
         this.data = data;
     }
 
-    public List<INorm> getData() {
+    public List<? extends INorm> getData() {
         return data;
     }
 

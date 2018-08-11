@@ -8,12 +8,13 @@ import com.ylink.fullgoal.core.SurfaceNorm;
 
 public abstract class OnClickNorm<T extends OnClickNorm, P extends SurfaceControllerApi> extends SurfaceNorm<T, P> {
 
+    private transient boolean selected;
     private transient View.OnClickListener onClickListener;
 
-    public OnClickNorm() {
+    OnClickNorm() {
     }
 
-    public OnClickNorm(OnBVClickListener<T> listener) {
+    OnClickNorm(OnBVClickListener<T> listener) {
         this.onClickListener = getOnBVClickListener(listener);
     }
 
@@ -23,6 +24,14 @@ public abstract class OnClickNorm<T extends OnClickNorm, P extends SurfaceContro
 
     public void setOnClickListener(OnBVClickListener<T> listener) {
         this.onClickListener = getOnBVClickListener(listener);
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
 }

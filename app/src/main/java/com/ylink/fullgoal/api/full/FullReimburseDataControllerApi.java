@@ -11,6 +11,7 @@ import android.view.View;
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.util.ResUtil;
@@ -18,20 +19,19 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.surface.IndicatorControllerApi;
-import com.ylink.fullgoal.bean.CCSQDBean;
-import com.ylink.fullgoal.bean.CCSQDBeanV1;
-import com.ylink.fullgoal.bean.DateArrayBean;
-import com.ylink.fullgoal.bean.IconBean;
 import com.ylink.fullgoal.bean.IndicatorBean;
-import com.ylink.fullgoal.bean.ReimburseTypeBean;
-import com.ylink.fullgoal.bean.TvHTv3Bean;
-import com.ylink.fullgoal.bean.VgBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.surface.BooleanController;
 import com.ylink.fullgoal.fg.ApplicationtFg;
 import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.norm.CCSQDNorm;
+import com.ylink.fullgoal.norm.CCSQDNormV1;
+import com.ylink.fullgoal.norm.DateArrayNorm;
+import com.ylink.fullgoal.norm.IconNorm;
+import com.ylink.fullgoal.norm.ReimburseTypeNorm;
+import com.ylink.fullgoal.norm.TvHTv3Norm;
+import com.ylink.fullgoal.norm.VgNorm;
 import com.ylink.fullgoal.vo.DDVo;
 import com.ylink.fullgoal.vo.DItemVo;
 
@@ -75,8 +75,8 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     DrawerLayout drawerLayout;
 
     private IndicatorControllerApi api;
-    private ReimburseTypeBean typeBean;
-    private DateArrayBean dateArrayBean;
+    private ReimburseTypeNorm typeNorm;
+    private DateArrayNorm dateArrayNorm;
     private int gravity = Gravity.RIGHT;
     private Map<String, RecycleControllerApi> map;
 
@@ -158,33 +158,33 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 api.clear().showContentView();
                 execute(applicationtData, obj -> {
                     String state = getValue(FULL_STATUS, obj.getStatus(), HZ);
-                    addVgBean(api, data -> {
+                    addVgNorm(api, data -> {
                         if (!TextUtils.isEmpty(state)) {
                             switch (state) {
                                 case QZ:
-                                    data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
+                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销状态",
                                             obj.getStatus(), null));
-                                    data.add(new CCSQDBean("时间", obj.getFillDate(), "报销类型",
+                                    data.add(new CCSQDNorm("时间", obj.getFillDate(), "报销类型",
                                             obj.getBillType(), null));
                                     break;
                                 case QR://确认
                                 case XG://修改
                                 case MQZ://金额前置
-                                    data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销状态",
+                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销状态",
                                             obj.getStatus(), null));
-                                    data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
+                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(),
                                             R.color.EE4433, null));
                                     break;
                                 default:
-                                    data.add(new CCSQDBean("报销批次号", obj.getSerialNo(), "报销单号",
+                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销单号",
                                             obj.getFkApprovalNum(), null));
-                                    data.add(new CCSQDBeanV1("时间", obj.getFillDate(), obj.getAmount(),
+                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(),
                                             R.color.EE4433, null));
                                     break;
                             }
                         }
-                        data.add(new TvHTv3Bean("事由", obj.getCause()));
-                    }, vg -> vg.setOnClickListener(v -> {
+                        data.add(new TvHTv3Norm("事由", obj.getCause()));
+                    }, vg -> vg.setOnClickListener((bean, view) -> {
                         if (!TextUtils.isEmpty(obj.getSerialNo()) && !TextUtils.isEmpty(state)
                                 && !TextUtils.isEmpty(obj.getBillType())) {
                             switch (obj.getBillType()) {
@@ -237,16 +237,16 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
 
     @SuppressLint("RtlHardcoded")
     private void initDrawerLayout() {
-        dateArrayBean = new DateArrayBean("查询时间", getListData(D_DATE1, D_DATE2,
+        dateArrayNorm = new DateArrayNorm("查询时间", getListData(D_DATE1, D_DATE2,
                 D_DATE3, D_DATE4, D_DATE5, D_DATE6), text -> vs(getItemValue(), DItemVo::getDate,
                 obj -> obj.initDB(text)));
-        typeBean = new ReimburseTypeBean(D_BT1, D_BT2, text ->
+        typeNorm = new ReimburseTypeNorm(D_BT1, D_BT2, text ->
                 vs(getItemValue(), DItemVo::getBillType, obj -> obj.initDB(text)));
         RecycleControllerApi api = getViewControllerApi(RecycleControllerApi.class, R.layout.l_sx);
         api.getRecyclerView().setBackgroundColor(ResUtil.getColor(R.color.white));
         setOnClickListener(api.findViewById(R.id.reset_tv), v -> {
-            dateArrayBean.clean();
-            typeBean.clean();
+            dateArrayNorm.clean();
+            typeNorm.clean();
         }).setOnClickListener(api.findViewById(R.id.confirm_tv), v -> {
             drawerLayout.closeDrawer(gravity);
             vs(getItemValue(), DItemVo::getOnce, obj -> obj.initDB(false));
@@ -273,11 +273,11 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             public void onDrawerStateChanged(int newState) {
             }
         });
-        /*api.add(new IconBean((bean, view)
+        api.add(new IconNorm((bean, view)
                 -> drawerLayout.closeDrawer(gravity)))
-                .add(dateArrayBean)
-                .add(typeBean)
-                .notifyDataSetChanged();*/ //TODO
+                .add(dateArrayNorm)
+                .add(typeNorm)
+                .notifyDataSetChanged();
     }
 
     @SuppressLint("RtlHardcoded")
@@ -290,11 +290,11 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             getRightTv().setCompoundDrawables(null, null, drawable, null);
             setRightTv("筛选", v -> {
-                if (check(dateArrayBean)) {
-                    dateArrayBean.update(vr(getItemValue(), value -> value.getDate().getDB()));
+                if (check(dateArrayNorm)) {
+                    dateArrayNorm.update(vr(getItemValue(), value -> value.getDate().getDB()));
                 }
-                if (check(typeBean)) {
-                    typeBean.updateSelected(vr(getItemValue(), value -> value.getBillType().getDB()));
+                if (check(typeNorm)) {
+                    typeNorm.updateSelected(vr(getItemValue(), value -> value.getBillType().getDB()));
                 }
                 drawerLayout.openDrawer(gravity);
             });
@@ -308,10 +308,10 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 .setAction((what, msg, bean, args) -> query());
     }
 
-    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api,
-                           IObjAction<VgBean> vgAction) {
+    private void addVgNorm(RecycleControllerApi controllerApi, IObjAction<List<INorm>> api,
+                           IObjAction<VgNorm> vgAction) {
         if (controllerApi != null && api != null) {
-//            executeNon(controllerApi.addVgBean(api, true), vgAction); //TODO
+            executeNon(controllerApi.addVgNorm(api, true), vgAction);
             controllerApi.notifyDataSetChanged();
         }
     }
