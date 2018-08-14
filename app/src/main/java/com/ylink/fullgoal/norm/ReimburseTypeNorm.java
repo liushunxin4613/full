@@ -7,16 +7,14 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.api.item.ReimburseTypeControllerApi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 import static com.leo.core.util.TextUtils.check;
 
 public class ReimburseTypeNorm extends BaseTestNorm<ReimburseTypeNorm>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi,
-                                                 Object controller) {
-        return new ReimburseTypeControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return ReimburseTypeControllerApi.class;
     }
 
     private transient TextView nameTv;

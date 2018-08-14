@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.iapi.api.IViewTypeApi;
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -38,7 +39,7 @@ import java.lang.reflect.Type;
  * @param <T> 自身
  * @param <C> 控制器
  */
-public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IAttachApi<T, C>, IOnCom {
+public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IAttachApi<T, C>, IOnCom, IViewTypeApi {
 
     /**
      * 初始化controller
@@ -243,10 +244,19 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      *
      * @return XmlResourceParser
      */
-    XmlResourceParser getRootXmlResourceParser();
+    String getRootViewXml();
+
+    /**
+     * 获取XmlResourceParser
+     *
+     * @param xml xml
+     * @return XmlResourceParser
+     */
+    XmlResourceParser getLayoutXmlPullParser(String xml);
 
     /**
      * 创建根容器
+     *
      * @param group 根视图
      */
     ViewGroup onCreateViewGroup(ViewGroup group, @NonNull View rootView);
@@ -290,10 +300,10 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     /**
      * 返回根视图xml文件
      *
-     * @param parser parser
+     * @param xml xml
      * @return 本身
      */
-    T setRootXmlResourceParser(XmlResourceParser parser);
+    T setRootViewXml(String xml);
 
     /**
      * 设置根视图Class
@@ -512,6 +522,7 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
 
     /**
      * 获取
+     *
      * @param <A> A
      * @return A
      */

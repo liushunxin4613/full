@@ -20,7 +20,6 @@ public class Config {
 
     //配置
     public final static String VERSION = VERSION_APP;//版本
-    public final static boolean TEMPLATE_FULL = true;//template下载方式
     public final static boolean DEBUG = false;//debug模式是否开启5
     final static boolean LOCAL = false;//本地模式是否开启
     public final static boolean TEST = true;//测试模式是否开启

@@ -118,4 +118,7 @@ dependencies {
 
     //工具类
     api 'com.blankj:utilcode:1.18.0'
+
+    //拼音转换类
+    api 'com.github.promeg:tinypinyin:2.0.3'
 }

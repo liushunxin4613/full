@@ -12,8 +12,8 @@ import com.ylink.fullgoal.core.SurfaceNorm;
 public class GridPhotoNorm extends SurfaceNorm<GridPhotoNorm, SurfaceControllerApi>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new GridPhotoControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return GridPhotoControllerApi.class;
     }
 
     private Object res;

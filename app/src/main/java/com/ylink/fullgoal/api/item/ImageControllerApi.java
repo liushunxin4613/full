@@ -19,7 +19,7 @@ public class ImageControllerApi<C> extends NormControllerApi<ImageControllerApi,
     }
 
     @Override
-    public Integer getDefRootViewResId() {
+    public Integer getRootViewResId() {
         return R.layout.l_image_d1;
     }
 

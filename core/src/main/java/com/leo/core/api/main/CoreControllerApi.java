@@ -139,11 +139,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IRouteApi routeApi;
 
     //other
+    private String rootViewXml;
     private Integer rootViewResId;
     private MsgSubscriber subscriber;
     private Observable.Transformer transformer;
     private ViewGroup container;
-    private XmlResourceParser parser;
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
 
@@ -721,6 +721,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         return getThis();
     }
 
+    @Override
+    public Integer getViewType() {
+        return getRootViewResId();
+    }
+
     @LayoutRes
     @Override
     public Integer getDefRootViewResId() {
@@ -772,8 +777,13 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public XmlResourceParser getRootXmlResourceParser() {
-        return parser;
+    public String getRootViewXml() {
+        return rootViewXml;
+    }
+
+    @Override
+    public XmlResourceParser getLayoutXmlPullParser(String xml) {
+        return openAssetsLayoutXmlPullParser(xml);
     }
 
     @Override
@@ -808,8 +818,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T setRootXmlResourceParser(XmlResourceParser parser) {
-        this.parser = parser;
+    public T setRootViewXml(String xml) {
+        this.rootViewXml = xml;
         return getThis();
     }
 
@@ -972,9 +982,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         onCreateView(inflater(), getRootContainer(), savedInstanceState);
-        executeNon(onCreateViewGroup(getRootContainer(), getRootView()),
-                this::setRootView);
         if (getRootView() != null) {
+            executeNon(onCreateViewGroup(getRootContainer(), getRootView()),
+                    this::setRootView);
             if (isActivity()) {
                 getActivity().setContentView(getRootView());
             } else if (isDialog()) {
@@ -999,11 +1009,14 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             setRootView(getObject(getRootViewClz()
                     , new Class[]{Context.class}
                     , new Object[]{getContext()}));
-        } else if (getRootXmlResourceParser() != null) {
-            if (isView()) {
-                setRootView(inflater.inflate(getRootXmlResourceParser(), container));
-            } else {
-                setRootView(inflater.inflate(getRootXmlResourceParser(), container, false));
+        } else if (!TextUtils.isEmpty(getRootViewXml())) {
+            XmlResourceParser parser = getLayoutXmlPullParser(getRootViewXml());
+            if (null != parser) {
+                if (isView()) {
+                    setRootView(inflater.inflate(parser, container));
+                } else {
+                    setRootView(inflater.inflate(parser, container, false));
+                }
             }
         }
         if (getRootView() instanceof BaseControllerApiView && getRootViewClzApi() != null) {

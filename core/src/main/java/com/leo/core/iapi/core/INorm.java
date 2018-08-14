@@ -1,6 +1,5 @@
 package com.leo.core.iapi.core;
 
-import android.content.res.XmlResourceParser;
 import android.view.ViewGroup;
 
 import com.leo.core.iapi.main.IControllerApi;
@@ -9,6 +8,12 @@ import com.leo.core.iapi.main.IControllerApi;
  * 创建规范
  */
 public interface INorm<P extends IControllerApi> extends IMNApi<P> {
+
+    /**
+     * ControllerApi clz
+     * @return clz
+     */
+    Class<? extends IControllerApi> getControllerApiClass();
 
     /**
      * 父容器
@@ -45,16 +50,21 @@ public interface INorm<P extends IControllerApi> extends IMNApi<P> {
     IControllerApi controllerApi();
 
     /**
-     * XmlResourceParser
-     *
-     * @return XmlResourceParser
+     * controllerApi
      */
-    XmlResourceParser getApiXmlResourceParser();
+    IControllerApi createControllerApi();
 
     /**
-     * 设置 XmlResourceParser
+     * RootViewXml
+     *
+     * @return RootViewXml
      */
-    void setApiXmlResourceParser(XmlResourceParser parser);
+    String getRootViewXml();
+
+    /**
+     * 设置 RootViewXml
+     */
+    void setRootViewXml(String xml);
 
     /**
      * api id

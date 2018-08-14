@@ -116,6 +116,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void queryJsonCostIndexData() {
         DataFg dataFg = new DataFg();
+        dataFg.setStatusCode("SUCCESS");
         dataFg.setCostIndextList(TextUtils.getListData(
                 new CostFg("84f83358-32c0-440e-81bf-2c8d955e8439", "差旅费"),
                 new CostFg("494765e5-ed5d-4a7f-a78b-e9b6b598a27e", "职工教育经费")));

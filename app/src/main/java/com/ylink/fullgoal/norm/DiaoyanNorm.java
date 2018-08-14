@@ -8,8 +8,8 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 public class DiaoyanNorm extends OnClickNorm<DiaoyanNorm, SurfaceControllerApi>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new DiaoyanControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return DiaoyanControllerApi.class;
     }
 
     private String code;

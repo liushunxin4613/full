@@ -2,13 +2,12 @@ package com.ylink.fullgoal.norm;
 
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.api.item.TvHintControllerApi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvHintNorm extends BaseTestNorm<TvHintNorm> {
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new TvHintControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return TvHintControllerApi.class;
     }
 
     private transient boolean show;

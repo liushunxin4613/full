@@ -17,8 +17,8 @@ public class TvH4Norm extends SurfaceNorm<TvH4Norm, SurfaceControllerApi>{
     }
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new TvH4ControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return TvH4ControllerApi.class;
     }
 
     private String name;

@@ -16,8 +16,8 @@ public class MoneyBean extends ApiBean<MoneyBean> {
         return new MoneyBi();
     }
 
-    private transient IABAction<MoneyBean, String> action;
     private transient double max;
+    private transient IABAction<MoneyBean, String> action;
 
     public MoneyBean(String name, String detail) {
         super(name, detail);

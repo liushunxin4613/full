@@ -1,25 +1,12 @@
 package com.ylink.fullgoal.controllerApi.surface;
 
 import com.google.gson.reflect.TypeToken;
-import com.leo.core.bean.Completed;
-import com.leo.core.iapi.api.IKeywordApi;
-import com.leo.core.iapi.main.IApiBean;
-import com.leo.core.other.Transformer;
-import com.leo.core.search.SearchUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.LineBean;
 import com.ylink.fullgoal.config.Config;
-import com.ylink.fullgoal.config.ViewBean;
-import com.ylink.fullgoal.fg.DataFg;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
-import rx.Observable;
 
 import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
 
@@ -104,10 +91,6 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
     @Override
     public void initData() {
         super.initData();
-        //消息标志
-        add(DataFg.class, (fieldName, path, what, msg, bean) -> showView(bean.isSuccess()));
-        //完成
-        add(Completed.class, (fieldName, path, what, msg, bean) -> search(getKeyword()));
         query();
     }
 
@@ -115,56 +98,6 @@ public class BaseSearchBarControllerApi<T extends BaseSearchBarControllerApi, C>
      * 数据请求
      */
     protected void query() {
-    }
-
-    private boolean isFilter(IApiBean bean, IApiBean old, String keyword) {
-        if (bean instanceof LineBean) {
-            return !(old instanceof LineBean);
-        } else if (bean instanceof IKeywordApi) {
-            String code = ((IKeywordApi) bean).getApiCode();
-            String fk = ((IKeywordApi) bean).getFilter();
-            if (!TextUtils.isEmpty(getFilterData())) {
-                for (String filter : getFilterData()) {
-                    if (!TextUtils.isEmpty(filter) && !TextUtils.isEmpty(fk)
-                            && fk.contains(filter)) {
-                        return false;
-                    }
-                }
-            }
-            if (TextUtils.isEmpty(keyword)) {
-                return true;
-            }
-            if (bean instanceof ViewBean) {
-                return SearchUtil.search(((ViewBean) bean).getMap(), keyword);
-            }
-            return SearchUtil.search(bean, keyword);
-        }
-        return true;
-    }
-
-    /**
-     * 搜索
-     *
-     * @param keyword 关键字
-     */
-    protected void search(String keyword) {
-        setKeyword(keyword);
-        adapterDataApi().setHelper((adapter, api, list)
-                -> Observable.create((Observable.OnSubscribe<List<IApiBean>>) subscriber -> {
-            List<IApiBean> data = new ArrayList<>();
-            AtomicReference<IApiBean> old = new AtomicReference<>();
-            execute(list, obj -> {
-                /*if (isFilter(obj, old.get(), keyword)) {
-                    data.add(obj);
-                    old.set(obj);
-                }*/ //TODO
-            });
-//            api.setFilterData(data); //TODO
-            subscriber.onNext(null);
-            subscriber.onCompleted();
-        }).compose(Transformer.getInstance())
-                .subscribe(obj -> adapter.notifyDataSetChanged()))
-                .notifyDataSetChanged();
     }
 
     private String getSearchValue(String key) {

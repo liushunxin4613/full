@@ -1,20 +1,20 @@
 package com.ylink.fullgoal.config;
 
-import android.content.res.XmlResourceParser;
-
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.api.VsApi;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.util.FileUtil;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.MD5Util;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.config.vo.ConfigFileVo;
 import com.ylink.fullgoal.config.vo.ConfigV1Vo;
-import com.ylink.fullgoal.config.vo.ConfigVo;
 import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.controllerApi.core.ControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.fg.DataFg;
+import com.ylink.fullgoal.norm.ViewNorm;
 import com.ylink.fullgoal.vo.SearchVo;
 
 import java.io.File;
@@ -22,16 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
-
 import static com.leo.core.util.TextUtils.checkParams;
-import static com.leo.core.util.TextUtils.contains;
 
 public class MVCFactory extends VsApi<MVCFactory> {
 
-    private final static boolean LOCAL = false;
+    public final static String DIR = "config";
+    private final static boolean LOCAL = true;
     private final static String FILTER[] = {};
-    private final static String DIR = "config";
+    private final static String ROOT_FILE = "config.json";
 
     private static MVCFactory instance;
 
@@ -58,22 +56,18 @@ public class MVCFactory extends VsApi<MVCFactory> {
 
     public void start() {
         String[] args = getConfigDir().list();
-        api().ii("args", args);
-        add(ConfigVo.class, (fieldName, path, what, msg, vo) -> {
-            if (vo.isSuccess()) {
-                execute(vo.getConfigList(), fileVo -> onFileVo(args, fileVo));
-            }
-        });
-        add(ResponseBody.class, (fieldName, path, what, fileName, body) -> {
+        api().ii(String.format("dir: %s, list: %s", getConfigDir().getPath(),
+                LogUtil.getLog((Object) args)));
+        add(DataFg.class, byte[].class, (fieldName, path, what, fileName, bytes) -> {
             if (TextUtils.check(path, fileName)) {
                 File file = new File(getConfigDir(), fileName);
-                if (FileUtil.writeFile(file.getPath(), body.byteStream())) {
+                if (FileUtil.writeFile(file.getPath(), bytes)) {
                     api().ii("保存成功", file.getPath());
                     onFile(file);
                 }
             }
         });
-        api().api().queryConfig();
+        download(ROOT_FILE);
     }
 
     private void onFile(File file) {
@@ -92,25 +86,25 @@ public class MVCFactory extends VsApi<MVCFactory> {
         if (!TextUtils.check(getVo())) {
             return;
         }
-        api().ii("vo", getVo());
+//        api().ii("vo", getVo());
         execute(getVo().getFileList(), vo -> {
             File file = new File(getConfigDir(), vo.getFile());
             if (!file.exists()) {
-                download(vo.getFile(), vo.getUrl());
+                download(vo.getFile());
             } else {
                 String md5 = MD5Util.getFileMD5(file);
                 api().ii(String.format("%s => md5: %s, hashcode: %s", file.getPath(), md5,
                         vo.getHashcode()));
                 if (!TextUtils.equals(md5, vo.getHashcode())) {
-                    download(vo.getFile(), vo.getUrl());
+                    download(vo.getFile());
                 }
             }
         });
     }
 
     public void onData(String path, String params, List list, BaseSearchControllerApi api,
-                       IObjAction<List<ViewBean>> action) {
-        if (TextUtils.check(path, list, api, action, getVo()) && TextUtils.check(getVo().getViewList())) {
+                       IObjAction<List<INorm>> action) {
+        if (TextUtils.check(path, list, action, api, getVo()) && TextUtils.check(getVo().getViewList())) {
             api().ii("path", path);
             api().ii("params", params);
             executeBol(getVo().getViewList(), vo -> {
@@ -121,10 +115,6 @@ public class MVCFactory extends VsApi<MVCFactory> {
                 return false;
             });
         }
-    }
-
-    private boolean check(ConfigFileVo vo) {
-        return TextUtils.equals(vo.getName(), "config");
     }
 
     private void initConfig(boolean local, String config) {
@@ -161,47 +151,28 @@ public class MVCFactory extends VsApi<MVCFactory> {
         api().add(root, action);
     }
 
-    private List<ViewBean> getVBData(String xml, List<TemplateVo> templateData, List list,
-                                     BaseSearchControllerApi api) {
+    private <A, B> void add(Class<A> root, Class<B> clz, IPathMsgAction<B> action) {
+        api().add(root, clz, action);
+    }
+
+    private List<INorm> getVBData(String xml, List<TemplateVo> templateData, List list,
+                                  BaseSearchControllerApi api) {
         if (TextUtils.check(xml, templateData, list)) {
-            List<ViewBean> data = new ArrayList<>();
-            execute(list, item -> executeNon(new ViewBean(xml, getXmlResourceParser(xml),
-                    templateData, item, (bean, view) -> api.finishActivity(new SearchVo<>(
-                    api.getSearch(), api.getKey(), bean.getMap(), new TypeToken<SearchVo<Map<String,
-                    String>>>() {
-            }))), data::add));
+            List<INorm> data = new ArrayList<>();
+            execute(list, item -> executeNon(new ViewNorm(xml, templateData, item,
+                    (bean, view) -> api.finishActivity(new SearchVo<>(
+                            api.getSearch(), api.getKey(), bean.getMap(),
+                            new TypeToken<SearchVo<Map<String, String>>>() {
+                            }))), data::add));
             return data;
         }
         return null;
     }
 
-    private void onFileVo(String[] args, ConfigFileVo vo) {
-        if (TextUtils.check(vo) && vo.isSafety() && check(vo)) {
-            if (contains(FILTER, vo.getFile()) || !contains(args, vo.getFile())) {
-                download(vo.getFile(), vo.getUrl());
-            } else {
-                File file = new File(getConfigDir(), vo.getFile());
-                String md5 = MD5Util.getFileMD5(file);
-                api().ii(String.format("%s => md5: %s, hashcode: %s", file.getPath(), md5,
-                        vo.getHashcode()));
-                if (!TextUtils.equals(md5, vo.getHashcode())) {
-                    download(vo.getFile(), vo.getUrl());
-                } else {
-                    onFile(file);
-                }
-            }
+    private void download(String fileName) {
+        if (TextUtils.check(fileName)) {
+            api().api().uploadFile(fileName);
         }
-    }
-
-    private void download(String name, String url) {
-        if (TextUtils.check(name) && TextUtils.isHttpUrl(url)) {
-            api().api().download(url, name);
-        }
-    }
-
-    private XmlResourceParser getXmlResourceParser(String xml) {
-        return TextUtils.isEmpty(xml) ? null : api()
-                .openFileLayoutXmlPullParser(getConfigDir(), xml);
     }
 
 }

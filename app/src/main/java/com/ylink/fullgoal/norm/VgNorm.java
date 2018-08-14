@@ -17,12 +17,13 @@ public class VgNorm extends OnClickNorm<VgNorm, SurfaceControllerApi> {
     public final static int LINE_SMALL = R.layout.v_line2;
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new VgControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return VgControllerApi.class;
     }
 
     private List<INorm> data;
-    private Integer lineLayoutResId;
+    private transient boolean end;
+    private transient Integer lineLayoutResId;
 
     public VgNorm(List<INorm> data) {
         this.setData(data, LAYOUT_NONE_RES_ID);
@@ -80,6 +81,15 @@ public class VgNorm extends OnClickNorm<VgNorm, SurfaceControllerApi> {
 
     public VgNorm setLineLayoutResId(Integer lineLayoutResId) {
         this.lineLayoutResId = lineLayoutResId;
+        return getThis();
+    }
+
+    public boolean isEnd() {
+        return end;
+    }
+
+    public VgNorm setEnd(boolean end) {
+        this.end = end;
         return getThis();
     }
 

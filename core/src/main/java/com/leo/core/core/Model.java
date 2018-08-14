@@ -2,11 +2,15 @@ package com.leo.core.core;
 
 import com.leo.core.iapi.core.IModel;
 import com.leo.core.iapi.core.INorm;
-import com.leo.core.iapi.main.IControllerApi;
 
 public class Model extends MNApi implements IModel {
 
     private transient INorm norm;
+
+    @Override
+    public Integer getViewType() {
+        return norm() == null ? null : norm().getViewType();
+    }
 
     @Override
     public void initNorm() {
@@ -26,6 +30,14 @@ public class Model extends MNApi implements IModel {
     @Override
     public String getApiCode() {
         return null;
+    }
+
+    @Override
+    public void setSelectedApiCode(String apiCode) {
+        super.setSelectedApiCode(apiCode);
+        if(norm() != null){
+            norm().setSelectedApiCode(apiCode);
+        }
     }
 
 }

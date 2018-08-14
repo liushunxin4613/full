@@ -20,30 +20,29 @@ public class OnClickControllerApi<T extends OnClickControllerApi, C, N extends O
     @Override
     protected void onSafeNorm(@NonNull N norm, int position) {
         setEnableOnClickListener(norm.getOnClickListener())
-                .setColorBg(getRootVg(), norm.isSelected()
-                        ? R.color.gray_light : R.color.white);
+                .setColorBg(getRootVg(), norm.isSelected() ? R.color.gray_light : R.color.white);
     }
 
-    protected View getRootVg(){
+    protected View getRootVg() {
         return null;
     }
 
-    protected String checkFormat(String format, String key){
-        if(TextUtils.check(format, key)){
+    String checkFormat(String format, String key) {
+        if (TextUtils.check(format, key)) {
             return String.format(format, key);
         }
         return null;
     }
 
-    protected String checkFormat(String format, String key, String value){
-        if(TextUtils.check(format, key, value)){
+    String checkFormat(String format, String key, String value) {
+        if (TextUtils.check(format, key, value)) {
             return String.format(format, key, value);
         }
         return null;
     }
 
-    protected String format(String format, String... args){
-        if(TextUtils.check(format, args)){
+    protected String format(String format, String... args) {
+        if (TextUtils.check(format, args)) {
             return String.format(format, (Object[]) args);
         }
         return null;

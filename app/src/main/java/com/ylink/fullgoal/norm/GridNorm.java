@@ -11,8 +11,8 @@ import java.util.List;
 public class GridNorm extends SurfaceNorm<GridNorm, SurfaceControllerApi> {
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new GridControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return GridControllerApi.class;
     }
 
     private List<? extends INorm> data;

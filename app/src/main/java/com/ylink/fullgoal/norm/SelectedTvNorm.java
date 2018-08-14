@@ -15,8 +15,8 @@ import static com.leo.core.util.TextUtils.check;
 public class SelectedTvNorm extends SurfaceNorm<SelectedTvNorm, SurfaceControllerApi>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new SelectedTvControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return SelectedTvControllerApi.class;
     }
 
     private String name;

@@ -4,13 +4,12 @@ import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.item.IconTvHControllerApi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class IconTvHNorm extends BaseTestNorm<IconTvHNorm>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new IconTvHControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return IconTvHControllerApi.class;
     }
 
     public IconTvHNorm(String name, OnBVClickListener<IconTvHNorm> listener) {

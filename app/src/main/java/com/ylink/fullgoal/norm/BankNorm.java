@@ -8,8 +8,8 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 public class BankNorm extends OnClickNorm<BankNorm, SurfaceControllerApi>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new BankControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return BankControllerApi.class;
     }
 
     private String name;

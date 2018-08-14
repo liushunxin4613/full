@@ -12,6 +12,7 @@ import com.leo.core.iapi.core.IMNApi;
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IShowDataApi;
+import com.leo.core.other.Transformer;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import rx.Observable;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
@@ -121,6 +123,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     @Override
     public void initView() {
         super.initView();
+        getRecycleAdapter().setHasStableIds(true);
         getRecyclerView().setLayoutManager(getLayoutManager());
         getRecyclerView().setAdapter(getRecycleAdapter());
         getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -140,7 +143,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         });
     }
 
-    protected void initDataAction(IObjAction<List<IMNApi>> action) {
+    public void initDataAction(IObjAction<List<IMNApi>> action) {
         if (action != null) {
             List<IMNApi> data;
             action.execute(data = new ArrayList<>());
@@ -149,13 +152,25 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     }
 
     public <A extends IMNApi> void initActionData(List<A> data) {
-        clear();
-        if(!TextUtils.isEmpty(data)){
-            showContentView();
-            addAll((List<IMNApi>) data);
-        }
-        notifyDataSetChanged();
-        dismissLoading();
+        Observable.create(subscriber -> {
+            clear();
+            if (!TextUtils.isEmpty(data)) {
+                showContentView();
+                execute(data, item -> {
+                    item.createSearchText();
+                    add(item);
+                });
+            }
+            subscriber.onNext(null);
+            subscriber.onCompleted();
+        }).compose(Transformer.getInstance()).subscribe(obj -> {
+            notifyDataSetChanged();
+            dismissLoading();
+            onInitActionData();
+        });
+    }
+
+    protected void onInitActionData() {
     }
 
     public T clear() {
@@ -216,17 +231,22 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return getThis();
     }
 
-    protected VgNorm addVgNorm(IObjAction<List<INorm>> api){
+    public VgNorm addVgNorm(IObjAction<List<INorm>> api) {
         return addVgNorm(api, false);
     }
 
     public VgNorm addVgNorm(IObjAction<List<INorm>> api, boolean noLine) {
+        return addVgNorm(api, noLine, false);
+    }
+
+    public VgNorm addVgNorm(IObjAction<List<INorm>> api, boolean noLine, boolean end) {
         if (api != null) {
             List<INorm> data = new ArrayList<>();
             api.execute(data);
             if (!TextUtils.isEmpty(data)) {
                 VgNorm vb = new VgNorm(data, VgNorm.LAYOUT_LINE_RES_ID)
-                        .setLineLayoutResId(noLine ? null : VgNorm.LINE_NORMAL);
+                        .setLineLayoutResId(noLine ? null : VgNorm.LINE_NORMAL)
+                        .setEnd(end);
                 add(vb);
                 return vb;
             }

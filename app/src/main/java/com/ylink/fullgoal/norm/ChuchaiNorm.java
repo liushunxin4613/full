@@ -8,8 +8,8 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 public class ChuchaiNorm extends OnClickNorm<ChuchaiNorm, SurfaceControllerApi>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new ChuchaiControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return ChuchaiControllerApi.class;
     }
 
     private String code;

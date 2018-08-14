@@ -1,15 +1,39 @@
 package com.ylink.fullgoal.fg;
 
-import com.leo.core.iapi.api.IApiCodeApi;
+import android.support.annotation.NonNull;
+
+import com.leo.core.api.core.CoreModel;
+import com.leo.core.iapi.core.INorm;
+import com.leo.core.iapi.main.IControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.norm.DiaoyanNorm;
+import com.ylink.fullgoal.vo.SearchVo;
 
 /**
  * 投研报告
  */
-public class ResearchReportFg implements IApiCodeApi {
+public class ResearchReportFg extends CoreModel {
+
+    @Override
+    protected INorm createNorm(@NonNull IControllerApi controllerApi) {
+        if (controllerApi instanceof BaseSearchControllerApi) {
+            BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
+            return new DiaoyanNorm(getStockCode(), getStockName(), getType(),
+                    getStatus(), getUploadTime(), getEndTime(), getReportInfo(),
+                    (bean, view) -> api.finishActivity(new SearchVo<>(api.getSearch(), getThis())));
+        }
+        return null;
+    }
+
+    @Override
+    protected String[] getSearchFields() {
+        return new String[]{getStockCode(), getStockName(), getType(), getStatus(), getUploadTime(),
+                getEndTime(), getReportInfo()};
+    }
 
     @Override
     public String getApiCode() {
-        return getStockCode();
+        return getReportInfo();
     }
 
     /**

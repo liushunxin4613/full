@@ -24,8 +24,8 @@ public abstract class CoreModel extends Model {
             if (norm != null) {
                 norm.setParentControllerApi(api);
                 norm.setController(getController());
+                norm.setSelectedApiCode(getSelectedApiCode());
                 norm.setApiCode(getApiCode());
-                norm.initControllerApi();
                 setNorm(norm);
             }
         }

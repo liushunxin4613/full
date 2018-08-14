@@ -139,7 +139,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             dismissLoading();
         }));
         add(ParseCompleted.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
-            ii("ParseCompleted-->", bean.getData());
             if (!TextUtils.isEmpty(path)) {
                 switch (path) {
                     case PATH_QUERY_MESSAGE_BACK_DATA://报销确认
@@ -163,8 +162,10 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                     if (!TextUtils.isEmpty(data)) {
                         ((RecycleControllerApi) this).initActionData(data);
                     }
+                    return;
                 }
             }
+            dismissLoading();
         });
     }
 
@@ -269,7 +270,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     protected List<? extends IModel> getOnDataFg(String fieldName, String path, int what,
                                                  String msg, DataFg fg) {
-        return null;
+        return fg.getModelData();
     }
 
     protected void addDataOfCode(List data, IApiCodeApi api, CoreApiBean bean) {

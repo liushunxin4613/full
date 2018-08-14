@@ -1,12 +1,13 @@
 package com.leo.core.iapi.core;
 
-import com.leo.core.iapi.api.IApiCodeApi;
+import com.leo.core.iapi.api.ISelectedApiCodeApi;
+import com.leo.core.iapi.api.IViewTypeApi;
 import com.leo.core.iapi.main.IControllerApi;
 
 /**
  * IModel和INorm的基类
  */
-public interface IMNApi<P extends IControllerApi> extends IApiCodeApi {
+public interface IMNApi<P extends IControllerApi> extends ISelectedApiCodeApi, IViewTypeApi {
 
     /**
      * api id
@@ -36,5 +37,22 @@ public interface IMNApi<P extends IControllerApi> extends IApiCodeApi {
      * controller
      */
     Object getController();
+
+    /**
+     * 搜索内容
+     * @return 内容
+     */
+    String getSearchText();
+
+    /**
+     * 设置搜索内容
+     * @param searchText 内容
+     */
+    void setSearchText(String searchText);
+
+    /**
+     * 创建搜索内容
+     */
+    void createSearchText();
 
 }

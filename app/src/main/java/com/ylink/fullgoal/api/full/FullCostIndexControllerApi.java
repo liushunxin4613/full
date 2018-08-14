@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.leo.core.adapter.BasePagerAdapter;
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.core.BaseControllerApiActivity;
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.other.Number;
@@ -17,11 +18,8 @@ import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.MoneyBean;
-import com.ylink.fullgoal.bean.TvH2MoreBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
-import com.ylink.fullgoal.core.BaseBiBean;
 import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.MapController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
@@ -33,6 +31,8 @@ import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.DimenFg;
 import com.ylink.fullgoal.fg.DimenListFg;
 import com.ylink.fullgoal.main.SurfaceActivity;
+import com.ylink.fullgoal.norm.MoneyNorm;
+import com.ylink.fullgoal.norm.TvH2MoreNorm;
 import com.ylink.fullgoal.view.MViewPager;
 import com.ylink.fullgoal.vo.CostIndexVo;
 import com.ylink.fullgoal.vo.CostVo;
@@ -294,7 +294,6 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         vos(CostVo::getCost, CostIndexController::getDB, fg
                 -> setText(nameTv, fg.getCostIndex())
                 .setText(detailTv, fg.getAmount())
-//                .setText(typeTv, fg.getShare())
                 .setText(taxTv, fg.getTaxAmount())
                 .setText(noneTaxMoneyTv, fg.getExTaxAmount())
                 .setText(yetCompleteTv, getVo().getOtherRatio()));
@@ -373,10 +372,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         return true;
     }
 
-    private void addVgBean(RecycleControllerApi controllerApi, IObjAction<List<BaseBiBean>> api) {
+    private void addVgNorm(RecycleControllerApi controllerApi, IObjAction<List<INorm>> api) {
         if (controllerApi != null && api != null) {
-//            controllerApi.addVgBean(api); //TODO
-            controllerApi.notifyDataSetChanged();
+            controllerApi.addVgNorm(api, false, true);
         }
     }
 
@@ -395,27 +393,29 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             List<DimenFg> list = vor(CostVo::getDimenData, DimenListController::getData);
             boolean empty = isEmpty(list);
             if (!empty) {
-                addVgBean(api, data -> {
-                    MoneyBean blBean = new MoneyBean("分摊比例", getCostRatio(api));
+                addVgNorm(api, data -> {
                     double m = getCostMoney(api);
-                    MoneyBean moneyBean = new MoneyBean("金额", getSMoneyString(m),
+                    MoneyNorm blNorm = new MoneyNorm("分摊比例", getCostRatio(api));
+                    MoneyNorm moneyNorm = new MoneyNorm("金额", getSMoneyString(m),
                             getVo().getRestMoney(api), (bean, text) -> {
                         if (TextUtils.isEmpty(text)) {
                             bean.setMax(getVo().getRestMoney(api));
                         }
                         double itemMoney = JavaTypeUtil.getdouble(text, 0);
                         updateOtherMoney(api, itemMoney);
-                        setText(blBean.getTextView(), getVo().getRatio(itemMoney));
+                        setText(blNorm.getTextView(), getVo().getRatio(itemMoney));
                         vos(CostVo::getPager, obj -> obj.update(api, itemMoney));
                     });
-                    data.add(moneyBean);
-                    data.add(blBean);
+                    data.add(moneyNorm);
+                    data.add(blNorm);
                     execute(list, item -> {
                         if (check(item.getCode(), item.getName())) {
-                            addDataOfCode(data, item, new TvH2MoreBean(item.getName(), getDimenValue(api, item.getCode()),
+                            data.add(new TvH2MoreNorm(item.getName(), getDimenValue(api, item.getCode()),
                                     String.format("请选择%s", item.getName()), (bean, view) -> routeApi()
-                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item), getDimenCode(api, item.getCode())), (bean, view)
-                                    -> vs(getCostItemController(api), obj -> obj.remove(item.getCode()))));
+                                    .search(SearchVo.COST_INDEX_DIMEN, encode(item), getDimenCode(api,
+                                            item.getCode())),
+                                    (bean, view) -> vs(getCostItemController(api), obj
+                                            -> obj.remove(item.getCode()))).setEnable(true));
                         }
                     });
                 });
@@ -439,26 +439,6 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         if (!TextUtils.isEmpty(map)) {
             vo.getItem().getMap().putAll(map);
         }
-        /*else {
-            List<DimenFg> list = vor(CostVo::getDimenData, DimenListController::getData);
-            if (TextUtils.check(dataMap)) {
-                Object reimbursement = dataMap.get("reimbursement");
-                if (reimbursement instanceof Map) {
-                    ((Map) reimbursement).get("userCode");
-                }
-                execute(list, item -> {
-                    if (TextUtils.check(item) && TextUtils.check(item.getName())) {
-                        switch (item.getName()) {
-                            case "人员":
-                                vo.getItem().getMap().put(item.getCode(), new DimenListFg());
-                                break;
-                            case "部门":
-                                break;
-                        }
-                    }
-                });
-            }
-        }*/
         vos(CostVo::getPager, obj -> obj.initDB(api, vo));
         initAddVgBean(api);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {

@@ -3,12 +3,12 @@ package com.ylink.fullgoal.norm;
 import android.view.View;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.core.SurfaceNorm;
 
 public abstract class OnClickNorm<T extends OnClickNorm, P extends SurfaceControllerApi> extends SurfaceNorm<T, P> {
 
-    private transient boolean selected;
     private transient View.OnClickListener onClickListener;
 
     OnClickNorm() {
@@ -27,11 +27,9 @@ public abstract class OnClickNorm<T extends OnClickNorm, P extends SurfaceContro
     }
 
     public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+        return !TextUtils.isEmpty(getApiCode())
+                && TextUtils.equals(getApiCode(),
+                getSelectedApiCode());
     }
 
 }

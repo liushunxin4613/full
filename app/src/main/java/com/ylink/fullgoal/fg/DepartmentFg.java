@@ -1,11 +1,34 @@
 package com.ylink.fullgoal.fg;
 
-import com.leo.core.iapi.api.IApiCodeApi;
+import android.support.annotation.NonNull;
+
+import com.leo.core.api.core.CoreModel;
+import com.leo.core.iapi.core.INorm;
+import com.leo.core.iapi.main.IControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.norm.DepartmentNorm;
+import com.ylink.fullgoal.vo.SearchVo;
 
 /**
  * 部门
  */
-public class DepartmentFg implements IApiCodeApi{
+public class DepartmentFg extends CoreModel {
+
+    @Override
+    protected INorm createNorm(@NonNull IControllerApi controllerApi) {
+        if (controllerApi instanceof BaseSearchControllerApi) {
+            BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
+            return new DepartmentNorm(getDepartmentName(),
+                    (bean, view) -> api.finishActivity(
+                            new SearchVo<>(api.getSearch(), getThis())));
+        }
+        return null;
+    }
+
+    @Override
+    protected String[] getSearchFields() {
+        return new String[]{getDepartmentName()};
+    }
 
     @Override
     public String getApiCode() {

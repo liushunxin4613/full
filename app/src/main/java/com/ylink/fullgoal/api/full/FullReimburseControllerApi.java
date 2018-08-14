@@ -374,7 +374,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     @Override
-    protected VgNorm addVgNorm(IObjAction<List<INorm>> api) {
+    public VgNorm addVgNorm(IObjAction<List<INorm>> api) {
         return super.addVgNorm(data -> {
             api.execute(data);
             execute(data, item -> {

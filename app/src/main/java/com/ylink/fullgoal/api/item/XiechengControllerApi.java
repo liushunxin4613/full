@@ -12,7 +12,7 @@ import com.ylink.fullgoal.norm.XiechengNorm;
 
 import butterknife.Bind;
 
-public class XiechengControllerApi<C> extends OnClickControllerApi<XiechengControllerApi, C, XiechengNorm> {
+public class XiechengControllerApi<C> extends LineControllerApi<XiechengControllerApi, C, XiechengNorm> {
 
     @Bind(R.id.icon_iv)
     ImageView iconIv;

@@ -10,8 +10,8 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 public class TvV2DialogNorm extends BaseDialogNorm<TvV2DialogNorm, SurfaceControllerApi>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new TvV2DialogControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return TvV2DialogControllerApi.class;
     }
 
     private String name;

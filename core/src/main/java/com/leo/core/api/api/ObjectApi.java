@@ -64,7 +64,7 @@ public class ObjectApi<C extends ObjectApi> implements IObjectApi<C> {
 
     @Override
     public <T> T getObject(Class<T> clz, Class cs, Object os) {
-        if (clz != null && cs != null && os != null) {
+        if (clz != null && cs != null) {
             try {
                 /*以下调用带参的、私有构造函数*/
                 Constructor<T> c = clz.getDeclaredConstructor(cs);
@@ -99,7 +99,7 @@ public class ObjectApi<C extends ObjectApi> implements IObjectApi<C> {
     @Override
     public <P> P getObject(String name, Class<P> pClz, Class cs, Object os) {
         Class clz = getClass(name);
-        if (clz != null && pClz != null && cs != null && os != null && pClz.isAssignableFrom(clz)) {
+        if (clz != null && pClz != null && cs != null && pClz.isAssignableFrom(clz)) {
             try {
                 /*以下调用带参的、私有构造函数*/
                 Constructor<P> c = clz.getDeclaredConstructor(cs);

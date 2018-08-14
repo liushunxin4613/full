@@ -141,7 +141,7 @@ public abstract class BaseTestNorm<T extends BaseTestNorm> extends OnClickNorm<T
         return textView;
     }
 
-    public void setTextView(TextView textView) {
+    public void setTextView(final TextView textView) {
         this.textView = textView;
         if (textView instanceof EditText) {
             if(!isEtEnable() && isMoneyEnable()){

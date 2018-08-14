@@ -12,7 +12,7 @@ import com.ylink.fullgoal.norm.DiaoyanNorm;
 
 import butterknife.Bind;
 
-public class DiaoyanControllerApi<C> extends OnClickControllerApi<DiaoyanControllerApi, C, DiaoyanNorm> {
+public class DiaoyanControllerApi<C> extends LineControllerApi<DiaoyanControllerApi, C, DiaoyanNorm> {
 
     @Bind(R.id.icon_iv)
     ImageView iconIv;

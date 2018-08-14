@@ -1,11 +1,35 @@
 package com.ylink.fullgoal.fg;
 
-import com.leo.core.iapi.api.IApiCodeApi;
+import android.support.annotation.NonNull;
+
+import com.leo.core.api.core.CoreModel;
+import com.leo.core.iapi.core.INorm;
+import com.leo.core.iapi.main.IControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.norm.ChuchaiNorm;
+import com.ylink.fullgoal.vo.SearchVo;
 
 /**
  * 出差申请单
  */
-public class TravelFormFg implements IApiCodeApi {
+public class TravelFormFg extends CoreModel {
+
+    @Override
+    protected INorm createNorm(@NonNull IControllerApi controllerApi) {
+        if (controllerApi instanceof BaseSearchControllerApi) {
+            BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
+            return new ChuchaiNorm(getCode(), getAmount(), getDestination(),
+                    getDates(), getStartDate(), getEndDate(), getWorkName(),
+                    (bean, view) -> api.finishActivity(new SearchVo<>(api.getSearch(), getThis())));
+        }
+        return null;
+    }
+
+    @Override
+    protected String[] getSearchFields() {
+        return new String[]{getCode(), getAmount(), getDestination(), getDates(), getStartDate(),
+                getEndDate(), getWorkName()};
+    }
 
     @Override
     public String getApiCode() {

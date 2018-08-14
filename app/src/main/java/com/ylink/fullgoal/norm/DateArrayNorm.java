@@ -16,8 +16,8 @@ import java.util.List;
 public class DateArrayNorm extends SurfaceNorm<DateArrayNorm, SurfaceControllerApi> {
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new DateArrayControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return DateArrayControllerApi.class;
     }
 
     private String name;

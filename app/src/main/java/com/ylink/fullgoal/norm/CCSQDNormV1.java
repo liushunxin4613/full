@@ -10,8 +10,8 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 public class CCSQDNormV1 extends OnClickNorm<CCSQDNormV1, SurfaceControllerApi>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new CCSQDControllerApiV1(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return CCSQDControllerApiV1.class;
     }
 
     private String start;

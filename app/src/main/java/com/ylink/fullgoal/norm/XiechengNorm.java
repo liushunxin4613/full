@@ -8,8 +8,8 @@ import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 public class XiechengNorm extends OnClickNorm<XiechengNorm, SurfaceControllerApi> {
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new XiechengControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return XiechengControllerApi.class;
     }
 
     private String code;

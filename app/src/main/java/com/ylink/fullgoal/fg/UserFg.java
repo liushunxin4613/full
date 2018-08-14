@@ -5,24 +5,27 @@ import android.support.annotation.NonNull;
 import com.leo.core.api.core.CoreModel;
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.LogUtil;
+import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.norm.PersonNorm;
+import com.ylink.fullgoal.vo.SearchVo;
 
 public class UserFg extends CoreModel {
 
-    /*@Override
-    protected IControllerApiBean createControllerApiBean(@NonNull IControllerApi controllerApi) {
-        if (controllerApi instanceof BaseSearchControllerApi) {
-            BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
-            return new PersonBean(getUserName(),
-                    getUserCode(), getUserDepartment(),
-                    (bean, view) -> api.finishActivity(new SearchVo<>
-                            (api.getSearch(), getThis())));
-        }
-        return null;
-    }*/
-
     @Override
     protected INorm createNorm(@NonNull IControllerApi controllerApi) {
+        if (controllerApi instanceof BaseSearchControllerApi) {
+            BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
+            return new PersonNorm(getUserName(), getUserCode(), getUserDepartment(),
+                    (bean, view) -> api.finishActivity(
+                            new SearchVo<>(api.getSearch(), getThis())));
+        }
         return null;
+    }
+
+    @Override
+    protected String[] getSearchFields() {
+        return new String[]{getUserName(), getUserCode(), getUserDepartment()};
     }
 
     @Override

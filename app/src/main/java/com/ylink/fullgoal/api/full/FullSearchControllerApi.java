@@ -15,7 +15,6 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
 import com.ylink.fullgoal.fg.DimenFg;
-import com.ylink.fullgoal.fg.UserFg;
 
 import butterknife.Bind;
 
@@ -56,82 +55,6 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     @Override
     public Integer getDefRootViewResId() {
         return R.layout.l_search;
-    }
-
-    @Override
-    public void initAddAction() {
-        super.initAddAction();
-        addList(UserFg.class, (name, path, what, msg, bean) -> {
-
-        });
-        /*//员工列表
-        addList(UserFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new PersonBean(item.getUserName(),
-                item.getUserCode(), item.getUserDepartment(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
-        //部门列表
-        addList(DepartmentFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new DepartmentBean(item.getDepartmentName(), (bean, view)
-                -> finishActivity(new SearchVo<>(getSearch(), item)))))));
-        //项目列表
-        addList(ProjectFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new ProjectBeanV1(item.getProjectName(), item.getProjectCode(),
-                item.getStatus(), item.getLeader(), item.getLeadDepartment(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
-        /*//合同付款申请单列表
-        addList(ContractPaymentFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ProjectBean(item.getName(), item.getApplicationDate(),
-                item.getLeader(), item.getLeadDepartment(), item.getFileNumber(), item.getStatus(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));
-        //招待申请单列表
-        addList(ProcessFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> data.add(new ProjectBean(item.getApplicant(), item.getDate(),
-                item.getApplyDepartment(), null, item.getAdvAmount(), item.getCause(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
-        /*//费用指标列表
-        addList(CostFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new ShareBean(item.getCostIndex(), (bean, view)
-                -> finishActivity(new SearchVo<>(getSearch(), item)))))));*/
-        //费用指标维度列表
-        /*addList(DimenListFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new ShareBean(item.getName(), (bean, view)
-                -> finishActivity(new SearchVo<>(getSearch(), getExecute(decode(getKey(),
-                DimenFg.class), DimenFg::getCode), item)))))));*/
-        /*addList(DimenListFg.class, (fieldName, path, what, msg, list) -> Observable.create(subscriber -> {
-            List<IApiBean> itemData = new ArrayList<>();
-            execute(list, item -> addDataOfCode(itemData, item, new ShareBean(item.getName(),
-                    (bean, view) -> finishActivity(new SearchVo<>(getSearch(), getExecute(
-                            decode(getKey(), DimenFg.class), DimenFg::getCode), item)))));
-            clear().adapterDataApi().addAll(getLineData(itemData));
-            subscriber.onNext(null);
-            subscriber.onCompleted();
-        }).compose(Transformer.getInstance())
-                .subscribe(obj -> {
-                    notifyDataSetChanged().dismissLoading();
-                    search(getKeyword());
-                }));
-        //申请单内容
-        addList(DataFgV1.class, ApplyContentFgV1.class, (fieldName, path, what, msg, list) -> initDataAction(data
-                -> execute(list, item -> addDataOfCode(data, item, new TvBean(item.getName(), (bean, view)
-                -> finishActivity(new SearchVo<>(getSearch(), getKey(), item)))))));
-        //出差申请单
-        addList(TravelFormFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new ChuchaiBean(item.getCode(), item.getAmount(), item.getDestination(),
-                item.getDates(), item.getStartDate(), item.getEndDate(), item.getWorkName(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
-                .setFilter(item.getAmount())))));
-        //投研报告列表
-        addList(ResearchReportFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new DiaoyanBean(item.getStockCode(), item.getStockName(), item.getType(),
-                item.getStatus(), item.getUploadTime(), item.getEndTime(), item.getReportInfo(),
-                (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
-                .setFilter(item.getProjectCode())))));
-        //携程机票列表
-        addList(CtripTicketsFg.class, (fieldName, path, what, msg, list) -> initDataAction(data -> execute(list, item
-                -> addDataOfCode(data, item, new XiechengBean(item.getFlightNumber(), item.getDeparture(), item.getDestination(),
-                item.getCrew(), item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(), item.getArrivelDate(),
-                item.getArrivelTime(), (bean, view) -> finishActivity(new SearchVo<>(getSearch(), item)))
-                .setFilter(item.getFlightNumber())))));*/
     }
 
     @Override

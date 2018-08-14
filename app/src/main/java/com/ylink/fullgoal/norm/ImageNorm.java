@@ -8,8 +8,8 @@ import com.ylink.fullgoal.core.SurfaceNorm;
 public class ImageNorm extends SurfaceNorm<ImageNorm, SurfaceControllerApi> {
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new ImageControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return ImageControllerApi.class;
     }
 
     private Object res;

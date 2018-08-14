@@ -13,7 +13,6 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.config.JsonHelper;
 import com.ylink.fullgoal.config.MVCFactory;
-import com.ylink.fullgoal.config.MVCFactoryV1;
 import com.ylink.fullgoal.config.Node;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
 
@@ -22,7 +21,6 @@ import java.util.List;
 import butterknife.Bind;
 
 import static com.leo.core.util.TextUtils.toJsonString;
-import static com.ylink.fullgoal.config.Config.TEMPLATE_FULL;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 
 public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, C> extends BaseSearchControllerApi<T, C> {
@@ -91,18 +89,13 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
     }
 
     private void onData(String path, String params, List list) {
-        /*if (TextUtils.isEmpty(list)) {
+        if (TextUtils.isEmpty(list)) {
             showNullView(true);
         } else {
-            if (!TEMPLATE_FULL) {
-                MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
-                        getThis(), d -> initDataAction(data -> execute(d, data::add)));
-            } else {
-                MVCFactoryV1.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
-                        getThis(), d -> initDataAction(data -> execute(d, data::add)));
-            }
+            MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
+                    getThis(), d -> initDataAction(data -> execute(d, data::add)));
         }
-        dismissLoading();*///TODO
+        dismissLoading();
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.ylink.fullgoal.controllerApi.surface.BaseSearchBarControllerApi;
 import com.ylink.fullgoal.cr.surface.ApplyMapControllerV2;
 import com.ylink.fullgoal.fg.ApplyDataFgV2;
 import com.ylink.fullgoal.fg.ApplyFgV2;
-import com.ylink.fullgoal.fg.DataFgV2;
+import com.ylink.fullgoal.norm.TvH2MoreNorm;
 import com.ylink.fullgoal.vo.ApplyVoV2;
 import com.ylink.fullgoal.vo.SearchVo;
 
@@ -15,12 +15,13 @@ import java.util.Map;
 
 import static com.leo.core.util.TextUtils.getJsonStringValue;
 import static com.ylink.fullgoal.vo.SearchVo.APPLY;
+import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 
-public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> extends BaseSearchBarControllerApi<T, C> {
+public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> extends BaseSearchBarControllerApi<T, C> {
 
     private Map<String, Object> map;
 
-    public FullSearchControllerApiV2(C controller) {
+    public FullSearchControllerApiV1(C controller) {
         super(controller);
     }
 
@@ -57,7 +58,7 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
 
     private void initAdds() {
         //申请单
-        addList(DataFgV2.class, ApplyFgV2.class, (fieldName, path, what, msg, list) -> initData(list));
+        addList(ApplyFgV2.class, (fieldName, path, what, msg, list) -> initData(list));
     }
 
     private void initData(List<ApplyFgV2> list) {
@@ -67,12 +68,12 @@ public class FullSearchControllerApiV2<T extends FullSearchControllerApiV2, C> e
     }
 
     private void initActionData() {
-        /*initDataAction(data -> execute(getDataMap(), (key, value) -> data.add(new TvH2MoreBean(
+        initDataAction(data -> execute(getDataMap(), (key, value) -> data.add(new TvH2MoreNorm(
                 vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName), value.getViewValue(),
                 String.format("请选择%s", vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName)),
                 (bean, view) -> routeApi().searchApplyContent(APPLY_CONTENT, encode(map(getMap(), m
                         -> m.put("applyType", key))), value.getApiCode()), (bean, view)
-                -> value.setMap(null)))));*/ //TODO
+                -> value.setMap(null)).setEnable(true))));
     }
 
     @Override

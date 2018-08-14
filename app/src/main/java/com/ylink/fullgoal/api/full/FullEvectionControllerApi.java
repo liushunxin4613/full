@@ -116,7 +116,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                     initVgApiBean("出差申请单", ()
                             -> vos(DVo::getTrave, obj -> obj.remove(item, this)));
                 }
-            })), bean -> filterData.add(bean.getApiCode()))));
+            })), bean -> filterData.add(bean.getCode()))));
             if (isEnable()) {
                 data.add(new IconTvHNorm("添加出差申请单", (bean, view)
                         -> routeApi().search(SearchVo.BUSINESS, getParams(), filterData)));
@@ -136,7 +136,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                     initVgApiBean("调研报告",
                             () -> vos(DVo::getReport, obj -> obj.remove(item, this)));
                 }
-            })), bean -> filterData.add(bean.getApiCode()))));
+            })), bean -> filterData.add(bean.getText()))));
             if (isEnable()) {
                 data.add(new IconTvHNorm("添加投研报告", (bean, view)
                         -> routeApi().search(SearchVo.REPORT, getParams(), filterData)));
@@ -163,7 +163,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                             initVgApiBean("携程机票",
                                     () -> vos(DVo::getCtrip, obj -> obj.remove(item, this)));
                         }
-                    })), bean -> filterData.add(bean.getApiCode()))));
+                    })), bean -> filterData.add(bean.getCode()))));
             if (isEnable()) {
                 data.add(new IconTvHNorm("添加携程机票", (bean, view)
                         -> routeApi().search(SearchVo.XC_AIR, vorc(DVo::getReimbursement), filterData)));

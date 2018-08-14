@@ -3,21 +3,19 @@ package com.leo.core.core;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.leo.core.iapi.inter.IViewHolder;
 import com.leo.core.iapi.main.IControllerApi;
 
-public class ViewHolder extends RecyclerView.ViewHolder implements IViewHolder {
+public class ViewHolder extends RecyclerView.ViewHolder {
 
-    private IControllerApi controllerApi;
+    private transient IControllerApi api;
 
-    public ViewHolder(View itemView, IControllerApi controllerApi) {
+    ViewHolder(View itemView, IControllerApi api) {
         super(itemView);
-        this.controllerApi = controllerApi;
+        this.api = api;
     }
 
-    @Override
-    public IControllerApi controllerApi() {
-        return controllerApi;
+    public IControllerApi api() {
+        return api;
     }
 
 }

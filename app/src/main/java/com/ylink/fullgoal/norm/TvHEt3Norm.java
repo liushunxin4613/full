@@ -4,7 +4,6 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.item.TvHEt3ControllerApi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvHEt3Norm extends BaseTestNorm<TvHEt3Norm>{
 
@@ -17,8 +16,8 @@ public class TvHEt3Norm extends BaseTestNorm<TvHEt3Norm>{
     }
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new TvHEt3ControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return TvHEt3ControllerApi.class;
     }
 
     private transient IObjAction<String> action;

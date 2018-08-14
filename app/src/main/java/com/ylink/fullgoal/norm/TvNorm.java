@@ -3,13 +3,12 @@ package com.ylink.fullgoal.norm;
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.api.item.TvControllerApi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvNorm extends BaseTestNorm<TvNorm>{
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new TvControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return TvControllerApi.class;
     }
 
     public TvNorm(String name) {

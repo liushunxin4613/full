@@ -1,8 +1,30 @@
 package com.ylink.fullgoal.fg;
 
-import com.leo.core.iapi.api.IApiCodeApi;
+import android.support.annotation.NonNull;
 
-public class CostFg implements IApiCodeApi {
+import com.leo.core.api.core.CoreModel;
+import com.leo.core.iapi.core.INorm;
+import com.leo.core.iapi.main.IControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.norm.ShareNorm;
+import com.ylink.fullgoal.vo.SearchVo;
+
+public class CostFg extends CoreModel {
+
+    @Override
+    protected INorm createNorm(@NonNull IControllerApi controllerApi) {
+        if (controllerApi instanceof BaseSearchControllerApi) {
+            BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
+            return new ShareNorm(getCostIndex(), (bean, view) -> api.finishActivity(new SearchVo<>(
+                    api.getSearch(), getThis())));
+        }
+        return null;
+    }
+
+    @Override
+    protected String[] getSearchFields() {
+        return new String[]{getCostIndex()};
+    }
 
     @Override
     public String getApiCode() {

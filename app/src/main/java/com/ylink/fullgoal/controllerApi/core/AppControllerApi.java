@@ -15,10 +15,7 @@ import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.ylink.fullgoal.config.MVCFactory;
-import com.ylink.fullgoal.config.MVCFactoryV1;
 import com.ylink.fullgoal.factory.BankFactory;
-
-import static com.ylink.fullgoal.config.Config.TEMPLATE_FULL;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
 
@@ -47,11 +44,7 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
                 -> new MaterialHeader(context));
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout)
                 -> new ClassicsFooter(context));
-        if (!TEMPLATE_FULL) {
-            MVCFactory.getInstance().init(getThis()).start();
-        } else {
-            MVCFactoryV1.getInstance().init(getThis()).start();
-        }
+        MVCFactory.getInstance().init(getThis()).start();
     }
 
 }

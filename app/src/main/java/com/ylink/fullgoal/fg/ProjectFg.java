@@ -1,11 +1,35 @@
 package com.ylink.fullgoal.fg;
 
-import com.leo.core.iapi.api.IApiCodeApi;
+import android.support.annotation.NonNull;
+
+import com.leo.core.api.core.CoreModel;
+import com.leo.core.iapi.core.INorm;
+import com.leo.core.iapi.main.IControllerApi;
+import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.norm.ProjectNorm;
+import com.ylink.fullgoal.vo.SearchVo;
 
 /**
  * 项目
  */
-public class ProjectFg implements IApiCodeApi {
+public class ProjectFg extends CoreModel {
+
+    @Override
+    protected INorm createNorm(@NonNull IControllerApi controllerApi) {
+        if (controllerApi instanceof BaseSearchControllerApi) {
+            BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
+            return new ProjectNorm(getProjectName(), getProjectCode(), getStatus(), getLeader(),
+                    getLeadDepartment(), (bean, view) -> api.finishActivity(new SearchVo<>(
+                    api.getSearch(), getThis())));
+        }
+        return null;
+    }
+
+    @Override
+    protected String[] getSearchFields() {
+        return new String[]{getProjectName(), getProjectCode(), getStatus(), getLeader(),
+                getLeadDepartment()};
+    }
 
     @Override
     public String getApiCode() {

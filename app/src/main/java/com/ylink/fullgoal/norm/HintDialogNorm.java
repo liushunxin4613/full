@@ -6,13 +6,14 @@ import android.view.View;
 import com.leo.core.iapi.inter.OnBVDialogClickListener;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.api.item.HintDialogControllerApi;
+import com.ylink.fullgoal.api.item.VgControllerApi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class HintDialogNorm extends BaseDialogNorm<HintDialogNorm, SurfaceControllerApi> {
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new HintDialogControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return HintDialogControllerApi.class;
     }
 
     private String title;

@@ -4,13 +4,14 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leo.core.iapi.core.INorm;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.norm.TvH2MoreNorm;
 
 import butterknife.Bind;
 
-public class TvH2MoreControllerApi<C> extends OnClickControllerApi<TvH2MoreControllerApi, C, TvH2MoreNorm>{
+public class TvH2MoreControllerApi<C> extends LineControllerApi<TvH2MoreControllerApi, C, TvH2MoreNorm> {
 
     @Bind(R.id.name_tv)
     TextView nameTv;

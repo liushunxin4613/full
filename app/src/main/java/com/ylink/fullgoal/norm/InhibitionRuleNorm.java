@@ -4,13 +4,12 @@ import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.item.InhibitionRuleControllerApi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class InhibitionRuleNorm extends BaseTestNorm<InhibitionRuleNorm> {
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new InhibitionRuleControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return InhibitionRuleControllerApi.class;
     }
 
     private static final String STATE_RED = "红灯";

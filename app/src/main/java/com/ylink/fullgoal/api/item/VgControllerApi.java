@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.norm.VgNorm;
 
@@ -33,7 +32,7 @@ public class VgControllerApi<T extends VgControllerApi, C, N extends VgNorm> ext
                         item.controllerApi(), item.getApiType());
                 controllerApi.onNorm(item, i);
                 vg.addView(controllerApi.getRootView());
-                if (norm.getLineLayoutResId() != null && i < norm.getCount() - 1) {
+                if (norm.getLineLayoutResId() != null && (norm.isEnd() || (i < norm.getCount() - 1))) {
                     LayoutInflater.from(getContext())
                             .inflate(norm.getLineLayoutResId(), vg);
                 }

@@ -12,7 +12,7 @@ import com.ylink.fullgoal.norm.ChuchaiNorm;
 
 import butterknife.Bind;
 
-public class ChuchaiControllerApi<C> extends OnClickControllerApi<ChuchaiControllerApi, C, ChuchaiNorm>{
+public class ChuchaiControllerApi<C> extends LineControllerApi<ChuchaiControllerApi, C, ChuchaiNorm>{
 
     @Bind(R.id.icon_iv)
     ImageView iconIv;

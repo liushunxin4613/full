@@ -1,23 +1,39 @@
 package com.leo.core.core;
 
-import android.content.res.XmlResourceParser;
 import android.view.ViewGroup;
 
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.ObjectUtil;
+import com.leo.core.util.TextUtils;
 
 /**
  * 创建和处理Norm
  */
-public class Norm<T extends Norm, P extends IControllerApi> extends MNApi<T, P> implements INorm<P> {
+public abstract class Norm<T extends Norm, P extends IControllerApi> extends MNApi<T, P> implements INorm<P> {
 
+    private transient String xml;
     private transient int position;
     private transient String apiCode;
     private transient ViewGroup group;
     private transient Integer apiType;
     private transient String apiSearch;
     private transient IControllerApi controllerApi;
-    private transient XmlResourceParser xmlResourceParser;
+
+    @Override
+    public Integer getViewType() {
+        String type = "";
+        Class<? extends IControllerApi> clz = getControllerApiClass();
+        if (clz != null) {
+            type += "&" + clz.getName();
+        }
+        if (getApiType() != null) {
+            type += "&" + getApiType();
+        } else if (!TextUtils.isEmpty(getRootViewXml())) {
+            type += "&" + getRootViewXml();
+        }
+        return type.hashCode();
+    }
 
     @Override
     public ViewGroup getViewGroup() {
@@ -31,6 +47,19 @@ public class Norm<T extends Norm, P extends IControllerApi> extends MNApi<T, P> 
 
     @Override
     public void onCreateViewGroup(IControllerApi api) {
+    }
+
+    @Override
+    public IControllerApi createControllerApi() {
+        Class<? extends IControllerApi> clz = getControllerApiClass();
+        if (clz == null) {
+            throw new NullPointerException("getControllerApiClass()不能为空");
+        }
+        IControllerApi api = (IControllerApi) ObjectUtil.getObject(clz,
+                Object.class, getController());
+        api.setRootViewXml(getRootViewXml());
+        api.setRootViewResId(getApiType());
+        return api;
     }
 
     @Override
@@ -48,13 +77,13 @@ public class Norm<T extends Norm, P extends IControllerApi> extends MNApi<T, P> 
     }
 
     @Override
-    public XmlResourceParser getApiXmlResourceParser() {
-        return xmlResourceParser;
+    public String getRootViewXml() {
+        return xml;
     }
 
     @Override
-    public void setApiXmlResourceParser(XmlResourceParser parser) {
-        this.xmlResourceParser = parser;
+    public void setRootViewXml(String xml) {
+        this.xml = xml;
     }
 
     @Override

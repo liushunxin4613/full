@@ -6,7 +6,6 @@ import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IControllerApi;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.item.TvH2MoreControllerApi;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 public class TvH2MoreNorm extends BaseTestNorm<TvH2MoreNorm>{
 
@@ -19,10 +18,10 @@ public class TvH2MoreNorm extends BaseTestNorm<TvH2MoreNorm>{
     }
 
     @Override
-    protected IControllerApi createControllerApi(SurfaceControllerApi controllerApi, Object controller) {
-        return new TvH2MoreControllerApi(controller);
+    public Class<? extends IControllerApi> getControllerApiClass() {
+        return TvH2MoreControllerApi.class;
     }
-    
+
     private transient View.OnClickListener iconOnClickListener;
 
     public TvH2MoreNorm(String name, String detail) {
