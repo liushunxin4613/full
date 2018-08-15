@@ -16,6 +16,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.factory.BankFactory;
+import com.ylink.fullgoal.util.CameraUtil;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
 
@@ -33,9 +34,10 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MainManage.init(getApplication());//主
+        LogUtil.openLog();//log
         Utils.init(getApplication());
         getApplication().registerActivityLifecycleCallbacks(activityLifecycleApi());
-        LogUtil.openLog();//log
+        CameraUtil.init(getContext());
         NetUtils.init(getApplication());
         RetrofitFactory.show(false);
         BankFactory.getInstance().init(getThis());

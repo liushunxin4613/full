@@ -254,8 +254,8 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         if (TextUtils.check(detail, confirm, confirmListener)) {
             HintDialogNorm norm = new HintDialogNorm("温馨提示", detail, confirm,
                     cancel, confirmListener, cancelListener);
-            SurfaceControllerApi api = getDialogControllerApi(getActivity(),
-                    SurfaceControllerApi.class, norm.getApiType());
+            IControllerApi api = getDialogControllerApi(getActivity(),
+                    norm.getControllerApiClass());
             api.dialogShow().onNorm(norm, 0);
             Window window = api.getDialog().getWindow();
             if (window != null) {
@@ -270,7 +270,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
 
     protected List<? extends IModel> getOnDataFg(String fieldName, String path, int what,
                                                  String msg, DataFg fg) {
-        return fg.getModelData();
+        return null;
     }
 
     protected void addDataOfCode(List data, IApiCodeApi api, CoreApiBean bean) {

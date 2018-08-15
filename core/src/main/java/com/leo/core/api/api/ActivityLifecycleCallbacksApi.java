@@ -2,10 +2,14 @@ package com.leo.core.api.api;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
+import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.util.GsonDecodeUtil;
+import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.LogUtil;
+import com.leo.core.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,14 +65,50 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
 
     @Override
     public void finishActivity(Object obj) {
-        vs(getItem(getCount() - 2), Activity::getIntent, in
-                -> in.putExtra(FINISH, GsonDecodeUtil.encode(obj)));
+        vs(getItem(getCount() - 2), activity -> putExtra(activity, obj));
         vs(getItem(getCount() - 1), Activity::finish);
+    }
+
+    private void putExtra(@NonNull Activity activity, Object obj) {
+        vs(activity, Activity::getIntent, intent -> intent.putExtra(FINISH, LogUtil.getLog(false, obj)));
+    }
+
+    @Override
+    public void finishActivity(Class<? extends IControllerApi> clz, Object obj) {
+        for (int i = getCount() - 1; i >= 0; i--) {
+            Activity activity = getItem(i);
+            if (activity instanceof BaseControllerApiActivity) {
+                IControllerApi api = ((BaseControllerApiActivity) activity).controllerApi();
+                if (TextUtils.checkNull(clz, api) && clz.isInstance(api)) {
+                    putExtra(activity, obj);
+                    return;
+                }
+            }
+            activity.finish();
+        }
+    }
+
+    @Override
+    public void finishActivity(Object obj, Class<? extends IControllerApi>... args) {
+        for (int i = getCount() - 1; i >= 0; i--) {
+            Activity activity = getItem(i);
+            if (activity instanceof BaseControllerApiActivity) {
+                IControllerApi api = ((BaseControllerApiActivity) activity).controllerApi();
+                int position = getCount() - 1 - i;
+                if(position >= 0 && position < args.length && args[position] != null
+                        && args[position].isInstance(api)){
+                    activity.finish();
+                } else {
+                    putExtra(activity, obj);
+                    return;
+                }
+            }
+        }
     }
 
     @Override
     public void finishAllActivity() {
-        while (getActivityStack().empty()){
+        while (getActivityStack().empty()) {
             executeNon(getActivityStack().pop(), Activity::finish);
         }
     }

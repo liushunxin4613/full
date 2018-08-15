@@ -1,16 +1,21 @@
 package com.ylink.fullgoal.api.api;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.hardware.Camera;
 import android.support.annotation.NonNull;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.api.CoreRouteApi;
 import com.leo.core.api.main.CoreControllerApi;
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.other.MMap;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.ylink.fullgoal.api.full.FullAutoSearchControllerApi;
 import com.ylink.fullgoal.api.full.FullBankControllerApi;
 import com.ylink.fullgoal.api.full.FullBillControllerApi;
@@ -20,6 +25,8 @@ import com.ylink.fullgoal.api.full.FullGeneralControllerApi;
 import com.ylink.fullgoal.api.full.FullReimburseDataControllerApi;
 import com.ylink.fullgoal.api.full.FullSearchControllerApi;
 import com.ylink.fullgoal.api.full.FullSearchControllerApiV1;
+import com.ylink.fullgoal.api.item.ImageTailorControllerApi;
+import com.ylink.fullgoal.api.surface.Camera2ControllerApi;
 import com.ylink.fullgoal.main.SurfaceActivity;
 
 import java.lang.reflect.Type;
@@ -27,7 +34,9 @@ import java.util.List;
 
 import cn.com.fullgoal.pt0001.MainActivity;
 
+import static com.ylink.fullgoal.config.Config.FILE_PATH;
 import static com.ylink.fullgoal.config.Config.FILTERS;
+import static com.ylink.fullgoal.config.Config.IMAGE_TYPE;
 import static com.ylink.fullgoal.config.Config.JSON;
 import static com.ylink.fullgoal.config.Config.KEY;
 import static com.ylink.fullgoal.config.Config.MAIN_APP;
@@ -187,6 +196,10 @@ public class RouteApi extends CoreRouteApi {
                 return FullSearchControllerApiV1.class;
             case "searchApplyContent"://搜索申请单内容
                 return FullAutoSearchControllerApi.class;
+            case "camera"://拍照
+                return Camera2ControllerApi.class;
+            case "tailor"://裁剪
+                return ImageTailorControllerApi.class;
         }
         return null;
     }
@@ -318,6 +331,58 @@ public class RouteApi extends CoreRouteApi {
                 -> map.put(SEARCH, search)
                 .put(KEY, key)
                 .put(VALUE, value));
+    }
+
+    /**
+     * 拍照
+     */
+    public void camera(int type) {
+        checkCamera(() -> routeSurface("camera", m -> m.put(IMAGE_TYPE, String.valueOf(type))));
+    }
+
+    /**
+     * 裁剪
+     */
+    public void tailor(String imageType, String filePath) {
+        route(MODULE, "surface/tailor", null, m -> m.put(FILE_PATH, filePath)
+                .put(IMAGE_TYPE, imageType));
+    }
+
+    //私有的
+
+    @SuppressLint("CheckResult")
+    private void checkCamera(IAction action) {
+        if (action != null) {
+            if (isCameraCanUse()) {
+                action.execute();
+            } else {
+                final RxPermissions rxPermissions = new RxPermissions(controllerApi().getFragmentActivity());
+                rxPermissions.requestEachCombined(Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribe(permission -> {
+                            if (permission.granted && isCameraCanUse()) {
+                                action.execute();
+                            } else {
+                                show("请开启拍照权限");
+                            }
+                        });
+            }
+        }
+    }
+
+    private static boolean isCameraCanUse() {
+        Camera mCamera = null;
+        try {
+            mCamera = Camera.open();
+            mCamera.setParameters(mCamera.getParameters());
+            return true;
+        } catch (Exception ignored) {
+        } finally {
+            if (mCamera != null) {
+                mCamera.release();
+            }
+        }
+        return false;
     }
 
 }

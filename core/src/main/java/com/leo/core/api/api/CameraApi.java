@@ -95,7 +95,6 @@ public class CameraApi extends DirApi implements ICameraApi {
         return false;
     }
 
-
     @SuppressLint("InlinedApi")
     @Override
     public void openCamera(int type, IMsgAction<File> action) {

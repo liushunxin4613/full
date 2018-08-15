@@ -133,5 +133,7 @@ public class Config {
     public final static String DATA_QR = "dataQR";
     public final static String MONEY = "totalAmountLower";
     public final static String CASTGC = "CASTGC";
+    public final static String FILE_PATH = "filePath";
+    public final static String IMAGE_TYPE = "imageType";
 
 }

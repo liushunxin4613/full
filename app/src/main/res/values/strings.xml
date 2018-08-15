@@ -29,4 +29,8 @@
     <string name="wobuyl">我不要了</string>
     <string name="xiugaitj">修改提交</string>
     <string name="quxiaobc">取消报销</string>
+    <string name="chongpai">重拍</string>
+    <string name="shiyongzp">使用照片</string>
+    <string name="paishepj">拍摄票据</string>
+    <string name="jiangpiaojfrxxknldjy">将票据放入拍摄框内,亮度均匀</string>
 </resources>

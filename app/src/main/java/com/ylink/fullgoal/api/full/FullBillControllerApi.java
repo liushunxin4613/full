@@ -40,6 +40,12 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
     }
 
     @Override
+    public void onPageSelected(int position) {
+        super.onPageSelected(position);
+        initTitle(position);
+    }
+
+    @Override
     public void initView() {
         super.initView();
         executeBundle(bundle -> {

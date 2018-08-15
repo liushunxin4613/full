@@ -13,10 +13,6 @@ import butterknife.Bind;
 
 public class HintDialogControllerApi<C> extends NormControllerApi<HintDialogControllerApi, C, HintDialogNorm> {
 
-    public HintDialogControllerApi(C controller) {
-        super(controller);
-    }
-
     @Bind(R.id.name_tv)
     TextView nameTv;
     @Bind(R.id.detail_tv)
@@ -25,6 +21,10 @@ public class HintDialogControllerApi<C> extends NormControllerApi<HintDialogCont
     TextView confirmTv;
     @Bind(R.id.cancel_tv)
     TextView cancelTv;
+
+    public HintDialogControllerApi(C controller) {
+        super(controller);
+    }
 
     @Override
     public Integer getDefRootViewResId() {

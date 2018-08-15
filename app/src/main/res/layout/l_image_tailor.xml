@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <include
+        android:id="@+id/image"
+        layout="@layout/l_child_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/name_tv" />
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:maxLines="1"
+        android:paddingBottom="24dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="24dp"
+        android:text="@string/chongpai"
+        android:textColor="@color/white"
+        android:textSize="@dimen/tv"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/detail_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:maxLines="1"
+        android:paddingBottom="24dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="24dp"
+        android:text="@string/shiyongzp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/tv"
+        tools:ignore="RelativeOverlap,RtlHardcoded" />
+
+</RelativeLayout>

@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.main.IControllerApi;
 
 import java.util.Stack;
 
@@ -14,5 +15,7 @@ public interface IActivityLifecycleCallbacksApi extends IApi, Application.Activi
     int getCount();
     Activity getItem(int position);
     void finishActivity(Object obj);
+    void finishActivity(Class<? extends IControllerApi> clz, Object obj);
+    void finishActivity(Object obj, Class<? extends IControllerApi>... args);
     void finishAllActivity();
 }

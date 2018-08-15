@@ -198,4 +198,8 @@ public abstract class CoreRouteApi extends HasCoreControllerApi<CoreRouteApi> im
         return path;
     }
 
+    protected IObjAction<MMap<String, String>> getFinishCommandMapAction() {
+        return m -> m.put(FINISH, FINISH);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.ylink.fullgoal.controllerApi.surface;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.iapi.core.IMNApi;
+import com.leo.core.iapi.core.IModel;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.other.Transformer;
 import com.leo.core.search.SearchUtil;
@@ -10,6 +11,7 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.config.Config;
+import com.ylink.fullgoal.fg.DataFg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +122,12 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
     public void initData() {
         super.initData();
         query();
+    }
+
+    @Override
+    protected List<? extends IModel> getOnDataFg(String fieldName, String path, int what, String msg,
+                                                 DataFg fg) {
+        return fg.getModelData();
     }
 
     /**

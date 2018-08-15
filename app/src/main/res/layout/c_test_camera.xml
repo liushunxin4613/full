@@ -8,9 +8,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.ylink.fullgoal.view.MaskView
+        android:id="@+id/mask_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="36dp"
+            android:maxLines="1"
+            android:tag="tv0"
+            android:text="@string/paishepj"
+            android:textColor="#FFBC2E"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv0"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:maxLines="1"
+            android:tag="tv0"
+            android:text="@string/jiangpiaojfrxxknldjy"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:id="@+id/topRly"
@@ -45,17 +78,9 @@
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:id="@+id/recycler_view"
-            android:scrollbars="none"
-            android:overScrollMode="never"
-            android:layout_above="@+id/boottomRly"
-            />
-
         <RelativeLayout
             android:id="@+id/boottomRly"
+            style="@style/padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -79,17 +104,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@mipmap/camera_photo" />
-
-            <Button
-                android:id="@+id/sure_bt"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="40dp"
-                android:layout_marginRight="40dp"
-                android:background="@mipmap/zhengque" />
         </RelativeLayout>
     </RelativeLayout>
+
 </FrameLayout>

@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.CoreController;
 import com.leo.core.bean.Bol;
 import com.leo.core.iapi.core.INorm;
@@ -68,6 +69,8 @@ import static com.ylink.fullgoal.config.ComConfig.UPDATE_MONEY;
 import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.Config.BILL_TYPE_TITLES;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
+import static com.ylink.fullgoal.config.Config.FILE_PATH;
+import static com.ylink.fullgoal.config.Config.IMAGE_TYPE;
 import static com.ylink.fullgoal.config.Config.JSON;
 import static com.ylink.fullgoal.config.Config.MAIN_APP;
 import static com.ylink.fullgoal.config.Config.SERIAL_NO;
@@ -358,6 +361,17 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         execute(getFinish(), ImageVo.class, vo -> vos(DVo::getImageList, obj -> obj.updateMoney(vo)));
         //申请单
         executeSearch(ApplyVoV2.class, vo -> getVo().setApply(vo.getObj().getApply()));
+        //图片
+        execute(getFinish(), new TypeToken<Map<String, String>>() {
+        }, map -> {
+            if (!TextUtils.isEmpty(map) && map.containsKey(IMAGE_TYPE) && map.containsKey(FILE_PATH)) {
+                int what = JavaTypeUtil.getInt(map.get(IMAGE_TYPE));
+                String filePath = map.get(FILE_PATH);
+                ImageVo vo = addPhoto(filePath, what);
+                api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
+                        what, vord(DVo::getSerialNo), new File(filePath), filePath, vo);
+            }
+        });
         notifyDataChanged();
     }
 
@@ -414,12 +428,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         execute(data, obj -> gridData.add(newGridPhotoBean(data, obj).setEnable(isEnable())
                 .setVisible(isNoneInitiateEnable())));
         if (isEnable()) {
-            gridData.add(new GridPhotoNorm(R.mipmap.posting_add, null, (bean, view) ->
-                    cameraApi().openCamera(type, (what, msg, file, args) -> {
-                        ImageVo vo = addPhoto(file.getPath(), what);
-                        api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
-                                what, vord(DVo::getSerialNo), file, file.getPath(), vo);
-                    }), null));
+            gridData.add(new GridPhotoNorm(R.mipmap.posting_add, null, (bean, view)
+                    -> routeApi().camera(type), null));
+            /*cameraApi().openCamera(type, (what, msg, file, args) -> {
+                ImageVo vo = addPhoto(file.getPath(), what);
+                api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
+                        what, vord(DVo::getSerialNo), file, file.getPath(), vo);
+            })*/
         }
         return gridData;
     }
@@ -613,7 +628,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      */
     boolean isNoneInitiateEnable() {
         return !(TextUtils.equals(state, FQ)
-                || TextUtils.equals(state, QZ));
+                || TextUtils.equals(state, QZ)
+                || TextUtils.equals(state, MQZ)
+                || TextUtils.equals(state, HZ));
     }
 
     protected <B> B getEnable(B a, B b) {
