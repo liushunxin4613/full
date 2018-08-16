@@ -406,6 +406,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 vor(DVo::getReimbursement, CoreController::getApiCode))
                 .put("budgetDepartment", vor(DVo::getBudgetDepartment,
                         CoreController::getApiCode))
+                .put("budgetDepartmentName", vor(DVo::getBudgetDepartment,
+                        DepartmentController::getViewBean))
                 .put("billType", vor(DVo::getBillType,
                         obj -> obj.getUB(getBType())))
                 .put("cost", vor(DVo::getCostIndex,

@@ -1,12 +1,15 @@
 package com.ylink.fullgoal.api.full;
 
 import com.leo.core.api.inter.CoreController;
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.surface.CtripTicketsController;
+import com.ylink.fullgoal.cr.surface.DepartmentController;
 import com.ylink.fullgoal.cr.surface.NodeController;
 import com.ylink.fullgoal.cr.surface.ResearchReportController;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.TravelFormController;
+import com.ylink.fullgoal.factory.CoreJsonFactory;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.NodeFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
@@ -123,7 +126,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
             }
         });
         //VgBean 投研报告
-        addVgNorm(data -> {
+        checkReport(() -> addVgNorm(data -> {
             List<ResearchReportFg> list = vor(DVo::getReport, ResearchReportController::getViewBean);
             if (!(!isEnable() && TextUtils.isEmpty(list))) {
                 data.add(new TvNorm("投研报告添加"));
@@ -141,7 +144,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                 data.add(new IconTvHNorm("添加投研报告", (bean, view)
                         -> routeApi().search(SearchVo.REPORT, getParams(), filterData)));
             }
-        });
+        }));
         //GridBean 交通费报销
         addVgNorm("交通费报销", newGridNorm(FILTER_JTF));
         //GridBean 住宿费报销
@@ -181,6 +184,13 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                 execute(nodeData, item -> data.add(new TvH4Norm(item.getName(),
                         item.getNode(), item.getOpinion(), item.getProcessTime())));
             });
+        }
+    }
+
+    private void checkReport(IAction action) {
+        if (CoreJsonFactory.getInstance().reportContains(vor(DVo::getBudgetDepartment,
+                DepartmentController::getViewBean))) {
+            execute(action);
         }
     }
 

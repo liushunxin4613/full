@@ -8,13 +8,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leo.core.iapi.core.IMNApi;
 import com.leo.core.update.IRunAction;
 import com.leo.core.update.Update;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
+import com.ylink.fullgoal.factory.CoreJsonFactory;
 import com.ylink.fullgoal.fg.DimenFg;
+import com.ylink.fullgoal.fg.ResearchReportFg;
 
 import butterknife.Bind;
 
@@ -47,6 +50,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
 
     private long time;
     private Update update;
+    private boolean allShow;
 
     public FullSearchControllerApi(C controller) {
         super(controller);
@@ -60,6 +64,8 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     @Override
     public void initView() {
         super.initView();
+        allShow = CoreJsonFactory.getInstance().reportAllContains(vr(TextUtils.toJSONMap(
+                String.class, String.class, getKey()), m -> m.get("budgetDepartmentName")));
         setOnClickListener(backIv, view -> onBackPressed());
         setOnClickListener(iconIv, v -> setText(nameEt, null));
         setText(nullTv, "没有更多的数据");
@@ -118,6 +124,14 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
         } else {
             search(keyword);
         }
+    }
+
+    @Override
+    public T add(IMNApi bean) {
+        if (bean instanceof ResearchReportFg) {
+            ((ResearchReportFg) bean).setAllShow(allShow);
+        }
+        return super.add(bean);
     }
 
     @Override

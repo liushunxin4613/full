@@ -2,14 +2,23 @@ package com.ylink.fullgoal.norm;
 
 import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IControllerApi;
+import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.item.DiaoyanControllerApi;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
-public class DiaoyanNorm extends OnClickNorm<DiaoyanNorm, SurfaceControllerApi>{
+public class DiaoyanNorm extends OnClickNorm<DiaoyanNorm, SurfaceControllerApi> {
 
     @Override
     public Class<? extends IControllerApi> getControllerApiClass() {
         return DiaoyanControllerApi.class;
+    }
+
+    @Override
+    public Integer getApiType() {
+        if (!allShow) {
+            return R.layout.l_diaoyan_v1;
+        }
+        return super.getApiType();
     }
 
     private String code;
@@ -19,6 +28,7 @@ public class DiaoyanNorm extends OnClickNorm<DiaoyanNorm, SurfaceControllerApi>{
     private String startDate;
     private String endDate;
     private String text;
+    private transient boolean allShow;//是否显示全部
 
     public DiaoyanNorm(String code, String name, String type, String state, String startDate,
                        String endDate, String text, OnBVClickListener<DiaoyanNorm> listener) {
@@ -86,6 +96,15 @@ public class DiaoyanNorm extends OnClickNorm<DiaoyanNorm, SurfaceControllerApi>{
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isAllShow() {
+        return allShow;
+    }
+
+    public DiaoyanNorm setAllShow(boolean allShow) {
+        this.allShow = allShow;
+        return this;
     }
 
 }

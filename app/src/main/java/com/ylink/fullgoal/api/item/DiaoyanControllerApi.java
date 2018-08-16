@@ -14,23 +14,14 @@ import butterknife.Bind;
 
 public class DiaoyanControllerApi<C> extends LineControllerApi<DiaoyanControllerApi, C, DiaoyanNorm> {
 
-    @Bind(R.id.icon_iv)
-    ImageView iconIv;
-    @Bind(R.id.tv0)
-    TextView tv0;
-    @Bind(R.id.tv1)
     TextView tv1;
-    @Bind(R.id.vg)
-    LinearLayout vg;
-    @Bind(R.id.tv2)
+    TextView tv0;
     TextView tv2;
-    @Bind(R.id.tv3)
     TextView tv3;
-    @Bind(R.id.tv4)
     TextView tv4;
-    @Bind(R.id.tv5)
     TextView tv5;
-    @Bind(R.id.root_vg)
+    LinearLayout vg;
+    ImageView iconIv;
     RelativeLayout rootVg;
 
     public DiaoyanControllerApi(C controller) {
@@ -48,6 +39,20 @@ public class DiaoyanControllerApi<C> extends LineControllerApi<DiaoyanController
     }
 
     @Override
+    public void initView() {
+        super.initView();
+        vg = findViewById(R.id.vg);
+        tv0 = findViewById(R.id.tv0);
+        tv1 = findViewById(R.id.tv1);
+        tv2 = findViewById(R.id.tv2);
+        tv3 = findViewById(R.id.tv3);
+        tv4 = findViewById(R.id.tv4);
+        tv5 = findViewById(R.id.tv5);
+        iconIv = findViewById(R.id.icon_iv);
+        rootVg = findViewById(R.id.root_vg);
+    }
+
+    @Override
     protected void onSafeNorm(@NonNull DiaoyanNorm norm, int position) {
         super.onSafeNorm(norm, position);
         setText(tv0, norm.getCode())
@@ -57,5 +62,5 @@ public class DiaoyanControllerApi<C> extends LineControllerApi<DiaoyanController
                 .setText(tv4, checkFormat("%s ~ %s", norm.getStartDate(), norm.getEndDate()))
                 .setText(tv5, norm.getText());
     }
-    
+
 }

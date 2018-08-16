@@ -20,7 +20,8 @@ public class ResearchReportFg extends CoreModel {
             BaseSearchControllerApi api = (BaseSearchControllerApi) controllerApi;
             return new DiaoyanNorm(getStockCode(), getStockName(), getType(),
                     getStatus(), getUploadTime(), getEndTime(), getReportInfo(),
-                    (bean, view) -> api.finishActivity(new SearchVo<>(api.getSearch(), getThis())));
+                    (bean, view) -> api.finishActivity(new SearchVo<>(api.getSearch(), getThis())))
+                    .setAllShow(isAllShow());
         }
         return null;
     }
@@ -55,6 +56,7 @@ public class ResearchReportFg extends CoreModel {
     private String stockName;
     private String type;
     private String uploadTime;
+    private transient boolean allShow;//是否显示全部
 
     public String getEndTime() {
         return endTime;
@@ -119,4 +121,13 @@ public class ResearchReportFg extends CoreModel {
     public void setUploadTime(String uploadTime) {
         this.uploadTime = uploadTime;
     }
+
+    public boolean isAllShow() {
+        return allShow;
+    }
+
+    public void setAllShow(boolean allShow) {
+        this.allShow = allShow;
+    }
+
 }
