@@ -41,7 +41,7 @@
         android:includeFontPadding="false"
         android:maxLines="1"
         android:textColor="@color/tv"
-        android:textSize="@dimen/tv_big"
+        android:textSize="@dimen/tv"
         tools:ignore="RelativeOverlap,RtlHardcoded"
         tools:text="修改任务" />
 

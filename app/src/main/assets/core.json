@@ -1,0 +1,8 @@
+{
+  "init": [
+    {
+      "name": "report",
+      "fileName": "report.json"
+    }
+  ]
+}

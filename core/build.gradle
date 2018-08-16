@@ -46,6 +46,8 @@ android {
     }
 }
 
+def dbflow_version = "4.0.3"
+
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -57,7 +59,7 @@ dependencies {
     api 'com.android.support:multidex:1.0.3'
 
     //分包
-    api 'com.google.code.gson:gson:2.8.0'
+    api 'com.google.code.gson:gson:2.8.2'
 
     //gson
     api 'com.zhy:okhttputils:2.6.2'
@@ -121,4 +123,8 @@ dependencies {
 
     //拼音转换类
     api 'com.github.promeg:tinypinyin:2.0.3'
+    //dbflow数据库
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 }

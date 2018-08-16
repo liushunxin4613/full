@@ -2,8 +2,8 @@ package com.ylink.fullgoal.norm;
 
 import android.view.View;
 
-import com.leo.core.iapi.inter.OnBVClickListener;
 import com.leo.core.iapi.main.IControllerApi;
+import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.item.CCSQDControllerApiV1;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
@@ -19,9 +19,11 @@ public class CCSQDNormV1 extends OnClickNorm<CCSQDNormV1, SurfaceControllerApi>{
     private String detail;
     private transient Integer colorResId;
 
-    public CCSQDNormV1(String start, String name, String detail, Integer resId,
-                       OnBVClickListener<CCSQDNormV1> listener) {
-        super(listener);
+    public CCSQDNormV1(String start, String name, String detail) {
+        this(start, name, detail, R.color.tv);
+    }
+
+    public CCSQDNormV1(String start, String name, String detail, Integer resId) {
         this.start = start;
         this.name = name;
         this.detail = detail;

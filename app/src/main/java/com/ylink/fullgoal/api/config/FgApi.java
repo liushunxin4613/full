@@ -132,6 +132,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
             post(ROOT_URL, PATH_QUERY_COST_INDEX_DATA, g(map -> {
                 map.put("reimbursement", paramsMap.get("reimbursement"));
                 map.put("depertation", paramsMap.get("budgetDepartment"));
+                map.put("billType", paramsMap.get("billType"));
             }));
         }
     }

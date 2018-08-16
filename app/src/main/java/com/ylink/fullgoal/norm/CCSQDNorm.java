@@ -19,9 +19,7 @@ public class CCSQDNorm extends OnClickNorm<CCSQDNorm, SurfaceControllerApi>{
     private String end;
     private String detail;
 
-    public CCSQDNorm(String start, String name, String end, String detail,
-                     OnBVClickListener<CCSQDNorm> listener) {
-        super(listener);
+    public CCSQDNorm(String start, String name, String end, String detail) {
         this.start = start;
         this.name = name;
         this.end = end;

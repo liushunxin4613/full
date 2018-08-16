@@ -162,24 +162,18 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                         if (!TextUtils.isEmpty(state)) {
                             switch (state) {
                                 case QZ:
-                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销状态",
-                                            obj.getStatus(), null));
-                                    data.add(new CCSQDNorm("时间", obj.getFillDate(), "报销类型",
-                                            obj.getBillType(), null));
+                                    data.add(new CCSQDNormV1("报销批次号", obj.getSerialNo(), obj.getStatus()));
+                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getBillType()));
                                     break;
                                 case QR://确认
                                 case XG://修改
                                 case MQZ://金额前置
-                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销状态",
-                                            obj.getStatus(), null));
-                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(),
-                                            R.color.EE4433, null));
+                                    data.add(new CCSQDNormV1("报销批次号", obj.getSerialNo(), obj.getStatus()));
+                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(), R.color.EE4433));
                                     break;
                                 default:
-                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销单号",
-                                            obj.getFkApprovalNum(), null));
-                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(),
-                                            R.color.EE4433, null));
+                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销单号", obj.getFkApprovalNum()));
+                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(), R.color.EE4433));
                                     break;
                             }
                         }

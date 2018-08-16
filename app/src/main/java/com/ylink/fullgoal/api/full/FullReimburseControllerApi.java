@@ -249,7 +249,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             if (TextUtils.equals(state, FQ)) {
                 title = getBTitle();
             } else {
-                if (TextUtils.isEmpty(title)) {
+                if (TextUtils.equals(state, HZ)) {
+                    title = "报销详情";
+                } else if (TextUtils.isEmpty(title)) {
                     title = getKey(BILL_TYPE_TITLES, state, state);
                 }
                 if (!TextUtils.isEmpty(serialNo)) {
@@ -404,6 +406,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 vor(DVo::getReimbursement, CoreController::getApiCode))
                 .put("budgetDepartment", vor(DVo::getBudgetDepartment,
                         CoreController::getApiCode))
+                .put("billType", vor(DVo::getBillType,
+                        obj -> obj.getUB(getBType())))
                 .put("cost", vor(DVo::getCostIndex,
                         CoreController::getApiCode))));
     }
@@ -430,11 +434,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         if (isEnable()) {
             gridData.add(new GridPhotoNorm(R.mipmap.posting_add, null, (bean, view)
                     -> routeApi().camera(type), null));
-            /*cameraApi().openCamera(type, (what, msg, file, args) -> {
-                ImageVo vo = addPhoto(file.getPath(), what);
-                api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
-                        what, vord(DVo::getSerialNo), file, file.getPath(), vo);
-            })*/
         }
         return gridData;
     }
