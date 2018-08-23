@@ -15,6 +15,7 @@ import com.ylink.fullgoal.fg.DataFg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 
@@ -125,8 +126,9 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
     }
 
     @Override
-    protected List<? extends IModel> getOnDataFg(String fieldName, String path, int what, String msg,
-                                                 DataFg fg) {
+    protected List<? extends IModel> getOnDataFg(String type, String baseUrl, String path,
+                                                 Map<String, String> map, int what, String msg,
+                                                 String field, DataFg fg) {
         return fg.getModelData();
     }
 

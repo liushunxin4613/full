@@ -2,6 +2,7 @@ package com.ylink.fullgoal.api.full;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -117,8 +118,24 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         getReiRecycleControllerApi(D4);
     }
 
-    private void query() {
-        if (!getExecute(getItemValue().getOnce(), false, BooleanController::is)) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        execute(getFinish(), Message.class, msg -> {
+            switch (msg.what){
+                case 0x123://更新
+                    query(true);
+                    break;
+            }
+        });
+    }
+
+    private void query(){
+        query(false);
+    }
+
+    private void query(boolean hz) {
+        if (hz || !getExecute(getItemValue().getOnce(), false, BooleanController::is)) {
             String type = getType();
             if (check(type)) {
                 executeNon(getReiRecycleControllerApi(type), api
@@ -205,7 +222,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         controllerApi.setText(controllerApi.findViewById(R.id.null_tv), "您还没有相关的报销");
         controllerApi.setNullView(controllerApi.findViewById(R.id.null_vg));
         add(name, controllerApi);
-        add(controllerApi, DataFg.class, (fieldName, path, what, msg, bean)
+        add(controllerApi, DataFg.class, (type, baseUrl, path, map, what, msg, field, bean)
                 -> initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList()));
         controllerApi.hideViews();
         return controllerApi;

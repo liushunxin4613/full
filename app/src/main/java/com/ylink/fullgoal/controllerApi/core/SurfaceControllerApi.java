@@ -112,7 +112,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     @Override
     public void initAddAction() {
         super.initAddAction();
-        add(Exceptions.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
+        add(Exceptions.class, (type, baseUrl, path, map, what, msg, field, bean) -> checkView(what, path, field, () -> {
             if (this instanceof ContentControllerApi) {
                 if (TextUtils.check(path)) {
                     switch (path) {
@@ -127,18 +127,18 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             }
             dismissLoading();
         }));
-        add(Exceptions.class, (fieldName, path, what, msg, bean) -> {
+        add(Exceptions.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             if (!TextUtils.isEmpty(bean.getMessage())) {
                 ToastUtil.show(this, bean.getMessage());
             }
         });
-        add(DataEmpty.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
+        add(DataEmpty.class, (type, baseUrl, path, map, what, msg, field, bean) -> checkView(what, path, field, () -> {
             if (this instanceof ContentControllerApi) {
                 ((ContentControllerApi) this).showNullView(true);
             }
             dismissLoading();
         }));
-        add(ParseCompleted.class, (fieldName, path, what, msg, bean) -> checkView(what, path, fieldName, () -> {
+        add(ParseCompleted.class, (type, baseUrl, path, map, what, msg, field, bean) -> checkView(what, path, field, () -> {
             if (!TextUtils.isEmpty(path)) {
                 switch (path) {
                     case PATH_QUERY_MESSAGE_BACK_DATA://报销确认
@@ -153,12 +153,12 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 }
             }
         }));
-        add(DataFg.class, (fieldName, path, what, msg, bean) -> {
+        add(DataFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             if (!bean.isSuccess()) {
                 ToastUtil.show(this, bean.getMessage());
             } else {
                 if (this instanceof RecycleControllerApi) {
-                    List<? extends IModel> data = getOnDataFg(fieldName, path, what, msg, bean);
+                    List<? extends IModel> data = getOnDataFg(type, baseUrl, path, map, what, msg, field, bean);
                     if (!TextUtils.isEmpty(data)) {
                         ((RecycleControllerApi) this).initActionData(data);
                     }
@@ -217,7 +217,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 clz, layoutResId).controllerApi();
     }
 
-    private <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz) {
+    protected <B extends IControllerApi> B getDialogControllerApi(Activity activity, Class<B> clz) {
         return clz == null ? null : (B) new BaseControllerApiDialog<>(getContext()).init(activity,
                 clz, null).controllerApi();
     }
@@ -268,8 +268,8 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         }
     }
 
-    protected List<? extends IModel> getOnDataFg(String fieldName, String path, int what,
-                                                 String msg, DataFg fg) {
+    protected List<? extends IModel> getOnDataFg(String type, String baseUrl, String path, Map<String, String> map, int what,
+                                                 String msg, String field, DataFg fg) {
         return null;
     }
 

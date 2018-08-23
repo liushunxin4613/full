@@ -1,22 +1,15 @@
 package com.leo.core.api.api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.alibaba.fastjson.JSON;
 import com.leo.core.iapi.api.IGsonDecodeApi;
 
 import java.lang.reflect.Type;
 
-public class GsonDecodeApi implements IGsonDecodeApi<GsonDecodeApi, Object, Object, Object> {
-
-    private Gson gson;
-
-    public GsonDecodeApi() {
-        gson = new GsonBuilder().disableHtmlEscaping().create();
-    }
+public class JsonDecodeApi implements IGsonDecodeApi<JsonDecodeApi, Object, Object, Object> {
 
     @Override
     public String encode(Object obj) {
-        return gson.toJson(obj);
+        return JSON.toJSONString(obj);
     }
 
     @Override
@@ -34,18 +27,19 @@ public class GsonDecodeApi implements IGsonDecodeApi<GsonDecodeApi, Object, Obje
                 return (R) decode(in, (Type) param);
             }
         } catch (Exception ignored) {
+//            ignored.printStackTrace();
         }
         return null;
     }
 
     @Override
     public <R> R decode(String in, Class<R> clz) {
-        return gson.fromJson(in, clz);
+        return JSON.parseObject(in, clz);
     }
 
     @Override
     public <R> R decode(String in, Type type) {
-        return gson.fromJson(in, type);
+        return JSON.parseObject(in, type);
     }
 
     @Override

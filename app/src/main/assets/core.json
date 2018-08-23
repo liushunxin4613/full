@@ -4,5 +4,6 @@
       "name": "report",
       "fileName": "report.json"
     }
-  ]
+  ],
+  "cacheSize": 100
 }

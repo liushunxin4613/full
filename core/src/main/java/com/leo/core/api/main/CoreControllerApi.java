@@ -70,7 +70,6 @@ import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.iapi.main.IHttpApi;
-import com.leo.core.iapi.main.INewApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.iapi.main.IViewApi;
 import com.leo.core.util.ObjectUtil;
@@ -98,7 +97,7 @@ import static com.leo.core.util.TextUtils.getEmptyLength;
 public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi<T, C> implements
         IControllerApi<T, C>, IViewApi<T>, IShowApi<T>, IHttpApi<T>, IMD5Api, IDataApi<T>, IObjectApi<T>,
         IActionApi<T, IApi>, IUserApi<T>, ILoadImageApi<T>, IConfigApi<T>, IDataTypeApi<T>, IMergeApi<T>,
-        IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi<T>, IVsApi<T>, IVosApi<T>, IDirApi {
+        IGalleryApi<T>, IFileApi, IParseApi<T>, IHelperApi<T>, IUrlApi, IVsApi<T>, IVosApi<T>, IDirApi {
 
     private C controller;
     private Handler mainHandler;
@@ -512,9 +511,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             } else {
                 if (getApplication() instanceof BaseControllerApiApp) {
                     IControllerApi api = ((BaseControllerApiApp) getApplication()).controllerApi();
-                    if (api instanceof INewApi) {
-                        activityLifecycleApi = api.activityLifecycleApi();
-                    }
+                    activityLifecycleApi = api.activityLifecycleApi();
                 }
             }
             if (activityLifecycleApi == null) {
@@ -922,11 +919,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 if (asset != null) {
                     Method method = asset.getClass().getMethod("addAssetPath", String.class);
                     int cookie = (Integer) method.invoke(asset, dir.getPath());
-                    ii("dir", dir.getPath());
                     return asset.openXmlResourceParser(cookie, xml);
                 }
-            } catch (Exception e) {
-//                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
         return null;
@@ -1474,18 +1469,18 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> T observable(B bean, String startUrl, String path, Map<String, String> map,
+    public <B> T observable(B bean, String type, String baseUrl, String path, Map<String, String> map,
                             int what, String tag) {
         httpApi().setNewSubscriber(newSubscriber());
-        httpApi().observable(bean, startUrl, path, map, what, tag);
+        httpApi().observable(bean, type, baseUrl, path, map, what, tag);
         return getThis();
     }
 
     @Override
-    public <B> T observable(Observable<B> observable, String startUrl, String path,
+    public <B> T observable(Observable<B> observable, String type, String baseUrl, String path,
                             Map<String, String> map, int what, String tag) {
         httpApi().setNewSubscriber(newSubscriber());
-        httpApi().observable(observable, startUrl, path, map, what, tag);
+        httpApi().observable(observable, type, baseUrl, path, map, what, tag);
         return getThis();
     }
 
@@ -2065,57 +2060,57 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public T init(String path, int what, String tag) {
-        parseApi().init(path, what, tag);
+    public T init(String type, String baseUrl, String path, Map<String, String> map, int what, String msg) {
+        parseApi().init(type, baseUrl, path, map, what, msg);
         return getThis();
     }
 
     @Override
-    public <B> void get(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void get(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                         int what, String tag) {
-        api().get(url, obj, path, action, what, tag);
+        api().get(type, url, obj, path, action, what, tag);
     }
 
     @Override
-    public <B> void post(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void post(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                          int what, String tag) {
-        api().post(url, obj, path, action, what, tag);
+        api().post(type, url, obj, path, action, what, tag);
     }
 
     @Override
-    public <B> void jsonPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void jsonPost(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                              int what, String tag) {
-        api().jsonPost(url, obj, path, action, what, tag);
+        api().jsonPost(type, url, obj, path, action, what, tag);
     }
 
     @Override
-    public <B> void bodyPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void bodyPost(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                              int what, String tag, IProgressListener listener) {
-        api().bodyPost(url, obj, path, action, what, tag, listener);
+        api().bodyPost(type, url, obj, path, action, what, tag, listener);
     }
 
     @Override
-    public void get(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void get(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                     String tag) {
-        api().get(url, path, action, what, tag);
+        api().get(type, url, path, action, what, tag);
     }
 
     @Override
-    public void post(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void post(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                      String tag) {
-        api().post(url, path, action, what, tag);
+        api().post(type, url, path, action, what, tag);
     }
 
     @Override
-    public void jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void jsonPost(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                          String tag) {
-        api().jsonPost(url, path, action, what, tag);
+        api().jsonPost(type, url, path, action, what, tag);
     }
 
     @Override
-    public void bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void bodyPost(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                          String tag, IProgressListener listener) {
-        api().bodyPost(url, path, action, what, tag, listener);
+        api().bodyPost(type, url, path, action, what, tag, listener);
     }
 
     @Override

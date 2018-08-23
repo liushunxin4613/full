@@ -116,7 +116,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     @Override
     public void initAddAction() {
         super.initAddAction();
-        add(Completed.class, (fieldName, path, what, msg, bean)
+        add(Completed.class, (type, baseUrl, path, map, what, msg, field, bean)
                 -> vs(adapterDataApi(), DataApi::openEmptyListen));
     }
 
@@ -155,7 +155,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         Observable.create(subscriber -> {
             clear();
             if (!TextUtils.isEmpty(data)) {
-                showContentView();
+                runOnUiThread(this::showContentView);
                 execute(data, item -> {
                     item.createSearchText();
                     add(item);

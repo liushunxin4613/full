@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.leo.core.iapi.core.IModel;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.bean.BankBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.fg.DataFg;
 
@@ -25,9 +24,6 @@ public class FullBankControllerApi<T extends FullBankControllerApi, C> extends R
     @Bind(R.id.null_vg)
     LinearLayout nullVg;
 
-    private final static String BANK = "bank";
-    private Map<String, BankBean> beanMap;
-
     public FullBankControllerApi(C controller) {
         super(controller);
     }
@@ -43,8 +39,9 @@ public class FullBankControllerApi<T extends FullBankControllerApi, C> extends R
     }
 
     @Override
-    protected List<? extends IModel> getOnDataFg(String fieldName, String path, int what, String msg,
-                                                 DataFg fg) {
+    protected List<? extends IModel> getOnDataFg(String type, String baseUrl, String path,
+                                                 Map<String, String> map, int what, String msg,
+                                                 String field, DataFg fg) {
         return fg.getBank();
     }
 

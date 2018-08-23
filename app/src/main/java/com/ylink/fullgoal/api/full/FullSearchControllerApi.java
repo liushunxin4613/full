@@ -15,7 +15,7 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
-import com.ylink.fullgoal.factory.CoreJsonFactory;
+import com.ylink.fullgoal.factory.CacheFactory;
 import com.ylink.fullgoal.fg.DimenFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
 
@@ -64,7 +64,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     @Override
     public void initView() {
         super.initView();
-        allShow = CoreJsonFactory.getInstance().reportAllContains(vr(TextUtils.toJSONMap(
+        allShow = CacheFactory.getInstance().reportAllContains(vr(TextUtils.toJSONMap(
                 String.class, String.class, getKey()), m -> m.get("budgetDepartmentName")));
         setOnClickListener(backIv, view -> onBackPressed());
         setOnClickListener(iconIv, v -> setText(nameEt, null));

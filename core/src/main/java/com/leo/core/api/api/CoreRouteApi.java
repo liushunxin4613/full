@@ -29,6 +29,8 @@ public abstract class CoreRouteApi extends HasCoreControllerApi<CoreRouteApi> im
     private final static String COMMAND = "command";
     private final static String PARAMS = "params";
     protected final static String FINISH = "finish";
+    private final static int CHECK_TIME = 500;
+    private long checkTime;
 
     public CoreRouteApi(CoreControllerApi controllerApi) {
         super(controllerApi);
@@ -134,14 +136,17 @@ public abstract class CoreRouteApi extends HasCoreControllerApi<CoreRouteApi> im
     @Override
     public void route(String module, String activity, String api, String viewApi, Map<String, String>
             commandMap, Map<String, String> paramsMap) {
-        onRoute(module, activity, api, viewApi, commandMap, paramsMap);
-        String finish = vr(commandMap, map -> map.get(FINISH));
-        if (TextUtils.equals(finish, FINISH)) {
-            controllerApi().getActivity().finish();
-        }
-        Intent intent = getIntent(module, activity, api, viewApi, paramsMap);
-        if (intent != null) {
-            controllerApi().getActivity().startActivity(intent);
+        if(checkTime()){
+            onRoute(module, activity, api, viewApi, commandMap, paramsMap);
+            String finish = vr(commandMap, map -> map.get(FINISH));
+            if (TextUtils.equals(finish, FINISH)) {
+                controllerApi().getActivity().finish();
+            }
+            Intent intent = getIntent(module, activity, api, viewApi, paramsMap);
+            if (intent != null) {
+                controllerApi().getActivity().startActivity(intent);
+                checkTime = System.currentTimeMillis();
+            }
         }
     }
 
@@ -200,6 +205,10 @@ public abstract class CoreRouteApi extends HasCoreControllerApi<CoreRouteApi> im
 
     protected IObjAction<MMap<String, String>> getFinishCommandMapAction() {
         return m -> m.put(FINISH, FINISH);
+    }
+
+    private boolean checkTime(){
+        return System.currentTimeMillis() - checkTime > CHECK_TIME;
     }
 
 }

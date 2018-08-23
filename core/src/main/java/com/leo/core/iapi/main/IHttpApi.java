@@ -71,23 +71,25 @@ public interface IHttpApi<T extends IHttpApi> {
     /**
      * 观察
      *
-     * @param bean     bean
-     * @param startUrl startUrl
-     * @param path     path
-     * @param map      map
-     * @param what     what
-     * @param tag      tag
-     * @param <B>      <B>
+     * @param bean    bean
+     * @param type    type
+     * @param baseUrl baseUrl
+     * @param path    path
+     * @param map     map
+     * @param what    what
+     * @param tag     tag
+     * @param <B>     <B>
      * @return 本身
      */
-    <B> T observable(B bean, String startUrl, String path,
+    <B> T observable(B bean, String type, String baseUrl, String path,
                      Map<String, String> map, int what, String tag);
 
     /**
      * 观察
      *
      * @param observable observable
-     * @param startUrl   startUrl
+     * @param type       type
+     * @param baseUrl    baseUrl
      * @param path       path
      * @param map        map
      * @param what       what
@@ -95,7 +97,7 @@ public interface IHttpApi<T extends IHttpApi> {
      * @param <B>        <B>
      * @return 本身
      */
-    <B> T observable(Observable<B> observable, String startUrl, String path,
+    <B> T observable(Observable<B> observable, String type, String baseUrl, String path,
                      Map<String, String> map, int what, String tag);
 
 }

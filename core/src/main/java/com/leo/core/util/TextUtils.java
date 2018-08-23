@@ -5,6 +5,7 @@ import android.content.res.XmlResourceParser;
 import android.util.SparseArray;
 
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.other.MMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -417,7 +418,7 @@ public class TextUtils {
 
     public static String getDecimalString(String text, int dec) {
         if (!TextUtils.isEmpty(text)) {
-            if (!Pattern.compile("^([1-9][0-9]+\\.[0-9]+)$|^([1-9][0-9]+)$")
+            if (!Pattern.compile("^([-]?[0-9]+\\.[0-9]+)$|^([-]?[1-9][0-9]*)$|^(0)$")
                     .matcher(text).find()) {
                 return null;
             } else {
@@ -451,7 +452,7 @@ public class TextUtils {
                     case '0':
                         if (decimal) {
                             end.append(c);
-                        } else if (start.length() > 0) {
+                        } else if (start.length() <= 0) {
                             start.append(c);
                         }
                         break;
@@ -478,16 +479,20 @@ public class TextUtils {
 
     public static <K, V> Map<K, V> toJSONMap(Class<K> kClz, Class<V> vClz, String text) {
         if (TextUtils.check(kClz, vClz, text)) {
-            Object obj = toJSONMap(text, null);
-            if (obj instanceof Map) {
-                Map<K, V> map = new LinkedHashMap<>();
-                RunUtil.execute((Map) obj, (key, value) -> {
-                    if (kClz.isInstance(key) && vClz.isInstance(value)) {
-                        map.put((K) key, (V) value);
-                    }
-                });
-                return map;
-            }
+            return toJSONMap(kClz, vClz, toJSONMap(text, null));
+        }
+        return null;
+    }
+
+    public static <K, V> Map<K, V> toJSONMap(Class<K> kClz, Class<V> vClz, Object obj) {
+        if (obj instanceof Map) {
+            Map<K, V> map = new LinkedHashMap<>();
+            RunUtil.execute((Map) obj, (key, value) -> {
+                if (kClz.isInstance(key) && vClz.isInstance(value)) {
+                    map.put((K) key, (V) value);
+                }
+            });
+            return map;
         }
         return null;
     }
@@ -718,9 +723,41 @@ public class TextUtils {
         return null;
     }
 
-    public static boolean isNotJsonString(String text){
+    public static boolean isNotJsonString(String text) {
         return isEmpty(text) || !((text.startsWith("[") && text.endsWith("]"))
                 || (text.startsWith("{") && text.endsWith("}")));
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static <D> void lookDataJsonString(Object obj, List<D> data) {
+        if (TextUtils.check(obj, data)) {
+            LogUtil.ee(obj, String.format("List -- %d --> [", data.size()));
+            for (int i = 0; i < data.size(); i++) {
+                LogUtil.ee(obj, String.format("总%d个,当前第%d个", data.size(), i + 1));
+                LogUtil.ee(obj, data.get(i));
+            }
+            LogUtil.ee(obj, String.format("] <-- %d -- List", data.size()));
+        } else if (TextUtils.checkNull(obj, data)) {
+            LogUtil.ee(obj, "[]");
+        }
+    }
+
+    public static <K, V> Map<K, V> map(IObjAction<MMap<K, V>> action) {
+        if (action != null) {
+            MMap<K, V> mMap = new MMap<>();
+            action.execute(mMap.map(new LinkedHashMap<>()));
+            return mMap.map();
+        }
+        return null;
+    }
+
+    public static <K, V> Map<K, V> map(Class<K> k, Class<V> v, IObjAction<MMap<K, V>> action) {
+        if (TextUtils.check(k, v, action)) {
+            MMap<K, V> mMap = new MMap<>();
+            action.execute(mMap.map(new LinkedHashMap<>()));
+            return mMap.map();
+        }
+        return null;
     }
 
 }

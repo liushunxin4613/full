@@ -14,9 +14,9 @@ import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.GsonDecodeUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.leo.core.bean.ParseBean;
+import com.ylink.fullgoal.db.table.Request;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -35,12 +35,15 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     private int what;
     private String msg;
     private String path;
+    private String type;
+    private String baseUrl;
     private Handler handler;
+    private Map<String, String> map;
     private ParseCompleted parseCompleted;
-    private Map<String, ParseTypeBean> map;
+    private Map<String, ParseTypeBean> typeMap;
 
     public ParseApi() {
-        map = new HashMap<>();
+        typeMap = new HashMap<>();
         parseCompleted = new ParseCompleted();
         handler = new Handler(Looper.getMainLooper());
     }
@@ -51,12 +54,15 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
     }
 
     private Map<String, ParseTypeBean> getMap() {
-        return map;
+        return typeMap;
     }
 
     @Override
-    public T init(String path, int what, String msg) {
+    public T init(String type, String baseUrl, String path, Map<String, String> map, int what, String msg) {
+        this.type = type;
+        this.baseUrl = baseUrl;
         this.path = path;
+        this.map = map;
         this.what = what;
         this.msg = msg;
         return getThis();
@@ -170,16 +176,6 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
         return getThis();
     }
 
-    /**
-     * 防止String解析非根节点的类数据
-     *
-     * @param bean bean
-     * @return 是否后加数据
-     */
-    private boolean checkRootType(ParseTypeBean bean) {
-        return bean != null && checkRootType(bean.getType());
-    }
-
     private boolean checkRootType(Type type) {
         return type != null
                 && !TextUtils.equals(type, ResponseBody.class)
@@ -205,7 +201,8 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
 
     private void executeAction(String name, IPathMsgAction action, Object obj) {
         if (TextUtils.check(action) && TextUtils.checkNull(obj)) {
-            handler.post(() -> action.execute(name, no(path), what, no(msg), obj));
+            handler.post(() -> action.execute(no(type), no(baseUrl), no(path), map, what, no(msg),
+                    no(name), obj));
             parseCompleted.add(obj.getClass());
         }
     }
@@ -222,28 +219,18 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                 onExceptions(new Exceptions("数据格式异常", HttpError.ERROR_JSON_ERROR,
                         new RuntimeException("数据格式异常")));
             } else {
-                execute(getMap(), (type, bean) -> {
-                    if (checkRootType(bean)) {
-                        onData(path, GsonDecodeUtil.decode(text, bean.getType()),
-                                bean.getMap());
-                    }
-                });
-                if(!TextUtils.isEmpty(parseCompleted.getData())){
+                //存储数据
+                Request.sav(baseUrl, path, GsonDecodeUtil.encode(map), text);
+                ParseTypeBean bean = getParseTypeBean(type);
+                if (bean != null && checkRootType(bean.getType())) {
+                    onData(path, GsonDecodeUtil.decode(text, bean.getType()),
+                            bean.getMap());
+                }
+                if (!TextUtils.isEmpty(parseCompleted.getData())) {
                     onObj(parseCompleted, ParseCompleted.class);
                 }
             }
         }
-    }
-
-    private void print() {
-        Map<String, Object> map = new HashMap<>();
-        execute(getMap(), (key, value) -> {
-            Map<String, Object> cm = new HashMap<>();
-            execute(value.getMap(), (key1, value1) ->
-                    cm.put(key1, TextUtils.count(value1)));
-            map.put(key, cm);
-        });
-        LogUtil.ee(this, map);
     }
 
     /**

@@ -157,6 +157,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             vs(getCostItemController(api), c -> c.initDB(vo.getValue(), vo.getObj()));
             initAddVgBean(api);
         });
+
     }
 
     @Override
@@ -188,7 +189,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                 onCost(decode(encode(dataMap.get(COST_LIST)), CostFg.class));
             }
         });
-        add(DataFg.class, (fieldName, path, what, msg, bean) -> {
+        add(DataFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             if (bean.isSuccess()) {
                 switch (path) {
                     case FULL_DIMENSION_LIST://分摊维度列表
@@ -313,10 +314,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             TextView tv = findViewById(getThisView(), R.id.delete_tv);
             isOpen = height >= minHeight && height < maxHeight;
             if (isOpen) {
-                setVisibility(tv, isOpen ? View.GONE : View.VISIBLE);
+                setVisibility(tv, View.GONE);
             } else {
-                executeNon(tv, obj -> obj.post(() -> setVisibility(obj, isOpen
-                        ? View.GONE : View.VISIBLE)));
+                executeNon(tv, obj -> obj.post(() -> setVisibility(obj, View.VISIBLE)));
             }
         });
         getViewPager().setHorizontalBeyondApi(is -> {

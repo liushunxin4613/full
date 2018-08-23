@@ -11,6 +11,7 @@ import com.leo.core.iapi.main.IControllerApi;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
+import java.util.Map;
 
 import retrofit2.adapter.rxjava.HttpException;
 
@@ -30,9 +31,9 @@ public class RetrofitSubscriber<T extends RetrofitSubscriber, B> extends MsgSubs
     }
 
     @Override
-    public T init(String msg, int what, String tag) {
+    public T init(String type, String baseUrl, String path, Map<String, String> map, int what, String msg) {
         if (api != null) {
-            api.init(msg, what, tag);
+            api.init(type, baseUrl, path, map, what, msg);
         }
         return (T) this;
     }

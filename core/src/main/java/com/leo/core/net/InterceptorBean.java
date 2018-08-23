@@ -16,6 +16,7 @@ public class InterceptorBean extends NewFieldBean {
 
     private final static transient boolean OPEN = false;
 
+    //HTTP
     private final static transient String FILTER[] = {
             "/uploadfile/",
     };
@@ -61,7 +62,7 @@ public class InterceptorBean extends NewFieldBean {
         if (!TextUtils.isEmpty(getUrl()) && !TextUtils.isEmpty(args)) {
             for (String[] filter : args) {
                 for (String text : filter) {
-                    if(!TextUtils.isEmpty(text) && getUrl().contains(text)){
+                    if (!TextUtils.isEmpty(text) && getUrl().contains(text)) {
                         return false;
                     }
                 }

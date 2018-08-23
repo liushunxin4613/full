@@ -19,8 +19,9 @@ import rx.Observable;
 
 import static com.leo.core.config.Config.APP_JSON;
 
-public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements IUrlApi<T> {
+public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements IUrlApi {
 
+    public final static String REQINFO = "REQINFO";
     private final static int WHAT_DEFAULT = -1;
 
     public UrlApi(CoreControllerApi controllerApi) {
@@ -46,7 +47,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         return new MRequestBody(builder.build(), listener);
     }
 
-    private <B> void observable(String url, B obj, String path, Map<String, String> map, int what,
+    private <B> void observable(String type, String url, B obj, String path, Map<String, String> map, int what,
                                 String tag, IUrlAction<Api, Observable<B>> action) {
         if (TextUtils.check(url)) {
             Observable<B> observable = null;
@@ -59,58 +60,58 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
                 observable = action.execute(getApi(url), url, path, map);
             }
             if (observable != null) {
-                controllerApi().observable(observable, url, path, map, what, tag);
+                controllerApi().observable(observable, type, url, path, map, what, tag);
             }
         }
     }
 
     @Override
-    public <B> void get(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void get(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                         int what, String tag) {
-        observable(url, obj, path, getActionMap(action), what, tag, null);
+        observable(type, url, obj, path, getActionMap(action), what, tag, null);
     }
 
     @Override
-    public <B> void post(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void post(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                          int what, String tag) {
-        observable(url, obj, path, getActionMap(action), what, tag, null);
+        observable(type, url, obj, path, getActionMap(action), what, tag, null);
     }
 
     @Override
-    public <B> void jsonPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void jsonPost(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                              int what, String tag) {
-        observable(url, obj, path, getActionMap(action), what, tag, null);
+        observable(type, url, obj, path, getActionMap(action), what, tag, null);
     }
 
     @Override
-    public <B> void bodyPost(String url, B obj, String path, IObjAction<Map<String, Object>> action,
+    public <B> void bodyPost(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                              int what, String tag, IProgressListener listener) {
-        observable(url, obj, path, getActionMap(action), what, tag, null);
+        observable(type, url, obj, path, getActionMap(action), what, tag, null);
     }
 
     @Override
-    public void get(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void get(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                     String tag) {
-        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.get(p, m));
+        observable(type, url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.get(p, m));
     }
 
     @Override
-    public void post(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void post(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                      String tag) {
-        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.post(p, m));
+        observable(type, url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.post(p, m));
     }
 
     @Override
-    public void jsonPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void jsonPost(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                          String tag) {
-        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.jsonPost(p,
+        observable(type, url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.jsonPost(p,
                 createJsonBody(m)));
     }
 
     @Override
-    public void bodyPost(String url, String path, IObjAction<Map<String, Object>> action, int what,
+    public void bodyPost(String type, String url, String path, IObjAction<Map<String, Object>> action, int what,
                          String tag, IProgressListener listener) {
-        observable(url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.bodyPost(p,
+        observable(type, url, null, path, getActionMap(action), what, tag, (a, u, p, m) -> a.bodyPost(p,
                 createBody(m, listener)));
     }
 
@@ -134,61 +135,61 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
 
     //******************************************* JSON *******************************************
 
-    public void post(String url, String path, String json) {
-        post(url, json, path, null, WHAT_DEFAULT, null);
+    public void post(String type, String url, String path, String json) {
+        post(type, url, json, path, null, WHAT_DEFAULT, null);
     }
 
     //******************************************* HTTP *******************************************
 
-    protected void postParams(String url, String path, IObjAction<Map<String, Object>> action) {
+    protected void postParams(String type, String url, String path, IObjAction<Map<String, Object>> action) {
         Map<String, String> map = getActionMap(action);
-        observable(url, null, path, map, WHAT_DEFAULT, LogUtil.getLog(false, map), (a, u, p, m)
+        observable(type, url, null, path, map, WHAT_DEFAULT, LogUtil.getLog(false, map), (a, u, p, m)
                 -> a.post(p, m));
     }
 
-    public void get(String url, String path, String tag) {
-        get(url, path, null, WHAT_DEFAULT, tag);
+    public void get(String type, String url, String path, String tag) {
+        get(type, url, path, null, WHAT_DEFAULT, tag);
     }
 
-    public void post(String url, String path) {
-        post(url, path, null, WHAT_DEFAULT, null);
+    public void post(String type, String url, String path) {
+        post(type, url, path, null, WHAT_DEFAULT, null);
     }
 
-    public void get(String url, String path, IObjAction<Map<String, Object>> action) {
-        get(url, path, action, WHAT_DEFAULT, null);
+    public void get(String type, String url, String path, IObjAction<Map<String, Object>> action) {
+        get(type, url, path, action, WHAT_DEFAULT, null);
     }
 
-    public void get(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
-        get(url, path, action, WHAT_DEFAULT, tag);
+    public void get(String type, String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+        get(type, url, path, action, WHAT_DEFAULT, tag);
     }
 
-    public void post(String url, String path, IObjAction<Map<String, Object>> action) {
-        post(url, path, action, WHAT_DEFAULT, null);
+    public void post(String type, String url, String path, IObjAction<Map<String, Object>> action) {
+        post(type, url, path, action, WHAT_DEFAULT, null);
     }
 
-    public void jsonPost(String url, String path, IObjAction<Map<String, Object>> action) {
-        jsonPost(url, path, action, WHAT_DEFAULT, null);
+    public void jsonPost(String type, String url, String path, IObjAction<Map<String, Object>> action) {
+        jsonPost(type, url, path, action, WHAT_DEFAULT, null);
     }
 
-    public void post(String url, String path, IObjAction<Map<String, Object>> action, String tag) {
-        post(url, path, action, WHAT_DEFAULT, tag);
+    public void post(String type, String url, String path, IObjAction<Map<String, Object>> action, String tag) {
+        post(type, url, path, action, WHAT_DEFAULT, tag);
     }
 
-    public void post(String url, String path, IObjAction<Map<String, Object>> action, int what) {
-        post(url, path, action, what, null);
+    public void post(String type, String url, String path, IObjAction<Map<String, Object>> action, int what) {
+        post(type, url, path, action, what, null);
     }
 
     protected IObjAction<Map<String, Object>> g(IObjAction<Map<String, Object>> action) {
         Map<String, Object> mp;
         executeNon(mp = new HashMap<>(), action);
         if (!TextUtils.isEmpty(mp)) {
-            return map -> map.put("REQINFO", LogUtil.getLog(false, mp));
+            return map -> map.put(REQINFO, LogUtil.getLog(false, mp));
         }
         return null;
     }
 
     protected IObjAction<Map<String, Object>> g() {
-        return map -> map.put("REQINFO", "{}");
+        return map -> map.put(REQINFO, "{}");
     }
 
     protected IObjAction<Map<String, Object>> gm(IObjAction<MMap<String, Object>> action) {

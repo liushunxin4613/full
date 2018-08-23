@@ -35,7 +35,7 @@ public class Model extends MNApi implements IModel {
     @Override
     public void setSelectedApiCode(String apiCode) {
         super.setSelectedApiCode(apiCode);
-        if(norm() != null){
+        if (norm() != null) {
             norm().setSelectedApiCode(apiCode);
         }
     }

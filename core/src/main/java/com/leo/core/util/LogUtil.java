@@ -14,55 +14,55 @@ public class LogUtil {
         return ClassBindUtil.getApi(LogApi.class);
     }
 
-    public static void openLog() {
+    public synchronized static void openLog() {
         getApi().openLog();
     }
 
-    public static void closeThisLog(Object in) {
+    public synchronized static void closeThisLog(Object in) {
         getApi().closeThisLog(in);
     }
 
-    public static void closeILog() {
+    public synchronized static void closeILog() {
         getApi().closeILog();
     }
 
-    public static void closeELog() {
+    public synchronized static void closeELog() {
         getApi().closeELog();
     }
 
-    public static String getLog(Object obj) {
+    public synchronized static String getLog(Object obj) {
         return getApi().getLog(obj);
     }
 
-    public static String getLog(boolean json, Object obj) {
+    public synchronized static String getLog(boolean json, Object obj) {
         return getApi().getLog(json, obj);
     }
 
-    public static String getLog(Object... args) {
+    public synchronized static String getLog(Object... args) {
         return getApi().getLog(args);
     }
 
-    public static String getLog(boolean json, Object... args) {
+    public synchronized static String getLog(boolean json, Object... args) {
         return getApi().getLog(json, args);
     }
 
-    public static void ii(Object in, Object param) {
+    public synchronized static void ii(Object in, Object param) {
         getApi().ii(in, param);
     }
 
-    public static void ii(Object in, Object... args) {
+    public synchronized static void ii(Object in, Object... args) {
         getApi().ii(in, args);
     }
 
-    public static void ee(Object in, Object param) {
+    public synchronized static void ee(Object in, Object param) {
         getApi().ee(in, param);
     }
 
-    public static void ee(Object in, Object... args) {
+    public synchronized static void ee(Object in, Object... args) {
         getApi().ee(in, args);
     }
 
-    public static void ee(Object in, IObjAction<MMap<String, Object>> action) {
+    public synchronized static void ee(Object in, IObjAction<MMap<String, Object>> action) {
         if (action != null) {
             MMap<String, Object> mMap = new MMap<>();
             action.execute(mMap.map(new LinkedHashMap<>()));

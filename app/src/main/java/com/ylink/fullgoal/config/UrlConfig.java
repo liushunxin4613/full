@@ -9,6 +9,7 @@ public class UrlConfig {
 
     private final static String FULL_TEST_HTTP = "http://192.168.41.123:7001/applications/";
     private final static String FULL_TEST1_HTTP = "http://192.168.8.114:8080/fuguo/";
+    private final static String FULL_TEST2_HTTP = "http://192.168.42.111:7001/applications/";
     private final static String ROOT_IP = LOCAL ? "http://192.168.43.79/"
             : "http://111.231.231.226/";
     public final static String ROOT_URL = ROOT_IP + "app/fullApp/";//根api地址
@@ -18,7 +19,7 @@ public class UrlConfig {
 //            : FG_ROOT_IP + "ssca/";//fg调试地址
 //    public final static String FG_ROOT_URL = TextUtils.equals(VERSION, VERSION_APP)
 //        ? "http://192.168.8.109:8088/ssca/" : FULL_TEST_HTTP;
-    public final static String FG_ROOT_URL = FULL_TEST_HTTP;
+    public final static String FG_ROOT_URL = FULL_TEST2_HTTP;
     private final static String UPLOAD_URL = ROOT_IP + "app/fullApp/upload";//根api地址
     public final static String UPLOAD_IMAGE_URL = UPLOAD_URL;//根api地址
 
@@ -105,6 +106,7 @@ public class UrlConfig {
     public final static String PATH_QUERY_DIMENSION_INFORMATION_DATA = "Dimension_information.action";//获取分摊维度信息列表
     public final static String PATH_QUERY_APPLY = "Apply_compensation.action";//请求申请单信息
     public final static String PATH_QUERY_APPLY_CONTENT = "Apply_content.action";//请求申请单内容信息
+    public final static String PATH_QUERY_TRANS_FILE = "Trans_file.action";//下载配置文件
 
     public final static String[] LOADING_DIALOGS = {
             PATH_QUERY_USER_DATA,//获取员工信息

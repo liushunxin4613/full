@@ -24,6 +24,8 @@ public class Config {
     final static boolean LOCAL = false;//本地模式是否开启
     public final static boolean TEST = true;//测试模式是否开启
     public final static boolean SIMULATE_HTTP = false;//模拟模式是否开启
+    public final static boolean HTTP_CACHE = true;//网络缓存模式是否开启
+    public final static long HTTP_CACHE_TIME = 1000 * 60 * 60;//网络缓存模式间隔时间
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间
     public final static int TIME_SPLASH = 1;//引导页时间
@@ -83,6 +85,7 @@ public class Config {
     public final static String[][] FULL_STATUS = {
             //前置(无金额)
             {"初始化任务", QZ},
+            {"外包录入", QZ},
             //活动
             {"金额确认", QR},
             {"修改任务", XG},

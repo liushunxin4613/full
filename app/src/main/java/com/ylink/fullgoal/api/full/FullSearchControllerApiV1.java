@@ -58,7 +58,7 @@ public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> e
 
     private void initAdds() {
         //申请单
-        addList(ApplyFgV2.class, (fieldName, path, what, msg, list) -> initData(list));
+        addList(ApplyFgV2.class, (type, baseUrl, path, map, what, msg, field, list) -> initData(list));
     }
 
     private void initData(List<ApplyFgV2> list) {

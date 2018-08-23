@@ -1,11 +1,8 @@
 package com.ylink.fullgoal.api.item;
 
-import android.os.Bundle;
+import android.content.res.XmlResourceParser;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.leo.core.util.ResUtil;
@@ -24,8 +21,20 @@ public class ViewControllerApi<C> extends LineControllerApi<ViewControllerApi, C
     }
 
     @Override
+    public XmlResourceParser getLayoutXmlPullParser(String xml) {
+        if (TextUtils.check(xml)) {
+            XmlResourceParser parser = openFileLayoutXmlPullParser(MVCFactory.getInstance().getConfigDir(), xml);
+            if (parser == null) {
+                parser = openAssetsLayoutXmlPullParser(xml);
+            }
+            return parser;
+        }
+        return null;
+    }
+
+    @Override
     public ViewControllerApi setRootViewXml(String xml) {
-        if (!TextUtils.isEmpty(xml) && openFileLayoutXmlPullParser(getRootDir(MVCFactory.DIR), xml) == null) {
+        if (!TextUtils.isEmpty(xml) && getLayoutXmlPullParser(xml) == null) {
             switch (xml) {
                 case "l_apply_v1.xml":
                     setRootViewResId(R.layout.l_apply_v1);
@@ -83,7 +92,6 @@ public class ViewControllerApi<C> extends LineControllerApi<ViewControllerApi, C
             }
         }
     }
-
 
     @Override
     protected void onSafeNorm(@NonNull ViewNorm norm, int position) {

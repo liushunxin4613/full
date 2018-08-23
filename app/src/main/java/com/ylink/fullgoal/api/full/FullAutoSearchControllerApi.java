@@ -81,19 +81,19 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
     }
 
     private void initAdds() {
-        add(String.class, (fieldName, path, what, msg, response)
+        add(String.class, (type, baseUrl, path, map, what, msg, field, response)
                 -> JsonHelper.newBuilder()
-                .add(List.class, (parent, list) -> onData(path, msg, list),
+                .add(List.class, (parent, list) -> onData(path, list),
                         new Node("applyCodeResult2"))
                 .execute(response));
     }
 
-    private void onData(String path, String params, List list) {
+    private void onData(String path, List list) {
         if (TextUtils.isEmpty(list)) {
             showNullView(true);
         } else {
-            MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"), list,
-                    getThis(), d -> initDataAction(data -> execute(d, data::add)));
+            MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"),
+                    list, getThis(), this::initActionData);
         }
         dismissLoading();
     }

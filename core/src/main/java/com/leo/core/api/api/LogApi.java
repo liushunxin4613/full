@@ -144,7 +144,7 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
         return false;
     }
 
-    private void log(boolean ii, String tag, String mm) {
+    private synchronized void log(boolean ii, String tag, String mm) {
         if (!TextUtils.isEmpty(tag)) {
             int max = 1024 * 3;
             int length = mm.length();

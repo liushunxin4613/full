@@ -43,28 +43,31 @@ public class MD5Util {
 	 * MD5校验字符串
 	 */
 	public static String getStringMD5(String s) {
-		MessageDigest mdInst;
-		try {
-			// 获得MD5摘要算法的 MessageDigest 对象
-			mdInst = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return "";
+		if(TextUtils.check(s)){
+			MessageDigest mdInst;
+			try {
+				// 获得MD5摘要算法的 MessageDigest 对象
+				mdInst = MessageDigest.getInstance("MD5");
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+				return "";
+			}
+			byte[] btInput = s.getBytes();
+			// 使用指定的字节更新摘要
+			mdInst.update(btInput);
+			// 获得密文
+			byte[] md = mdInst.digest();
+			// 把密文转换成十六进制的字符串形式
+			int length = md.length;
+			char str[] = new char[length * 2];
+			int k = 0;
+			for (byte b : md) {
+				str[k++] = HEX_DIGITS[b >>> 4 & 0xf];
+				str[k++] = HEX_DIGITS[b & 0xf];
+			}
+			return new String(str);
 		}
-		byte[] btInput = s.getBytes();
-		// 使用指定的字节更新摘要
-		mdInst.update(btInput);
-		// 获得密文
-		byte[] md = mdInst.digest();
-		// 把密文转换成十六进制的字符串形式
-		int length = md.length;
-		char str[] = new char[length * 2];
-		int k = 0;
-		for (byte b : md) {
-			str[k++] = HEX_DIGITS[b >>> 4 & 0xf];
-			str[k++] = HEX_DIGITS[b & 0xf];
-		}
-		return new String(str);
+		return null;
 	}
 
 	@SuppressWarnings("unused")

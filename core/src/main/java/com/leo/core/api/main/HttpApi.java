@@ -3,7 +3,6 @@ package com.leo.core.api.main;
 import android.support.annotation.NonNull;
 
 import com.leo.core.api.inter.MsgSubscriber;
-import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.net.RetrofitFactory;
 import com.leo.core.util.TextUtils;
@@ -12,11 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import rx.Observable;
-import rx.Subscriber;
 
 public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implements IHttpApi<T> {
 
-    private IParseApi api;
     private RetrofitFactory factory;
     private MsgSubscriber newSubscriber;
     private HashMap<String, Object> map;
@@ -85,34 +82,39 @@ public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implemen
     }
 
     @Override
-    public <B> T observable(B bean, String startUrl, String path, Map<String, String> map, int what,
-                            String tag) {
-        observable(Observable.create((Observable.OnSubscribe<B>) subscriber -> {
-            subscriber.onNext(bean);
-            subscriber.onCompleted();
-        }), startUrl, path, map, what, tag);
+    public <B> T observable(B bean, String type, String baseUrl, String path, Map<String, String> map,
+                            int what, String tag) {
+        observable(getObservable(bean), type, baseUrl, path, map, what, tag);
         return getThis();
     }
 
     @Override
-    public <B> T observable(Observable<B> observable, String startUrl, String path, Map<String,
-            String> map, int what, String tag) {
-        if (observable != null && checkObservable(observable, startUrl, path, map, what, tag)) {
-            onObservable(observable, startUrl, path, map, what, tag);
+    public <B> T observable(Observable<B> observable, String type, String baseUrl, String path,
+                            Map<String, String> map, int what, String tag) {
+        if (observable != null && checkObservable(observable, type, baseUrl, path, map, what, tag)) {
+            onObservable(observable, type, baseUrl, path, map, what, tag);
         }
         return getThis();
     }
 
-    protected <B> boolean checkObservable(@NonNull Observable<B> observable, String startUrl, String path,
-                                          Map<String, String> map, int what, String tag) {
+    protected <B> boolean checkObservable(@NonNull Observable<B> observable, String type,
+                                          String baseUrl, String path, Map<String, String> map,
+                                          int what, String tag) {
         return true;
     }
 
-    protected <B> void onObservable(@NonNull Observable<B> observable, String startUrl, String path,
-                                    Map<String, String> map, int what, String tag) {
-        MsgSubscriber<T, B> subscriber = subscriber();
-        subscriber.init(path, what, tag);
-        observable.compose(transformer()).subscribe((Subscriber) subscriber);
+    protected void onObservable(@NonNull Observable observable, String type, String baseUrl,
+                                String path, Map<String, String> map, int what, String tag) {
+        MsgSubscriber subscriber = subscriber();
+        subscriber.init(type, baseUrl, path, map, what, tag);
+        observable.compose(transformer()).subscribe(subscriber);
+    }
+
+    protected <B> Observable<B> getObservable(B bean) {
+        return Observable.create(subscriber -> {
+            subscriber.onNext(bean);
+            subscriber.onCompleted();
+        });
     }
 
 }

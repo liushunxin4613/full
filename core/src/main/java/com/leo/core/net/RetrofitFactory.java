@@ -28,8 +28,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class RetrofitFactory {
 
     private final static int TIME_OUT_SECONDS = Config.TIME_OUT_SECONDS;
-
-    private static boolean log;
     private static RetrofitFactory instance;
     private static Retrofit.Builder builder;
 
@@ -42,10 +40,6 @@ public class RetrofitFactory {
             }
         }
         return instance;
-    }
-
-    public static void show(boolean show) {
-        RetrofitFactory.log = show;
     }
 
     /**

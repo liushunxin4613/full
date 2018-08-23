@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.api.full;
 
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,13 @@ import com.leo.core.bean.Bol;
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.SurfaceNorm;
@@ -162,21 +163,21 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     @Override
     public void initAddAction() {
         super.initAddAction();
-        add(Exceptions.class, (fieldName, path, what, msg, bean) -> vos(DVo::getImageList, obj
+        add(Exceptions.class, (type, baseUrl, path, map, what, msg, field, bean) -> vos(DVo::getImageList, obj
                 -> obj.onError(msg)));
-        add(String.class, (fieldName, path, what, msg, text) -> {
+        add(String.class, (type, baseUrl, path, map, what, msg, field, text) -> {
             if (TextUtils.equals(path, FULL_IMAGE_UPLOAD) && TextUtils.isNotJsonString(text)) {
                 vos(DVo::getImageList, obj -> obj.onError(msg));
             }
         });
-        add(ImageFg.class, (fieldName, path, what, msg, bean) -> {
+        add(ImageFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             if (!TextUtils.isEmpty(msg)) {
                 vos(DVo::getSerialNo, obj -> obj.initDB(bean.getSerialNo()));
                 vos(DVo::getSbumitFlag, SbumitFlagController::open);
                 vos(DVo::getImageList, obj -> obj.initImageFg(msg, bean, this));
             }
         });
-        add(DataFg.class, (fieldName, path, what, msg, bean) -> {
+        add(DataFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             switch (path) {
                 case FULL_REIMBURSE_SUBMIT://报销提交
                     if (bean.isSuccess() && !TextUtils.isEmpty(getState())) {
@@ -189,7 +190,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                                 if (TextUtils.equals(getMainApp(), MAIN_APP)) {
                                     activityLifecycleApi().finishAllActivity();
                                 } else {
-                                    getActivity().finish();
+                                    Message message = new Message();
+                                    message.what = 0x123;
+                                    activityLifecycleApi().finishActivity(message, getClass());
                                 }
                                 break;
                             case XG://经办人修改
@@ -205,7 +208,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                                         activityLifecycleApi().finishAllActivity();
                                     });
                                 } else {
-                                    getActivity().finish();
+                                    Message message = new Message();
+                                    message.what = 0x123;
+                                    activityLifecycleApi().finishActivity(message, getClass());
                                 }
                                 break;
                         }
@@ -223,7 +228,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     break;
             }
         });
-        add(RVo.class, (fieldName, path, what, msg, bean) -> {
+        add(RVo.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             switch (path) {
                 case FULL_REIMBURSE_QUERY://报销获取
                     bean.get(getVo());
@@ -297,6 +302,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     @Override
     public void initData() {
         super.initData();
+        vos(DVo::getFirst, obj -> obj.initDB(state));
         vos(DVo::getImageList, obj -> obj.setOnCom(this));
         vos(DVo::getAgent, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
         vos(DVo::getReimbursement, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
@@ -552,7 +558,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     private GridPhotoNorm newGridPhotoBean(List<ImageVo> data, ImageVo vo) {
         return getExecute(vo, obj -> new GridPhotoNorm(obj.getBindPhoto(), obj,
                 (bean, view) -> onGridPhotoClick(data, vo),
-                this::onGridPhotoLongClick));
+                (bean, view) -> onGridPhotoLongClick(bean)));
     }
 
     /**
@@ -569,10 +575,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 图片长按
      *
      * @param photoNorm photoNorm
-     * @param view      view
      * @return 是否同时响应点击
      */
-    private boolean onGridPhotoLongClick(GridPhotoNorm photoNorm, View view) {
+    private boolean onGridPhotoLongClick(GridPhotoNorm photoNorm) {
         TvV2DialogNorm norm = new TvV2DialogNorm("重新上传", "删除", photoNorm.getObj() instanceof ImageVo
                 && ((ImageVo) photoNorm.getObj()).isError(), (item, v, dialog) -> {
             dialog.dismiss();
@@ -596,8 +601,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
             notifyDataChanged();
         });
-        SurfaceControllerApi api = getDialogControllerApi(getActivity(), SurfaceControllerApi.class,
-                norm.getApiType());
+        IControllerApi api = getDialogControllerApi(getActivity(), norm.getControllerApiClass());
         api.dialogShow().onNorm(norm, 0);
         Window window = api.getDialog().getWindow();
         if (window != null) {
@@ -632,18 +636,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 || TextUtils.equals(state, QZ)
                 || TextUtils.equals(state, MQZ)
                 || TextUtils.equals(state, HZ));
-    }
-
-    protected <B> B getEnable(B a, B b) {
-        return isEnable() ? a : b;
-    }
-
-    protected <B> B getEnable(B a) {
-        return isEnable() ? a : null;
-    }
-
-    protected <B> B getHasEnable(B a) {
-        return isNoneInitiateEnable() ? a : null;
     }
 
     private ImageVo addPhoto(String path, int type) {

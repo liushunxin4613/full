@@ -44,12 +44,12 @@ public class ConfigFactory extends VsApi<ConfigFactory> {
     public void start() {
         String[] args = getRootDir().list();
         api().ii("args", args);
-        add(ConfigVo.class, (fieldName, path, what, msg, vo) -> {
+        add(ConfigVo.class, (type, baseUrl, path, map, what, msg, field, vo) -> {
             if (vo.isSuccess()) {
                 execute(vo.getConfigList(), fileVo -> onFileVo(args, fileVo));
             }
         });
-        add(ResponseBody.class, (fieldName, path, what, fileName, body) -> {
+        add(ResponseBody.class, (type, baseUrl, path, map, what, fileName, field, body) -> {
             if (TextUtils.check(path, fileName)) {
                 File file = new File(getRootDir(), fileName);
                 if (FileUtil.writeFile(file.getPath(), body.byteStream())) {

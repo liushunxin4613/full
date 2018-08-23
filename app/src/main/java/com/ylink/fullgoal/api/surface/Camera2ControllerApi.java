@@ -375,13 +375,12 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
         }
         Camera.Size previewSize = CameraUtil.findBestPreviewResolution(camera);
         parameters.setPreviewSize(previewSize.width, previewSize.height);
-//        Camera.Size pictrueSize = CameraUtil.getInstance().getPropPictureSize(parameters.getSupportedPictureSizes(), 1000);
-//        parameters.setPictureSize(pictrueSize.width, pictrueSize.height);
-        parameters.setPictureSize(CameraUtil.SCREEN_HEIGHT, CameraUtil.SCREEN_WIDTH);
+        parameters.setPictureSize(previewSize.width, previewSize.height);
         camera.setParameters(parameters);
         int picHeight = CameraUtil.SCREEN_WIDTH * previewSize.width / previewSize.height;
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(CameraUtil.SCREEN_WIDTH, picHeight);
         mySurfaceView.setLayoutParams(params);
+        maskView.initCenterRect(CameraUtil.SCREEN_WIDTH, picHeight);
     }
 
     //将bitmap保存在本地，然后通知图库更新
@@ -416,7 +415,7 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
                     matrix.preRotate(90);
                     break;
             }
-            Rec rec = maskView.newRec(bitmap.getHeight());
+            Rec rec = maskView.newRec(bitmap.getHeight(), bitmap.getWidth());
             bitmap = Bitmap.createBitmap(bitmap, rec.getY(), rec.getX(), rec.getH(),
                     rec.getW(), matrix, true);
             File file = saveImageToGallery(bitmap);

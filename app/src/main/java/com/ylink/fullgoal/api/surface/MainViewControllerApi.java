@@ -43,7 +43,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                     username, cookieStr, portalPac));
         }
         api().SSO(getCastgc());
-        ii("user", getUser());
+//        ii("user", getUser());
         if (TextUtils.check(taskId)) {
             api().queryNoShowLoadingMessageBack(taskId);
         }
@@ -52,7 +52,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     @Override
     public void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        add(MessageBackFg.class, (fieldName, path, what, msg, bean) -> {
+        add(MessageBackFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             if (TextUtils.check(bean.getBillType(), bean.getTaskType())) {
                 String state = getValue(FULL_STATUS, bean.getTaskType(), bean.getTaskType());
                 switch (bean.getBillType()) {
@@ -65,9 +65,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 }
             }
         });
-        add(StatusFg.class, (fieldName, path, what, msg, bean) -> ii(String.format("SSO认证%s",
-                bean.isSuccess() ? "成功" : "失败")));
-        addList(UserFg.class, (fieldName, path, what, msg, list) -> {
+        add(StatusFg.class, (type, baseUrl, path, map, what, msg, field, bean)
+                -> ii(String.format("SSO认证%s", bean.isSuccess() ? "成功" : "失败")));
+        addList(UserFg.class, (type, baseUrl, path, map, what, msg, field, list) -> {
             if (TextUtils.check(list)) {
                 UserFg fg = list.get(0);
                 if (TextUtils.check(fg)) {
@@ -95,6 +95,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 new IconTvMoreNorm(R.mipmap.m2, "出差费用报销", (bean, view) -> routeApi().evection(FQ)),
                 new IconTvMoreNorm(R.mipmap.m3, "报销列表查询", (bean, view) -> routeApi().queryReimburse()),
                 new IconTvMoreNorm(R.mipmap.m4, "选择银行卡号", (bean, view) -> routeApi().selectBank()))
+//                new IconTvMoreNorm(R.mipmap.m4, "查看", (bean, view) -> Request.look()))
                 .notifyDataSetChanged();
     }
 

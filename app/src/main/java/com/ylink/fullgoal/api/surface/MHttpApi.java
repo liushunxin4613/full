@@ -10,6 +10,7 @@ import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.UrlConfig;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
+import com.ylink.fullgoal.db.table.Request;
 
 import java.util.Map;
 
@@ -18,7 +19,9 @@ import rx.Observable;
 import static com.leo.core.util.TextUtils.getUriParams;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_YES;
+import static com.ylink.fullgoal.config.Config.HTTP_CACHE;
 import static com.ylink.fullgoal.config.Config.SIMULATE_HTTP;
+import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_TRANS_FILE;
 
 public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
 
@@ -33,10 +36,27 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
     }
 
     @Override
-    protected <B> boolean checkObservable(@NonNull Observable<B> observable, String startUrl,
+    protected <B> boolean checkObservable(@NonNull Observable<B> observable, String type, String baseUrl,
                                           String path, Map<String, String> map, int what, String tag) {
-        if (SIMULATE_HTTP) {//拦截并处理代码
-            String url = startUrl + path;
+        if (HTTP_CACHE) {//拦截并处理代码
+            Request.query(baseUrl, path, controllerApi().encode(map), response -> {
+                if (TextUtils.check(path)) {
+                    if (TextUtils.isEmpty(response)) {
+                        onObservable(observable, type, baseUrl, path, map, what, tag);
+                    } else {
+                        switch (path) {
+                            case PATH_QUERY_TRANS_FILE://配置文件
+                                break;
+                            default:
+                                onObservable(getObservable(response), type, baseUrl, path, map, what, tag);
+                                break;
+                        }
+                    }
+                }
+            });
+            return false;
+        } else if (SIMULATE_HTTP) {//拦截并处理代码
+            String url = baseUrl + path;
             String params = getUriParams(map);
             LogUtil.ii(this, "url: " + url);
             LogUtil.ii(this, "params: " + params);
@@ -45,7 +65,7 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
             AuxiliaryFactory.getInstance().postSimulate(map(m -> {
                 m.put("url", url);
                 m.put("params", params);
-            }), new RetrofitSubscriber<>(controllerApi()).init(path, what, tag));
+            }), new RetrofitSubscriber<>(controllerApi()).init(type, baseUrl, path, map, what, tag));
             showLoading(what, path);
             return false;
         }
@@ -53,9 +73,9 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
     }
 
     @Override
-    protected <B> void onObservable(@NonNull Observable<B> observable, String startUrl, String path,
-                                    Map<String, String> map, int what, String tag) {
-        super.onObservable(observable, startUrl, path, map, what, tag);
+    protected void onObservable(@NonNull Observable observable, String type, String baseUrl, String path,
+                                Map<String, String> map, int what, String tag) {
+        super.onObservable(observable, type, baseUrl, path, map, what, tag);
         showLoading(what, path);
     }
 

@@ -1,15 +1,14 @@
 buildscript {
-    ext.kotlin_version = '1.2.20'
     repositories {
+        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "https://www.jitpack.io" }
+        jcenter(){url "http://jcenter.bintray.com/"}
         jcenter()
         google()
         mavenLocal()
         mavenCentral()
-        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
         maven{url'https://plugins.gradle.org/m2/'}
         maven{url"https://jitpack.io"}
-        maven{url"http://mvn.gt.igexin.com/nexus/content/repositories/releases/"}
-        maven{url'http://maven.oschina.net/content/groups/public/'}
         maven{url'https://oss.sonatype.org/content/repositories/snapshots/'}
         maven{url"http://maven.springframework.org/release"}
         maven{url"http://maven.restlet.org"}
@@ -24,14 +23,15 @@ buildscript {
 
 allprojects {
     repositories {
+        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "https://www.jitpack.io" }
+        jcenter(){url "http://jcenter.bintray.com/"}
         jcenter()
         google()
         mavenLocal()
         mavenCentral()
-        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
         maven{url'https://plugins.gradle.org/m2/'}
         maven{url"https://jitpack.io"}
-        maven{url'http://maven.oschina.net/content/groups/public/'}
         maven{url'https://oss.sonatype.org/content/repositories/snapshots/'}
         maven{url"http://maven.springframework.org/release"}
         maven{url"http://maven.restlet.org"}
@@ -39,6 +39,11 @@ allprojects {
         maven{url"http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/"}
         maven{url'https://maven.fabric.io/public'}
     }
+    /*gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }*/
 }
 
 task clean(type: Delete) {

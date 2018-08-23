@@ -9,7 +9,7 @@ import com.ylink.fullgoal.cr.surface.NodeController;
 import com.ylink.fullgoal.cr.surface.ResearchReportController;
 import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.TravelFormController;
-import com.ylink.fullgoal.factory.CoreJsonFactory;
+import com.ylink.fullgoal.factory.CacheFactory;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 import com.ylink.fullgoal.fg.NodeFg;
 import com.ylink.fullgoal.fg.ResearchReportFg;
@@ -188,7 +188,7 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
     }
 
     private void checkReport(IAction action) {
-        if (CoreJsonFactory.getInstance().reportContains(vor(DVo::getBudgetDepartment,
+        if (CacheFactory.getInstance().reportContains(vor(DVo::getBudgetDepartment,
                 DepartmentController::getViewBean))) {
             execute(action);
         }

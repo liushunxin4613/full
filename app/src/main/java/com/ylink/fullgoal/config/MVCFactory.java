@@ -6,7 +6,6 @@ import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.util.FileUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.MD5Util;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.vo.ConfigV1Vo;
@@ -26,9 +25,8 @@ import static com.leo.core.util.TextUtils.checkParams;
 
 public class MVCFactory extends VsApi<MVCFactory> {
 
-    public final static String DIR = "config";
-    private final static boolean LOCAL = true;
-    private final static String FILTER[] = {};
+    private final static String DIR = "config";
+    private final static boolean LOCAL = false;
     private final static String ROOT_FILE = "config.json";
 
     private static MVCFactory instance;
@@ -44,7 +42,6 @@ public class MVCFactory extends VsApi<MVCFactory> {
         return instance;
     }
 
-    private boolean copy;
     private String config;
     private ConfigV1Vo vo;
     private ControllerApi api;
@@ -55,25 +52,28 @@ public class MVCFactory extends VsApi<MVCFactory> {
     }
 
     public void start() {
-        String[] args = getConfigDir().list();
-        api().ii(String.format("dir: %s, list: %s", getConfigDir().getPath(),
-                LogUtil.getLog((Object) args)));
-        add(DataFg.class, byte[].class, (fieldName, path, what, fileName, bytes) -> {
+        add(DataFg.class, byte[].class, (type, baseUrl, path, map, what, fileName, field, bytes) -> {
             if (TextUtils.check(path, fileName)) {
                 File file = new File(getConfigDir(), fileName);
                 if (FileUtil.writeFile(file.getPath(), bytes)) {
                     api().ii("保存成功", file.getPath());
+                    api().ii("md5", MD5Util.getFileMD5(file));
                     onFile(file);
                 }
             }
         });
-        download(ROOT_FILE);
+        File file = new File(getConfigDir(), ROOT_FILE);
+        if(file.exists()){
+            onFile(file);
+        } else {
+            download(ROOT_FILE);
+        }
     }
 
     private void onFile(File file) {
         if (TextUtils.check(file) && TextUtils.check(file.getName()) && file.exists()) {
             switch (file.getName()) {
-                case "config.json":
+                case ROOT_FILE:
                     initConfig(LOCAL, file.getName());
                     setVo((ConfigV1Vo) api().decode(getConfig(), ConfigV1Vo.class));
                     initConfigVo();
@@ -93,9 +93,9 @@ public class MVCFactory extends VsApi<MVCFactory> {
                 download(vo.getFile());
             } else {
                 String md5 = MD5Util.getFileMD5(file);
-                api().ii(String.format("%s => md5: %s, hashcode: %s", file.getPath(), md5,
-                        vo.getHashcode()));
                 if (!TextUtils.equals(md5, vo.getHashcode())) {
+                    api().ii(String.format("%s => md5: %s, hashcode: %s", file.getPath(), md5,
+                            vo.getHashcode()));
                     download(vo.getFile());
                 }
             }
@@ -143,12 +143,8 @@ public class MVCFactory extends VsApi<MVCFactory> {
         return api;
     }
 
-    private File getConfigDir() {
+    public File getConfigDir() {
         return api().getRootDir(DIR);
-    }
-
-    private <A> void add(Class<A> root, IPathMsgAction<A> action) {
-        api().add(root, action);
     }
 
     private <A, B> void add(Class<A> root, Class<B> clz, IPathMsgAction<B> action) {

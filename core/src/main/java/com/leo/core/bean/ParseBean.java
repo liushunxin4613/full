@@ -3,51 +3,35 @@ package com.leo.core.bean;
 import com.leo.core.api.api.VsApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 
+import java.util.Map;
+
 public class ParseBean<B> extends VsApi<ParseBean> {
 
     private IPathMsgAction<B> action;
-    private B bean;
-    private String name;
+    private String type;
+    private String baseUrl;
     private String path;
+    private Map<String, String> map;
     private int what;
     private String msg;
+    private String field;
+    private B bean;
 
-    public ParseBean(IPathMsgAction<B> action, String name, String path, int what, String msg, B bean) {
+    public ParseBean(IPathMsgAction<B> action, String type, String baseUrl, String path,
+                     Map<String, String> map, int what, String msg, String field, B bean) {
         this.action = action;
-        this.bean = bean;
-        this.name = name;
+        this.type = type;
+        this.baseUrl = baseUrl;
         this.path = path;
+        this.map = map;
         this.what = what;
         this.msg = msg;
+        this.field = field;
+        this.bean = bean;
     }
 
     public void execute() {
-        executeNon(getAction(), action -> action.execute(getName(), no(getPath()), getWhat(), no(getMsg()),
-                getBean()));
-    }
-
-    private IPathMsgAction<B> getAction() {
-        return action;
-    }
-
-    private B getBean() {
-        return bean;
-    }
-
-    private String getName() {
-        return name;
-    }
-
-    private String getPath() {
-        return path;
-    }
-
-    private int getWhat() {
-        return what;
-    }
-
-    private String getMsg() {
-        return msg;
+        executeNon(action, action -> action.execute(type, baseUrl, path, map, what, msg, field, bean));
     }
 
 }

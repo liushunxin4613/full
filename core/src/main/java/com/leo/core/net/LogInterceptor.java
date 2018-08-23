@@ -177,7 +177,9 @@ public class LogInterceptor implements Interceptor {
             print("response head", bean.getResponseHead());
             print("params", bean.getParams());
         }
-        print("response", bean.getResponse());
+        if (bean != null) {
+            print("response", bean.getResponse());
+        }
     }
 
     private long getLength(RequestBody body) throws IOException {

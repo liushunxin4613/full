@@ -63,6 +63,9 @@ public class ImageVo implements IProgressListener {
     private transient IProgressListener listener;
     private transient IbooleanAction errorAction;
 
+    public ImageVo() {
+    }
+
     public ImageVo(Object photo, String invoiceUse) {
         this.photo = photo;
         this.invoiceUse = invoiceUse;

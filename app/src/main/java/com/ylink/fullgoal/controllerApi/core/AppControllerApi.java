@@ -8,15 +8,18 @@ import android.support.multidex.MultiDex;
 import com.blankj.utilcode.util.Utils;
 import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.MainManage;
-import com.leo.core.net.RetrofitFactory;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.NetUtils;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.ylink.fullgoal.config.MVCFactory;
+import com.ylink.fullgoal.db.core.AppDatabase;
 import com.ylink.fullgoal.factory.BankFactory;
-import com.ylink.fullgoal.factory.CoreJsonFactory;
+import com.ylink.fullgoal.factory.CacheFactory;
+import com.ylink.fullgoal.factory.FilesFactory;
 import com.ylink.fullgoal.util.CameraUtil;
 
 public class AppControllerApi extends ControllerApi<AppControllerApi, BaseControllerApiApp> {
@@ -34,14 +37,17 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FlowManager.init(new FlowConfig.Builder(getContext()).build());
         MainManage.init(getApplication());//主
         LogUtil.openLog();//log
+        AppDatabase.init();//数据库初始化
+        FilesFactory.getInstance().init(getThis());
+        FilesFactory.getInstance().openCore();
+        CacheFactory.getInstance().init();//初始化缓存
         Utils.init(getApplication());
         getApplication().registerActivityLifecycleCallbacks(activityLifecycleApi());
         CameraUtil.init(getContext());
-        CoreJsonFactory.getInstance().init(getThis());
         NetUtils.init(getApplication());
-        RetrofitFactory.show(false);
         BankFactory.getInstance().init(getThis());
         //友盟初始化
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout)

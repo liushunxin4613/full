@@ -15,8 +15,7 @@ import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 
-public class BaseRecycleControllerApiAdapter<T extends BaseRecycleControllerApiAdapter,
-        C extends IControllerApi> extends RecyclerView.Adapter<ViewHolder> implements
+public class BaseRecycleControllerApiAdapter extends RecyclerView.Adapter<ViewHolder> implements
         Adapter<BaseRecycleControllerApiAdapter> {
 
     private Context context;
