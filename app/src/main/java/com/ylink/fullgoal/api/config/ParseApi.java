@@ -17,6 +17,7 @@ import com.leo.core.util.GsonDecodeUtil;
 import com.leo.core.util.TextUtils;
 import com.leo.core.bean.ParseBean;
 import com.ylink.fullgoal.db.table.Request;
+import com.ylink.fullgoal.db.table.Times;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -228,6 +229,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                 }
                 if (!TextUtils.isEmpty(parseCompleted.getData())) {
                     onObj(parseCompleted, ParseCompleted.class);
+                    Times.sav(String.format("%s#%s", path, GsonDecodeUtil.encode(map)), "结束");
                 }
             }
         }

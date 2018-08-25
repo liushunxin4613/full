@@ -8,11 +8,11 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.fg.DepartmentFg;
-import com.ylink.fullgoal.fg.MessageBackFg;
 import com.ylink.fullgoal.fg.StatusFg;
 import com.ylink.fullgoal.fg.UserFg;
 import com.ylink.fullgoal.norm.IconTvMoreNorm;
 import com.ylink.fullgoal.norm.ImageNorm;
+import com.ylink.fullgoal.vo.RVo;
 
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.Config.FULL_STATUS;
@@ -52,14 +52,17 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     @Override
     public void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        add(MessageBackFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
+        add(RVo.class, (type, baseUrl, path, map, what, serialNo, field, bean) -> {
             if (TextUtils.check(bean.getBillType(), bean.getTaskType())) {
+                bean.setSerialNo(serialNo);
                 String state = getValue(FULL_STATUS, bean.getTaskType(), bean.getTaskType());
                 switch (bean.getBillType()) {
                     case "427"://一般报销
+                        dismissLoading();
                         routeApi().generalMain(state, encode(bean));
                         break;
                     case "428"://出差报销
+                        dismissLoading();
                         routeApi().evectionMain(state, encode(bean));
                         break;
                 }
@@ -95,7 +98,6 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                 new IconTvMoreNorm(R.mipmap.m2, "出差费用报销", (bean, view) -> routeApi().evection(FQ)),
                 new IconTvMoreNorm(R.mipmap.m3, "报销列表查询", (bean, view) -> routeApi().queryReimburse()),
                 new IconTvMoreNorm(R.mipmap.m4, "选择银行卡号", (bean, view) -> routeApi().selectBank()))
-//                new IconTvMoreNorm(R.mipmap.m4, "查看", (bean, view) -> Request.look()))
                 .notifyDataSetChanged();
     }
 

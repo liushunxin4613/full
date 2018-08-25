@@ -17,10 +17,12 @@ import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
+import com.ylink.fullgoal.db.table.Times;
 import com.ylink.fullgoal.norm.VgNorm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import rx.Observable;
@@ -143,29 +145,27 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         });
     }
 
-    public void initDataAction(IObjAction<List<IMNApi>> action) {
+    protected void initDataAction(String path, Map<String, String> map, IObjAction<List<IMNApi>> action) {
         if (action != null) {
             List<IMNApi> data;
             action.execute(data = new ArrayList<>());
-            initActionData(data);
+            initActionData(path, map, data);
         }
     }
 
-    public <A extends IMNApi> void initActionData(List<A> data) {
+    public <A extends IMNApi> void initActionData(String path, Map<String, String> map, List<A> data) {
         Observable.create(subscriber -> {
             clear();
             if (!TextUtils.isEmpty(data)) {
                 runOnUiThread(this::showContentView);
-                execute(data, item -> {
-                    item.createSearchText();
-                    add(item);
-                });
+                execute(data, this::add);
             }
             subscriber.onNext(null);
             subscriber.onCompleted();
         }).compose(Transformer.getInstance()).subscribe(obj -> {
             notifyDataSetChanged();
             dismissLoading();
+            Times.sav(String.format("%s#%s", path, encode(map)), "显示");
             onInitActionData();
         });
     }

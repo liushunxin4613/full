@@ -193,7 +193,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * 报销确认请求数据
      */
     public void queryJsonMessageBack(String json) {
-        post(CLASS_DATA_FG, APP_JSON, PATH_QUERY_MESSAGE_BACK_DATA, json);
+        post(CLASS_RVO, APP_JSON, PATH_QUERY_MESSAGE_BACK_DATA, json);
     }
 
     /**
@@ -202,8 +202,8 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * @param serialNo 报销批次号
      */
     public void queryNoShowLoadingMessageBack(String serialNo) {
-        post(CLASS_DATA_FG, ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)),
-                SHOW_LOADING_NO);
+        post(CLASS_RVO, ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)),
+                serialNo);
     }
 
     /**

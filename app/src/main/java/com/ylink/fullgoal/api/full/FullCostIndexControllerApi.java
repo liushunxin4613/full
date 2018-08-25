@@ -177,7 +177,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             String text = bundle.getString(DATA_QR);
             dataMap = toJSONMap(text);
             if (!TextUtils.isEmpty(dataMap)) {
-                ee("dataMap", dataMap);
+//                ee("dataMap", dataMap);
                 serialNo = (String) dataMap.get(SERIAL_NO);
                 Object obj = vr(dataMap, map -> map.get("budgetDepartment"));
                 if (obj instanceof Map) {

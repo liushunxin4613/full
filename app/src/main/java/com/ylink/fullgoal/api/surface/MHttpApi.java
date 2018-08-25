@@ -11,6 +11,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.UrlConfig;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.db.table.Request;
+import com.ylink.fullgoal.db.table.Times;
 
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
     @Override
     protected <B> boolean checkObservable(@NonNull Observable<B> observable, String type, String baseUrl,
                                           String path, Map<String, String> map, int what, String tag) {
+        Times.sav(String.format("%s#%s", path, controllerApi().encode(map)), "开始");
         if (HTTP_CACHE) {//拦截并处理代码
             Request.query(baseUrl, path, controllerApi().encode(map), response -> {
                 if (TextUtils.check(path)) {

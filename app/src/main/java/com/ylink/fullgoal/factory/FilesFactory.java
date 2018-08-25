@@ -6,6 +6,7 @@ import com.leo.core.api.api.VsApi;
 import com.leo.core.util.MD5Util;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.controllerApi.core.AppControllerApi;
+import com.ylink.fullgoal.db.core.AppDatabase;
 import com.ylink.fullgoal.db.table.Files;
 import com.ylink.fullgoal.db.table.JsonFile;
 
@@ -68,8 +69,13 @@ public class FilesFactory extends VsApi<FilesFactory> {
             case JsonFile.CORE_JSON:
                 List<JsonFile> data = JsonFile.queryList("init.fileName");
                 execute(data, obj -> open(obj.getValue()));
+                lazy();
                 break;
         }
+    }
+
+    private void lazy(){
+        AppDatabase.lazy();
     }
 
     private void initJsonText(String root, String text) {
@@ -83,11 +89,13 @@ public class FilesFactory extends VsApi<FilesFactory> {
         if (obj instanceof List) {
             execute((List) obj, item -> recursive(root, spectrum, parent, name, item));
         } else if (obj instanceof Map) {
-            execute((Map) obj, (key, value) -> {
-                if (key instanceof String) {
-                    recursive(root, gv(spectrum, parent), name, (String) key, value);
-                }
-            });
+            if (!TextUtils.equals(((Map) obj).get("enable"), false)) {
+                execute((Map) obj, (key, value) -> {
+                    if (key instanceof String) {
+                        recursive(root, gv(spectrum, parent), name, (String) key, value);
+                    }
+                });
+            }
         } else {
             JsonFile.sav(root, name, valueOf(obj), parent, spectrum);
         }

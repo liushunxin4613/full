@@ -20,9 +20,13 @@ public class MNApi<T extends MNApi, P extends IControllerApi> extends SelectedAp
     @Override
     public Object getApiId() {
         if (apiId == null) {
-            apiId = hashCode();
+            apiId = newApiId();
         }
         return apiId;
+    }
+
+    private Object newApiId() {
+        return null;
     }
 
     @Override
@@ -58,8 +62,15 @@ public class MNApi<T extends MNApi, P extends IControllerApi> extends SelectedAp
     @Override
     public void createSearchText() {
         String[] args = getSearchFields();
-        if(!TextUtils.isEmpty(args)){
+        if (!TextUtils.isEmpty(args)) {
             setSearchText(SearchUtil.getArgsSearch(args));
+        }
+    }
+
+    @Override
+    public void lazy() {
+        if (getSearchFields() != null && getSearchText() == null) {
+            createSearchText();
         }
     }
 
@@ -68,7 +79,7 @@ public class MNApi<T extends MNApi, P extends IControllerApi> extends SelectedAp
         return null;
     }
 
-    protected String[] getSearchFields(){
+    protected String[] getSearchFields() {
         return null;
     }
 

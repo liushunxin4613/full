@@ -19,8 +19,6 @@ import java.util.Map;
 
 import rx.Observable;
 
-import static com.ylink.fullgoal.vo.SearchVo.SEARCHS;
-
 public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> extends RecycleControllerApi<T, C> {
 
     private String key;
@@ -35,11 +33,11 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         super(controller);
     }
 
-    protected String getKeyword() {
+    private String getKeyword() {
         return keyword;
     }
 
-    protected void setKeyword(String keyword) {
+    private void setKeyword(String keyword) {
         this.keyword = keyword;
     }
 
@@ -150,8 +148,11 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
                 }
             }
         }
-        return TextUtils.isEmpty(keyword) || SearchUtil.searchString(
-                mnApi.getSearchText(), keyword);
+        if (TextUtils.isEmpty(keyword)) {
+            return true;
+        }
+        mnApi.lazy();//懒加载处理
+        return SearchUtil.searchString(mnApi.getSearchText(), keyword);
     }
 
     @Override
@@ -182,20 +183,6 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
         }).compose(Transformer.getInstance())
                 .subscribe(obj -> adapter.notifyDataSetChanged()))
                 .notifyDataSetChanged();
-    }
-
-    private String getSearchValue(String key) {
-        if (!TextUtils.isEmpty(SEARCHS) && !TextUtils.isEmpty(key)) {
-            for (String[] args : SEARCHS) {
-                if (!TextUtils.isEmpty(args)) {
-                    if (TextUtils.count(args) == 2 &&
-                            TextUtils.equals(args[0], key)) {
-                        return args[1];
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     private void showView(boolean enable) {

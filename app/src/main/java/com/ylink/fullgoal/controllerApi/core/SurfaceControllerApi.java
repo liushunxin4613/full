@@ -16,9 +16,7 @@ import com.leo.core.bean.DataEmpty;
 import com.leo.core.bean.ParseCompleted;
 import com.leo.core.core.BaseControllerApiDialog;
 import com.leo.core.core.BaseControllerApiView;
-import com.leo.core.core.bean.CoreApiBean;
 import com.leo.core.helper.TimeFactory;
-import com.leo.core.iapi.api.IApiCodeApi;
 import com.leo.core.iapi.api.IDisplayApi;
 import com.leo.core.iapi.core.IModel;
 import com.leo.core.iapi.inter.IAction;
@@ -72,7 +70,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         this.dialogApi = api;
     }
 
-    private final LoadingDialogControllerApi getDialogApi() {
+    private LoadingDialogControllerApi getDialogApi() {
         return dialogApi;
     }
 
@@ -101,7 +99,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     }
 
     public void dismissLoading() {
-        getTimeFactory().check(500, () -> {
+        getTimeFactory().check(100, () -> {
             executeNon(getDialogApi(), CoreControllerApi::dismiss);
             if (this instanceof ContentControllerApi) {
                 ((ContentControllerApi) this).renewViews();
@@ -158,9 +156,10 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 ToastUtil.show(this, bean.getMessage());
             } else {
                 if (this instanceof RecycleControllerApi) {
-                    List<? extends IModel> data = getOnDataFg(type, baseUrl, path, map, what, msg, field, bean);
+                    List<? extends IModel> data = getOnDataFg(type, baseUrl, path, map, what,
+                            msg, field, bean);
                     if (!TextUtils.isEmpty(data)) {
-                        ((RecycleControllerApi) this).initActionData(data);
+                        ((RecycleControllerApi) this).initActionData(path, map, data);
                     }
                     return;
                 }
@@ -273,12 +272,6 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return null;
     }
 
-    protected void addDataOfCode(List data, IApiCodeApi api, CoreApiBean bean) {
-        if (TextUtils.checkNull(data, api, bean)) {
-            data.add(bean.setApiCode(api.getApiCode()));
-        }
-    }
-
     public int getResTvColor(CharSequence text) {
         return !TextUtils.isEmpty(text) ? R.color.tv : R.color.tv1;
     }
@@ -370,7 +363,7 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                     if (TextUtils.equals(getKey(key), "serialNo")) {
                         show("票据不能为空");
                     } else {
-                        show(String.format("%s(%s)不能为空", key, getKey(key)));
+                        show(String.format("%s不能为空", key));
                     }
                     return null;
                 }
@@ -498,9 +491,11 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     private boolean checkField(Field field) {
         if (field != null) {
             int m = field.getModifiers();
-            return field != null && !TextUtils.isEmpty(field.getName())
-                    && !Modifier.isAbstract(m) && !Modifier.isFinal(m)
-                    && !Modifier.isTransient(m) && !Modifier.isStatic(m)
+            return !TextUtils.isEmpty(field.getName())
+                    && !Modifier.isAbstract(m)
+                    && !Modifier.isFinal(m)
+                    && !Modifier.isTransient(m)
+                    && !Modifier.isStatic(m)
                     && !Modifier.isInterface(field.getType().getModifiers());
         }
         return false;

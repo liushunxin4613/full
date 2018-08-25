@@ -27,7 +27,7 @@ public class JsonDecodeApi implements IGsonDecodeApi<JsonDecodeApi, Object, Obje
                 return (R) decode(in, (Type) param);
             }
         } catch (Exception ignored) {
-//            ignored.printStackTrace();
+            ignored.printStackTrace();
         }
         return null;
     }

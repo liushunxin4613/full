@@ -40,7 +40,7 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
         FlowManager.init(new FlowConfig.Builder(getContext()).build());
         MainManage.init(getApplication());//主
         LogUtil.openLog();//log
-        AppDatabase.init();//数据库初始化
+        AppDatabase.init();//初始化
         FilesFactory.getInstance().init(getThis());
         FilesFactory.getInstance().openCore();
         CacheFactory.getInstance().init();//初始化缓存

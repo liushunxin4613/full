@@ -33,10 +33,12 @@ public class BaseRecycleControllerApiAdapter extends RecyclerView.Adapter<ViewHo
         dataApi = new DataApi<>()
                 .setAdapter(this);
         dataApi.setApi(obj -> {
-            for (IMNApi model : dataApi.getData()) {
-                if (model != null && TextUtils.equals(
-                        model.getApiId(), obj.getApiId())) {
-                    return true;
+            if (obj.getApiId() != null) {
+                for (IMNApi model : dataApi.getData()) {
+                    if (model != null && TextUtils.equals(
+                            model.getApiId(), obj.getApiId())) {
+                        return true;
+                    }
                 }
             }
             return false;

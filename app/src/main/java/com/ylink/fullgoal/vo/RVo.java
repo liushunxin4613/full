@@ -29,6 +29,9 @@ public class RVo extends MessageBackFg implements IGet<DVo> {
             //新加 2018-07-24 20:51
             vo.getIsShare().initDB(TextUtils.equals(getIsShare(), "需要分摊"));
             vo.getApply().init(getApply());
+            if (TextUtils.check(getSerialNo())) {
+                vo.getSerialNo().initDB(getSerialNo());
+            }
             vo.getSame().initDB(vo.getInfoMap());//添加相似初始化数据
         }
         return vo;

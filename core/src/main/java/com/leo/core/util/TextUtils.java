@@ -760,4 +760,36 @@ public class TextUtils {
         return null;
     }
 
+    public static String timeToString(long time) {
+        if (time == 0) {
+            return "零";
+        }
+        StringBuilder builder = new StringBuilder();
+        if (time < 0) {
+            time = -time;
+            builder.append("负");
+        }
+        int hs = (int) (time % 1000);
+        int s = (int) ((time / 1000) % 60);
+        int m = (int) ((time / (1000 * 60)) % 60);
+        int h = (int) ((time / (1000 * 60 * 60)) % 24);
+        int d = (int) (time / (1000 * 60 * 60 * 24));
+        if (d > 0) {
+            builder.append(d).append("天");
+        }
+        if (h > 0) {
+            builder.append(h).append("小时");
+        }
+        if (m > 0) {
+            builder.append(m).append("分钟");
+        }
+        if (s > 0) {
+            builder.append(s).append("秒");
+        }
+        if (hs > 0) {
+            builder.append(hs).append("毫秒");
+        }
+        return builder.toString();
+    }
+
 }

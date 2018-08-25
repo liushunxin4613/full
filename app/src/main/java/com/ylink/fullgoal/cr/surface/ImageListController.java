@@ -149,8 +149,9 @@ public class ImageListController<T extends ImageListController> extends AddContr
         return getFilterDBData(ImageVo.getValue(i));
     }
 
+    @SafeVarargs
     @Override
-    public ImageVo getFilterDB(IBolAction<ImageVo>... args) {
+    public final ImageVo getFilterDB(IBolAction<ImageVo>... args) {
         return super.getFilterDB(args);
     }
 

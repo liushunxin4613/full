@@ -2,7 +2,6 @@ package com.ylink.fullgoal.factory;
 
 import com.leo.core.api.api.VsApi;
 import com.leo.core.util.JavaTypeUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.db.table.JsonFile;
 
@@ -29,7 +28,7 @@ public class CacheFactory extends VsApi<CacheFactory> {
         return instance;
     }
 
-    private final static String CACHE_SIZE = "cacheSize";
+    private final static String CACHE_SIZE = "size.cacheSize";
 
     private int cacheSize = 10;
     private Map<Object, Object> cacheMap;
@@ -43,6 +42,7 @@ public class CacheFactory extends VsApi<CacheFactory> {
             }
         }
         this.cacheMap = new LinkedHashMap<Object, Object>((int) Math.ceil(cacheSize / 0.75f) + 1, 0.75f, true) {
+            private static final long serialVersionUID = -9193199736698387017L;
             @Override
             protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
                 return size() > cacheSize;
@@ -76,7 +76,7 @@ public class CacheFactory extends VsApi<CacheFactory> {
         return cacheMap;
     }
 
-    public void sav(String baseUrl, String path, Map<String, String> map, String response){
+    public void sav(String baseUrl, String path, Map<String, String> map, String response) {
 //        getCacheMap().put(map(m -> m.put("baseUrl", baseUrl)), )
     }
 

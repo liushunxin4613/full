@@ -24,6 +24,7 @@ import com.ylink.fullgoal.bean.IndicatorBean;
 import com.ylink.fullgoal.controllerApi.surface.BarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.cr.surface.BooleanController;
+import com.ylink.fullgoal.db.table.Times;
 import com.ylink.fullgoal.fg.ApplicationtFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.norm.CCSQDNorm;
@@ -122,7 +123,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     public void onResume() {
         super.onResume();
         execute(getFinish(), Message.class, msg -> {
-            switch (msg.what){
+            switch (msg.what) {
                 case 0x123://更新
                     query(true);
                     break;
@@ -130,7 +131,7 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         });
     }
 
-    private void query(){
+    private void query() {
         query(false);
     }
 
@@ -212,8 +213,8 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
             } else {
                 api.showNullView(true);
             }
+            api.dismissLoading();
         }
-        api.dismissLoading();
     }
 
     private RecycleControllerApi getRecycleControllerApi(String name) {
@@ -222,8 +223,10 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         controllerApi.setText(controllerApi.findViewById(R.id.null_tv), "您还没有相关的报销");
         controllerApi.setNullView(controllerApi.findViewById(R.id.null_vg));
         add(name, controllerApi);
-        add(controllerApi, DataFg.class, (type, baseUrl, path, map, what, msg, field, bean)
-                -> initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList()));
+        add(controllerApi, DataFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
+            initReimburseVoData(getReiRecycleControllerApi(msg), bean.getApplicationtList());
+            Times.sav(String.format("%s#%s", path, encode(map)), "显示");
+        });
         controllerApi.hideViews();
         return controllerApi;
     }

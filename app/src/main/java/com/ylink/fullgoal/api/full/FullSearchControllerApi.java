@@ -48,8 +48,6 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
     @Bind(R.id.null_vg)
     LinearLayout nullVg;
 
-    private long time;
-    private Update update;
     private boolean allShow;
 
     public FullSearchControllerApi(C controller) {
@@ -79,7 +77,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
             @Override
             public void onTextChanged(CharSequence text, int start, int before, int count) {
                 setIcon(iconIv, count > 0);
-                FullSearchControllerApi.this.lazySearch(text.toString());
+                search(text.toString());
             }
 
             @Override
@@ -96,34 +94,6 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                     return true;
             }
         });
-    }
-
-    private void initUpdate() {
-        update = new Update(new IRunAction() {
-            @Override
-            public boolean isRun(long timeMillis) {
-                return time > timeMillis;
-            }
-
-            @Override
-            public void onListen(int count, long timeMillis) {
-            }
-
-            @Override
-            public void run() {
-                search(getKeyword());
-            }
-        }).setInterval(200);
-    }
-
-    private void lazySearch(String keyword) {
-        if (update != null) {
-            setKeyword(keyword);
-            time = update.getAddCurrentTimeMillis(600);
-            update.update();
-        } else {
-            search(keyword);
-        }
     }
 
     @Override

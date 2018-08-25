@@ -17,6 +17,7 @@ import com.ylink.fullgoal.config.Node;
 import com.ylink.fullgoal.controllerApi.surface.BaseSearchControllerApi;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 
@@ -83,17 +84,17 @@ public class FullAutoSearchControllerApi<T extends FullAutoSearchControllerApi, 
     private void initAdds() {
         add(String.class, (type, baseUrl, path, map, what, msg, field, response)
                 -> JsonHelper.newBuilder()
-                .add(List.class, (parent, list) -> onData(path, list),
+                .add(List.class, (parent, list) -> onData(path, map, list),
                         new Node("applyCodeResult2"))
                 .execute(response));
     }
 
-    private void onData(String path, List list) {
+    private void onData(String path, Map<String, String> map, List list) {
         if (TextUtils.isEmpty(list)) {
             showNullView(true);
         } else {
             MVCFactory.getInstance().onData(path, toJsonString(getKey(), true, "applyType"),
-                    list, getThis(), this::initActionData);
+                    list, getThis(), data -> initActionData(path, map, data));
         }
         dismissLoading();
     }

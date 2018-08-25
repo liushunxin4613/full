@@ -19,7 +19,9 @@ import static com.ylink.fullgoal.vo.SearchVo.APPLY_CONTENT;
 
 public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> extends BaseSearchBarControllerApi<T, C> {
 
+    private String path;
     private Map<String, Object> map;
+    private Map<String, String> params;
 
     public FullSearchControllerApiV1(C controller) {
         super(controller);
@@ -58,17 +60,20 @@ public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> e
 
     private void initAdds() {
         //申请单
-        addList(ApplyFgV2.class, (type, baseUrl, path, map, what, msg, field, list) -> initData(list));
+        addList(ApplyFgV2.class, (type, baseUrl, path, map, what, msg, field, list)
+                -> initData(path, map, list));
     }
 
-    private void initData(List<ApplyFgV2> list) {
+    private void initData(String path, Map<String, String> map, List<ApplyFgV2> list) {
         execute(list, item -> vos(ApplyVoV2::getApply, obj -> obj.initKey(item)));
         vos(ApplyVoV2::getApply, obj -> obj.insert(decode(getValue(), ApplyMapControllerV2.class)));
-        initActionData();
+        initActionData(path, map);
     }
 
-    private void initActionData() {
-        initDataAction(data -> execute(getDataMap(), (key, value) -> data.add(new TvH2MoreNorm(
+    private void initActionData(String path, Map<String, String> map) {
+        this.path = path;
+        this.params = map;
+        initDataAction(path, map, data -> execute(getDataMap(), (key, value) -> data.add(new TvH2MoreNorm(
                 vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName), value.getViewValue(),
                 String.format("请选择%s", vr(value, ApplyDataFgV2::getKey, ApplyFgV2::getApplyName)),
                 (bean, view) -> routeApi().searchApplyContent(APPLY_CONTENT, encode(map(getMap(), m
@@ -95,7 +100,7 @@ public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> e
         execute(getFinish(), new TypeToken<SearchVo<Map<String, String>>>() {
         }, vo -> vos(ApplyVoV2::getApply, obj -> obj.initDB(getJsonStringValue(vo.getValue(),
                 "applyType"), vo.getObj())));
-        initActionData();
+        initActionData(path, params);
     }
 
 }

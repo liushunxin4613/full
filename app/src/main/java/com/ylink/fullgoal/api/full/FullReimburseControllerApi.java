@@ -30,6 +30,7 @@ import com.ylink.fullgoal.cr.core.StringController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.DepartmentController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
+import com.ylink.fullgoal.db.table.Times;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
@@ -186,9 +187,14 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                                 again();
                                 break;
                             case QR://经办人确认
-                                show("报销确认成功");
                                 if (TextUtils.equals(getMainApp(), MAIN_APP)) {
-                                    activityLifecycleApi().finishAllActivity();
+                                    dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
+                                        dialog.dismiss();
+                                        getActivity().finish();
+                                    }, (bean1, v, dialog) -> {
+                                        dialog.dismiss();
+                                        activityLifecycleApi().finishAllActivity();
+                                    });
                                 } else {
                                     Message message = new Message();
                                     message.what = 0x123;
@@ -235,6 +241,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     notifyDataChanged();
                     showContentView();
                     dismissLoading();
+                    Times.sav(String.format("%s#%s", path, encode(map)), "显示");
                     break;
             }
         });
@@ -481,7 +488,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         if (TextUtils.equals(vor(DVo::getCostIndex, CostIndexController::getCostName),
                 "其他招待（办公）")) {
             double money = vor(DVo::getMoney, DoubleController::getdouble);
-            ee("money", money);
             if (money > 3000) {
                 dialog("您的报销金额超过三千元,请关联招待申请单", "确认", null, (bean, v, dialog)
                         -> dialog.dismiss(), null);

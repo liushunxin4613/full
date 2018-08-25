@@ -28,16 +28,6 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
         data = new ArrayList<>();
     }
 
-    public DataApi(List<D> data) {
-        this();
-        replaceAll(data);
-    }
-
-    public T setData(List<D> data) {
-        this.data = data;
-        return getThis();
-    }
-
     public T setApi(ICheckApi<ICheckApi, D> api) {
         this.api = api;
         return getThis();
@@ -56,11 +46,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
         this.emptyListenEnable = true;
     }
 
-    public void closeEmptyListen(){
-        this.emptyListenEnable = false;
-    }
-
-    public IDataHelper<D> getHelper() {
+    private IDataHelper<D> getHelper() {
         return helper;
     }
 
@@ -69,9 +55,8 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
         return getThis();
     }
 
-    public T setFilterData(List<D> filterData) {
+    public void setFilterData(List<D> filterData) {
         this.filterData = filterData;
-        return getThis();
     }
 
     private void initFilterAction() {
@@ -512,7 +497,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
     public D getLastItem(int type, int position) {
         List<D> data = getData(type);
         int count = data.size();
-        if (data != null && position >= 0 && position < count)
+        if (position >= 0 && position < count)
             data.get(count - position - 1);
         return null;
     }
@@ -529,7 +514,7 @@ public class DataApi<T extends DataApi, D> extends ThisApi<T> implements IDataAp
     public D getLastItem(Class<? extends D> clz, int position) {
         List<D> data = getData(clz);
         int count = data.size();
-        if (data != null && position >= 0 && position < count)
+        if (position >= 0 && position < count)
             data.get(count - position - 1);
         return null;
     }

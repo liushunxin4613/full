@@ -88,15 +88,16 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
         }
     }
 
+    @SafeVarargs
     @Override
-    public void finishActivity(Object obj, Class<? extends IControllerApi>... args) {
+    public final void finishActivity(Object obj, Class<? extends IControllerApi>... args) {
         for (int i = getCount() - 1; i >= 0; i--) {
             Activity activity = getItem(i);
             if (activity instanceof BaseControllerApiActivity) {
                 IControllerApi api = ((BaseControllerApiActivity) activity).controllerApi();
                 int position = getCount() - 1 - i;
-                if(position >= 0 && position < args.length && args[position] != null
-                        && args[position].isInstance(api)){
+                if (position >= 0 && position < args.length && args[position] != null
+                        && args[position].isInstance(api)) {
                     activity.finish();
                 } else {
                     putExtra(activity, obj);
@@ -108,8 +109,8 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
 
     @Override
     public void finishAllActivity() {
-        while (getActivityStack().empty()) {
-            executeNon(getActivityStack().pop(), Activity::finish);
+        for (int i = getCount() - 1; i >= 0; i--) {
+            executeNon(getItem(i), Activity::finish);
         }
     }
 
@@ -120,27 +121,22 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
 
     @Override
     public void onActivityStarted(Activity activity) {
-
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-
     }
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
     }
 
     @Override
