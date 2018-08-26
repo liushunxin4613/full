@@ -17,7 +17,7 @@ import com.ylink.fullgoal.vo.ImageVo;
 
 import butterknife.Bind;
 
-public class GridPhotoControllerApi<C> extends NormControllerApi<GridPhotoControllerApi, C, GridPhotoNorm>{
+public class GridPhotoControllerApi<C> extends NormControllerApi<GridPhotoControllerApi, C, GridPhotoNorm> {
 
     @Bind(R.id.icon_iv)
     ImageView iconIv;
@@ -43,8 +43,10 @@ public class GridPhotoControllerApi<C> extends NormControllerApi<GridPhotoContro
                 .execute(() -> {
                     if (norm.getObj() instanceof ImageVo) {
                         ImageVo vo = (ImageVo) norm.getObj();
-                        setText(nameTv, String.format("金额: %s", TextUtils.isEmpty(vo.getAmount())
-                                ? "0" : vo.getAmount()));
+                        if (TextUtils.check(vo.getImageType())) {
+                            setText(nameTv, String.format("金额: %s",
+                                    TextUtils.isEmpty(vo.getAmount()) ? "0" : vo.getAmount()));
+                        }
                         onError(vo.isError());
                         vo.setProgressListener(this::onLoading).setErrorAction(this::onError);
                     }

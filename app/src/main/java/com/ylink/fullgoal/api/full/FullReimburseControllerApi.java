@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.inter.CoreController;
-import com.leo.core.bean.Bol;
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -574,7 +573,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * @param vo   vo
      */
     private void onGridPhotoClick(List<ImageVo> data, ImageVo vo) {
-        executeNon(vo, obj -> routeApi().bill(data, vo, new Bol(isNoneInitiateEnable())));
+        executeNon(vo, obj -> routeApi().bill(data, vo));
     }
 
     /**

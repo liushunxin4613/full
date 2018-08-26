@@ -51,7 +51,7 @@ public class ImageVoControllerApi<C> extends NormControllerApi<ImageVoController
                 .setVisibility(TextUtils.isEmpty(norm.getPhoto()) ?
                         View.INVISIBLE : View.VISIBLE, photoIv)
                 .setText(nameTv, "金额")
-                .setText(detailEt, norm.getAmount())
+                .setText(detailEt, TextUtils.isEmpty(norm.getAmount()) ? "0" : norm.getAmount())
                 .setImage(photoIv, norm.getPhoto(), ImageFactory.getInstance().getRotate(norm.getPhoto()),
                         (path, iv, rotate, success) -> ImageFactory.getInstance().save(path, rotate))
                 .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt,

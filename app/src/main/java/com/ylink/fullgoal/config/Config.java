@@ -30,6 +30,7 @@ public class Config {
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间
     public final static int TIME_SPLASH = 1;//引导页时间
     public final static String HTTP_SUCCESS = "AAAAAA";//接口成功标志
+    public final static boolean MAIN = false;
 
     public final static String[][] FIELDS = {
             {"agentList", "经办人"},

@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.controllerApi.func;
 
+import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 
 import static com.ylink.fullgoal.config.Config.BACK_PRESSED_INTERVAL;
@@ -18,12 +19,14 @@ public class MainControllerApi<T extends SurfaceControllerApi, C> extends Surfac
 
     @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - currentBackPressedTime > interval) {
-            currentBackPressedTime = System.currentTimeMillis();
-            show("再按一次返回键退出程序");
-        } else {
-            getActivity().finish();//退出
+        if(Config.MAIN){
+            if (System.currentTimeMillis() - currentBackPressedTime > interval) {
+                currentBackPressedTime = System.currentTimeMillis();
+                show("再按一次返回键退出程序");
+                return;
+            }
         }
+        getActivity().finish();//退出
     }
 
 }

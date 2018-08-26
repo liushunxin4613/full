@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.leo.core.adapter.BasePagerAdapter;
-import com.leo.core.bean.Bol;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.api.item.ImageVoControllerApi;
@@ -22,7 +21,6 @@ import static com.leo.core.util.TextUtils.count;
 public class FullBillControllerApi<T extends FullBillControllerApi, C> extends BarViewPagerControllerApi<T, C> {
 
     private ImageVo vo;
-    private boolean bol;
     private List<ImageVo> data;
 
     public FullBillControllerApi(C controller) {
@@ -42,6 +40,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
     @Override
     public void onPageSelected(int position) {
         super.onPageSelected(position);
+        vo = getItem(position);
         initTitle(position);
     }
 
@@ -51,11 +50,9 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
         executeBundle(bundle -> {
             executeNon(getBundleList(bundle, ImageVo.class), data -> this.data = data);
             executeNon(getBundle(bundle, ImageVo.class), vo -> this.vo = vo);
-            executeNon(getBundle(bundle, Bol.class), bol -> this.bol = bol.isBol());
         });
         setRightTv("修改金额", v -> executeNon(getImageVo(), vo -> api().imageUpdateAmount(
                 vo.getSerialNo(), vo.getImageID(), vo.getAmount())));
-        setVisibility(getRightTv(), bol ? View.VISIBLE : View.INVISIBLE);
         initViewPager();
         add(ImageFg.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             if (bean.isSuccess()) {
@@ -98,11 +95,20 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
 
     private IControllerApi getControllerApi(ImageVo vo, int position) {
         SurfaceControllerApi api = getViewControllerApi(ImageVoControllerApi.class);
-        api.onNorm(new ImageVoNorm(vo.getPhoto(), vo.getAmount(), bol), position);
+        api.onNorm(new ImageVoNorm(vo.getPhoto(), vo.getAmount(), getBol(vo)), position);
         return api;
     }
 
+    private ImageVo getItem(int position){
+        return TextUtils.isEmpty(data) ? null : position < data.size() ? data.get(position) : null;
+    }
+
+    private boolean getBol(ImageVo vo){
+        return vo != null && TextUtils.check(vo.getImageType());
+    }
+
     private void initTitle(int position) {
+        setVisibility(getRightTv(), getBol(vo) ? View.VISIBLE : View.INVISIBLE);
         setTitle(String.format("票据(%d/%d)", position + 1, count(data)));
     }
 
