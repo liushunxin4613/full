@@ -32,6 +32,8 @@ import com.leo.core.iapi.core.IAttachApi;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 控制器
@@ -597,6 +599,129 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     void onStartActivityForResult(Intent intent, int requestCode, @Nullable Bundle options);
 
     //自定义的
+
+    /**
+     * 创建json view
+     *
+     * @param map          map
+     * @param root         root
+     * @param attachToRoot attachToRoot
+     * @param <V>          <V>
+     * @return 视图
+     */
+    <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root, boolean attachToRoot);
+
+    /**
+     * 创建json view
+     *
+     * @param map  map
+     * @param root root
+     * @param <V>  <V>
+     * @return 视图
+     */
+    <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root);
+
+    /**
+     * 创建json view
+     *
+     * @param json         json
+     * @param root         root
+     * @param attachToRoot attachToRoot
+     * @param <V>          <V>
+     * @return 视图
+     */
+    <V extends View> V createJsonView(String json, ViewGroup root, boolean attachToRoot);
+
+    /**
+     * 创建json view
+     *
+     * @param json json
+     * @param root root
+     * @param <V>  <V>
+     * @return 视图
+     */
+    <V extends View> V createJsonView(String json, ViewGroup root);
+
+    /**
+     * json view assets 默认文件夹路径
+     * @return 路径
+     */
+    List<String> getJsonViewAssetsDefDir();
+
+    /**
+     * json view file 默认文件夹路径
+     * @return 路径
+     */
+    List<File> getJsonViewFileDefDir();
+
+    /**
+     * json view assets 是否允许全局搜索
+     * @return true为是,false为否
+     */
+    boolean isGlobalJsonViewAssets();
+
+    /**
+     * 创建json view
+     *
+     * @param assets       assets
+     * @param root         root
+     * @param attachToRoot attachToRoot
+     * @param <V>          <V>
+     * @return 视图
+     */
+    <V extends View> V createAssetsJsonView(String assets, ViewGroup root, boolean attachToRoot);
+
+    /**
+     * 创建json view
+     *
+     * @param assets assets
+     * @param root   root
+     * @param <V>    <V>
+     * @return 视图
+     */
+    <V extends View> V createAssetsJsonView(String assets, ViewGroup root);
+
+    /**
+     * 创建json view
+     *
+     * @param file         file
+     * @param root         root
+     * @param attachToRoot attachToRoot
+     * @param <V>          <V>
+     * @return 视图
+     */
+    <V extends View> V createFileJsonView(File file, ViewGroup root, boolean attachToRoot);
+
+    /**
+     * 创建json view
+     *
+     * @param file file
+     * @param root root
+     * @param <V>  <V>
+     * @return 视图
+     */
+    <V extends View> V createFileJsonView(File file, ViewGroup root);
+
+    /**
+     * 创建json view
+     *
+     * @param filePath     filePath
+     * @param root         root
+     * @param attachToRoot attachToRoot
+     * @param <V>          <V>
+     * @return 视图
+     */
+    <V extends View> V createFileJsonView(String filePath, ViewGroup root, boolean attachToRoot);
+
+    /**
+     * 创建json view
+     *
+     * @param filePath filePath
+     * @param root     root
+     * @param <V>      <V>
+     * @return 视图
+     */
+    <V extends View> V createFileJsonView(String filePath, ViewGroup root);
 
     /**
      * 初始化添加action

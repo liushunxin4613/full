@@ -1,0 +1,8 @@
+{
+  "name": "View",
+  "android:layout_width": "match_parent",
+  "android:layout_height": "1.6px",
+  "android:layout_marginLeft": "16dp",
+  "android:layout_marginStart": "16dp",
+  "android:background": "#e3e6e8"
+}

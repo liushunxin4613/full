@@ -2,6 +2,7 @@ package com.ylink.fullgoal.factory;
 
 import android.support.annotation.NonNull;
 
+import com.leo.core.api.api.FileApi;
 import com.leo.core.api.api.VsApi;
 import com.leo.core.util.MD5Util;
 import com.leo.core.util.TextUtils;
@@ -10,6 +11,7 @@ import com.ylink.fullgoal.db.core.AppDatabase;
 import com.ylink.fullgoal.db.table.Files;
 import com.ylink.fullgoal.db.table.JsonFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +49,11 @@ public class FilesFactory extends VsApi<FilesFactory> {
         return api;
     }
 
+    public void initAssets() {
+        FileApi.assetsClear();
+        list(null, "");
+    }
+
     public void openCore() {
         open(JsonFile.CORE_JSON);
     }
@@ -56,7 +63,7 @@ public class FilesFactory extends VsApi<FilesFactory> {
             String text = getApi().getAssetsString(name);
             String path = Files.FILE_TYPE_ASSETS_HEADER + name;
             String md5 = MD5Util.getStringMD5(text);
-            if (!Files.check(name, md5)) {
+            if (TextUtils.equals(name, JsonFile.CORE_JSON) || !Files.check(name, md5)) {
                 initJsonText(path, text);
                 onOpen(name);
                 Files.sav(name, null, Files.FILE_TYPE_ASSETS, md5);
@@ -67,14 +74,14 @@ public class FilesFactory extends VsApi<FilesFactory> {
     private void onOpen(@NonNull String name) {
         switch (name) {
             case JsonFile.CORE_JSON:
+                lazy();
                 List<JsonFile> data = JsonFile.queryList("init.fileName");
                 execute(data, obj -> open(obj.getValue()));
-                lazy();
                 break;
         }
     }
 
-    private void lazy(){
+    private void lazy() {
         AppDatabase.lazy();
     }
 
@@ -113,6 +120,22 @@ public class FilesFactory extends VsApi<FilesFactory> {
 
     private String valueOf(Object obj) {
         return obj == null ? null : String.valueOf(obj);
+    }
+
+    private void list(String parent, String name) {
+        if (name != null) {
+            try {
+                String pt = TextUtils.isEmpty(parent) ? name
+                        : String.format("%s/%s", parent, name);
+                String[] args = getApi().getApplication().getAssets().list(name);
+                if (!TextUtils.isEmpty(args)) {
+                    execute(args, item -> list(pt, item));
+                } else if (TextUtils.check(pt)) {
+                    FileApi.assetsAdd(pt);
+                }
+            } catch (IOException ignored) {
+            }
+        }
     }
 
 }

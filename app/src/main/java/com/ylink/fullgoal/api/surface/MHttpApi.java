@@ -6,6 +6,7 @@ import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HttpApi;
 import com.leo.core.net.AuxiliaryFactory;
 import com.leo.core.net.RetrofitSubscriber;
+import com.leo.core.util.JsonShowUtil;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.config.UrlConfig;
@@ -50,6 +51,7 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
                             case PATH_QUERY_TRANS_FILE://配置文件
                                 break;
                             default:
+                                LogUtil.ii(this, "\n" + JsonShowUtil.getShowJson(response));
                                 onObservable(getObservable(response), type, baseUrl, path, map, what, tag);
                                 break;
                         }

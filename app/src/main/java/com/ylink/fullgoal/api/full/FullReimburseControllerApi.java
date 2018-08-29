@@ -379,7 +379,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         execute(getFinish(), new TypeToken<Map<String, String>>() {
         }, map -> {
             if (!TextUtils.isEmpty(map) && map.containsKey(IMAGE_TYPE) && map.containsKey(FILE_PATH)) {
-                int what = JavaTypeUtil.getInt(map.get(IMAGE_TYPE));
+                int what = JavaTypeUtil.getInt(map.get(IMAGE_TYPE), 0);
                 String filePath = map.get(FILE_PATH);
                 ImageVo vo = addPhoto(filePath, what);
                 api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),

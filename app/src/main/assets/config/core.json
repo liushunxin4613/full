@@ -3,7 +3,7 @@
   "init": [
     {
       "name": "report",
-      "fileName": "report.json",
+      "fileName": "config/report.json",
       "note": "投研报告配置文件"
     }
   ],
@@ -26,7 +26,7 @@
       {
         "name": "JsonFile",
         "className": "com.ylink.fullgoal.db.table.JsonFile",
-        "enable": false,
+        "enable": true,
         "note": "json文件处理,以core.json解析,enable是否使用"
       },
       {

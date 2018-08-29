@@ -11,8 +11,8 @@ public class Sp2PxContextApi extends ADisplayApi<Sp2PxContextApi> {
     }
 
     @Override
-    public int convert(Float in) {
+    public float convert(Float in) {
         scale = getDisplayMetrics().density;
-        return (int) (in * scale + 0.5f);
+        return in * scale + 0.5f;
     }
 }

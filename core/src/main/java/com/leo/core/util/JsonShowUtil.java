@@ -1,6 +1,10 @@
 package com.leo.core.util;
 
+import java.util.List;
+
 public class JsonShowUtil {
+
+    private final static List<String> JSON_SHOW_ISSUE = TextUtils.getListData("android", "app");
 
     public static String getShowJson(String json) {
         if (!TextUtils.isNotJsonString(json)) {
@@ -73,6 +77,10 @@ public class JsonShowUtil {
             show = show.replaceAll(": //", "://");
             show = show.replaceAll("\"\\{\\s+", "\"{");
             show = show.replaceAll("\\s+\\}\"", "}\"");
+            for (String string : JSON_SHOW_ISSUE) {
+                show = show.replaceAll(String.format("\"%s: ", string),
+                        String.format("\"%s:", string));
+            }
             return show;
         }
         return json;

@@ -19,28 +19,28 @@ public class DisneyUtil {
     /**
      * 将px值转换为dip或dp值，保证尺寸大小不变
      */
-    public static int px2dip(float pxValue) {
+    public static float px2dip(float pxValue) {
         return getApi(Px2DipContextApi.class).convert(pxValue);
     }
 
     /**
      * 将dip或dp值转换为px值，保证尺寸大小不变
      */
-    public static int dip2px(float dipValue) {
+    public static float dip2px(float dipValue) {
         return getApi(Dip2PxContextApi.class).convert(dipValue);
     }
 
     /**
      * 将px值转换为sp值，保证文字大小不变
      */
-    public static int px2sp(float pxValue) {
+    public static float px2sp(float pxValue) {
         return getApi(Px2SpContextApi.class).convert(pxValue);
     }
 
     /**
      * 将sp值转换为px值，保证文字大小不变
      */
-    public static int sp2px(float spValue) {
+    public static float sp2px(float spValue) {
         return getApi(Sp2PxContextApi.class).convert(spValue);
     }
 

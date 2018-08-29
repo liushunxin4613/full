@@ -40,7 +40,7 @@ public abstract class ADisplayApi<T extends ADisplayApi> extends BindContextApi<
      *
      * @return 显示指标
      */
-    public DisplayMetrics getDisplayMetrics() {
+    DisplayMetrics getDisplayMetrics() {
         return context.getResources().getDisplayMetrics();
     }
 
@@ -50,6 +50,6 @@ public abstract class ADisplayApi<T extends ADisplayApi> extends BindContextApi<
      * @param in 输入数据
      * @return 返回数据
      */
-    public abstract int convert(Float in);
+    public abstract float convert(Float in);
 
 }

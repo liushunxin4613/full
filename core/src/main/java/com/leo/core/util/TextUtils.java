@@ -724,8 +724,15 @@ public class TextUtils {
     }
 
     public static boolean isNotJsonString(String text) {
-        return isEmpty(text) || !((text.startsWith("[") && text.endsWith("]"))
-                || (text.startsWith("{") && text.endsWith("}")));
+        return isEmpty(text) || !(isJsonObjectString(text) || isJsonArrayString(text));
+    }
+
+    public static boolean isJsonObjectString(String text) {
+        return !isEmpty(text) && (text.startsWith("{") && text.endsWith("}"));
+    }
+
+    public static boolean isJsonArrayString(String text) {
+        return !isEmpty(text) && (text.startsWith("[") && text.endsWith("]"));
     }
 
     @SuppressLint("DefaultLocale")

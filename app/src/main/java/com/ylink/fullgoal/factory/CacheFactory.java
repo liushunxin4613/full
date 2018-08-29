@@ -36,7 +36,7 @@ public class CacheFactory extends VsApi<CacheFactory> {
     public void init() {
         JsonFile jf = JsonFile.query(CACHE_SIZE);
         if (jf != null) {
-            int size = JavaTypeUtil.getInt(jf.getValue());
+            int size = JavaTypeUtil.getInt(jf.getValue(), 0);
             if (size > 0) {
                 this.cacheSize = size;
             }
@@ -71,14 +71,5 @@ public class CacheFactory extends VsApi<CacheFactory> {
         execute(JsonFile.queryList(JsonFile.REPORT_JSON, "filter.all"), item
                 -> REPORT_FILTER_ALL.add(item.getValue()));
     }
-
-    private Map<Object, Object> getCacheMap() {
-        return cacheMap;
-    }
-
-    public void sav(String baseUrl, String path, Map<String, String> map, String response) {
-//        getCacheMap().put(map(m -> m.put("baseUrl", baseUrl)), )
-    }
-
 
 }

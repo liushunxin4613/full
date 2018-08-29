@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class BankFactory {
 
-    private final static String ASSET_FILE_BANK = "bank.json";
-    private final static String ASSET_FILE_BANK_NAME = "bankname.json";
+    private final static String ASSET_FILE_BANK = "data/bank.json";
+    private final static String ASSET_FILE_BANK_NAME = "data/bankname.json";
 
     private static BankFactory instance;
 

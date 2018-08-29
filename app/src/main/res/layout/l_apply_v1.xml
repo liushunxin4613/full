@@ -19,6 +19,7 @@
         tools:ignore="ContentDescription,HardcodedText" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,6 +34,7 @@
         tools:text="IT技术培训" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +51,7 @@
         tools:text="金额: 2000.00" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,6 +65,7 @@
         tools:text="FG-201807001" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,6 +82,7 @@
         tools:text="经办人: 张三" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,6 +98,7 @@
         tools:text="2018-07-01" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv5"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
@@ -108,6 +114,7 @@
         tools:text="技术培训" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -124,6 +131,7 @@
         tools:text="申请人: 欧燕" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,6 +147,7 @@
         tools:text="2018-07-02止" />
 
     <TextView
+        android:ellipsize="end"
         android:id="@+id/tv8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

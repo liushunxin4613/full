@@ -7,7 +7,6 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.ylink.fullgoal.db.core.AppDatabase;
 import com.ylink.fullgoal.db.core.DBModel;
-import com.ylink.fullgoal.factory.FilesFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +18,8 @@ import java.util.Map;
 @Table(database = AppDatabase.class, name = "JsonFile_v1")
 public class JsonFile extends DBModel {
 
-    public final static String CORE_JSON = "core.json";
-    public final static String REPORT_JSON = "report.json";
+    public final static String CORE_JSON = "config/core.json";
+    public final static String REPORT_JSON = "config/report.json";
 
     public static void clear(String root) {
         if (TextUtils.check(root)) {

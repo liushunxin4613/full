@@ -11,8 +11,8 @@ public class Px2SpContextApi extends ADisplayApi<Px2SpContextApi> {
     }
 
     @Override
-    public int convert(Float in) {
+    public float convert(Float in) {
         scale = getDisplayMetrics().scaledDensity;
-        return (int) (in / scale + 0.5f);
+        return in / scale + 0.5f;
     }
 }

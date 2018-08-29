@@ -17,6 +17,7 @@ public class ObjectApi<C extends ObjectApi> implements IObjectApi<C> {
             try {
                 return Class.forName(name);
             } catch (Exception ignored) {
+//                ignored.printStackTrace();
             }
         }
         return null;

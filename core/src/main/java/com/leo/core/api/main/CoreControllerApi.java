@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.leo.core.api.api.FileApi;
 import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
 import com.leo.core.bean.ParseBean;
@@ -72,9 +73,11 @@ import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.iapi.main.IHttpApi;
 import com.leo.core.iapi.main.IShowApi;
 import com.leo.core.iapi.main.IViewApi;
+import com.leo.core.util.FileUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.StatusBarUtil;
 import com.leo.core.util.TextUtils;
+import com.leo.core.viewParse.ViewFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -903,6 +906,132 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root,
+                                             boolean attachToRoot) {
+        return (V) ViewFactory.getInstance().createJsonView(map, root, attachToRoot, getContext());
+    }
+
+    @Override
+    public <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root) {
+        return createJsonView(map, root, root != null);
+    }
+
+    @Override
+    public <V extends View> V createJsonView(String json, ViewGroup root, boolean attachToRoot) {
+        if (TextUtils.isJsonObjectString(json)) {
+            return createJsonView(TextUtils.toJSONMap(json), root, attachToRoot);
+        }
+        return null;
+    }
+
+    @Override
+    public <V extends View> V createJsonView(String json, ViewGroup root) {
+        return createJsonView(json, root, root != null);
+    }
+
+    @Override
+    public List<String> getJsonViewAssetsDefDir() {
+        return null;
+    }
+
+    @Override
+    public List<File> getJsonViewFileDefDir() {
+        return null;
+    }
+
+    @Override
+    public boolean isGlobalJsonViewAssets() {
+        return true;
+    }
+
+    private String getAssets(String assets) {
+        if (TextUtils.check(assets)) {
+            if (FileApi.assetsContains(assets)) {
+                return assets;
+            } else {
+                List<String> data = getJsonViewAssetsDefDir();
+                if (TextUtils.check(data)) {
+                    for (String item : data) {
+                        if (TextUtils.check(item)) {
+                            List<String> list = FileApi.getAssetsData(item, "json");
+                            if (list.contains(String.format("%s/%s", item, assets))) {
+                                return String.format("%s/%s", item, assets);
+                            }
+                        }
+                    }
+                }
+                if (isGlobalJsonViewAssets()) {
+                    for (String item : FileApi.getAssetsData()) {
+                        if (TextUtils.check(item) && item.endsWith(assets)) {
+                            return item;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isFile(File file) {
+        return file != null && file.exists() && file.isFile() && file.canRead();
+    }
+
+    private boolean isDirectory(File dir) {
+        return dir != null && dir.exists() && dir.isDirectory();
+    }
+
+    private File getFile(String filePath) {
+        if (TextUtils.check(filePath)) {
+            File file = new File(filePath);
+            if (isFile(file)) {
+                return file;
+            } else {
+                List<File> data = getJsonViewFileDefDir();
+                if (TextUtils.check(data)) {
+                    for (File item : data) {
+                        if (isDirectory(item)) {
+                            if (isFile(file = new File(item, filePath))) {
+                                return file;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public <V extends View> V createAssetsJsonView(String assets, ViewGroup root, boolean attachToRoot) {
+        return createJsonView(getAssetsString(getAssets(assets)), root, attachToRoot);
+    }
+
+    @Override
+    public <V extends View> V createAssetsJsonView(String assets, ViewGroup root) {
+        return createAssetsJsonView(assets, root, root != null);
+    }
+
+    @Override
+    public <V extends View> V createFileJsonView(File file, ViewGroup root, boolean attachToRoot) {
+        return createJsonView(FileUtil.readFile(file), root, attachToRoot);
+    }
+
+    @Override
+    public <V extends View> V createFileJsonView(File file, ViewGroup root) {
+        return createFileJsonView(file, root, root != null);
+    }
+
+    @Override
+    public <V extends View> V createFileJsonView(String filePath, ViewGroup root, boolean attachToRoot) {
+        return createFileJsonView(getFile(filePath), root, attachToRoot);
+    }
+
+    @Override
+    public <V extends View> V createFileJsonView(String filePath, ViewGroup root) {
+        return createFileJsonView(filePath, root, root != null);
+    }
+
+    @Override
     public void initAddAction() {
     }
 
@@ -933,8 +1062,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             try {
                 return getContext().getResources().getAssets()
                         .openXmlResourceParser(xml);
-            } catch (IOException e) {
-//                e.printStackTrace();
+            } catch (IOException ignored) {
             }
         }
         return null;
@@ -976,48 +1104,50 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        onCreateView(inflater(), getRootContainer(), savedInstanceState);
-        if (getRootView() != null) {
-            executeNon(onCreateViewGroup(getRootContainer(), getRootView()),
+        final View rootView = onCreateView(inflater(), getRootContainer(), savedInstanceState);
+        setRootView(rootView);
+        if (rootView != null) {
+            executeNon(onCreateViewGroup(getRootContainer(), rootView),
                     this::setRootView);
             if (isActivity()) {
-                getActivity().setContentView(getRootView());
+                getActivity().setContentView(rootView);
             } else if (isDialog()) {
-                getDialog().setContentView(getRootView());
+                getDialog().setContentView(rootView);
             }
+            onViewCreated(rootView, savedInstanceState);
         }
-        onViewCreated(getRootView(), savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        View rootView = null;
         init(savedInstanceState);
         if (getRootViewResId() != null) {
             if (isView()) {
-                setRootView(inflater.inflate(getRootViewResId(), container));
+                rootView = inflater.inflate(getRootViewResId(), container);
             } else {
-                setRootView(inflater.inflate(getRootViewResId(), container, false));
+                rootView = inflater.inflate(getRootViewResId(), container, false);
             }
         } else if (getRootViewClz() != null) {
-            setRootView(getObject(getRootViewClz()
+            rootView = getObject(getRootViewClz()
                     , new Class[]{Context.class}
-                    , new Object[]{getContext()}));
+                    , new Object[]{getContext()});
         } else if (!TextUtils.isEmpty(getRootViewXml())) {
             XmlResourceParser parser = getLayoutXmlPullParser(getRootViewXml());
             if (null != parser) {
                 if (isView()) {
-                    setRootView(inflater.inflate(parser, container));
+                    rootView = inflater.inflate(parser, container);
                 } else {
-                    setRootView(inflater.inflate(parser, container, false));
+                    rootView = inflater.inflate(parser, container, false);
                 }
             }
         }
-        if (getRootView() instanceof BaseControllerApiView && getRootViewClzApi() != null) {
-            ((BaseControllerApiView) getRootView()).init(getRootViewClzApi());
+        if (rootView instanceof BaseControllerApiView && getRootViewClzApi() != null) {
+            ((BaseControllerApiView) rootView).init(getRootViewClzApi());
         }
-        return getRootView();
+        return rootView;
     }
 
     @Override

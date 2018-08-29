@@ -2,6 +2,7 @@ package com.ylink.fullgoal.controllerApi.core;
 
 import com.leo.core.api.main.HttpApi;
 import com.leo.core.core.BaseControllerApi;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.api.api.RouteApi;
 import com.ylink.fullgoal.api.config.FgApi;
 import com.ylink.fullgoal.api.config.ParseApi;
@@ -10,6 +11,8 @@ import com.leo.core.net.Api;
 import com.ylink.fullgoal.api.surface.MHttpApi;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.fg.DepartmentFg;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -82,6 +85,11 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     @Override
     public DepartmentFg getDepartment() {
         return super.getDepartment();
+    }
+
+    @Override
+    public List<String> getJsonViewAssetsDefDir() {
+        return TextUtils.getListData("test");
     }
 
     @Override

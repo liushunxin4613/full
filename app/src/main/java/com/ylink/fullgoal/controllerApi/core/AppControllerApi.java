@@ -10,6 +10,7 @@ import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.MainManage;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.NetUtils;
+import com.leo.core.viewParse.ViewFactory;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.scwang.smartrefresh.header.MaterialHeader;
@@ -42,8 +43,10 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
         LogUtil.openLog();//log
         AppDatabase.init();//初始化
         FilesFactory.getInstance().init(getThis());
+        FilesFactory.getInstance().initAssets();
         FilesFactory.getInstance().openCore();
         CacheFactory.getInstance().init();//初始化缓存
+        ViewFactory.getInstance().set(new ViewFactory()).init(getThis());
         Utils.init(getApplication());
         getApplication().registerActivityLifecycleCallbacks(activityLifecycleApi());
         CameraUtil.init(getContext());
