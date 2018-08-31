@@ -1,12 +1,12 @@
 package com.leo.core.util;
 
 import com.leo.core.iapi.inter.IAction;
-import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IPositionAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.ITextAction;
+import com.leo.core.iapi.inter.IbolAction;
 
 import java.util.List;
 import java.util.Map;
@@ -70,7 +70,7 @@ public class RunUtil {
         return true;
     }
 
-    public static <T> boolean executeBol(List<T> data, IBolAction<T> action) {
+    public static <T> boolean executeBol(List<T> data, IbolAction<T> action) {
         if (action == null || data == null) {
             return false;
         }

@@ -53,7 +53,7 @@ public interface IController<T extends IController, DB, UB> extends IApiCodeApi 
      * @param args args
      * @return DB
      */
-    DB getFilterDB(IBolAction<DB>... args);
+    DB getFilterDB(IbolAction<DB>... args);
 
     /**
      * 视图绑定对象

@@ -21,6 +21,11 @@ public class MaskView extends View {
     private Paint mAreaPaint;
     private Rect mCenterRect;
 
+    public MaskView(Context context) {
+        super(context);
+        initPaint();
+    }
+
     public MaskView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initPaint();

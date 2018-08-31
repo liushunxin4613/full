@@ -6,7 +6,6 @@ import com.leo.core.iapi.core.IModel;
 import com.leo.core.iapi.main.IApiBean;
 import com.leo.core.other.Transformer;
 import com.leo.core.search.SearchUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
@@ -181,7 +180,6 @@ public class BaseSearchControllerApi<T extends BaseSearchControllerApi, C> exten
             api.setFilterData(data);
             subscriber.onNext(null);
             subscriber.onCompleted();
-            LogUtil.ii(this, "\n" + LogUtil.getLog(data));
         }).compose(Transformer.getInstance())
                 .subscribe(obj -> adapter.notifyDataSetChanged()))
                 .notifyDataSetChanged();

@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.res.XmlResourceParser;
 import android.util.SparseArray;
 
+import com.leo.core.iapi.inter.INewWhatAction;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IbolAction;
 import com.leo.core.other.MMap;
 
 import org.json.JSONArray;
@@ -706,6 +708,10 @@ public class TextUtils {
 
     public static Map<String, Object> getMap(String text, boolean filter, String... args) {
         return getMap(toJSONMap(text), filter, args);
+    }
+
+    public static String toJsonString(String text) {
+        return GsonDecodeUtil.encode(toJSONMap(text));
     }
 
     public static String toJsonString(String text, boolean filter, String... args) {

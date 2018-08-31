@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.leo.core.iapi.api.IObjectApi;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 类帮助
@@ -17,7 +18,6 @@ public class ObjectApi<C extends ObjectApi> implements IObjectApi<C> {
             try {
                 return Class.forName(name);
             } catch (Exception ignored) {
-//                ignored.printStackTrace();
             }
         }
         return null;
@@ -67,12 +67,17 @@ public class ObjectApi<C extends ObjectApi> implements IObjectApi<C> {
     public <T> T getObject(Class<T> clz, Class cs, Object os) {
         if (clz != null && cs != null) {
             try {
-                /*以下调用带参的、私有构造函数*/
                 Constructor<T> c = clz.getDeclaredConstructor(cs);
                 c.setAccessible(true);
                 return c.newInstance(os);
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.getTargetException().printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
             }
         }
         return null;

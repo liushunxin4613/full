@@ -1,14 +1,11 @@
 package com.ylink.fullgoal.api.item;
 
-import android.content.res.XmlResourceParser;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.config.vo.TemplateVo;
 import com.ylink.fullgoal.norm.ViewNorm;
 
@@ -18,40 +15,6 @@ public class ViewControllerApi<C> extends LineControllerApi<ViewControllerApi, C
 
     public ViewControllerApi(C controller) {
         super(controller);
-    }
-
-    @Override
-    public XmlResourceParser getLayoutXmlPullParser(String xml) {
-        if (TextUtils.check(xml)) {
-            XmlResourceParser parser = openFileLayoutXmlPullParser(MVCFactory.getInstance().getConfigDir(), xml);
-            if (parser == null) {
-                parser = openAssetsLayoutXmlPullParser(xml);
-            }
-            return parser;
-        }
-        return null;
-    }
-
-    @Override
-    public ViewControllerApi setRootViewXml(String xml) {
-        if (!TextUtils.isEmpty(xml) && getLayoutXmlPullParser(xml) == null) {
-            switch (xml) {
-                case "l_apply_v1.xml":
-                    setRootViewResId(R.layout.l_apply_v1);
-                    break;
-                case "l_apply_v2.xml":
-                    setRootViewResId(R.layout.l_apply_v2);
-                    break;
-                case "l_apply_v3.xml":
-                    setRootViewResId(R.layout.l_apply_v3);
-                    break;
-                case "l_apply_v4.xml":
-                    setRootViewResId(R.layout.l_apply_v4);
-                    break;
-            }
-            xml = null;
-        }
-        return super.setRootViewXml(xml);
     }
 
     @Override

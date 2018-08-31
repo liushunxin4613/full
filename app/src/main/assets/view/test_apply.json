@@ -1,40 +1,40 @@
 {
-  "name": "LinearLayout",
+  "cname": "LinearLayout",
   "android:layout_width": "match_parent",
   "android:layout_height": "match_parent",
   "android:orientation": "vertical",
   "childs": [
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/l_apply_v1",
       "xml_priority": "true"
     },
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/v_line"
     },
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/l_apply_v2"
     },
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/v_line"
     },
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/l_apply_v3"
     },
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/v_line"
     },
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/l_apply_v4"
     },
     {
-      "name": "include",
+      "cname": "include",
       "layout": "@layout/v_line"
     }
   ]

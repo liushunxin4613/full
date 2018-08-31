@@ -67,6 +67,18 @@ public interface INorm<P extends IControllerApi> extends IMNApi<P> {
     void setRootViewXml(String xml);
 
     /**
+     * RootViewJson
+     *
+     * @return RootViewJson
+     */
+    String getRootViewJsonName();
+
+    /**
+     * 设置 RootViewJson
+     */
+    void setRootViewJsonName(String jsonName);
+
+    /**
      * api id
      *
      * @return api id

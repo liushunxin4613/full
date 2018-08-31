@@ -1,13 +1,13 @@
 package com.leo.core.api.core;
 
 import com.leo.core.iapi.inter.IAction;
-import com.leo.core.iapi.inter.IBolAction;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IPositionAction;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.core.IThisApi;
 import com.leo.core.iapi.inter.ITextAction;
+import com.leo.core.iapi.inter.IbolAction;
 import com.leo.core.other.MMap;
 import com.leo.core.other.ParamType;
 import com.leo.core.util.RunUtil;
@@ -62,7 +62,7 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getThis();
     }
 
-    protected static <A> void executeBol(List<A> data, IBolAction<A> action) {
+    protected static <A> void executeBol(List<A> data, IbolAction<A> action) {
         RunUtil.executeBol(data, action);
     }
 

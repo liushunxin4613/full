@@ -10,6 +10,7 @@ import com.ylink.fullgoal.api.func.UserApi;
 import com.leo.core.net.Api;
 import com.ylink.fullgoal.api.surface.MHttpApi;
 import com.ylink.fullgoal.bean.UserBean;
+import com.ylink.fullgoal.db.table.Text;
 import com.ylink.fullgoal.fg.DepartmentFg;
 
 import java.util.List;
@@ -89,7 +90,12 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
 
     @Override
     public List<String> getJsonViewAssetsDefDir() {
-        return TextUtils.getListData("test");
+        return TextUtils.getListData("view");
+    }
+
+    @Override
+    public String queryViewJson(String name) {
+        return Text.queryViewJson(name);
     }
 
     @Override

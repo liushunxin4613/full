@@ -34,11 +34,11 @@ public class ViewNorm extends OnClickNorm<ViewNorm, SurfaceControllerApi> {
     private List<TemplateVo> data;
     private Map<String, String> map;
 
-    public ViewNorm(String xml, List<TemplateVo> data, Object obj,
+    public ViewNorm(String name, List<TemplateVo> data, Object obj,
                     OnBVClickListener<ViewNorm> listener) {
         super(listener);
         this.data = data;
-        this.setRootViewXml(xml);
+        this.setRootViewJsonName(name);
         this.map = new LinkedHashMap<>();
         if (obj instanceof Map) {
             execute((Map) obj, (key, value) -> {

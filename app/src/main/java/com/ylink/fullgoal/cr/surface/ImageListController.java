@@ -1,6 +1,6 @@
 package com.ylink.fullgoal.cr.surface;
 
-import com.leo.core.iapi.inter.IBolAction;
+import com.leo.core.iapi.inter.IbolAction;
 import com.leo.core.iapi.main.IOnCom;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.TextUtils;
@@ -151,7 +151,7 @@ public class ImageListController<T extends ImageListController> extends AddContr
 
     @SafeVarargs
     @Override
-    public final ImageVo getFilterDB(IBolAction<ImageVo>... args) {
+    public final ImageVo getFilterDB(IbolAction<ImageVo>... args) {
         return super.getFilterDB(args);
     }
 

@@ -27,10 +27,10 @@
             android:id="@+id/back_iv"
             android:layout_width="@dimen/bar_height"
             android:layout_height="@dimen/bar_height"
-            android:padding="12dp"
             android:background="@null"
             android:clickable="true"
             android:focusable="true"
+            android:padding="12dp"
             android:src="@mipmap/back"
             tools:ignore="ContentDescription,RtlSymmetry" />
 
@@ -63,10 +63,10 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:hint="@string/search"
+                android:imeOptions="actionSearch"
+                android:inputType="none"
                 android:minLines="1"
                 android:singleLine="true"
-                android:inputType="none"
-                android:imeOptions="actionSearch"
                 android:textColorHint="@color/tv1"
                 android:textSize="@dimen/tv1" />
 

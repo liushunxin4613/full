@@ -18,6 +18,7 @@ public abstract class Norm<T extends Norm, P extends IControllerApi> extends MNA
     private transient ViewGroup group;
     private transient Integer apiType;
     private transient String apiSearch;
+    private transient String viewJsonName;
     private transient IControllerApi controllerApi;
 
     @Override
@@ -57,6 +58,7 @@ public abstract class Norm<T extends Norm, P extends IControllerApi> extends MNA
         }
         IControllerApi api = (IControllerApi) ObjectUtil.getObject(clz,
                 Object.class, getController());
+        api.setRootViewJsonName(getRootViewJsonName());
         api.setRootViewXml(getRootViewXml());
         api.setRootViewResId(getApiType());
         return api;
@@ -74,6 +76,16 @@ public abstract class Norm<T extends Norm, P extends IControllerApi> extends MNA
     @Override
     public IControllerApi controllerApi() {
         return controllerApi;
+    }
+
+    @Override
+    public String getRootViewJsonName() {
+        return viewJsonName;
+    }
+
+    @Override
+    public void setRootViewJsonName(String jsonName) {
+        this.viewJsonName = jsonName;
     }
 
     @Override

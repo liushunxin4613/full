@@ -191,6 +191,27 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     Integer getRootViewResId();
 
     /**
+     * 返回根视图节点JsonName
+     *
+     * @return 根视图节点JsonName
+     */
+    String getRootViewJsonName();
+
+    /**
+     * 设置JsonName
+     *
+     * @return 本身
+     */
+    T setRootViewJsonName(String jsonName);
+
+    /**
+     * 查询viewJson
+     * @param name name
+     * @return view json
+     */
+    String queryViewJson(String name);
+
+    /**
      * 返回根视图节点ID
      *
      * @return 根视图节点ID
@@ -601,6 +622,27 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     //自定义的
 
     /**
+     * json view assets 默认文件夹路径
+     *
+     * @return 路径
+     */
+    List<String> getJsonViewAssetsDefDir();
+
+    /**
+     * json view file 默认文件夹路径
+     *
+     * @return 路径
+     */
+    List<File> getJsonViewFileDefDir();
+
+    /**
+     * json view assets 是否允许全局搜索
+     *
+     * @return true为是, false为否
+     */
+    boolean isGlobalJsonViewAssets();
+
+    /**
      * 创建json view
      *
      * @param map          map
@@ -641,24 +683,6 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
      * @return 视图
      */
     <V extends View> V createJsonView(String json, ViewGroup root);
-
-    /**
-     * json view assets 默认文件夹路径
-     * @return 路径
-     */
-    List<String> getJsonViewAssetsDefDir();
-
-    /**
-     * json view file 默认文件夹路径
-     * @return 路径
-     */
-    List<File> getJsonViewFileDefDir();
-
-    /**
-     * json view assets 是否允许全局搜索
-     * @return true为是,false为否
-     */
-    boolean isGlobalJsonViewAssets();
 
     /**
      * 创建json view

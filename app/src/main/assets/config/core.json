@@ -26,7 +26,7 @@
       {
         "name": "JsonFile",
         "className": "com.ylink.fullgoal.db.table.JsonFile",
-        "enable": true,
+        "enable": false,
         "note": "json文件处理,以core.json解析,enable是否使用"
       },
       {
@@ -40,6 +40,12 @@
         "className": "com.ylink.fullgoal.db.table.Times",
         "enable": true,
         "note": "时刻节点处理,enable是否使用"
+      },
+      {
+        "name": "Text",
+        "className": "com.ylink.fullgoal.db.table.Text",
+        "enable": false,
+        "note": "JSON数据处理,enable是否使用"
       }
     ]
   }

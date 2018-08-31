@@ -630,7 +630,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 是否为修改
      */
     boolean isAlterEnable() {
-        return TextUtils.equals(state, XG);
+        return true;
     }
 
     /**

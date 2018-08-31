@@ -1,5 +1,5 @@
 {
-  "name": "RelativeLayout",
+  "cname": "RelativeLayout",
   "android:id": "@+id/root_vg",
   "android:layout_width": "match_parent",
   "android:layout_height": "wrap_content",
@@ -10,7 +10,7 @@
   "android:tag": "root_vg",
   "childs": [
     {
-      "name": "ImageView",
+      "cname": "ImageView",
       "android:id": "@+id/icon_iv",
       "android:layout_width": "40dp",
       "android:layout_height": "40dp",
@@ -18,7 +18,7 @@
       "android:tag": "icon_iv"
     },
     {
-      "name": "LinearLayout",
+      "cname": "LinearLayout",
       "android:id": "@+id/vg",
       "android:layout_width": "match_parent",
       "android:layout_height": "wrap_content",
@@ -28,7 +28,7 @@
       "android:orientation": "horizontal",
       "childs": [
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv0",
           "android:layout_width": "wrap_content",
           "android:layout_height": "wrap_content",
@@ -40,27 +40,27 @@
           "android:textSize": "12sp"
         },
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv1",
           "android:layout_width": "0dp",
           "android:layout_height": "wrap_content",
-          "android:layout_weight": "4",
+          "android:layout_weight": "3",
           "android:ellipsize": "start",
           "android:gravity": "right",
           "android:maxLines": "1",
-          "android:paddingLeft": "20dp",
+          "android:paddingLeft": "8dp",
           "android:tag": "tv1",
           "android:textColor": "#808000",
           "android:textSize": "12sp",
-          "android:text": "FGMC-ZD-20180302-0001"
+          "android:text": "FGMC-201803020001"
         },
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv2",
           "android:layout_width": "wrap_content",
           "android:layout_height": "wrap_content",
-          "android:layout_marginLeft": "40dp",
-          "android:layout_marginStart": "40dp",
+          "android:layout_marginLeft": "16dp",
+          "android:layout_marginStart": "16dp",
           "android:ellipsize": "end",
           "android:maxLines": "1",
           "android:tag": "tv2",
@@ -69,14 +69,14 @@
           "android:textSize": "12sp"
         },
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv3",
           "android:layout_width": "0dp",
           "android:layout_height": "wrap_content",
           "android:layout_weight": "1.5",
           "android:gravity": "right",
           "android:maxLines": "1",
-          "android:paddingLeft": "20dp",
+          "android:paddingLeft": "8dp",
           "android:tag": "tv3",
           "android:textColor": "#808000",
           "android:textSize": "12sp",
@@ -85,7 +85,7 @@
       ]
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv4",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -100,7 +100,7 @@
       "android:text": "李强"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv5",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -116,7 +116,7 @@
       "android:text": "部门一"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv6",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -132,7 +132,7 @@
       "android:text": "2018-06-10"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv7",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -146,7 +146,7 @@
       "android:textSize": "12sp"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv8",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",

@@ -1,5 +1,5 @@
 {
-  "name": "RelativeLayout",
+  "cname": "RelativeLayout",
   "android:id": "@+id/root_vg",
   "android:layout_width": "match_parent",
   "android:layout_height": "wrap_content",
@@ -10,7 +10,7 @@
   "android:tag": "root_vg",
   "childs": [
     {
-      "name": "ImageView",
+      "cname": "ImageView",
       "android:id": "@+id/icon_iv",
       "android:layout_width": "40dp",
       "android:layout_height": "40dp",
@@ -18,7 +18,7 @@
       "android:tag": "icon_iv"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv0",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -34,7 +34,7 @@
       "android:text": "流水号 FG-2018-01-22"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv1",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -52,7 +52,7 @@
       "android:text": "张三"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv2",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -69,7 +69,7 @@
       "android:text": "信息技术部"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv3",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -85,7 +85,7 @@
       "android:text": "2018-02-21 发起"
     },
     {
-      "name": "LinearLayout",
+      "cname": "LinearLayout",
       "android:id": "@+id/vg0",
       "android:layout_width": "match_parent",
       "android:layout_height": "wrap_content",
@@ -94,7 +94,7 @@
       "android:orientation": "horizontal",
       "childs": [
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv4",
           "android:layout_width": "96dp",
           "android:layout_height": "wrap_content",
@@ -108,7 +108,7 @@
           "android:text": "广告小礼品"
         },
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv5",
           "android:layout_width": "0dp",
           "android:layout_height": "wrap_content",
@@ -122,7 +122,7 @@
           "android:text": "￥10000.00"
         },
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv6",
           "android:layout_width": "0dp",
           "android:layout_height": "wrap_content",
@@ -137,7 +137,7 @@
           "android:text": "10000件"
         },
         {
-          "name": "TextView",
+          "cname": "TextView",
           "android:id": "@+id/tv7",
           "android:layout_width": "0dp",
           "android:layout_height": "wrap_content",
@@ -153,7 +153,7 @@
       ]
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv8",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",
@@ -167,7 +167,7 @@
       "android:textSize": "12sp"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:id": "@+id/tv9",
       "android:layout_width": "wrap_content",
       "android:layout_height": "wrap_content",

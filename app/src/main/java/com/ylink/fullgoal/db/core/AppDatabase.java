@@ -12,6 +12,7 @@ import com.ylink.fullgoal.db.table.Files;
 import com.ylink.fullgoal.db.table.JsonFile;
 import com.ylink.fullgoal.db.table.Request;
 import com.ylink.fullgoal.db.table.Times;
+import com.ylink.fullgoal.db.table.Text;
 import com.ylink.fullgoal.db.migration.FilesMigration;
 
 import java.util.ArrayList;
@@ -45,8 +46,10 @@ import java.util.List;
  * <p>
  * #12:
  * 1>创建Times表{@link Times},使生效
+ * #13:
+ * 1>创建Text表{@link Text},使生效
  */
-@Database(version = 12)
+@Database(version = 13)
 public class AppDatabase {
 
     private final static List<Class> DELETE_CLASS_ARGS = new ArrayList<>();
@@ -54,7 +57,6 @@ public class AppDatabase {
     //对外方法
 
     public static void init(){
-        DELETE_CLASS_ARGS.add(Files.class);
         initDelete();
     }
 

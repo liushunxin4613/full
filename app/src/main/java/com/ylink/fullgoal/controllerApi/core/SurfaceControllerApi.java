@@ -110,21 +110,23 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
     @Override
     public void initAddAction() {
         super.initAddAction();
-        add(Exceptions.class, (type, baseUrl, path, map, what, msg, field, bean) -> checkView(what, path, field, () -> {
-            if (this instanceof ContentControllerApi) {
-                if (TextUtils.check(path)) {
-                    switch (path) {
-                        case FULL_REIMBURSE_QUERY://报销请求
-                            ((ContentControllerApi) this).showErrorView();
-                            break;
-                        default:
-                            ((ContentControllerApi) this).showContentView();
-                            break;
+        add(Exceptions.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
+            checkView(what, path, field, () -> {
+                if (this instanceof ContentControllerApi) {
+                    if (TextUtils.check(path)) {
+                        switch (path) {
+                            case FULL_REIMBURSE_QUERY://报销请求
+                                ((ContentControllerApi) this).showErrorView();
+                                break;
+                            default:
+                                ((ContentControllerApi) this).showContentView();
+                                break;
+                        }
                     }
                 }
-            }
+            });
             dismissLoading();
-        }));
+        });
         add(Exceptions.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             if (!TextUtils.isEmpty(bean.getMessage())) {
                 ToastUtil.show(this, bean.getMessage());

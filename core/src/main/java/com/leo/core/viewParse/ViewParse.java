@@ -3,7 +3,6 @@ package com.leo.core.viewParse;
 import android.view.View;
 
 import com.leo.core.util.JavaTypeUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.util.Map;

@@ -143,6 +143,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     //other
     private String rootViewXml;
     private Integer rootViewResId;
+    private String rootViewJsonName;
     private MsgSubscriber subscriber;
     private Observable.Transformer transformer;
     private ViewGroup container;
@@ -742,6 +743,22 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
+    public String getRootViewJsonName() {
+        return rootViewJsonName;
+    }
+
+    @Override
+    public T setRootViewJsonName(String jsonName) {
+        this.rootViewJsonName = jsonName;
+        return getThis();
+    }
+
+    @Override
+    public String queryViewJson(String name) {
+        return null;
+    }
+
+    @Override
     public T setRootViewResId(Integer resId) {
         this.rootViewResId = resId;
         return getThis();
@@ -906,30 +923,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root,
-                                             boolean attachToRoot) {
-        return (V) ViewFactory.getInstance().createJsonView(map, root, attachToRoot, getContext());
-    }
-
-    @Override
-    public <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root) {
-        return createJsonView(map, root, root != null);
-    }
-
-    @Override
-    public <V extends View> V createJsonView(String json, ViewGroup root, boolean attachToRoot) {
-        if (TextUtils.isJsonObjectString(json)) {
-            return createJsonView(TextUtils.toJSONMap(json), root, attachToRoot);
-        }
-        return null;
-    }
-
-    @Override
-    public <V extends View> V createJsonView(String json, ViewGroup root) {
-        return createJsonView(json, root, root != null);
-    }
-
-    @Override
     public List<String> getJsonViewAssetsDefDir() {
         return null;
     }
@@ -1002,7 +995,33 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <V extends View> V createAssetsJsonView(String assets, ViewGroup root, boolean attachToRoot) {
+    public <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root,
+                                             boolean attachToRoot) {
+        return (V) ViewFactory.getInstance().createJsonView(getContext(), map, root, attachToRoot);
+    }
+
+    @Override
+    public <V extends View> V createJsonView(Map<String, Object> map, ViewGroup root) {
+        return createJsonView(map, root, root != null);
+    }
+
+    @Override
+    public <V extends View> V createJsonView(String json, ViewGroup root,
+                                             boolean attachToRoot) {
+        if (TextUtils.isJsonObjectString(json)) {
+            return createJsonView(TextUtils.toJSONMap(json), root, attachToRoot);
+        }
+        return null;
+    }
+
+    @Override
+    public <V extends View> V createJsonView(String json, ViewGroup root) {
+        return createJsonView(json, root, root != null);
+    }
+
+    @Override
+    public <V extends View> V createAssetsJsonView(String assets, ViewGroup root,
+                                                   boolean attachToRoot) {
         return createJsonView(getAssetsString(getAssets(assets)), root, attachToRoot);
     }
 
@@ -1012,7 +1031,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <V extends View> V createFileJsonView(File file, ViewGroup root, boolean attachToRoot) {
+    public <V extends View> V createFileJsonView(File file, ViewGroup root,
+                                                 boolean attachToRoot) {
         return createJsonView(FileUtil.readFile(file), root, attachToRoot);
     }
 
@@ -1022,7 +1042,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <V extends View> V createFileJsonView(String filePath, ViewGroup root, boolean attachToRoot) {
+    public <V extends View> V createFileJsonView(String filePath, ViewGroup root,
+                                                 boolean attachToRoot) {
         return createFileJsonView(getFile(filePath), root, attachToRoot);
     }
 
@@ -1124,7 +1145,14 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                              @Nullable Bundle savedInstanceState) {
         View rootView = null;
         init(savedInstanceState);
-        if (getRootViewResId() != null) {
+        String viewJson = queryViewJson(getRootViewJsonName());
+        if (TextUtils.check(viewJson)) {
+            if (isView()) {
+                rootView = createJsonView(viewJson, container);
+            } else {
+                rootView = createJsonView(viewJson, container, false);
+            }
+        } else if (getRootViewResId() != null) {
             if (isView()) {
                 rootView = inflater.inflate(getRootViewResId(), container);
             } else {

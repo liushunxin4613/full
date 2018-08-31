@@ -3,7 +3,7 @@ package com.leo.core.api.inter;
 import android.support.annotation.NonNull;
 
 import com.leo.core.api.api.VesApi;
-import com.leo.core.iapi.inter.IBolAction;
+import com.leo.core.iapi.inter.IbolAction;
 import com.leo.core.iapi.inter.IController;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.util.TextUtils;
@@ -57,9 +57,9 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
     }
 
     @Override
-    public DB getFilterDB(IBolAction<DB>... args) {
+    public DB getFilterDB(IbolAction<DB>... args) {
         if (!TextUtils.isEmpty(args)) {
-            for (IBolAction<DB> action : args) {
+            for (IbolAction<DB> action : args) {
                 if (!action.execute(getDB())) {
                     return null;
                 }

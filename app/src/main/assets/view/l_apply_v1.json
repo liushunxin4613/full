@@ -1,5 +1,5 @@
 {
-  "name": "RelativeLayout",
+  "cname": "RelativeLayout",
   "android:id": "@+id/root_vg",
   "android:layout_width": "match_parent",
   "android:layout_height": "wrap_content",
@@ -10,7 +10,7 @@
   "android:tag": "root_vg",
   "childs": [
     {
-      "name": "ImageView",
+      "cname": "ImageView",
       "android:id": "@+id/icon_iv",
       "android:layout_width": "40dp",
       "android:layout_height": "40dp",
@@ -18,7 +18,7 @@
       "android:tag": "icon_iv"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv0",
       "android:layout_width": "wrap_content",
@@ -34,7 +34,7 @@
       "android:text": "IT技术培训"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv1",
       "android:layout_width": "wrap_content",
@@ -52,7 +52,7 @@
       "android:text": "金额: 2000.00"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv2",
       "android:layout_width": "wrap_content",
@@ -66,7 +66,7 @@
       "android:text": "FG-201807001"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv3",
       "android:layout_width": "wrap_content",
@@ -83,7 +83,7 @@
       "android:text": "经办人: 张三"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv4",
       "android:layout_width": "wrap_content",
@@ -99,7 +99,7 @@
       "android:text": "2018-07-01"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv5",
       "android:layout_width": "120dp",
@@ -115,7 +115,7 @@
       "android:text": "技术培训"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv6",
       "android:layout_width": "wrap_content",
@@ -132,7 +132,7 @@
       "android:text": "申请人: 欧燕"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv7",
       "android:layout_width": "wrap_content",
@@ -148,7 +148,7 @@
       "android:text": "2018-07-02止"
     },
     {
-      "name": "TextView",
+      "cname": "TextView",
       "android:ellipsize": "end",
       "android:id": "@+id/tv8",
       "android:layout_width": "wrap_content",
