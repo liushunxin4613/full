@@ -1,5 +1,7 @@
 package com.leo.core.api.api;
 
+import android.content.Context;
+
 import com.leo.core.api.main.HasControllerApi;
 import com.leo.core.iapi.api.IFileApi;
 import com.leo.core.iapi.main.IControllerApi;
@@ -17,7 +19,7 @@ public class FileApi extends HasControllerApi implements IFileApi {
 
     private final static List<String> ASSETS = new ArrayList<>();
 
-    public static List<String> getAssetsData(){
+    public static List<String> getAssetsData() {
         return ASSETS;
     }
 
@@ -56,12 +58,11 @@ public class FileApi extends HasControllerApi implements IFileApi {
         super(controllerApi);
     }
 
-    @Override
-    public String getAssetsString(String assets) {
-        if (assetsContains(assets)) {
+    public static String getAssetsString(Context context, String assets) {
+        if (TextUtils.check(context) && assetsContains(assets)) {
             try {
-                InputStreamReader is = new InputStreamReader(controllerApi().getContext()
-                        .getAssets().open(assets), "UTF-8");
+                InputStreamReader is = new InputStreamReader(
+                        context.getAssets().open(assets), "UTF-8");
                 BufferedReader bf = new BufferedReader(is);
                 String line;
                 StringBuilder builder = new StringBuilder();
@@ -78,6 +79,11 @@ public class FileApi extends HasControllerApi implements IFileApi {
             }
         }
         return null;
+    }
+
+    @Override
+    public String getAssetsString(String assets) {
+        return getAssetsString(controllerApi().getContext(), assets);
     }
 
 }

@@ -23,6 +23,7 @@ import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_APPEAL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_TASK_NODE;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLICATION_FORM_DATA;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLY;
 import static com.ylink.fullgoal.config.UrlConfig.PATH_QUERY_APPLY_CONTENT;
@@ -479,8 +480,8 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     // >>> ****************************** 2018-08-10 10:28 ****************************** >>>
 
     public void queryTaskNode(String serialNo) {
-        if (TextUtils.isEmpty(serialNo)) {
-            post(CLASS_DATA_FG, ROOT_URL, "Task_node.action", g(map -> map.put("serialNo", serialNo)));
+        if (!TextUtils.isEmpty(serialNo)) {
+            post(CLASS_RVO, ROOT_URL, FULL_TASK_NODE, g(map -> map.put("serialNo", serialNo)));
         }
     }
 

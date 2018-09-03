@@ -71,6 +71,7 @@ import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.Config.BILL_TYPE_TITLES;
 import static com.ylink.fullgoal.config.Config.DATA_QR;
 import static com.ylink.fullgoal.config.Config.FILE_PATH;
+import static com.ylink.fullgoal.config.Config.FK_NUM;
 import static com.ylink.fullgoal.config.Config.IMAGE_TYPE;
 import static com.ylink.fullgoal.config.Config.JSON;
 import static com.ylink.fullgoal.config.Config.MAIN_APP;
@@ -86,6 +87,7 @@ import static com.ylink.fullgoal.config.UrlConfig.FULL_DIMENSION_LIST;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_QUERY;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_REIMBURSE_SUBMIT;
+import static com.ylink.fullgoal.config.UrlConfig.FULL_TASK_NODE;
 
 /**
  * 报销
@@ -107,6 +109,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private String state;
     private String title;
+    private String fkNum;
     private String mainApp;
 
     protected FullReimburseControllerApi(C controller) {
@@ -241,6 +244,15 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     showContentView();
                     dismissLoading();
                     Times.sav(String.format("%s#%s", path, encode(map)), "显示");
+                    if (TextUtils.check(fkNum)) {
+                        api().queryTaskNode(vord(DVo::getSerialNo));
+                    }
+                    break;
+                case FULL_TASK_NODE://报销节点获取
+                    if (TextUtils.check(bean.getTaskNode())) {
+                        vos(DVo::getTaskNode, obj -> obj.addHeadAll(bean.getTaskNode()));
+                        notifyDataChanged();
+                    }
                     break;
             }
         });
@@ -252,6 +264,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         executeBundle(bundle -> {
             state = bundle.getString(STATE);
             title = bundle.getString(TITLE);
+            fkNum = bundle.getString(FK_NUM);
             mainApp = bundle.getString(MAIN_APP);
             String json = bundle.getString(JSON);
             vos(DVo::getFirst, obj -> obj.initDB(state));
@@ -630,7 +643,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 是否为修改
      */
     boolean isAlterEnable() {
-        return true;
+        return !TextUtils.equals(state, QR);
     }
 
     /**

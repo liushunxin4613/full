@@ -124,6 +124,7 @@ public class Config {
     public final static String STATE = "state";
     public final static String TITLE = "title";
     public final static String SERIAL_NO = "serialNo";
+    public final static String FK_NUM = "fkNum";
     public final static String JSON = "json";
     public final static String MAIN_APP = "mainApp";
     public final static String COST = "cost";

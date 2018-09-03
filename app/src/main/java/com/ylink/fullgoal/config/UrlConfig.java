@@ -45,6 +45,8 @@ public class UrlConfig {
     public final static String FULL_REIMBURSE_SUBMIT = "Task_submit.action";
     //报销获取
     public final static String FULL_REIMBURSE_QUERY = "Message_back.action";
+    //报销费控节点获取
+    public final static String FULL_TASK_NODE = "Task_node.action";
     //报销列表获取
     public final static String FULL_REIMBURSE_QUERY_LIST = "Application_form.action";
     //分摊维度列表

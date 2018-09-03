@@ -12,7 +12,6 @@ public class MainActivity<T extends MainActivity, C extends IControllerApi> exte
     public IControllerApi newControllerApi() {
         return new MainControllerApi(this)
                 .setRootViewClz(BaseControllerApiView.class)
-//                .setRootViewClzApi(TestControllerApi.class);
                 .setRootViewClzApi(MainViewControllerApi.class);
     }
 

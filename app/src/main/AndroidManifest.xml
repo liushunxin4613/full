@@ -26,10 +26,16 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!--<data android:host="MainActivity" android:scheme="cn.com.fullgoal.pt0001"-->
-                <!--tools:ignore="AppLinkUrlError" />-->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="cn.com.fullgoal.pt0001.TestActivity"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".main.SurfaceActivity"

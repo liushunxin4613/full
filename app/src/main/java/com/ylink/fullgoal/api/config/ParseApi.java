@@ -224,6 +224,7 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                 Request.sav(baseUrl, path, GsonDecodeUtil.encode(map), text);
                 ParseTypeBean bean = getParseTypeBean(type);
                 if (bean != null && checkRootType(bean.getType())) {
+                    text = text.replace("\"apply\":[[]]", "\"apply\":[]");
                     onData(path, GsonDecodeUtil.decode(text, bean.getType()),
                             bean.getMap());
                 }

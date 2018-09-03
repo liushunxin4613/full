@@ -100,6 +100,15 @@ public class BaseControllerApiView<T extends BaseControllerApiView, C extends IC
     /**
      * 自定义初始化
      */
+    public T init(IControllerApi api) {
+        setControllerApi(api);
+        initControllerApi();
+        return (T) this;
+    }
+
+    /**
+     * 自定义初始化
+     */
     public T init(Class<? extends IControllerApi> clz) {
         this.apiClz = clz;
         initControllerApi();

@@ -1,0 +1,115 @@
+{
+  "layout": {
+    "image": {
+      "cname": "ImageView",
+      "android:id": "@+id/image",
+      "android:layout_width": "match_parent",
+      "android:layout_height": "@dimen/y360",
+      "android:scaleType": "fitXY",
+      "android:src": "${src}"
+    },
+    "line": {
+      "cname": "View",
+      "android:layout_width": "match_parent",
+      "android:layout_height": "1.6px",
+      "android:layout_marginLeft": "@dimen/x120",
+      "android:layout_marginStart": "@dimen/x120",
+      "android:background": "#e3e6e8"
+    },
+    "item": {
+      "cname": "LinearLayout",
+      "style": "@style/padding",
+      "android:layout_width": "match_parent",
+      "android:layout_height": "wrap_content",
+      "android:background": "@color/white",
+      "android:gravity": "center_vertical",
+      "android:orientation": "horizontal",
+      "childs": [
+        {
+          "cname": "ImageView",
+          "android:id": "@+id/icon_iv",
+          "android:layout_width": "@dimen/x80",
+          "android:layout_height": "@dimen/x80",
+          "android:scaleType": "fitXY",
+          "android:src": "${src}"
+        },
+        {
+          "cname": "TextView",
+          "android:id": "@+id/name_tv",
+          "android:layout_width": "0dp",
+          "android:layout_height": "wrap_content",
+          "android:layout_marginLeft": "@dimen/x20",
+          "android:layout_marginRight": "@dimen/x20",
+          "android:layout_weight": "1",
+          "android:maxLines": "1",
+          "android:textColor": "@color/tv",
+          "android:textSize": "@dimen/tv",
+          "android:text": "${name}"
+        },
+        {
+          "cname": "ImageView",
+          "android:layout_width": "wrap_content",
+          "android:layout_height": "wrap_content",
+          "android:src": "@mipmap/more"
+        }
+      ]
+    }
+  },
+  "data": {
+    "controllerApi": "com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi",
+    "hideBackIv": true,
+    "title": "富国基金个人报销平台",
+    "recycle": [
+      {
+        "layout": "image",
+        "data": {
+          "src": "@mipmap/banner"
+        }
+      },
+      {
+        "layout": "item",
+        "data": {
+          "src": "@mipmap/m1",
+          "name": "一般费用报销",
+          "onClick": "app://route/app/surface/general?params={\"state\":\"发起\"}"
+        }
+      },
+      {
+        "layout": "line"
+      },
+      {
+        "layout": "item",
+        "data": {
+          "src": "@mipmap/m2",
+          "name": "出差费用报销",
+          "onClick": "app://route/app/surface/evection?params={\"state\":\"发起\"}"
+        }
+      },
+      {
+        "layout": "line"
+      },
+      {
+        "layout": "item",
+        "data": {
+          "src": "@mipmap/m3",
+          "name": "报销列表查询",
+          "onClick": "app://route/app/surface/queryReimburse"
+        }
+      },
+      {
+        "layout": "line"
+      },
+      {
+        "layout": "item",
+        "data": {
+          "src": "@mipmap/m4",
+          "name": "选择银行卡号",
+          "onClick": "app://route/app/surface/selectBank"
+        }
+      },
+      {
+        "layout": "line"
+      }
+    ]
+  }
+}

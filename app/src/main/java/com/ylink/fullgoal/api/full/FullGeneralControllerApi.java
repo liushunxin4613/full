@@ -91,7 +91,7 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
         addVgNorm("票据", newGridNorm(FILTER_YB));
         //添加流程
         List<NodeFg> nodeData = vor(DVo::getTaskNode, NodeController::getViewBean);
-        if (!isEnable() && !TextUtils.isEmpty(nodeData)) {
+        if (!TextUtils.isEmpty(nodeData)) {
             addVgNorm(data -> {
                 data.add(new TvH4Norm());
                 execute(nodeData, item -> data.add(new TvH4Norm(item.getName(),

@@ -38,6 +38,18 @@ public class JavaTypeUtil {
         return d;
     }
 
+    public static long getlong(Object obj, long l) {
+        if (obj instanceof Long) {
+            return (long) obj;
+        } else {
+            try {
+                return Long.valueOf((String) obj);
+            } catch (Exception ignored) {
+            }
+        }
+        return l;
+    }
+
     public static boolean getboolean(Object obj, boolean b) {
         if (obj instanceof Boolean) {
             return (boolean) obj;

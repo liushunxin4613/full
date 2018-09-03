@@ -36,6 +36,7 @@ import cn.com.fullgoal.pt0001.MainActivity;
 
 import static com.ylink.fullgoal.config.Config.FILE_PATH;
 import static com.ylink.fullgoal.config.Config.FILTERS;
+import static com.ylink.fullgoal.config.Config.FK_NUM;
 import static com.ylink.fullgoal.config.Config.IMAGE_TYPE;
 import static com.ylink.fullgoal.config.Config.JSON;
 import static com.ylink.fullgoal.config.Config.KEY;
@@ -100,14 +101,14 @@ public class RouteApi extends CoreRouteApi {
      * 一般费用报销
      */
     public void general(String state) {
-        general(state, null, null);
+        general(state, null, null, null);
     }
 
     /**
      * 出差费用报销
      */
     public void evection(String state) {
-        evection(state, null, null);
+        evection(state, null, null, null);
     }
 
     /**
@@ -213,21 +214,23 @@ public class RouteApi extends CoreRouteApi {
     /**
      * 一般费用报销
      */
-    public void general(String state, String title, String serialNo) {
+    public void general(String state, String title, String serialNo, String fkNum) {
         route(VERSION, "surface/general", null, map
                 -> map.put(STATE, state)
                 .put(TITLE, title)
-                .put(SERIAL_NO, serialNo));
+                .put(SERIAL_NO, serialNo)
+                .put(FK_NUM, fkNum));
     }
 
     /**
      * 出差费用报销
      */
-    public void evection(String state, String title, String serialNo) {
+    public void evection(String state, String title, String serialNo, String fkNum) {
         route(VERSION, "surface/evection", null, map
                 -> map.put(STATE, state)
                 .put(TITLE, title)
-                .put(SERIAL_NO, serialNo));
+                .put(SERIAL_NO, serialNo)
+                .put(FK_NUM, fkNum));
     }
 
     /**

@@ -271,8 +271,10 @@ public class ViewFactory extends VsApi<ViewFactory> {
         if (action != null) {
             ViewGroup.LayoutParams layoutParams
                     = view.getLayoutParams();
-            action.execute(layoutParams);
-            view.setLayoutParams(layoutParams);
+            if(null != layoutParams){
+                action.execute(layoutParams);
+                view.setLayoutParams(layoutParams);
+            }
         }
     }
 
@@ -403,15 +405,17 @@ public class ViewFactory extends VsApi<ViewFactory> {
     }
 
     @NonNull
-    private ViewGroup.LayoutParams lp(@NonNull Map<String, Object> map, @NonNull final ViewGroup vg) {
+    private ViewGroup.LayoutParams lp(@NonNull Map<String, Object> map, final ViewGroup vg) {
         int width = getPxInt(gs(map.get("android:layout_width")));
         int height = getPxInt(gs(map.get("android:layout_height")));
-        Class clz = ObjectUtil.getClass(vg.getClass().getName() + "$LayoutParams");
-        if (clz != null) {
-            Object obj = ObjectUtil.getObject(clz, new Class[]{int.class, int.class},
-                    new Object[]{width, height});
-            if (obj instanceof ViewGroup.LayoutParams) {
-                return (ViewGroup.LayoutParams) obj;
+        if(null != vg){
+            Class clz = ObjectUtil.getClass(vg.getClass().getName() + "$LayoutParams");
+            if (clz != null) {
+                Object obj = ObjectUtil.getObject(clz, new Class[]{int.class, int.class},
+                        new Object[]{width, height});
+                if (obj instanceof ViewGroup.LayoutParams) {
+                    return (ViewGroup.LayoutParams) obj;
+                }
             }
         }
         return new ViewGroup.LayoutParams(width, height);
@@ -695,7 +699,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.LEFT_OF, resId));
             } else {
-                addNoParseMap(view, "layout_toLeftOf", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_toLeftOf", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_toRightOf", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -703,7 +707,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.RIGHT_OF, resId));
             } else {
-                addNoParseMap(view, "layout_toRightOf", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_toRightOf", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_above", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -711,7 +715,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.ABOVE, resId));
             } else {
-                addNoParseMap(view, "layout_above", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_above", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_below", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -719,7 +723,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.BELOW, resId));
             } else {
-                addNoParseMap(view, "layout_below", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_below", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_alignBaseline", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -727,7 +731,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_BASELINE, resId));
             } else {
-                addNoParseMap(view, "layout_alignBaseline", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignBaseline", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_alignLeft", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -735,7 +739,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_LEFT, resId));
             } else {
-                addNoParseMap(view, "layout_alignLeft", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignLeft", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_alignTop", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -743,7 +747,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_TOP, resId));
             } else {
-                addNoParseMap(view, "layout_alignTop", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignTop", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_alignRight", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -751,7 +755,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_RIGHT, resId));
             } else {
-                addNoParseMap(view, "layout_alignRight", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignRight", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_alignBottom", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -759,7 +763,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_BOTTOM, resId));
             } else {
-                addNoParseMap(view, "layout_alignBottom", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignBottom", TextUtils.getClassName(layoutParams));
             }
         }));
         addLazy(View.class, "layout_toStartOf", (view, value, map) -> initLayoutParams(view, layoutParams -> {
@@ -768,7 +772,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                     initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_BOTTOM, resId));
                 } else {
-                    addNoParseMap(view, "layout_toStartOf", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_toStartOf", TextUtils.getClassName(layoutParams));
                 }
             }
         }));
@@ -778,7 +782,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                     initResId(value, resId -> lp.addRule(RelativeLayout.END_OF, resId));
                 } else {
-                    addNoParseMap(view, "layout_toEndOf", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_toEndOf", TextUtils.getClassName(layoutParams));
                 }
             }
         }));
@@ -788,7 +792,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                     initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_START, resId));
                 } else {
-                    addNoParseMap(view, "layout_alignStart", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_alignStart", TextUtils.getClassName(layoutParams));
                 }
             }
         }));
@@ -798,7 +802,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                     initResId(value, resId -> lp.addRule(RelativeLayout.ALIGN_END, resId));
                 } else {
-                    addNoParseMap(view, "layout_alignEnd", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_alignEnd", TextUtils.getClassName(layoutParams));
                 }
             }
         }));
@@ -807,7 +811,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
             if (layoutParams instanceof RelativeLayout.LayoutParams) {
                 ((RelativeLayout.LayoutParams) layoutParams).alignWithParent = value;
             } else {
-                addNoParseMap(view, "layout_alignWithParentIfMissing", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignWithParentIfMissing", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_margin", (view, value, map) -> initPxInt(value, what
@@ -815,7 +819,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
             if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).setMargins(what, what, what, what);
             } else {
-                addNoParseMap(view, "layout_marginLeft", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_marginLeft", TextUtils.getClassName(layoutParams));
             }
         })));
         add(View.class, "layout_marginLeft", (view, value, map) -> initPxInt(value, what
@@ -823,7 +827,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
             if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = what;
             } else {
-                addNoParseMap(view, "layout_marginLeft", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_marginLeft", TextUtils.getClassName(layoutParams));
             }
         })));
         add(View.class, "layout_marginRight", (view, value, map) -> initPxInt(value, what
@@ -831,7 +835,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
             if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = what;
             } else {
-                addNoParseMap(view, "layout_marginRight", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_marginRight", TextUtils.getClassName(layoutParams));
             }
         })));
         add(View.class, "layout_marginStart", (view, value, map) -> initLayoutParams(view, layoutParams
@@ -840,7 +844,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                     ((ViewGroup.MarginLayoutParams) layoutParams).setMarginStart(what);
                 } else {
-                    addNoParseMap(view, "layout_marginStart", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_marginStart", TextUtils.getClassName(layoutParams));
                 }
             }
         })));
@@ -850,7 +854,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                     ((ViewGroup.MarginLayoutParams) layoutParams).setMarginEnd(what);
                 } else {
-                    addNoParseMap(view, "layout_marginEnd", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_marginEnd", TextUtils.getClassName(layoutParams));
                 }
             }
         })));
@@ -859,7 +863,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
             if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = what;
             } else {
-                addNoParseMap(view, "layout_marginTop", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_marginTop", TextUtils.getClassName(layoutParams));
             }
         })));
         add(View.class, "layout_marginBottom", (view, value, map) -> initLayoutParams(view, layoutParams
@@ -867,7 +871,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
             if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = what;
             } else {
-                addNoParseMap(view, "layout_marginBottom", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_marginBottom", TextUtils.getClassName(layoutParams));
             }
         })));
         add(View.class, "layout_alignParentLeft", boolean.class, (view, value, map)
@@ -876,7 +880,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, value ? RelativeLayout.TRUE : 0);
             } else {
-                addNoParseMap(view, "layout_alignParentLeft", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignParentLeft", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_alignParentTop", boolean.class, (view, value, map)
@@ -885,7 +889,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, value ? RelativeLayout.TRUE : 0);
             } else {
-                addNoParseMap(view, "layout_alignParentTop", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignParentTop", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_alignParentRight", boolean.class, (view, value, map)
@@ -894,7 +898,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, value ? RelativeLayout.TRUE : 0);
             } else {
-                addNoParseMap(view, "layout_alignParentRight", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignParentRight", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_alignParentBottom", boolean.class, (view, value, map)
@@ -903,7 +907,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, value ? RelativeLayout.TRUE : 0);
             } else {
-                addNoParseMap(view, "layout_alignParentBottom", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_alignParentBottom", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_alignParentStart", boolean.class, (view, value, map)
@@ -913,7 +917,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                     lp.addRule(RelativeLayout.ALIGN_PARENT_START, value ? RelativeLayout.TRUE : 0);
                 } else {
-                    addNoParseMap(view, "layout_alignParentStart", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_alignParentStart", TextUtils.getClassName(layoutParams));
                 }
             }
         }));
@@ -924,7 +928,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                     lp.addRule(RelativeLayout.ALIGN_PARENT_END, value ? RelativeLayout.TRUE : 0);
                 } else {
-                    addNoParseMap(view, "layout_alignParentEnd", layoutParams.getClass().getName());
+                    addNoParseMap(view, "layout_alignParentEnd", TextUtils.getClassName(layoutParams));
                 }
             }
         }));
@@ -934,7 +938,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 lp.addRule(RelativeLayout.CENTER_IN_PARENT, value ? RelativeLayout.TRUE : 0);
             } else {
-                addNoParseMap(view, "layout_centerInParent", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_centerInParent", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_centerHorizontal", boolean.class, (view, value, map)
@@ -943,7 +947,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 lp.addRule(RelativeLayout.CENTER_HORIZONTAL, value ? RelativeLayout.TRUE : 0);
             } else {
-                addNoParseMap(view, "layout_centerHorizontal", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_centerHorizontal", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_centerVertical", boolean.class, (view, value, map)
@@ -952,7 +956,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) layoutParams;
                 lp.addRule(RelativeLayout.CENTER_VERTICAL, value ? RelativeLayout.TRUE : 0);
             } else {
-                addNoParseMap(view, "layout_centerVertical", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_centerVertical", TextUtils.getClassName(layoutParams));
             }
         }));
         add(View.class, "layout_weight", float.class, (view, value, map)
@@ -969,7 +973,7 @@ public class ViewFactory extends VsApi<ViewFactory> {
             } else if (layoutParams instanceof FrameLayout.LayoutParams) {
                 ((FrameLayout.LayoutParams) layoutParams).gravity = what;
             } else {
-                addNoParseMap(view, "layout_gravity", layoutParams.getClass().getName());
+                addNoParseMap(view, "layout_gravity", TextUtils.getClassName(layoutParams));
             }
         })));
     }

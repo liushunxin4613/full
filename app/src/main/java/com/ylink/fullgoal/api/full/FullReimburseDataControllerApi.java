@@ -46,10 +46,6 @@ import butterknife.Bind;
 import static com.leo.core.util.TextUtils.check;
 import static com.leo.core.util.TextUtils.getListData;
 import static com.ylink.fullgoal.config.ComConfig.HZ;
-import static com.ylink.fullgoal.config.ComConfig.MQZ;
-import static com.ylink.fullgoal.config.ComConfig.QR;
-import static com.ylink.fullgoal.config.ComConfig.QZ;
-import static com.ylink.fullgoal.config.ComConfig.XG;
 import static com.ylink.fullgoal.config.Config.D1;
 import static com.ylink.fullgoal.config.Config.D2;
 import static com.ylink.fullgoal.config.Config.D3;
@@ -177,34 +173,24 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
                 execute(applicationtData, obj -> {
                     String state = getValue(FULL_STATUS, obj.getStatus(), HZ);
                     addVgNorm(api, data -> {
-                        if (!TextUtils.isEmpty(state)) {
-                            switch (state) {
-                                case QZ:
-                                    data.add(new CCSQDNormV1("报销批次号", obj.getSerialNo(), obj.getStatus()));
-                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getBillType()));
-                                    break;
-                                case QR://确认
-                                case XG://修改
-                                case MQZ://金额前置
-                                    data.add(new CCSQDNormV1("报销批次号", obj.getSerialNo(), obj.getStatus()));
-                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(), R.color.EE4433));
-                                    break;
-                                default:
-                                    data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销单号", obj.getFkApprovalNum()));
-                                    data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(), R.color.EE4433));
-                                    break;
-                            }
+                        if (TextUtils.check(obj.getFkApprovalNum())) {
+                            data.add(new CCSQDNorm("报销批次号", obj.getSerialNo(), "报销单号", obj.getFkApprovalNum()));
+                        } else {
+                            data.add(new CCSQDNormV1("报销批次号", obj.getSerialNo(), obj.getStatus()));
                         }
+                        data.add(new CCSQDNormV1("时间", obj.getFillDate(), obj.getAmount(), R.color.EE4433));
                         data.add(new TvHTv3Norm("事由", obj.getCause()));
                     }, vg -> vg.setOnClickListener((bean, view) -> {
                         if (!TextUtils.isEmpty(obj.getSerialNo()) && !TextUtils.isEmpty(state)
                                 && !TextUtils.isEmpty(obj.getBillType())) {
                             switch (obj.getBillType()) {
                                 case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_YB://一般报销
-                                    routeApi().general(state, obj.getStatus(), obj.getSerialNo());
+                                    routeApi().general(state, obj.getStatus(), obj.getSerialNo(),
+                                            obj.getFkApprovalNum());
                                     break;
                                 case REIMBURSE_LIST_QUERY_RETURN_BILL_TYPE_CC://出差报销
-                                    routeApi().evection(state, obj.getStatus(), obj.getSerialNo());
+                                    routeApi().evection(state, obj.getStatus(), obj.getSerialNo(),
+                                            obj.getFkApprovalNum());
                                     break;
                             }
                         }

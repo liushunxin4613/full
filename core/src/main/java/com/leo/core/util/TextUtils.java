@@ -454,7 +454,7 @@ public class TextUtils {
                     case '0':
                         if (decimal) {
                             end.append(c);
-                        } else if (start.length() <= 0) {
+                        } else {
                             start.append(c);
                         }
                         break;
@@ -803,6 +803,10 @@ public class TextUtils {
             builder.append(hs).append("毫秒");
         }
         return builder.toString();
+    }
+
+    public static String getClassName(Object obj){
+        return obj == null ? null : obj.getClass().getName();
     }
 
 }
