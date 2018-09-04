@@ -8,8 +8,7 @@ public class TestActivity<T extends TestActivity, C extends IControllerApi> exte
 
     @Override
     public IControllerApi newControllerApi() {
-        return new TestControllerApi(this)
-                .setRootViewClz(BaseControllerApiView.class);
+        return new TestV1ControllerApi(this);
     }
 
 }

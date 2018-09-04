@@ -39,4 +39,8 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
         return vor(DepartmentFg::getDepartmentName);
     }
 
+    public String getDepartmentName(){
+        return vor(DepartmentFg::getDepartmentName);
+    }
+
 }

@@ -24,6 +24,7 @@ import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.SurfaceNorm;
+import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.StringController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
@@ -60,6 +61,7 @@ import java.util.Map;
 import butterknife.Bind;
 
 import static com.leo.core.util.TextUtils.getSetData;
+import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.FQ;
 import static com.ylink.fullgoal.config.ComConfig.HZ;
 import static com.ylink.fullgoal.config.ComConfig.MQZ;
@@ -327,6 +329,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         vos(DVo::getReimbursement, obj -> obj.initDB(new UserFg(getUId(), getUserName())));
         vos(DVo::getDepartment, obj -> obj.initDB(getDepartment()));
         vos(DVo::getBudgetDepartment, obj -> obj.initDB(getDepartment()));
+        if (TextUtils.equals(getBType(), CC)) {
+            vos(DVo::getCostIndex, obj -> obj.initDB(
+                    new CostFg("84f83358-32c0-440e-81bf-2c8d955e8439", "差旅费")));
+        }
     }
 
     @Override
@@ -473,8 +479,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         vos(DVo::getCostIndex, obj -> obj.update((String) vor(DVo::getMoney,
                 DoubleController::getDBMoney)));
         Map<String, Object> map = getSubmitMap();
-        checkAction(() -> {
-            if (!TextUtils.isEmpty(map)) {
+        if (!TextUtils.isEmpty(map)) {
+            checkAction(() -> {
                 if (getVo().getIsShare().is() && !getVo().getSbumitFlag().isOpen()) {
                     vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
                             CostIndexController::getDB)));//更新分摊金额
@@ -483,8 +489,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 } else {
                     api().submitReimburse(map);
                 }
-            }
-        });
+            });
+        }
     }
 
     private int getFlag() {
@@ -497,19 +503,40 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     }
 
     private void checkAction(IAction action) {
-        if (TextUtils.equals(vor(DVo::getCostIndex, CostIndexController::getCostName),
-                "其他招待（办公）")) {
-            double money = vor(DVo::getMoney, DoubleController::getdouble);
-            if (money > 3000) {
-                dialog("您的报销金额超过三千元,请关联招待申请单", "确认", null, (bean, v, dialog)
+        String departmentName = vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentName);
+        String costName = vor(DVo::getCostIndex, CostIndexController::getCostName);
+        if (TextUtils.check(departmentName, costName)) {
+            if (!(TextUtils.equals(departmentName, "高管部")
+                    || TextUtils.equals(departmentName, "上海资管高管部")
+                    || TextUtils.equals(departmentName, "董事会办公室"))
+                    && (TextUtils.equals(costName, "其他招待（办公）")
+                    || TextUtils.equals(costName, "餐费招待（办公）"))) {
+                double money = vor(DVo::getMoney, DoubleController::getdouble);
+                if (money > 3000) {
+                    dialog("您的报销金额超过三千元,请关联招待申请单", "确认", null, (bean, v, dialog)
+                            -> dialog.dismiss(), null);
+                    return;
+                } else if (money > 10000) {
+                    dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "确认",
+                            null, (bean, v, dialog) -> {
+                                dialog.dismiss();
+                                execute(action);
+                            }, null);
+                    return;
+                }
+            }
+        }
+        if (TextUtils.equals(getBType(), CC) && TextUtils.equals("差旅费", costName)) {
+            if (vor(DVo::getTrave, AddController::isEmpty) && vor(DVo::getReport, AddController::isEmpty)) {
+                dialog("差旅费报销时必须关联出差申请单或投研报告", "确认", null, (bean, v, dialog)
                         -> dialog.dismiss(), null);
                 return;
-            } else if (money > 10000) {
-                dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "确认", null, (bean, v, dialog) -> {
+            } else {
+                dialog("差旅费报销中是否含有餐费发票报销", "是", "否", (bean, v, dialog)
+                        -> dialog.dismiss(), (bean, v, dialog) -> {
                     dialog.dismiss();
                     execute(action);
-                }, null);
-                return;
+                });
             }
         }
         execute(action);

@@ -154,4 +154,8 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
         return super.getOnUB(key);
     }
 
+    public boolean isEmpty(){
+        return TextUtils.isEmpty(getData());
+    }
+
 }

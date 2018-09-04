@@ -86,25 +86,33 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         super(controller);
     }
 
+    protected boolean isLoading() {
+        return true;
+    }
+
     public void showLoading() {
-        if (!(check(getDialogApi()) && check(getDialogApi().getDialog())
-                && getDialogApi().getDialog().isShowing())) {
-            setDialogApi((LoadingDialogControllerApi) getDialogControllerApi(getActivity(),
-                    LoadingDialogControllerApi.class).dialogShow());
-            if (this instanceof ContentControllerApi) {
-                ((ContentControllerApi) this).hideViews();
+        if (isLoading()) {
+            if (!(check(getDialogApi()) && check(getDialogApi().getDialog())
+                    && getDialogApi().getDialog().isShowing())) {
+                setDialogApi((LoadingDialogControllerApi) getDialogControllerApi(getActivity(),
+                        LoadingDialogControllerApi.class).dialogShow());
+                if (this instanceof ContentControllerApi) {
+                    ((ContentControllerApi) this).hideViews();
+                }
+                getTimeFactory().start();
             }
-            getTimeFactory().start();
         }
     }
 
     public void dismissLoading() {
-        getTimeFactory().check(100, () -> {
-            executeNon(getDialogApi(), CoreControllerApi::dismiss);
-            if (this instanceof ContentControllerApi) {
-                ((ContentControllerApi) this).renewViews();
-            }
-        });
+        if (isLoading()) {
+            getTimeFactory().check(100, () -> {
+                executeNon(getDialogApi(), CoreControllerApi::dismiss);
+                if (this instanceof ContentControllerApi) {
+                    ((ContentControllerApi) this).renewViews();
+                }
+            });
+        }
     }
 
     @Override

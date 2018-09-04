@@ -53,7 +53,7 @@ public class FullSearchControllerApiV1<T extends FullSearchControllerApiV1, C> e
     public void initView() {
         super.initView();
         setMap(TextUtils.toJSONMap(getKey()));
-        setTitle("单据内容");
+        setTitle("申请单类型");
         setRightTv("确定", v -> finishActivity(new SearchVo<>(getSearch(), getVo())));
         initAdds();
     }
