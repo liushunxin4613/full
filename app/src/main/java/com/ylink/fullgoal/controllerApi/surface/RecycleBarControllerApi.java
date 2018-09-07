@@ -55,7 +55,6 @@ public class RecycleBarControllerApi<T extends RecycleBarControllerApi, C> exten
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         getActivity().finish();
     }
 

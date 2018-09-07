@@ -1,0 +1,24 @@
+{
+  "route":{
+    "name":"路由",
+    "startWith":"app://route",
+    "text":"此项的功能是路由功能,若遇此功能当调用route解析器进行进一步处理"
+  },
+  "cmd":{
+    "name":"命令",
+    "startWith":"app://cmd",
+    "text":"此项的功能是命令功能,如遇此功能则调用cmd解析器进行解析",
+    "value":{
+      "activity/finish":{
+        "name":"关闭当前activity"
+      },
+      "app/finish":{
+        "name":"关闭当前所有activity"
+      }
+    }
+  },
+  "model":{
+    "name":"数据处理",
+    "startWith":"app://model"
+  }
+}

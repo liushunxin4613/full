@@ -36,37 +36,12 @@ public interface IHttpApi<T extends IHttpApi> {
     <B, M> Observable.Transformer<B, M> transformer();
 
     /**
-     * new Observable.Transformer
-     *
-     * @param <B> B
-     * @param <M> M
-     * @return Observable.Transformer
-     */
-    <B, M> Observable.Transformer<B, M> newTransformer();
-
-    /**
-     * Subscriber
-     *
-     * @param <B> B
-     * @return Subscriber
-     */
-    <B> MsgSubscriber<T, B> subscriber();
-
-    /**
      * new Subscriber
      *
      * @param <B> B
      * @return Subscriber
      */
     <B> MsgSubscriber<T, B> newSubscriber();
-
-    /**
-     * 设置setSubscriber
-     *
-     * @param <B>           <B>
-     * @param newSubscriber newSubscriber
-     */
-    <B> void setNewSubscriber(MsgSubscriber<T, B> newSubscriber);
 
     /**
      * 观察

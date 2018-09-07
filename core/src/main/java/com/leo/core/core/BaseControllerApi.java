@@ -233,7 +233,7 @@ public class BaseControllerApi<T extends BaseControllerApi, C> extends CoreContr
     }
 
     @Override
-    public <B, M> Observable.Transformer<B, M> newTransformer() {
+    public <B, M> Observable.Transformer<B, M> transformer() {
         return Transformer.getInstance();
     }
 

@@ -157,7 +157,8 @@ public abstract class CoreRouteApi extends HasCoreControllerApi<CoreRouteApi> im
             String query = getQuery(map(map -> map.put(COMMAND, LogUtil.getLog(false, commandMap))
                     .put(PARAMS, LogUtil.getLog(false, paramsMap))));
             String url = String.format("%s/%s%s", URL_START, path, no(query));
-            ii(this, "uri <== " + url);
+            LogUtil.ii(this, "uri <== " + url);
+            LogUtil.ee(this, "uri <== " + url);
         }
     }
 

@@ -51,7 +51,11 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
                             case PATH_QUERY_TRANS_FILE://配置文件
                                 break;
                             default:
-                                LogUtil.ii(this, "\n" + JsonShowUtil.getShowJson(response));
+                                String params = TextUtils.getUriParams(map);
+                                String url = String.format("%s/%s%s", baseUrl, path,
+                                        TextUtils.check(params) ? String.format("?%s", params) : "");
+                                LogUtil.ii(this, String.format("%s\n%s", url,
+                                        JsonShowUtil.getShowJson(response)));
                                 onObservable(getObservable(response), type, baseUrl, path, map, what, tag);
                                 break;
                         }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.leo.core.core.BaseControllerApiActivity;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.inter.IObjAction;
+import com.leo.core.iapi.inter.IbolAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
@@ -61,6 +62,17 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
             return getActivityStack().get(position);
         }
         return null;
+    }
+
+    @Override
+    public void finishActivity(IbolAction<Activity> action) {
+        if (TextUtils.check(action)) {
+            execute(getActivityStack(), obj -> {
+                if (action.execute(obj)) {
+                    obj.finish();
+                }
+            });
+        }
     }
 
     @Override

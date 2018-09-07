@@ -33,7 +33,7 @@ public class CtripTicketsFg extends CoreModel {
 
     @Override
     public String getApiCode() {
-        return getFlightNumber();
+        return String.format("%s&%s&%s", getFlightNumber(), getTakeOffDate(), getTakeOffTime());
     }
 
     /**

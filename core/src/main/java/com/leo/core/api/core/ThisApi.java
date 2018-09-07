@@ -75,7 +75,8 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         RunUtil.executePos(data, action);
     }
 
-    protected <B> T execute(IObjAction<B> action, List<B>... args) {
+    @SafeVarargs
+    protected final <B> T execute(IObjAction<B> action, List<B>... args) {
         if (action != null && !TextUtils.isEmpty(args)) {
             for (List<B> data : args) {
                 RunUtil.execute(data, action);
@@ -99,7 +100,8 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
         return getThis();
     }
 
-    protected <B> T execute(IObjAction<B> action, B... args) {
+    @SafeVarargs
+    protected final <B> T execute(IObjAction<B> action, B... args) {
         RunUtil.execute(TextUtils.getListData(args), action);
         return getThis();
     }
@@ -117,11 +119,6 @@ public class ThisApi<T extends ThisApi> implements IThisApi<T> {
 
     protected <A, B> B getExecute(A in, IReturnAction<A, B> api) {
         return getExecute(in, null, api);
-    }
-
-    protected <A> A retExecute(A a, IObjAction<A> action){
-        executeNon(a, action);
-        return a;
     }
 
     protected <A> A no(A a, A def) {

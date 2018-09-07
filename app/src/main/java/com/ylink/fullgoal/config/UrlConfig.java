@@ -9,19 +9,9 @@ public class UrlConfig {
 
     private final static String FULL_TEST_HTTP = "http://192.168.41.123:7001/applications/";
     private final static String FULL_TEST1_HTTP = "http://192.168.8.114:8080/fuguo/";
-    private final static String FULL_TEST2_HTTP = "http://192.168.42.111:7001/applications/";
-    private final static String ROOT_IP = LOCAL ? "http://192.168.43.79/"
-            : "http://111.231.231.226/";
-    public final static String ROOT_URL = ROOT_IP + "app/fullApp/";//根api地址
-    private final static String FG_ROOT_IP = LOCAL ? "http://192.168.8.102:8080/"
-            : "http://192.168.8.108:8088/";
-    //    public final static String FG_ROOT_URL = TEST ? FULL_TEST_HTTP + "/ssca/"
-//            : FG_ROOT_IP + "ssca/";//fg调试地址
-//    public final static String FG_ROOT_URL = TextUtils.equals(VERSION, VERSION_APP)
-//        ? "http://192.168.8.109:8088/ssca/" : FULL_TEST_HTTP;
-    public final static String FG_ROOT_URL = FULL_TEST2_HTTP;
-    private final static String UPLOAD_URL = ROOT_IP + "app/fullApp/upload";//根api地址
-    public final static String UPLOAD_IMAGE_URL = UPLOAD_URL;//根api地址
+    private final static String FULL_TEST2_HTTP = "http://192.168.42.111:7001/applications/";//test
+    private final static String FULL_TEST_WWW_HTTP = "https://budget.fullgoal.com.cn:8000/ssca/";
+    public final static String FG_ROOT_URL = LOCAL ? FULL_TEST2_HTTP : FULL_TEST_WWW_HTTP;
 
     //请求参数
     //上传图片

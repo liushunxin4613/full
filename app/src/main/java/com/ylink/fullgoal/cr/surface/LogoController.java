@@ -29,7 +29,7 @@ public class LogoController<T extends LogoController> extends StringController<T
                 case XG1:
                     return "4";
                 case XG2:
-                    return "5";
+                    return "1";
                 case XG3:
                     return "3";
                 case XG4:

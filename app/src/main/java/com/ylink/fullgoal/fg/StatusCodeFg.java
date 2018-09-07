@@ -8,10 +8,12 @@ public class StatusCodeFg extends NewFieldBean implements IIsSuccessApi {
 
     @Override
     public boolean isSuccess() {
-        return TextUtils.equals(getStatusCode(), "SUCCESS");
+        return TextUtils.equals(getStatusCode(), "SUCCESS")
+                || TextUtils.equals(getStatus(), "SUCC");
     }
 
     private String statusCode;
+    private String status;
 
     public String getStatusCode() {
         return statusCode;
@@ -19,6 +21,14 @@ public class StatusCodeFg extends NewFieldBean implements IIsSuccessApi {
 
     public void setStatusCode(String statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

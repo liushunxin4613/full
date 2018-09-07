@@ -4,6 +4,7 @@ import android.view.ViewGroup;
 
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.TextUtils;
 
@@ -124,8 +125,15 @@ public abstract class Norm<T extends Norm, P extends IControllerApi> extends MNA
     }
 
     @Override
-    public String getApiCode() {
+    public final String getApiCode() {
+        if (TextUtils.isEmpty(apiCode)) {
+            return getDefApiCode();
+        }
         return apiCode;
+    }
+
+    protected String getDefApiCode() {
+        return null;
     }
 
     @Override

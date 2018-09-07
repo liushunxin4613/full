@@ -6,8 +6,8 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.api.api.RouteApi;
 import com.ylink.fullgoal.api.config.FgApi;
 import com.ylink.fullgoal.api.config.ParseApi;
-import com.ylink.fullgoal.api.func.UserApi;
 import com.leo.core.net.Api;
+import com.ylink.fullgoal.api.func.UserApiV1;
 import com.ylink.fullgoal.api.surface.MHttpApi;
 import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.db.table.Text;
@@ -24,13 +24,13 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
     }
 
     @Override
-    public UserApi userApi() {
-        return (UserApi) super.userApi();
+    public UserApiV1 userApi() {
+        return (UserApiV1) super.userApi();
     }
 
     @Override
-    public UserApi newUserApi() {
-        return new UserApi(getThis());
+    public UserApiV1 newUserApi() {
+        return new UserApiV1(getThis());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ControllerApi<T extends ControllerApi, C> extends BaseControllerApi
 
     @Override
     public HttpApi newHttpApi() {
-        return new MHttpApi(getThis(), newTransformer());
+        return new MHttpApi(getThis(), transformer());
     }
 
     @Override

@@ -142,11 +142,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     //other
     private String rootViewXml;
+    private ViewGroup container;
     private Integer rootViewResId;
     private String rootViewJsonName;
-    private MsgSubscriber subscriber;
-    private Observable.Transformer transformer;
-    private ViewGroup container;
     private Class<? extends View> viewClz;
     private Class<? extends IControllerApi> controllerApiClz;
 
@@ -176,11 +174,19 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             if (context instanceof Activity) {
                 activity = (Activity) context;
             }
+            Context appContext = context.getApplicationContext();
+            if(appContext instanceof Application){
+                application = (Application) appContext;
+            }
         } else if (controller instanceof Adapter) {
             adapter = (Adapter) controller;
             context = adapter.getContext();
             if (context instanceof Activity) {
                 activity = (Activity) context;
+            }
+            Context appContext = context.getApplicationContext();
+            if(appContext instanceof Application){
+                application = (Application) appContext;
             }
         } else if (controller instanceof Application) {
             application = (Application) controller;
@@ -193,6 +199,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
             context = dialog.getContext();
             if (context instanceof Activity) {
                 activity = (Activity) context;
+            }
+            Context appContext = context.getApplicationContext();
+            if(appContext instanceof Application){
+                application = (Application) appContext;
             }
         }
     }
@@ -1591,29 +1601,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public <B, M> Observable.Transformer<B, M> transformer() {
-        if (transformer == null) {
-            transformer = newTransformer();
-            if (transformer == null) {
-                throw new NullPointerException("newTransformer 不能为空");
-            }
-        }
-        return transformer;
-    }
-
-    @Override
-    public <B, M> Observable.Transformer<B, M> newTransformer() {
         return null;
-    }
-
-    @Override
-    public <B> MsgSubscriber<T, B> subscriber() {
-        if (subscriber == null) {
-            subscriber = newSubscriber();
-            if (subscriber == null) {
-                throw new NullPointerException("newTransformer 不能为空");
-            }
-        }
-        return subscriber;
     }
 
     @Override
@@ -1622,14 +1610,8 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     @Override
-    public <B> void setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
-        httpApi().setNewSubscriber(newSubscriber);
-    }
-
-    @Override
     public <B> T observable(B bean, String type, String baseUrl, String path, Map<String, String> map,
                             int what, String tag) {
-        httpApi().setNewSubscriber(newSubscriber());
         httpApi().observable(bean, type, baseUrl, path, map, what, tag);
         return getThis();
     }
@@ -1637,7 +1619,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public <B> T observable(Observable<B> observable, String type, String baseUrl, String path,
                             Map<String, String> map, int what, String tag) {
-        httpApi().setNewSubscriber(newSubscriber());
         httpApi().observable(observable, type, baseUrl, path, map, what, tag);
         return getThis();
     }
@@ -2132,6 +2113,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     }
 
     private void executeViewControllerApi(View view, IObjAction<IControllerApi> api) {
+        if (!isView() && view instanceof BaseControllerApiView) {
+            executeNon(((BaseControllerApiView) view).controllerApi(), api);
+        }
         if (view instanceof ViewGroup) {
             ViewGroup vg = (ViewGroup) view;
             for (int i = 0; i < vg.getChildCount(); i++) {

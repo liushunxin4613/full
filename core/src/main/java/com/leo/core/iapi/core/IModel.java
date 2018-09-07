@@ -1,9 +1,11 @@
 package com.leo.core.iapi.core;
 
+import com.leo.core.iapi.main.IControllerApi;
+
 /**
  * 数据
  */
-public interface IModel extends IMNApi {
+public interface IModel<P extends IControllerApi> extends IMNApi<P> {
 
     /**
      * 初始化norm

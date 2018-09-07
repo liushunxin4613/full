@@ -6,6 +6,7 @@ import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.net.UrlApi;
 import com.leo.core.util.Base64Util;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.fg.CostFg;
 import com.ylink.fullgoal.fg.DataFg;
 import com.ylink.fullgoal.fg.ImageFg;
@@ -203,8 +204,9 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      * @param serialNo 报销批次号
      */
     public void queryNoShowLoadingMessageBack(String serialNo) {
-        post(CLASS_RVO, ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA, g(map -> map.put("serialNo", serialNo)),
-                serialNo);
+        post(CLASS_RVO, ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA,
+                g(map -> map.put("serialNo", serialNo)),
+                SHOW_LOADING_NO, serialNo);
     }
 
     /**
@@ -331,8 +333,13 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
      */
     public void SSO(String tid) {
         if (!TextUtils.isEmpty(tid)) {
-            if (FG_ROOT_URL.startsWith("FULL_TEST_HTTP")) {
+            if (Config.LOCAL) {
                 get(CLASS_DATA_FG, "http://192.168.40.87:8080/", "sso-server/validateTGT", map -> {
+                    map.put("ticketGrantingTicketId", tid);
+                    map.put("type", "validateTGT");
+                });
+            } else {
+                get(CLASS_DATA_FG, "https://login.fullgoal.com.cn/", "sso-server/serviceValidate", map -> {
                     map.put("ticketGrantingTicketId", tid);
                     map.put("type", "validateTGT");
                 });

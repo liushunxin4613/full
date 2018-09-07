@@ -32,7 +32,7 @@
       {
         "name": "Request",
         "className": "com.ylink.fullgoal.db.table.Request",
-        "enable": false,
+        "enable": true,
         "note": "数据请求缓存处理,enable是否使用"
       },
       {

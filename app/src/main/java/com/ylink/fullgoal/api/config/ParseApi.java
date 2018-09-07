@@ -14,6 +14,7 @@ import com.leo.core.iapi.api.IParseApi;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.net.Exceptions;
 import com.leo.core.util.GsonDecodeUtil;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 import com.leo.core.bean.ParseBean;
 import com.ylink.fullgoal.db.table.Request;
@@ -227,6 +228,8 @@ public class ParseApi<T extends ParseApi> extends ThisApi<T> implements IParseAp
                     text = text.replace("\"apply\":[[]]", "\"apply\":[]");
                     onData(path, GsonDecodeUtil.decode(text, bean.getType()),
                             bean.getMap());
+                } else {
+                    LogUtil.ii(this, String.format("%s找不到", type));
                 }
                 if (!TextUtils.isEmpty(parseCompleted.getData())) {
                     onObj(parseCompleted, ParseCompleted.class);

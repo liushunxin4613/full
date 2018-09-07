@@ -559,6 +559,40 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         });
     }
 
+    void reimbursementClear(){
+        vos(DVo::getReimbursement, CoreController::clear);//清理报销人数据
+        //清理费用指标数据后续
+        vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
+        vos(DVo::getIsShare, CoreController::clear);//清理是否分摊数据
+        //其他
+        vos(DVo::getTrave, CoreController::clear);//清理出差申请单数据
+        vos(DVo::getReport, CoreController::clear);//清理调研报告数据
+        vos(DVo::getCtrip, CoreController::clear);//清理携程机票数据
+        vos(DVo::getApply, CoreController::clear);//清理申请单数据
+        //重新处理部门数据
+        vos(DVo::getBudgetDepartment, CoreController::clear);//清理部门数据
+        vos(DVo::getProject, CoreController::clear);//清理项目数据
+        notifyDataChanged();//更新数据
+    }
+
+    void budgetDepartmentClear(){
+        vos(DVo::getBudgetDepartment, CoreController::clear);//清理部门信息
+        vos(DVo::getProject, CoreController::clear);//清理项目数据
+        vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
+        vos(DVo::getIsShare, CoreController::clear);//清理费用指标数据时,同清理是否分摊数据
+        vos(DVo::getTrave, CoreController::clear);//清理出差申请单数据
+        vos(DVo::getReport, CoreController::clear);//清理调研报告数据
+        vos(DVo::getApply, CoreController::clear);//清理申请单数据
+        notifyDataChanged();//更新数据
+    }
+
+    void costClear(){
+        vos(DVo::getCostIndex, CoreController::clear);//清理费用指标
+        vos(DVo::getApply, CoreController::clear);//清理申请单数据
+        vos(DVo::getIsShare, obj -> obj.initDB(false));//清理分摊数据
+        notifyDataChanged();//更新数据
+    }
+
     void initVgApiBean(String title, IAction action) {
         if (!TextUtils.isEmpty(title)) {
             RecycleControllerApi api = getDialogControllerApi(getActivity(), RecycleControllerApi.class,

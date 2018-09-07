@@ -257,9 +257,9 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         addList(DataFg.class, clz, action);
     }
 
-    protected void dialog(String detail, String confirm, String cancel,
-                          OnBVDialogClickListener<HintDialogNorm> confirmListener,
-                          OnBVDialogClickListener<HintDialogNorm> cancelListener) {
+    protected Dialog dialog(String detail, String confirm, String cancel,
+                            OnBVDialogClickListener<HintDialogNorm> confirmListener,
+                            OnBVDialogClickListener<HintDialogNorm> cancelListener) {
         if (TextUtils.check(detail, confirm, confirmListener)) {
             HintDialogNorm norm = new HintDialogNorm("温馨提示", detail, confirm,
                     cancel, confirmListener, cancelListener);
@@ -274,7 +274,9 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
                 lp.width = (int) (display.getX() * 0.8);
                 window.setAttributes(lp);
             }
+            return api.getDialog();
         }
+        return null;
     }
 
     protected List<? extends IModel> getOnDataFg(String type, String baseUrl, String path, Map<String, String> map, int what,

@@ -15,15 +15,13 @@ import rx.Observable;
 public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implements IHttpApi<T> {
 
     private RetrofitFactory factory;
-    private MsgSubscriber newSubscriber;
     private HashMap<String, Object> map;
     private Observable.Transformer transformer;
-    private Observable.Transformer newTransformer;
 
-    public HttpApi(CoreControllerApi controllerApi, Observable.Transformer newTransformer) {
+    public HttpApi(CoreControllerApi controllerApi, Observable.Transformer transformer) {
         super(controllerApi);
         this.map = new HashMap<>();
-        this.newTransformer = newTransformer;
+        this.transformer = transformer;
         this.factory = RetrofitFactory.getInstance();
     }
 
@@ -48,37 +46,12 @@ public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implemen
 
     @Override
     public <B, M> Observable.Transformer<B, M> transformer() {
-        if (transformer == null) {
-            transformer = newTransformer();
-            if (transformer == null) {
-                throw new NullPointerException("newTransformer 不能为空");
-            }
-        }
         return transformer;
     }
 
     @Override
-    public <B, M> Observable.Transformer<B, M> newTransformer() {
-        return newTransformer;
-    }
-
-    @Override
-    public <B> MsgSubscriber<T, B> subscriber() {
-        MsgSubscriber<T, B> subscriber = newSubscriber();
-        if (subscriber == null) {
-            throw new NullPointerException("newTransformer 不能为空");
-        }
-        return subscriber;
-    }
-
-    @Override
     public <B> MsgSubscriber<T, B> newSubscriber() {
-        return newSubscriber;
-    }
-
-    @Override
-    public <B> void setNewSubscriber(MsgSubscriber<T, B> newSubscriber) {
-        this.newSubscriber = newSubscriber;
+        return controllerApi().newSubscriber();
     }
 
     @Override
@@ -103,9 +76,9 @@ public class HttpApi<T extends HttpApi> extends HasCoreControllerApi<T> implemen
         return true;
     }
 
-    protected void onObservable(@NonNull Observable observable, String type, String baseUrl,
+    protected synchronized void onObservable(@NonNull Observable observable, String type, String baseUrl,
                                 String path, Map<String, String> map, int what, String tag) {
-        MsgSubscriber subscriber = subscriber();
+        MsgSubscriber subscriber = newSubscriber();
         subscriber.init(type, baseUrl, path, map, what, tag);
         observable.compose(transformer()).subscribe(subscriber);
     }

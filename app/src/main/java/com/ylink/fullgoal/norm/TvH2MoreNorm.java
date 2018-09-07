@@ -24,10 +24,6 @@ public class TvH2MoreNorm extends BaseTestNorm<TvH2MoreNorm>{
 
     private transient View.OnClickListener iconOnClickListener;
 
-    public TvH2MoreNorm(String name, String detail) {
-        super(name, detail);
-    }
-
     public TvH2MoreNorm(String name, String detail, String hint,
                         OnBVClickListener<TvH2MoreNorm> listener,
                         OnBVClickListener<TvH2MoreNorm> iconListener) {

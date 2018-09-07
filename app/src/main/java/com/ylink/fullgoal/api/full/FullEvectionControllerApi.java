@@ -67,26 +67,27 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                     vorv(DVo::getReimbursement), "请选择报销人",
                     (bean, view) -> routeApi().searchValue(SearchVo.REIMBURSEMENT,
                             vorc(DVo::getReimbursement)),
-                    (bean, view) -> vos(DVo::getReimbursement, CoreController::clear)));
+                    (bean, view) -> reimbursementClear()));
             checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreNorm("预算归属",
                     vorv(DVo::getBudgetDepartment), "请选择预算归属",
                     (bean, view) -> routeApi().searchValue(SearchVo.BUDGET_DEPARTMENT,
                             vorc(DVo::getBudgetDepartment)),
-                    (bean, view) -> vos(DVo::getBudgetDepartment, CoreController::clear)));
+                    (bean, view) -> budgetDepartmentClear()));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreNorm("项目",
                     vorv(DVo::getProject), "请选择项目",
-                    (bean, view) -> routeApi().search(SearchVo.PROJECT, vorc(DVo::getBudgetDepartment),
-                            vorc(DVo::getProject)),
+                    (bean, view) -> routeApi().search(SearchVo.PROJECT,
+                            vorc(DVo::getBudgetDepartment), vorc(DVo::getProject)),
                     (bean, view) -> vos(DVo::getProject, CoreController::clear)));
             checkAdd(data, vorv(DVo::getCostIndex), new TvH2MoreNorm("费用指标",
                     vorv(DVo::getCostIndex), "请选择费用指标",
                     (bean, view) -> routeApi().searchEvection(SearchVo.COST_INDEX,
                             getParams(), vorc(DVo::getCostIndex)),
-                    (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
+                    (bean, view) -> costClear()));
             checkAdd(data, vorv(DVo::getApply), new TvH2MoreNorm("申请单",
                     vorv(DVo::getApply), "请选择申请单", (bean, view)
                     -> routeApi().searchApply(SearchVo.APPLY, getParams(),
-                    encode(getVo().getApply())), (bean, view) -> vos(DVo::getApply, CoreController::clear)));
+                    encode(getVo().getApply())), (bean, view)
+                    -> vos(DVo::getApply, CoreController::clear)));
             //经办人确认、经办人修改
             if (isNoneInitiateEnable()) {
                 checkAdd(data, vorv(DVo::getMoney), new TvH2Norm("金额", vorv(DVo::getMoney)));
@@ -112,14 +113,17 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                 data.add(new TvNorm("出差申请单添加"));
             }
             List<String> filterData = new ArrayList<>();
-            execute(list, fg -> data.add(retExecute(getExecute(fg, item -> new ChuchaiNorm(
-                    item.getCode(), item.getAmount(), item.getDestination(), item.getDates(),
-                    item.getStartDate(), item.getEndDate(), item.getWorkName(), (bean, view) -> {
-                if (isEnable()) {
-                    initVgApiBean("出差申请单", ()
-                            -> vos(DVo::getTrave, obj -> obj.remove(item, this)));
-                }
-            })), bean -> filterData.add(bean.getCode()))));
+            execute(list, fg -> {
+                data.add(getExecute(fg, item -> new ChuchaiNorm(item.getCode(), item.getAmount(),
+                        item.getDestination(), item.getDates(), item.getStartDate(),
+                        item.getEndDate(), item.getWorkName(), (bean, view) -> {
+                    if (isEnable()) {
+                        initVgApiBean("出差申请单", () -> vos(DVo::getTrave, obj
+                                -> obj.remove(item, this)));
+                    }
+                })));
+                filterData.add(fg.getApiCode());
+            });
             if (isEnable()) {
                 data.add(new IconTvHNorm("添加出差申请单", (bean, view)
                         -> routeApi().search(SearchVo.BUSINESS, getParams(), filterData)));
@@ -132,14 +136,18 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                 data.add(new TvNorm("投研报告添加"));
             }
             List<String> filterData = new ArrayList<>();
-            execute(list, fg -> data.add(retExecute(getExecute(fg, item -> new DiaoyanNorm(
-                    item.getStockCode(), item.getStockName(), item.getType(), item.getStatus(),
-                    item.getUploadTime(), item.getEndTime(), item.getReportInfo(), (bean, view) -> {
-                if (isEnable()) {
-                    initVgApiBean("调研报告",
-                            () -> vos(DVo::getReport, obj -> obj.remove(item, this)));
-                }
-            })), bean -> filterData.add(bean.getText()))));
+            execute(list, fg -> {
+                data.add(getExecute(fg, item -> new DiaoyanNorm(item.getStockCode(),
+                        item.getStockName(), item.getType(), item.getStatus(), item.getUploadTime(),
+                        item.getEndTime(), item.getReportInfo(), (bean, view) -> {
+                    if (isEnable()) {
+                        initVgApiBean("调研报告", () -> vos(DVo::getReport, obj
+                                -> obj.remove(item, this)));
+                    }
+                }).setAllShow(CacheFactory.getInstance().reportAllContains(vor(
+                        DVo::getBudgetDepartment, DepartmentController::getViewBean)))));
+                filterData.add(fg.getApiCode());
+            });
             if (isEnable()) {
                 data.add(new IconTvHNorm("添加投研报告", (bean, view)
                         -> routeApi().search(SearchVo.REPORT, getParams(), filterData)));
@@ -157,16 +165,18 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                 data.add(new TvHintNorm("车船机票费报销", isEnable()));
             }
             List<String> filterData = new ArrayList<>();
-            execute(ctripData, fg -> data.add(retExecute(getExecute(fg, item -> new XiechengNorm(
-                    item.getFlightNumber(), item.getDeparture(), item.getDestination(),
-                    item.getCrew(), item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(),
-                    item.getArrivelDate(), item.getArrivelTime(),
-                    (bean, view) -> {
-                        if (isEnable()) {
-                            initVgApiBean("携程机票",
-                                    () -> vos(DVo::getCtrip, obj -> obj.remove(item, this)));
-                        }
-                    })), bean -> filterData.add(bean.getCode()))));
+            execute(ctripData, fg -> {
+                data.add(getExecute(fg, item -> new XiechengNorm(item.getFlightNumber(),
+                        item.getDeparture(), item.getDestination(), item.getCrew(),
+                        item.getTakeOffDate(), item.getTakeOffTime(), item.getTicket(),
+                        item.getArrivelDate(), item.getArrivelTime(), (bean, view) -> {
+                    if (isEnable()) {
+                        initVgApiBean("携程机票",
+                                () -> vos(DVo::getCtrip, obj -> obj.remove(item, this)));
+                    }
+                })));
+                filterData.add(fg.getApiCode());
+            });
             if (isEnable()) {
                 data.add(new IconTvHNorm("添加携程机票", (bean, view)
                         -> routeApi().search(SearchVo.XC_AIR, vorc(DVo::getReimbursement), filterData)));
@@ -175,7 +185,6 @@ public class FullEvectionControllerApi<T extends FullEvectionControllerApi, C> e
                 data.add(newGridNorm(FILTER_CCJPF, imageData));
             }
         });
-        //添加流程
         //添加流程
         List<NodeFg> nodeData = vor(DVo::getTaskNode, NodeController::getViewBean);
         if (!TextUtils.isEmpty(nodeData)) {

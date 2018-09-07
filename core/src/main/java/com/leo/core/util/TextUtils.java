@@ -1,9 +1,12 @@
 package com.leo.core.util;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.XmlResourceParser;
+import android.os.Bundle;
 import android.util.SparseArray;
 
+import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.INewWhatAction;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IbolAction;
@@ -658,16 +661,6 @@ public class TextUtils {
         return -1;
     }
 
-    public static String getUriParams(Map<String, ?> map) {
-        if (!TextUtils.isEmpty(map)) {
-            StringBuilder builder = new StringBuilder();
-            RunUtil.execute(map, (key, value) -> builder.append(key)
-                    .append("=").append(LogUtil.getLog(false, value)));
-            return builder.toString();
-        }
-        return null;
-    }
-
     public static boolean checkParams(Object v1, Object v2) {
         return v1 == null && v2 == null || v1 != null && v2 != null
                 && TextUtils.equals(String.class, v1.getClass())
@@ -805,8 +798,36 @@ public class TextUtils {
         return builder.toString();
     }
 
-    public static String getClassName(Object obj){
+    public static String getClassName(Object obj) {
         return obj == null ? null : obj.getClass().getName();
+    }
+
+    public static String getUriParams(Map<String, ?> map) {
+        if (TextUtils.check(map)) {
+            StringBuilder builder = new StringBuilder();
+            RunUtil.execute(map, (key, value) -> {
+                if (TextUtils.check(key)) {
+                    String v = LogUtil.getLog(value, false);
+                    builder.append(builder.length() > 0 ? "&" : "")
+                            .append(key)
+                            .append("=")
+                            .append(TextUtils.isEmpty(v) ? "" : v);
+                }
+            });
+            return builder.toString();
+        }
+        return null;
+    }
+
+    public static void show(Intent intent, IMapAction<String, Object> action) {
+        if (intent != null && action != null) {
+            Bundle os = intent.getExtras();
+            if (os != null && TextUtils.check(os.keySet())) {
+                for (String key : os.keySet()) {
+                    action.execute(key, os.get(key));
+                }
+            }
+        }
     }
 
 }

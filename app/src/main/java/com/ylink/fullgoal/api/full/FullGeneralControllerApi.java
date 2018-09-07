@@ -49,12 +49,12 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
                     vorv(DVo::getReimbursement), "请选择报销人",
                     (bean, view) -> routeApi().searchValue(SearchVo.REIMBURSEMENT,
                             vorc(DVo::getReimbursement)),
-                    (bean, view) -> vos(DVo::getReimbursement, CoreController::clear)));
+                    (bean, view) -> reimbursementClear()));
             checkAdd(data, vorv(DVo::getBudgetDepartment), new TvH2MoreNorm("预算归属",
                     vorv(DVo::getBudgetDepartment), "请选择预算归属",
                     (bean, view) -> routeApi().searchValue(SearchVo.BUDGET_DEPARTMENT,
                             vorc(DVo::getBudgetDepartment)),
-                    (bean, view) -> vos(DVo::getBudgetDepartment, CoreController::clear)));
+                    (bean, view) -> budgetDepartmentClear()));
             checkAdd(data, vorv(DVo::getProject), new TvH2MoreNorm("项目",
                     vorv(DVo::getProject), "请选择项目",
                     (bean, view) -> routeApi().search(SearchVo.PROJECT, vorc(DVo::getBudgetDepartment),
@@ -64,7 +64,7 @@ public class FullGeneralControllerApi<T extends FullGeneralControllerApi, C> ext
                     vorv(DVo::getCostIndex), "请选择费用指标",
                     (bean, view) -> routeApi().search(SearchVo.COST_INDEX, getParams(),
                             vorc(DVo::getCostIndex)),
-                    (bean, view) -> vos(DVo::getCostIndex, CoreController::clear)));
+                    (bean, view) -> costClear()));
             checkAdd(data, vorv(DVo::getApply), new TvH2MoreNorm("申请单",
                     vorv(DVo::getApply), "请选择申请单", (bean, view)
                     -> routeApi().searchApply(SearchVo.APPLY, getParams(),

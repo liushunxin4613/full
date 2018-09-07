@@ -1,0 +1,28 @@
+{
+  "view": {
+    "title": "富国基金个人报销平台",
+    "banner": "@mipmap/banner",
+    "list": [
+      {
+        "title": "一般费用报销",
+        "src": "@mipmap/m1",
+        "onClick": "app://route/app/surface/general?params={\"state\":\"发起\"}"
+      },
+      {
+        "title": "出差费用报销",
+        "src": "@mipmap/m2",
+        "onClick": "app://route/app/surface/evection?params={\"state\":\"发起\"}"
+      },
+      {
+        "title": "报销列表查询",
+        "src": "@mipmap/m3",
+        "onClick": "app://route/app/surface/queryReimburse"
+      },
+      {
+        "title": "选择银行卡号",
+        "src": "@mipmap/m4",
+        "onClick": "app://route/app/surface/selectBank"
+      }
+    ]
+  }
+}

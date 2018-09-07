@@ -3,7 +3,9 @@ package com.ylink.fullgoal.factory;
 import com.leo.core.api.api.VsApi;
 import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.bean.UserBean;
 import com.ylink.fullgoal.db.table.JsonFile;
+import com.ylink.fullgoal.fg.DepartmentFg;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -70,6 +72,26 @@ public class CacheFactory extends VsApi<CacheFactory> {
                 -> REPORT_FILTER_ONE.add(item.getValue()));
         execute(JsonFile.queryList(JsonFile.REPORT_JSON, "filter.all"), item
                 -> REPORT_FILTER_ALL.add(item.getValue()));
+    }
+
+    //缓存数据
+    private UserBean userBean;
+    private DepartmentFg departmentFg;
+
+    public UserBean getUserBean() {
+        return userBean;
+    }
+
+    public void setUserBean(UserBean userBean) {
+        this.userBean = userBean;
+    }
+
+    public DepartmentFg getDepartmentFg() {
+        return departmentFg;
+    }
+
+    public void setDepartmentFg(DepartmentFg departmentFg) {
+        this.departmentFg = departmentFg;
     }
 
 }

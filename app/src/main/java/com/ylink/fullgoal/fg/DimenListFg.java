@@ -31,11 +31,6 @@ public class DimenListFg extends CoreModel {
         return new String[]{getName()};
     }
 
-    @Override
-    public String getApiCode() {
-        return getCode();
-    }
-
     /**
      * code : 00001
      * name : 账单

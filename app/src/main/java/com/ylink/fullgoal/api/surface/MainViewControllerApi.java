@@ -1,6 +1,8 @@
 package com.ylink.fullgoal.api.surface;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.leo.core.util.TextUtils;
@@ -20,8 +22,10 @@ import static com.ylink.fullgoal.config.Config.FULL_STATUS;
 /**
  * 主View视图
  */
-@SuppressWarnings("MalformedFormatString")
 public class MainViewControllerApi<T extends MainViewControllerApi, C> extends RecycleBarControllerApi<T, C> {
+
+    private boolean check;
+    private Dialog mDialog;
 
     public MainViewControllerApi(C controller) {
         super(controller);
@@ -30,22 +34,53 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        check = false;
+        activityLifecycleApi().finishActivity(obj
+                -> !TextUtils.equals(obj, getActivity()));
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
+        TextUtils.show(intent, this::ee);
         String taskId = intent.getStringExtra("taskId");
+        String name = intent.getStringExtra("name");
         String cookie = intent.getStringExtra("cookie");
         String userId = intent.getStringExtra("userId");
         String username = intent.getStringExtra("username");
-        String name = intent.getStringExtra("name");
         String cookieStr = intent.getStringExtra("cookieStr");
         String portalPac = intent.getStringExtra("portalPac");
-        if (TextUtils.check(userId, username)) {//TODO 测试用
+        if (TextUtils.check(userId)) {
             api().queryUserName(userId);
             initUser(new UserBean(taskId, name, cookie, userId,
                     username, cookieStr, portalPac));
+        } else if (!TextUtils.check(getUserName(), getUId())) {
+            check();
         }
-        api().SSO(getCastgc());
-//        ii("user", getUser());
         if (TextUtils.check(taskId)) {
             api().queryNoShowLoadingMessageBack(taskId);
+        }
+        api().SSO(getCastgc());
+    }
+
+    private void check() {
+        check = false;
+        mDialog = dialog("请从门户进入", "确定", null, (bean, v, dialog) -> {
+            check = true;
+            dialog.dismiss();
+            PackageManager pm = getContext().getPackageManager();
+            Intent it = pm.getLaunchIntentForPackage("cn.com.fullgoal.portal");
+            if (it == null) {
+                show("手机未安装该应用");
+            } else {
+                getActivity().startActivity(it);
+            }
+        }, null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (check && !TextUtils.check(getUserName())) {
+            check();
         }
     }
 
@@ -86,6 +121,7 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
                             fg.getUserDepartment()));
                 }
             }
+            dismissLoading();
         });
     }
 

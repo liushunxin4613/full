@@ -54,7 +54,8 @@ public class Request extends DBModel {
         return false;
     }
 
-    public static void query(String baseUrl, String path, String params, IObjAction<String> action) {
+    public static synchronized void query(String baseUrl, String path, String params, IObjAction<String> action) {
+
         if (action != null) {
             if (checkAllow(path, params)) {
                 SQLite.select().from(Request.class)
