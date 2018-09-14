@@ -20,7 +20,7 @@ public class BaseControllerApiDialog<T extends BaseControllerApiDialog, C extend
     private Class<? extends IControllerApi> apiClz;
 
     public BaseControllerApiDialog(@NonNull Context context) {
-        super(context, R.style.Dialog);
+        super(context, R.style.MyDialog);
     }
 
     @Override

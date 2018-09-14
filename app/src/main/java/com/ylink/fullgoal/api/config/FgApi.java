@@ -427,8 +427,8 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     public void queryApply(Map<String, Object> jsonMap) {
         if (TextUtils.check(jsonMap)) {
             postParams(CLASS_DATA_FG, ROOT_URL, PATH_QUERY_APPLY, g(map -> {
-                map.put("departmentCode", jsonMap.get("budgetDepartment"));
                 map.put("reimbursement", jsonMap.get("reimbursement"));
+                map.put("departmentCode", jsonMap.get("budgetDepartment"));
                 map.put("costIndexCode", jsonMap.get("cost"));
             }));
         }

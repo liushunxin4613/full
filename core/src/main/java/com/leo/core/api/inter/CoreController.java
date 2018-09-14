@@ -37,6 +37,11 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
     }
 
     @Override
+    public boolean isEmpty() {
+        return !TextUtils.check(getDB());
+    }
+
+    @Override
     public T clear() {
         this.db = null;
         return getThis();
@@ -82,13 +87,13 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
     @Override
     public UB getSafeUB(String... args) {
         UB ub = getUB(args);
-        if (ub == null){
+        if (ub == null) {
             ub = getNoneUB();
         }
         return ub;
     }
 
-    protected UB getNoneUB(){
+    protected UB getNoneUB() {
         return null;
     }
 
@@ -102,7 +107,7 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
      *
      * @return 参数
      */
-    protected String getDefUBKey(){
+    protected String getDefUBKey() {
         return null;
     }
 
@@ -111,7 +116,7 @@ public abstract class CoreController<T extends CoreController, DB, UB> extends V
      *
      * @return 值
      */
-    protected UB getDefUB(){
+    protected UB getDefUB() {
         return null;
     }
 

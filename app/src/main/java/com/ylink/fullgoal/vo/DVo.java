@@ -71,7 +71,7 @@ public class DVo extends NewFieldBean {
     private UserController reimbursement;
     //部门
     private DepartmentController department;
-    //预算归属部门
+    //预算归属
     private DepartmentController budgetDepartment;
     //项目
     private ProjectController project;
@@ -114,7 +114,7 @@ public class DVo extends NewFieldBean {
         /*map.put("reimbursement", vr(getReimbursement(), UserController::getDB,
                 UserFg::getApiCode));//报销人*/ //TODO
         map.put("budgetDepartment", vr(getBudgetDepartment(), DepartmentController::getDB,
-                DepartmentFg::getApiCode));//预算归属部门
+                DepartmentFg::getApiCode));//预算归属
         map.put("project", vr(getProject(), ProjectController::getDB,
                 ProjectFg::getApiCode));//项目
         map.put("cost", vr(getCostIndex(), CostIndexController::getDB,

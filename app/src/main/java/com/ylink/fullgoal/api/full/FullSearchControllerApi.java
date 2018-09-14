@@ -113,7 +113,7 @@ public class FullSearchControllerApi<T extends FullSearchControllerApi, C> exten
                 case REIMBURSEMENT://员工
                     api().queryUserData();
                     break;
-                case BUDGET_DEPARTMENT://预算归属部门
+                case BUDGET_DEPARTMENT://预算归属
                     api().queryDepartmentData();
                     break;
                 case PROJECT://项目

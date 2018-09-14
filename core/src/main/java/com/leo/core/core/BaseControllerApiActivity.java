@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -16,6 +15,7 @@ import com.leo.core.iapi.main.IAFVApi;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.RunUtil;
+import android.support.v7.app.AppCompatActivity;
 
 import static com.leo.core.iapi.api.IStartApi.CONTROLLER_API;
 import static com.leo.core.iapi.api.IStartApi.ROOT_VIEW_CLZ_API;

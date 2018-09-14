@@ -99,6 +99,11 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
     }
 
     @Override
+    public void onBackPressed() {
+        routeApi().main();
+    }
+
+    @Override
     public void initView() {
         super.initView();
         initDrawerLayout();

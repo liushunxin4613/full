@@ -266,13 +266,14 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
             IControllerApi api = getDialogControllerApi(getActivity(),
                     norm.getControllerApiClass());
             api.dialogShow().onNorm(norm, 0);
-            Window window = api.getDialog().getWindow();
-            if (window != null) {
-                window.setGravity(Gravity.CENTER);
-                WindowManager.LayoutParams lp = window.getAttributes();
+            if (api.getDialog().getWindow() != null) {
+                api.getDialog().getWindow().setGravity(Gravity.CENTER);
+                WindowManager.LayoutParams lp = api.getDialog().getWindow().getAttributes();
                 IDisplayApi.ScreenDisplay display = DisneyUtil.getScreenDisplay();
                 lp.width = (int) (display.getX() * 0.8);
-                window.setAttributes(lp);
+                lp.dimAmount = 0.6f;
+                api.getDialog().getWindow().setAttributes(lp);
+                api.getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             }
             return api.getDialog();
         }

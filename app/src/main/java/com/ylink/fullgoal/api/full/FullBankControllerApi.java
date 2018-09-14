@@ -39,6 +39,11 @@ public class FullBankControllerApi<T extends FullBankControllerApi, C> extends R
     }
 
     @Override
+    public void onBackPressed() {
+        routeApi().main();
+    }
+
+    @Override
     protected List<? extends IModel> getOnDataFg(String type, String baseUrl, String path,
                                                  Map<String, String> map, int what, String msg,
                                                  String field, DataFg fg) {

@@ -1,12 +1,13 @@
 buildscript {
     repositories {
-        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
-        maven { url "https://www.jitpack.io" }
-        jcenter(){url "http://jcenter.bintray.com/"}
         jcenter()
         google()
         mavenLocal()
         mavenCentral()
+        maven{url'https://maven.google.com'}
+        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "https://www.jitpack.io" }
+        jcenter(){url "http://jcenter.bintray.com/"}
         maven{url'https://plugins.gradle.org/m2/'}
         maven{url"https://jitpack.io"}
         maven{url'https://oss.sonatype.org/content/repositories/snapshots/'}
@@ -23,13 +24,14 @@ buildscript {
 
 allprojects {
     repositories {
-        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
-        maven { url "https://www.jitpack.io" }
-        jcenter(){url "http://jcenter.bintray.com/"}
         jcenter()
         google()
         mavenLocal()
         mavenCentral()
+        maven{url'https://maven.google.com'}
+        maven{url'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "https://www.jitpack.io" }
+        jcenter(){url "http://jcenter.bintray.com/"}
         maven{url'https://plugins.gradle.org/m2/'}
         maven{url"https://jitpack.io"}
         maven{url'https://oss.sonatype.org/content/repositories/snapshots/'}

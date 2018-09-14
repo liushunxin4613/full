@@ -14,7 +14,7 @@ public class MessageBackFg extends StatusCodeFg {
     private UserFg agent;
     //报销人
     private UserFg reimbursement;
-    //预算归属部门
+    //预算归属
     private DepartmentFg budgetDepartment;
     //事由
     private String cause;

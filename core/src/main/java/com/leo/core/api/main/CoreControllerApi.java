@@ -16,7 +16,6 @@ import android.os.Looper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,27 +25,23 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.support.v4.app.Fragment;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.api.FileApi;
-import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.api.core.AttachApi;
+import com.leo.core.api.inter.MsgSubscriber;
 import com.leo.core.bean.ParseBean;
 import com.leo.core.core.BaseControllerApiApp;
 import com.leo.core.core.BaseControllerApiView;
+import com.leo.core.iapi.api.IActionApi;
 import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.api.ICameraApi;
-import com.leo.core.iapi.api.IDirApi;
-import com.leo.core.iapi.api.IRouteApi;
-import com.leo.core.iapi.api.IVosApi;
-import com.leo.core.iapi.api.IVsApi;
-import com.leo.core.iapi.core.INorm;
-import com.leo.core.iapi.inter.IAction;
-import com.leo.core.iapi.api.IActionApi;
 import com.leo.core.iapi.api.IConfigApi;
 import com.leo.core.iapi.api.IDataApi;
 import com.leo.core.iapi.api.IDataTypeApi;
 import com.leo.core.iapi.api.IDecodeApi;
+import com.leo.core.iapi.api.IDirApi;
 import com.leo.core.iapi.api.IFileApi;
 import com.leo.core.iapi.api.IGalleryApi;
 import com.leo.core.iapi.api.IHelperApi;
@@ -54,20 +49,25 @@ import com.leo.core.iapi.api.ILoadImageApi;
 import com.leo.core.iapi.api.IMD5Api;
 import com.leo.core.iapi.api.IMergeApi;
 import com.leo.core.iapi.api.IObjectApi;
-import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IParseApi;
+import com.leo.core.iapi.api.IRouteApi;
 import com.leo.core.iapi.api.ISerialVersionTagApi;
 import com.leo.core.iapi.api.ISubjoinApi;
+import com.leo.core.iapi.api.IUrlApi;
+import com.leo.core.iapi.api.IUserApi;
+import com.leo.core.iapi.api.IVgRunApi;
+import com.leo.core.iapi.api.IVosApi;
+import com.leo.core.iapi.api.IVsApi;
+import com.leo.core.iapi.core.IApi;
+import com.leo.core.iapi.core.INorm;
+import com.leo.core.iapi.inter.IAction;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IPathMsgAction;
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.IReturnAction;
 import com.leo.core.iapi.inter.ITAction;
-import com.leo.core.iapi.api.IUrlApi;
-import com.leo.core.iapi.api.IUserApi;
-import com.leo.core.iapi.api.IVgRunApi;
 import com.leo.core.iapi.inter.ImageAction;
 import com.leo.core.iapi.inter.OnAddListener;
-import com.leo.core.iapi.core.IApi;
 import com.leo.core.iapi.main.Adapter;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.iapi.main.IHttpApi;
@@ -175,7 +175,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 activity = (Activity) context;
             }
             Context appContext = context.getApplicationContext();
-            if(appContext instanceof Application){
+            if (appContext instanceof Application) {
                 application = (Application) appContext;
             }
         } else if (controller instanceof Adapter) {
@@ -185,7 +185,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 activity = (Activity) context;
             }
             Context appContext = context.getApplicationContext();
-            if(appContext instanceof Application){
+            if (appContext instanceof Application) {
                 application = (Application) appContext;
             }
         } else if (controller instanceof Application) {
@@ -201,7 +201,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 activity = (Activity) context;
             }
             Context appContext = context.getApplicationContext();
-            if(appContext instanceof Application){
+            if (appContext instanceof Application) {
                 application = (Application) appContext;
             }
         }

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.finalteam.rxgalleryfinal:library-1.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-1.1.0.aar/3a9857f21ccc37bfc4ede72a32d47696/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-1.1.0.aar/3a9857f21ccc37bfc4ede72a32d47696/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cn.finalteam.rxgalleryfinal/library/1.1.0/3ed0b1d34ade27a5add6864d56695883235170f5/library-1.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

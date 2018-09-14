@@ -140,6 +140,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         return contentVg;
     }
 
+    @Override
+    public void onBackPressed() {
+//        routeApi().main();
+        super.onBackPressed();
+    }
+
     /**
      * 报销类型
      */
@@ -290,10 +296,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             setTitle(title);
             switch (TextUtils.isEmpty(state) ? "" : state) {
                 case FQ:
-                    setRightTv("提交", v -> submit());
+                    setRightTv("提交", v -> submit(false));
                     break;
                 case QR:
-                    setRightTv("确认", v -> submit());
+                    setRightTv("确认", v -> submit(false));
                     break;
                 case XG:
                     setRightTv("申诉", v -> api().appeal(vor(DVo::getSerialNo,
@@ -301,19 +307,19 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpTv, v -> {
                         //申请特批
                         vos(DVo::getLogo, obj -> obj.initDB(XG1));
-                        submit();
+                        submit(true);
                     }).setOnClickListener(wbylTv, v -> {
                         //我不要了
                         vos(DVo::getLogo, obj -> obj.initDB(XG2));
-                        submit();
+                        submit(true);
                     }).setOnClickListener(xgtjTv, v -> {
                         //修改提交
                         vos(DVo::getLogo, obj -> obj.initDB(XG3));
-                        submit();
+                        submit(false);
                     }).setOnClickListener(qxbxTv, v -> {
                         //取消报销
                         vos(DVo::getLogo, obj -> obj.initDB(XG4));
-                        submit();
+                        submit(true);
                     });
                     break;
             }
@@ -357,7 +363,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
             vos(DVo::getReimbursement, obj -> obj.initDB(fg));
         });
-        //预算归属部门
+        //预算归属
         executeSearch(DepartmentFg.class, vo -> {
             DepartmentFg fg = vo.getObj();
             if (!TextUtils.equals(fg.getApiCode(), vorc(DVo::getBudgetDepartment))) {//code不同时修改相关数据
@@ -474,13 +480,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     /**
      * 提交数据
      */
-    private void submit() {
+    private void submit(boolean special) {
         vos(DVo::getSbumitFlag, obj -> obj.initDB(String.valueOf(getFlag())));
         vos(DVo::getCostIndex, obj -> obj.update((String) vor(DVo::getMoney,
                 DoubleController::getDBMoney)));
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
-            checkAction(() -> {
+            checkAction(special, () -> {
                 if (getVo().getIsShare().is() && !getVo().getSbumitFlag().isOpen()) {
                     vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
                             CostIndexController::getDB)));//更新分摊金额
@@ -502,26 +508,26 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         return 3;//有修改
     }
 
-    private void checkAction(IAction action) {
+    private void checkAction(boolean special, IAction action) {
+        if (action == null) {
+            return;
+        }
+        if (special) {
+            action.execute();
+            return;
+        }
         String departmentName = vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentName);
         String costName = vor(DVo::getCostIndex, CostIndexController::getCostName);
+        double money = vor(DVo::getMoney, DoubleController::getdouble);
         if (TextUtils.check(departmentName, costName)) {
             if (!(TextUtils.equals(departmentName, "高管部")
                     || TextUtils.equals(departmentName, "上海资管高管部")
                     || TextUtils.equals(departmentName, "董事会办公室"))
                     && (TextUtils.equals(costName, "其他招待（办公）")
                     || TextUtils.equals(costName, "餐费招待（办公）"))) {
-                double money = vor(DVo::getMoney, DoubleController::getdouble);
                 if (money > 3000) {
                     dialog("您的报销金额超过三千元,请关联招待申请单", "确认", null, (bean, v, dialog)
                             -> dialog.dismiss(), null);
-                    return;
-                } else if (money > 10000) {
-                    dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "确认",
-                            null, (bean, v, dialog) -> {
-                                dialog.dismiss();
-                                execute(action);
-                            }, null);
                     return;
                 }
             }
@@ -531,20 +537,35 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 dialog("差旅费报销时必须关联出差申请单或投研报告", "确认", null, (bean, v, dialog)
                         -> dialog.dismiss(), null);
                 return;
-            } else {
-                dialog("差旅费报销中是否含有餐费发票报销", "是", "否", (bean, v, dialog)
-                        -> dialog.dismiss(), (bean, v, dialog) -> {
-                    dialog.dismiss();
-                    execute(action);
-                });
             }
+            dialog("差旅费报销中是否含有餐费发票报销", "否", "是", (bean, v, dialog) -> {
+                dialog.dismiss();
+                //下一部
+                if (TextUtils.equals(getBType(), CC) && money > 10000) {
+                    dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "否", "是", (bean1, v1, dialog1) -> {
+                        dialog1.dismiss();
+                        action.execute();
+                    }, (bean1, v1, dialog1) -> dialog1.dismiss());
+                    return;
+                }
+                action.execute();
+            }, (bean, v, dialog) -> dialog.dismiss());
+            return;
         }
-        execute(action);
+        //下一部
+        if (TextUtils.equals(getBType(), CC) && money > 10000) {
+            dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "否", "是", (bean1, v1, dialog1) -> {
+                dialog1.dismiss();
+                action.execute();
+            }, (bean1, v1, dialog1) -> dialog1.dismiss());
+            return;
+        }
+        action.execute();
     }
 
     private Map<String, Object> getSubmitMap() {
         return getCheckMap(getVo().getCheckMap(getBType(), getState()),
-                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属部门", "事由",
+                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属", "事由",
                         "费用指标"));
 
     }
@@ -559,7 +580,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         });
     }
 
-    void reimbursementClear(){
+    void reimbursementClear() {
         vos(DVo::getReimbursement, CoreController::clear);//清理报销人数据
         //清理费用指标数据后续
         vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
@@ -575,7 +596,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         notifyDataChanged();//更新数据
     }
 
-    void budgetDepartmentClear(){
+    void budgetDepartmentClear() {
         vos(DVo::getBudgetDepartment, CoreController::clear);//清理部门信息
         vos(DVo::getProject, CoreController::clear);//清理项目数据
         vos(DVo::getCostIndex, CoreController::clear);//清理费用指标数据
@@ -586,7 +607,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         notifyDataChanged();//更新数据
     }
 
-    void costClear(){
+    void costClear() {
         vos(DVo::getCostIndex, CoreController::clear);//清理费用指标
         vos(DVo::getApply, CoreController::clear);//清理申请单数据
         vos(DVo::getIsShare, obj -> obj.initDB(false));//清理分摊数据

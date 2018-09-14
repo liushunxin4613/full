@@ -28,6 +28,12 @@ public interface IController<T extends IController, DB, UB> extends IApiCodeApi 
     T initDB(DB db);
 
     /**
+     * 数据是否为空
+     * @return 是否为空
+     */
+    boolean isEmpty();
+
+    /**
      * 清理数据
      * @return 本身
      */

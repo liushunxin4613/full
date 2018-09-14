@@ -45,8 +45,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':core')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':core')
     //必须在每一个使用DBFlow的Module加入
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:4.2.4"
 }
