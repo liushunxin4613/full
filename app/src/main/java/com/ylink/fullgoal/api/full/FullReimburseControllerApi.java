@@ -493,7 +493,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
                             .put(MAIN_APP, getMainApp()));
                 } else {
-                    api().submitReimburse(map);
+                    api().submitNoLoadingReimburse(map);
                 }
             });
         }
@@ -512,7 +512,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         if (action == null) {
             return;
         }
-        if (special) {
+        if (special || TextUtils.equals(state, FQ)) {
             action.execute();
             return;
         }
@@ -523,8 +523,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             if (!(TextUtils.equals(departmentName, "高管部")
                     || TextUtils.equals(departmentName, "上海资管高管部")
                     || TextUtils.equals(departmentName, "董事会办公室"))
-                    && (TextUtils.equals(costName, "其他招待（办公）")
-                    || TextUtils.equals(costName, "餐费招待（办公）"))) {
+                    && costName.contains("招待")) {
                 if (money > 3000) {
                     dialog("您的报销金额超过三千元,请关联招待申请单", "确认", null, (bean, v, dialog)
                             -> dialog.dismiss(), null);
@@ -541,7 +540,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             dialog("差旅费报销中是否含有餐费发票报销", "否", "是", (bean, v, dialog) -> {
                 dialog.dismiss();
                 //下一部
-                if (TextUtils.equals(getBType(), CC) && money > 10000) {
+                if (money > 10000) {
                     dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "否", "是", (bean1, v1, dialog1) -> {
                         dialog1.dismiss();
                         action.execute();
@@ -553,7 +552,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             return;
         }
         //下一部
-        if (TextUtils.equals(getBType(), CC) && money > 10000) {
+        if (money > 10000) {
             dialog("您的报销金额超过一万元,请问是否填错流程,是对公付款还是对私付款", "否", "是", (bean1, v1, dialog1) -> {
                 dialog1.dismiss();
                 action.execute();

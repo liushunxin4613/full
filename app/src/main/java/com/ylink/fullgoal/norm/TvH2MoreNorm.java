@@ -39,4 +39,8 @@ public class TvH2MoreNorm extends BaseTestNorm<TvH2MoreNorm>{
         return iconOnClickListener;
     }
 
+    @Override
+    public View.OnClickListener getOnClickListener() {
+        return isEnable() ? super.getOnClickListener() : null;
+    }
 }

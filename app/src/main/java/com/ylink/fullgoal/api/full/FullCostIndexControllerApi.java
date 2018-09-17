@@ -396,8 +396,6 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                 addVgNorm(api, data -> {
                     double m = getCostMoney(api);
                     MoneyNorm blNorm = new MoneyNorm("分摊比例", getCostRatio(api));
-                    ee("m", m);
-                    ee("getSMoneyString(m)", getSMoneyString(m));
                     MoneyNorm moneyNorm = new MoneyNorm("金额", getSMoneyString(m),
                             getVo().getRestMoney(api), (bean, text) -> {
                         if (TextUtils.isEmpty(text)) {

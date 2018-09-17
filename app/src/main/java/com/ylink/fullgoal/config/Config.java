@@ -24,7 +24,7 @@ public class Config {
     public final static boolean LOCAL = true;// 本地模式是否开启
     public final static boolean TEST = false;//测试模式是否开启
     public final static boolean SIMULATE_HTTP = false;//模拟模式是否开启
-    public final static boolean HTTP_CACHE = false;//网络缓存模式是否开启
+    public final static boolean HTTP_CACHE = true;//网络缓存模式是否开启
     public final static long HTTP_CACHE_TIME = 1000 * 60 * 60;//网络缓存模式间隔时间
     public final static int SOCKET_OUT_TIME = 10000;//网络超时时间
     public final static int BACK_PRESSED_INTERVAL = 2000;//退出间隔时间

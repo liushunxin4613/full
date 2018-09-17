@@ -117,6 +117,7 @@ public class UrlConfig {
             PATH_QUERY_DIMENSION_INFORMATION_DATA,//获取分摊维度信息列表
             PATH_QUERY_APPLY,//请求申请单信息
             PATH_QUERY_APPLY_CONTENT,//请求申请单内容信息
+            FULL_REIMBURSE_SUBMIT,//提交数据
     };
 
 }

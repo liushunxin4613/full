@@ -319,7 +319,17 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     }
 
     /**
-     * 提交报销、修改、确认任务
+     * 提交报销任务
+     */
+    public void submitNoLoadingReimburse(Map<String, Object> map) {
+        if (!TextUtils.isEmpty(map)) {
+            api().ii("报销数据", map);
+            post(CLASS_DATA_FG, ROOT_URL, FULL_REIMBURSE_SUBMIT, g(mp -> mp.putAll(map)), SHOW_LOADING_NO);
+        }
+    }
+
+    /**
+     * 提交修改、确认任务
      */
     public void submitReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {

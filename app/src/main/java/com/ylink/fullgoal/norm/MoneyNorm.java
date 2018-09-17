@@ -4,7 +4,6 @@ import android.widget.EditText;
 
 import com.leo.core.iapi.inter.IABAction;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.api.item.MoneyControllerApi;
 
@@ -35,7 +34,6 @@ public class MoneyNorm extends BaseTestNorm<MoneyNorm>{
 
     public MoneyNorm(String name, String detail, double max, IABAction<MoneyNorm, String> action) {
         super(name, detail);
-        LogUtil.ee(this, "detail: " + detail);
         setMax(max);
         setEtEnable(false);
         setMoneyEnable(true);

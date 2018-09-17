@@ -297,7 +297,7 @@ public class RouteApi extends CoreRouteApi {
     /**
      * 搜索页面
      */
-    public void searchEvection(String search, String key, String value) {//TODO
+    public void searchEvection(String search, String key, String value) {
         onSearch();
         route(MODULE, "surface/search", null, map
                 -> map.put(SEARCH_TITLE, search)
@@ -310,7 +310,7 @@ public class RouteApi extends CoreRouteApi {
     /**
      * 搜索申请单
      */
-    public void searchApply(String search, String key, String value) {//TODO
+    public void searchApply(String search, String key, String value) {
         onSearch();
         route(MODULE, "surface/searchApply", null, map
                 -> map.put(SEARCH, search)
