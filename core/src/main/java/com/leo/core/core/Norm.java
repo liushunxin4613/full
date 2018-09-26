@@ -4,7 +4,6 @@ import android.view.ViewGroup;
 
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.ObjectUtil;
 import com.leo.core.util.TextUtils;
 

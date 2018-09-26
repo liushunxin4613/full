@@ -14,6 +14,11 @@ public class DItemController<T extends DItemController> extends MapController<T,
     }
 
     @Override
+    public Map<String, DItemVo> getMap() {
+        return super.getMap();
+    }
+
+    @Override
     public DItemVo getValue(String key) {
         return super.getValue(key);
     }

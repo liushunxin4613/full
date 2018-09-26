@@ -21,28 +21,29 @@ import uk.co.senab.photoview.PhotoView;
 
 public class ImageVoControllerApi<C> extends NormControllerApi<ImageVoControllerApi, C, ImageVoNorm> {
 
-    @Bind(R.id.name_tv)
-    TextView nameTv;
-    @Bind(R.id.detail_et)
-    EditText detailEt;
     @Bind(R.id.photo_iv)
     PhotoView photoIv;
     @Bind(R.id.to_left_tv)
     ImageView toLeftTv;
     @Bind(R.id.to_right_tv)
     ImageView toRightTv;
-    @Bind(R.id.vg)
-    ViewGroup vg;
-    @Bind(R.id.h_vg)
-    HFrameLayout hVg;
+
+    private ViewGroup vg;
+    private TextView nameTv;
+    private HFrameLayout hVg;
+    private TextView detailEt;
 
     public ImageVoControllerApi(C controller) {
         super(controller);
     }
 
     @Override
-    public Integer getDefRootViewResId() {
-        return R.layout.l_photo;
+    public void initView() {
+        super.initView();
+        vg = findViewById(R.id.vg);
+        hVg = findViewById(R.id.h_vg);
+        nameTv = findViewById(R.id.name_tv);
+        detailEt = findViewById(R.id.detail_et);
     }
 
     @Override
@@ -54,8 +55,12 @@ public class ImageVoControllerApi<C> extends NormControllerApi<ImageVoController
                 .setText(detailEt, TextUtils.isEmpty(norm.getAmount()) ? "0" : norm.getAmount())
                 .setImage(photoIv, norm.getPhoto(), ImageFactory.getInstance().getRotate(norm.getPhoto()),
                         (path, iv, rotate, success) -> ImageFactory.getInstance().save(path, rotate))
-                .execute(() -> HelperUtil.addMoneyTextChangedListener(detailEt,
-                        null, norm::setAmount))
+                .execute(() -> {
+                    if (detailEt instanceof EditText) {
+                        HelperUtil.addMoneyTextChangedListener((EditText) detailEt,
+                                null, norm::setAmount);
+                    }
+                })
                 .setOnClickListener(toLeftTv, view -> setImage(photoIv, norm.getPhoto(),
                         ImageFactory.getInstance().getRotate(norm.getPhoto(), -90),
                         (path, iv, rotate, success) -> ImageFactory.getInstance().save(path, rotate)))

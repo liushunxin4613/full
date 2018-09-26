@@ -512,7 +512,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         if (action == null) {
             return;
         }
-        if (special || TextUtils.equals(state, FQ)) {
+        if (special) {
             action.execute();
             return;
         }
@@ -667,7 +667,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * @param vo   vo
      */
     private void onGridPhotoClick(List<ImageVo> data, ImageVo vo) {
-        executeNon(vo, obj -> routeApi().bill(data, vo));
+        executeNon(vo, obj -> routeApi().bill(data, vo, state));
     }
 
     /**
@@ -706,7 +706,9 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         if (window != null) {
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.width = DisneyUtil.getScreenDisplay().getX() - ResUtil.getDimenInt(R.dimen.x120);
-            window.setAttributes(lp);
+            lp.dimAmount = 0.6f;
+            api.getDialog().getWindow().setAttributes(lp);
+            api.getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
         return true;
     }
@@ -731,10 +733,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 是否有金额
      */
     boolean isNoneInitiateEnable() {
-        return !(TextUtils.equals(state, FQ)
-                || TextUtils.equals(state, QZ)
-                || TextUtils.equals(state, MQZ)
-                || TextUtils.equals(state, HZ));
+        return !TextUtils.equals(state, QZ);
     }
 
     private ImageVo addPhoto(String path, int type) {

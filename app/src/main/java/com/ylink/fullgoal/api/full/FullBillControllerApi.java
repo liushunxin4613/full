@@ -16,11 +16,14 @@ import com.ylink.fullgoal.vo.ImageVo;
 import java.util.List;
 
 import static com.leo.core.util.TextUtils.count;
+import static com.ylink.fullgoal.config.ComConfig.QR;
+import static com.ylink.fullgoal.config.ComConfig.XG;
 
 @SuppressLint("DefaultLocale")
 public class FullBillControllerApi<T extends FullBillControllerApi, C> extends BarViewPagerControllerApi<T, C> {
 
     private ImageVo vo;
+    private String state;
     private List<ImageVo> data;
 
     public FullBillControllerApi(C controller) {
@@ -50,6 +53,7 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
         executeBundle(bundle -> {
             executeNon(getBundleList(bundle, ImageVo.class), data -> this.data = data);
             executeNon(getBundle(bundle, ImageVo.class), vo -> this.vo = vo);
+            executeNon(getBundle(bundle, String.class), state -> this.state = state);
         });
         setRightTv("修改金额", v -> executeNon(getImageVo(), vo -> api().imageUpdateAmount(
                 vo.getSerialNo(), vo.getImageID(), vo.getAmount())));
@@ -94,21 +98,23 @@ public class FullBillControllerApi<T extends FullBillControllerApi, C> extends B
     }
 
     private IControllerApi getControllerApi(ImageVo vo, int position) {
-        SurfaceControllerApi api = getViewControllerApi(ImageVoControllerApi.class);
-        api.onNorm(new ImageVoNorm(vo.getPhoto(), vo.getAmount(), getBol(vo)), position);
+        ImageVoNorm norm = new ImageVoNorm(vo.getPhoto(), vo.getAmount(), getBol(vo), state);
+        SurfaceControllerApi api = getViewControllerApi(ImageVoControllerApi.class, norm.getApiType());
+        api.onNorm(norm, position);
         return api;
     }
 
-    private ImageVo getItem(int position){
+    private ImageVo getItem(int position) {
         return TextUtils.isEmpty(data) ? null : position < data.size() ? data.get(position) : null;
     }
 
-    private boolean getBol(ImageVo vo){
+    private boolean getBol(ImageVo vo) {
         return vo != null && TextUtils.check(vo.getImageType());
     }
 
     private void initTitle(int position) {
-        setVisibility(getRightTv(), getBol(vo) ? View.VISIBLE : View.INVISIBLE);
+        setVisibility(getRightTv(), (getBol(vo) && (TextUtils.equals(QR, state)
+                || TextUtils.equals(XG, state)) ? View.VISIBLE : View.INVISIBLE));
         setTitle(String.format("票据(%d/%d)", position + 1, count(data)));
     }
 

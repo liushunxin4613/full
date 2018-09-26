@@ -126,18 +126,15 @@ public class FullReimburseDataControllerApi<T extends FullReimburseDataControlle
         execute(getFinish(), Message.class, msg -> {
             switch (msg.what) {
                 case 0x123://更新
-                    query(true);
+                    getVo().onAllDItemVo(vo -> vo.getOnce().initDB(false));
+                    query();
                     break;
             }
         });
     }
 
     private void query() {
-        query(false);
-    }
-
-    private void query(boolean hz) {
-        if (hz || !getExecute(getItemValue().getOnce(), false, BooleanController::is)) {
+        if (!getExecute(getItemValue().getOnce(), false, BooleanController::is)) {
             String type = getType();
             if (check(type)) {
                 executeNon(getReiRecycleControllerApi(type), api

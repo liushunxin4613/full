@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.leo.core.api.core.CoreModel;
 import com.leo.core.iapi.core.INorm;
 import com.leo.core.iapi.main.IControllerApi;
+import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.norm.BankNorm;
 
@@ -14,7 +15,12 @@ public class BankFg extends CoreModel {
     protected INorm createNorm(@NonNull IControllerApi controllerApi) {
         if (controllerApi instanceof RecycleControllerApi) {
             RecycleControllerApi api = (RecycleControllerApi) controllerApi;
-            return new BankNorm(getBankNo(), getBankOrignalName(), (bean, view) -> {
+            String bankNo = getBankNo();
+            int length = bankNo.length();
+            if (TextUtils.check(bankNo) && length > 4) {
+                bankNo = String.format("**** **** **** %s", bankNo.substring(length - 4, length));
+            }
+            return new BankNorm(bankNo, getBankOrignalName(), (bean, view) -> {
                 api.getActivity().finish();
                 api.api().submitBankV1(getBankNo(), getBankName());
             });

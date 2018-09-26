@@ -65,6 +65,7 @@ public class ImageListController<T extends ImageListController> extends AddContr
             executeBol(getData(), item -> {
                 if (TextUtils.equals(item.getPath(), path)) {
                     getData().remove(item);
+                    notifyDataChanged();
                     return true;
                 }
                 return false;
@@ -110,6 +111,7 @@ public class ImageListController<T extends ImageListController> extends AddContr
                 executeBol(getData(), item -> {
                     if (TextUtils.equals(msg, item.getImageID())) {
                         getData().remove(item);
+                        notifyDataChanged();
                         if (action != null) {
                             action.onCom(0, UPDATE, null);
                         }
