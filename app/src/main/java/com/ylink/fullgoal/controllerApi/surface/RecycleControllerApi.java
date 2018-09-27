@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.controllerApi.surface;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -18,6 +17,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.RecycleControllerApiAdapter;
 import com.ylink.fullgoal.db.table.Times;
+import com.ylink.fullgoal.manager.HLinearLayoutManager;
 import com.ylink.fullgoal.norm.VgNorm;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
 
     @Override
     public RecyclerView.LayoutManager newLayoutManager() {
-        return new LinearLayoutManager(getContext());
+        return new HLinearLayoutManager(getContext());
     }
 
     @Override

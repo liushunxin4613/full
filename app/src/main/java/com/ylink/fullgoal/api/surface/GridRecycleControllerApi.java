@@ -1,6 +1,5 @@
 package com.ylink.fullgoal.api.surface;
 
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.leo.core.iapi.core.INorm;
@@ -9,6 +8,7 @@ import com.leo.core.util.DisneyUtil;
 import com.leo.core.util.ResUtil;
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.manager.HGridLayoutManager;
 import com.ylink.fullgoal.other.GridSpacingItemDecoration;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class GridRecycleControllerApi<T extends GridRecycleControllerApi, C> ext
 
     @Override
     public RecyclerView.LayoutManager newLayoutManager() {
-        return new GridLayoutManager(getContext(), getGridCount());
+        return new HGridLayoutManager(getContext(), getGridCount());
     }
 
     @Override

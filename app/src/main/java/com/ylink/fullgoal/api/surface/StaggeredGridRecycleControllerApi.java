@@ -1,10 +1,10 @@
 package com.ylink.fullgoal.api.surface;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.LinearLayout;
 
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
+import com.ylink.fullgoal.manager.HStaggeredGridLayoutManager;
 import com.ylink.fullgoal.other.GridSpacing1ItemDecoration;
 
 public class StaggeredGridRecycleControllerApi<T extends StaggeredGridRecycleControllerApi, C> extends RecycleControllerApi<T, C> {
@@ -31,7 +31,7 @@ public class StaggeredGridRecycleControllerApi<T extends StaggeredGridRecycleCon
 
     @Override
     public RecyclerView.LayoutManager newLayoutManager() {
-        return new StaggeredGridLayoutManager(getGridCount(), LinearLayout.HORIZONTAL);
+        return new HStaggeredGridLayoutManager(getGridCount(), LinearLayout.HORIZONTAL);
     }
 
     @Override
