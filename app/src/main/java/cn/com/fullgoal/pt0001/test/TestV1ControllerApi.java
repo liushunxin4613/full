@@ -1,9 +1,8 @@
-package cn.com.fullgoal.pt0001;
+package cn.com.fullgoal.pt0001.test;
 
 import android.os.Bundle;
 
 import com.leo.core.util.TextUtils;
-import com.ylink.fullgoal.api.config.ParseTypeBean;
 import com.ylink.fullgoal.controllerApi.func.MainControllerApi;
 
 import java.util.Map;

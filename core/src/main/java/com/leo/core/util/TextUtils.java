@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
 import com.leo.core.iapi.inter.IMapAction;
@@ -828,6 +829,78 @@ public class TextUtils {
                 }
             }
         }
+    }
+
+    public static <K, V> V get(Map<K, ?> map, Class<V> clz, K key, V def) {
+        if (clz == null) {
+            throw new NullPointerException("clz 不能为空");
+        }
+        if (TextUtils.check(map, clz) && map.containsKey(key)) {
+            return conversion(map.get(key), clz);
+        }
+        return conversion(def, clz);
+    }
+
+    public static <K, V> V get(Map<K, ?> map, Class<V> clz, K key) {
+        return get(map, clz, key, null);
+    }
+
+    public static <A> A conversion(Object obj, Class<A> clz) {
+        if (clz == null) {
+            throw new NullPointerException("clz 不能为空");
+        }
+        if (TextUtils.equals(byte.class, clz)) {
+            Byte ts = 0;
+            if (Byte.class.isInstance(obj)) {
+                ts = (Byte) obj;
+            }
+            return (A) ts;
+        } else if (TextUtils.equals(short.class, clz)) {
+            Short ts = 0;
+            if (Short.class.isInstance(obj)) {
+                ts = (Short) obj;
+            }
+            return (A) ts;
+        } else if (TextUtils.equals(int.class, clz)) {
+            Integer ts = 0;
+            if (Integer.class.isInstance(obj)) {
+                ts = (Integer) obj;
+            }
+            return (A) ts;
+        } else if (TextUtils.equals(long.class, clz)) {
+            Long ts = 0L;
+            if (Long.class.isInstance(obj)) {
+                ts = (Long) obj;
+            }
+            return (A) ts;
+        } else if (TextUtils.equals(float.class, clz)) {
+            Float ts = 0f;
+            if (Float.class.isInstance(obj)) {
+                ts = (Float) obj;
+            }
+            return (A) ts;
+        } else if (TextUtils.equals(double.class, clz)) {
+            Double ts = 0d;
+            if (Double.class.isInstance(obj)) {
+                ts = (Double) obj;
+            }
+            return (A) ts;
+        } else if (TextUtils.equals(boolean.class, clz)) {
+            Boolean ts = false;
+            if (Boolean.class.isInstance(obj)) {
+                ts = (Boolean) obj;
+            }
+            return (A) ts;
+        } else if (TextUtils.equals(char.class, clz)) {
+            Character ts = '\u0000';
+            if (Character.class.isInstance(obj)) {
+                ts = (Character) obj;
+            }
+            return (A) ts;
+        } else if (clz.isInstance(obj)) {
+            return (A) obj;
+        }
+        return null;
     }
 
 }

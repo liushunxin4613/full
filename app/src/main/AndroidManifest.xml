@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cn.com.fullgoal.pt0001.TestActivity"
+            android:name="cn.com.fullgoal.pt0001.test.TestActivity"
             android:screenOrientation="portrait">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
