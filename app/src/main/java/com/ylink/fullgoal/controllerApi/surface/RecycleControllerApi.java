@@ -66,6 +66,10 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
         return manager;
     }
 
+    private void clearLayoutManager() {
+        manager = null;
+    }
+
     @Override
     public RecyclerView.LayoutManager newLayoutManager() {
         return new HLinearLayoutManager(getContext());
@@ -125,8 +129,11 @@ public class RecycleControllerApi<T extends RecycleControllerApi, C> extends Con
     @Override
     public void initView() {
         super.initView();
-        getRecycleAdapter().setHasStableIds(true);
+        clearLayoutManager();
         getRecyclerView().setLayoutManager(getLayoutManager());
+        if (!getRecycleAdapter().hasObservers()) {
+            getRecycleAdapter().setHasStableIds(true);
+        }
         getRecyclerView().setAdapter(getRecycleAdapter());
         getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

@@ -28,7 +28,6 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
     HorizontalScrollView indicator;
 
     private int sum;
-    private int currentItem;
     private View selected;
     private ViewPager viewPager;
     private BasePagerAdapter adapter;
@@ -87,10 +86,6 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
         return getThis();
     }
 
-    public int getCurrentItem() {
-        return currentItem;
-    }
-
     private int getCount() {
         return getDataApi().getCount();
     }
@@ -146,12 +141,13 @@ public class IndicatorControllerApi<T extends IndicatorControllerApi, C> extends
                 vg.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             }
-            if (getCurrentItem() < 0) {
+            int currentItem = viewPager.getCurrentItem();
+            if (currentItem < 0) {
                 currentItem = 0;
-            } else if (getCurrentItem() > count - 1) {
+            } else if (currentItem > count - 1) {
                 currentItem = count - 1;
             }
-            onSelected(getCurrentItem());
+            onSelected(currentItem);
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }

@@ -531,6 +531,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 }
             }
         }
+        if(TextUtils.equals("职工教育经费", costName) && !vor(DVo::getApply, obj -> obj.contains("001"))){
+            dialog("职工教育经费报销时必须关联培训费申请单", "确认", null, (bean, v, dialog)
+                    -> dialog.dismiss(), null);
+            return;
+        }
         if (TextUtils.equals(getBType(), CC) && TextUtils.equals("差旅费", costName)) {
             if (vor(DVo::getTrave, AddController::isEmpty) && vor(DVo::getReport, AddController::isEmpty)) {
                 dialog("差旅费报销时必须关联出差申请单或投研报告", "确认", null, (bean, v, dialog)

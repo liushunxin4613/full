@@ -136,4 +136,8 @@ public class ApplyMapControllerV2<T extends ApplyMapControllerV2> extends BaseMa
         return data;
     }
 
+    public boolean contains(String key){
+        return getMap().containsKey(key);
+    }
+
 }

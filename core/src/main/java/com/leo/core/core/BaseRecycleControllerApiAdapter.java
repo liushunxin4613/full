@@ -83,6 +83,19 @@ public class BaseRecycleControllerApiAdapter extends RecyclerView.Adapter<ViewHo
         return dataApi().getCount();
     }
 
+    /*@SuppressLint("DefaultLocale")
+    @Override
+    public long getItemId(int position) {
+        IMNApi mnApi = getItem(position);
+        if (mnApi != null) {
+            Integer viewType = mnApi.getViewType();
+            if (viewType != null) {
+                return String.format("%d&%d", viewType, position).hashCode();
+            }
+        }
+        return position;
+    }*/
+
     @Override
     public long getItemId(int position) {
         return position;
