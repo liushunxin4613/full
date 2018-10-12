@@ -4,7 +4,7 @@ import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.cr.core.BaseController;
 import com.ylink.fullgoal.fg.NodeFg;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,7 +14,9 @@ public class NodeController<T extends NodeController> extends BaseController<T, 
 
     @Override
     public T initDB(List<NodeFg> nodeFgs) {
-        return super.initDB(nodeFgs);
+        super.initDB(nodeFgs);
+        sort();
+        return getThis();
     }
 
     public T addHeadAll(List<NodeFg> nodeFgs) {
@@ -22,8 +24,15 @@ public class NodeController<T extends NodeController> extends BaseController<T, 
             initDB(nodeFgs);
         } else if (TextUtils.check(nodeFgs)) {
             execute(nodeFgs, item -> getDB().add(0, item));
+            sort();
         }
         return getThis();
+    }
+
+    private void sort() {
+        Collections.sort(getDB(), (dt, dt1) -> TextUtils.isEmpty(dt.getProcessTime())
+                || TextUtils.isEmpty(dt1.getProcessTime()) ? 1
+                : -dt.getProcessTime().compareTo(dt1.getProcessTime()));
     }
 
     @Override

@@ -65,12 +65,12 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         check = false;
         mDialog = dialog("请从门户进入", "确定", null, (bean, v, dialog) -> {
             check = true;
-            dialog.dismiss();
             PackageManager pm = getContext().getPackageManager();
             Intent it = pm.getLaunchIntentForPackage("cn.com.fullgoal.portal");
             if (it == null) {
                 show("手机未安装该应用");
             } else {
+                dialog.dismiss();
                 getActivity().startActivity(it);
             }
         }, null);

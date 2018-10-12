@@ -738,7 +738,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 是否有金额
      */
     boolean isNoneInitiateEnable() {
-        return !TextUtils.equals(state, QZ);
+        return !(TextUtils.equals(state, QZ) || TextUtils.equals(state, FQ));
     }
 
     private ImageVo addPhoto(String path, int type) {
