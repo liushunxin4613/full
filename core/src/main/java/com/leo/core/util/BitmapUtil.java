@@ -23,6 +23,10 @@ public class BitmapUtil {
         return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), width, height, true);
     }
 
+    public static Bitmap getScaledBitmap(Bitmap bitmap, int width, int height) {
+        return bitmap == null ? bitmap : Bitmap.createScaledBitmap(bitmap, width, height, true);
+    }
+
     public static Bitmap getOptionBitmap(String filePath, int inSampleSize) {
         if (inSampleSize < 1) {
             inSampleSize = 1;

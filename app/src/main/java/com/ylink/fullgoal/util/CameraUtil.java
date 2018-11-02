@@ -168,7 +168,6 @@ public class CameraUtil {
         for (int i = 0; i < previewSizes.size(); i++) {
             Size size = previewSizes.get(i);
         }
-
     }
 
     /**

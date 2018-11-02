@@ -65,6 +65,8 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
     private Camera.Parameters parameters;
     private boolean safeToTakePicture = true;
     private String imageType;
+    private int previewSizeWidth;
+    private int previewSizeHeight;
 
     public Camera2ControllerApi(C controller) {
         super(controller);
@@ -374,9 +376,22 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         }
         Camera.Size previewSize = CameraUtil.findBestPreviewResolution(camera);
+        Camera.Size pictrueSize = CameraUtil.getInstance().getPropPictureSize(
+                parameters.getSupportedPictureSizes(), 1000);
         parameters.setPreviewSize(previewSize.width, previewSize.height);
+        previewSizeWidth = previewSize.width;
+        previewSizeHeight = previewSize.height;
         parameters.setPictureSize(previewSize.width, previewSize.height);
-        camera.setParameters(parameters);
+        try {
+            camera.setParameters(parameters);
+        } catch (Exception e) {
+            parameters.setPictureSize(pictrueSize.width, pictrueSize.height);
+            try {
+                camera.setParameters(parameters);
+            } catch (Exception ee) {
+                ee.printStackTrace();
+            }
+        }
         int picHeight = CameraUtil.SCREEN_WIDTH * previewSize.width / previewSize.height;
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(CameraUtil.SCREEN_WIDTH, picHeight);
         mySurfaceView.setLayoutParams(params);
@@ -401,6 +416,24 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
         return null;
     }
 
+    private Bitmap jz(Bitmap bitmap) {
+        if (bitmap != null && previewSizeWidth > 0 && previewSizeHeight > 0
+                && bitmap.getHeight() > 0 && bitmap.getWidth() > 0) {
+            double sa = (double) previewSizeWidth / previewSizeHeight;
+            double sb = (double) bitmap.getHeight() / bitmap.getWidth();
+            if (sa > sb) {
+                double ds = (double) bitmap.getWidth() * previewSizeHeight / previewSizeWidth;
+                double offset = (bitmap.getHeight() - ds) / 2;
+                return Bitmap.createBitmap(bitmap, 0, (int) offset, bitmap.getWidth(), (int) ds);
+            } else if (sa < sb) {
+                double ds = (double) bitmap.getHeight() * previewSizeWidth / previewSizeHeight;
+                double offset = (bitmap.getWidth() - ds) / 2;
+                return Bitmap.createBitmap(bitmap, (int) offset, 0, (int) ds, bitmap.getHeight());
+            }
+        }
+        return bitmap;
+    }
+
     //图像数据处理完成后的回调函数
     private Camera.PictureCallback mJpeg = (data, camera) -> new Thread(() -> {
         try {
@@ -415,6 +448,7 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
                     matrix.preRotate(90);
                     break;
             }
+            bitmap = jz(bitmap);
             Rec rec = maskView.newRec(bitmap.getHeight(), bitmap.getWidth());
             bitmap = Bitmap.createBitmap(bitmap, rec.getY(), rec.getX(), rec.getH(),
                     rec.getW(), matrix, true);
