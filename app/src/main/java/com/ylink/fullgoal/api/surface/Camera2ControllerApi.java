@@ -87,9 +87,9 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
 
     private void initOnClickListener() {
         setOnClickListener(takePhoto, v -> op(() -> {
-            if (safeToTakePicture) {
-                safeToTakePicture = false;
+            if (safeToTakePicture && mCamera != null) {
                 mCamera.takePicture(null, null, mJpeg);
+                safeToTakePicture = false;
             }
         })).setOnClickListener(openLight, v -> turnLight(mCamera)).setOnClickListener(cameraSwitch, v -> {
             releaseCamera();

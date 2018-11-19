@@ -90,6 +90,18 @@ public class ImageListController<T extends ImageListController> extends AddContr
         return sum;
     }
 
+    public boolean isFinish() {
+        if (TextUtils.check(getData())) {
+            for (ImageVo vo : getData()) {
+                if (TextUtils.check(vo) && !TextUtils.check(
+                        vo.getImageID(), vo.getSerialNo())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * 处理返回消息
      *

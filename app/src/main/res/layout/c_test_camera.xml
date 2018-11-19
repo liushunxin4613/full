@@ -22,9 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
             android:maxLines="1"
             android:tag="tv0"
             android:text="@string/paishepj"
@@ -32,18 +32,38 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/tv1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv0"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
             android:maxLines="1"
             android:tag="tv0"
             android:text="@string/jiangpiaojfrxxknldjy"
             android:textColor="@color/white"
             android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="24dp"
+            android:layout_below="@+id/tv1"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/cs_top"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="64dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginRight="@dimen/margin"
+            android:src="@mipmap/cs_right"
+            tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:id="@+id/topRly"
@@ -55,10 +75,10 @@
                 android:id="@+id/openLight"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
                 android:background="#00000000"
                 android:src="@mipmap/camera_flash_off"
                 tools:ignore="ContentDescription" />
@@ -69,10 +89,10 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
                 android:background="#00000000"
                 android:src="@mipmap/camera_flip"
                 tools:ignore="ContentDescription" />
@@ -92,8 +112,8 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
                 android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
                 android:background="@mipmap/cuowu" />
 
             <Button
@@ -101,8 +121,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@mipmap/camera_photo" />
         </RelativeLayout>
     </RelativeLayout>

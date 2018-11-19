@@ -29,6 +29,7 @@ import com.ylink.fullgoal.cr.core.DoubleController;
 import com.ylink.fullgoal.cr.core.StringController;
 import com.ylink.fullgoal.cr.surface.CostIndexController;
 import com.ylink.fullgoal.cr.surface.DepartmentController;
+import com.ylink.fullgoal.cr.surface.ImageListController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.db.table.Times;
 import com.ylink.fullgoal.fg.ContractPaymentFg;
@@ -108,6 +109,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
     LinearLayout alterVg;
     @Bind(R.id.content_vg)
     ViewGroup contentVg;
+    @Bind(R.id.right_tv1)
+    TextView rightTv1;
+    @Bind(R.id.line_vew)
+    View lineVew;
 
     private String state;
     private String title;
@@ -299,11 +304,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setRightTv("提交", v -> submit(false));
                     break;
                 case QR:
+                    setVisibility(View.VISIBLE, rightTv1, lineVew)
+                            .setText(rightTv1, "申诉")
+                            .setOnClickListener(rightTv1, v -> appeal());
                     setRightTv("确认", v -> submit(false));
                     break;
                 case XG:
-                    setRightTv("申诉", v -> api().appeal(vor(DVo::getSerialNo,
-                            StringController::getDB)));
+                    setRightTv("申诉", v -> appeal());
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpTv, v -> {
                         //申请特批
                         vos(DVo::getLogo, obj -> obj.initDB(XG1));
@@ -453,6 +460,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     //私有的
 
+    private void appeal() {
+        api().appeal(vor(DVo::getSerialNo, StringController::getDB));
+    }
+
     private void again() {
         dialog("是否需要添加新的报销", "是",
                 "否", (bean, v, dialog) -> {
@@ -481,6 +492,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 提交数据
      */
     private void submit(boolean special) {
+        boolean imageFinsih = vor(DVo::getImageList, ImageListController::isFinish);
+        if(!imageFinsih){
+            show("您还有图片未上传完毕或上传成功");
+            return;
+        }
         vos(DVo::getSbumitFlag, obj -> obj.initDB(String.valueOf(getFlag())));
         vos(DVo::getCostIndex, obj -> obj.update((String) vor(DVo::getMoney,
                 DoubleController::getDBMoney)));
@@ -531,7 +547,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 }
             }
         }
-        if(TextUtils.equals("职工教育经费", costName) && !vor(DVo::getApply, obj -> obj.contains("001"))){
+        if (TextUtils.equals("职工教育经费", costName) && !vor(DVo::getApply, obj -> obj.contains("001"))) {
             dialog("职工教育经费报销时必须关联培训费申请单", "确认", null, (bean, v, dialog)
                     -> dialog.dismiss(), null);
             return;

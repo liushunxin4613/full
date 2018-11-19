@@ -141,6 +141,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     private IRouteApi routeApi;
 
     //other
+    private boolean rootLayer;
     private String rootViewXml;
     private ViewGroup container;
     private Integer rootViewResId;
@@ -160,6 +161,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         this.controller = controller;
         mainHandler = new Handler(Looper.getMainLooper());
         if (controller instanceof Activity) {
+            rootLayer = true;
             activity = (Activity) controller;
             context = activity.getBaseContext();
             application = activity.getApplication();
@@ -623,6 +625,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public C getController() {
         return controller;
+    }
+
+    @Override
+    public boolean isRootLayer() {
+        return rootLayer;
     }
 
     @Override
@@ -1231,6 +1238,9 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onPause() {
+        if(isRootLayer()){
+            vs(getActivity(), Activity::getIntent, obj -> obj.removeExtra(FINISH));
+        }
         executeViewControllerApi(IControllerApi::onPause);
     }
 

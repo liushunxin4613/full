@@ -16,7 +16,6 @@ import okio.Okio;
 
 public class MRequestBody extends RequestBody implements IProgressListener {
 
-    private boolean once;
     private RequestBody mRequestBody;
     private IProgressListener mListener;
     private Handler handler;

@@ -58,6 +58,12 @@ public interface IControllerApi<T extends IControllerApi, C> extends INewApi, IA
     C getController();
 
     /**
+     * 是否是根部层级
+     * @return true是,false否
+     */
+    boolean isRootLayer();
+
+    /**
      * 获取Activity
      *
      * @return Activity
