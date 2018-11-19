@@ -58,7 +58,6 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         if (TextUtils.check(taskId)) {
             api().queryNoShowLoadingMessageBack(taskId);
         }
-//        api().SSO(getCastgc());
     }
 
     private void check() {

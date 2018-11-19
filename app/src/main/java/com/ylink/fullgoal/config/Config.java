@@ -21,7 +21,7 @@ public class Config {
     //配置
     public final static String VERSION = VERSION_APP;//版本
     public final static boolean DEBUG = false;//debug模式是否开启
-    public final static boolean LOCAL = true;// 本地模式是否开启
+    public final static boolean LOCAL = false;// 本地模式是否开启
     public final static boolean TEST = false;//测试模式是否开启
     public final static boolean SIMULATE_HTTP = false;//模拟模式是否开启
     public final static boolean HTTP_CACHE = true;//网络缓存模式是否开启
