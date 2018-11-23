@@ -33,4 +33,7 @@
     <string name="shiyongzp">使用照片</string>
     <string name="paishepj">拍摄票据</string>
     <string name="jiangpiaojfrxxknldjy">将票据放入拍摄框内,亮度均匀</string>
+    <string name="cmcsdqby">此面朝上,对齐边缘</string>
+    <string name="cmcs">此面朝上&#160;</string>
+    <string name="dqby">&#160;对齐边缘</string>
 </resources>

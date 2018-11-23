@@ -6,8 +6,6 @@ import com.ylink.fullgoal.fg.CtripTicketsFg;
 
 import java.util.List;
 
-import static com.ylink.fullgoal.config.ComConfig.CC;
-
 /**
  * 携程机票控制器
  */
@@ -40,11 +38,7 @@ public class CtripTicketsController<T extends CtripTicketsController> extends Ad
 
     @Override
     protected String getOnUBKey(String key) {
-        switch (key){
-            case CC:
-                return "ctrip";
-        }
-        return super.getOnUBKey(key);
+        return "ctrip";
     }
 
 }

@@ -6,8 +6,6 @@ import com.ylink.fullgoal.fg.TravelFormFg;
 
 import java.util.List;
 
-import static com.ylink.fullgoal.config.ComConfig.CC;
-
 /**
  * 出差申请单控制器
  */
@@ -40,11 +38,7 @@ public class TravelFormController<T extends TravelFormController> extends AddCon
 
     @Override
     protected String getOnUBKey(String key) {
-        switch (key){
-            case CC:
-                return "travel";
-        }
-        return super.getOnUBKey(key);
+        return "travel";
     }
 
 }

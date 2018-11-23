@@ -6,8 +6,6 @@ import com.ylink.fullgoal.fg.ResearchReportFg;
 
 import java.util.List;
 
-import static com.ylink.fullgoal.config.ComConfig.CC;
-
 /**
  * 调研报告控制器
  */
@@ -40,11 +38,7 @@ public class ResearchReportController<T extends ResearchReportController> extend
 
     @Override
     protected String getOnUBKey(String key) {
-        switch (key){
-            case CC:
-                return "reportName";
-        }
-        return super.getOnUBKey(key);
+        return "reportName";
     }
 
 }

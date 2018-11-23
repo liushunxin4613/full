@@ -9,7 +9,6 @@ import com.leo.core.util.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ylink.fullgoal.config.ComConfig.CC;
 import static com.ylink.fullgoal.config.ComConfig.UPDATE;
 
 /**
@@ -62,7 +61,6 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
     }
 
     protected void notifyDataChanged(){
-
     }
 
     @NonNull
@@ -147,11 +145,7 @@ public abstract class AddController<T extends AddController, DB> extends BaseCon
 
     @Override
     protected List<DB> getOnUB(String key) {
-        switch (key) {
-            case CC:
-                return getData();
-        }
-        return super.getOnUB(key);
+        return getData();
     }
 
     public boolean isEmpty(){

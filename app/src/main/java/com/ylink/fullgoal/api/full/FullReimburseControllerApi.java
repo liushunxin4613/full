@@ -202,44 +202,20 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                                 again();
                                 break;
                             case QR://经办人确认
-                                if (TextUtils.equals(getMainApp(), MAIN_APP)) {
-                                    dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
-                                        dialog.dismiss();
-                                        getActivity().finish();
-                                    }, (bean1, v, dialog) -> {
-                                        dialog.dismiss();
-                                        activityLifecycleApi().finishAllActivity();
-                                    });
-                                } else {
-                                    Message message = new Message();
-                                    message.what = 0x123;
-                                    activityLifecycleApi().finishActivity(message, getClass());
-                                }
+                                finishApp();
                                 break;
                             case XG://经办人修改
                                 String logo = vor(DVo::getLogo, StringController::getDB);
                                 show(String.format("%s成功", !TextUtils.isEmpty(logo)
                                         ? logo : "报销修改"));
-                                if (TextUtils.equals(getMainApp(), MAIN_APP)) {
-                                    dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
-                                        dialog.dismiss();
-                                        getActivity().finish();
-                                    }, (bean1, v, dialog) -> {
-                                        dialog.dismiss();
-                                        activityLifecycleApi().finishAllActivity();
-                                    });
-                                } else {
-                                    Message message = new Message();
-                                    message.what = 0x123;
-                                    activityLifecycleApi().finishActivity(message, getClass());
-                                }
+                                finishApp();
                                 break;
                         }
                     }
                     break;
                 case FULL_APPEAL://申诉任务
                     if (bean.isSuccess()) {
-                        getActivity().finish();
+                        finishApp();
                     } else {
                         show(bean.getMessage());
                     }
@@ -462,6 +438,22 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private void appeal() {
         api().appeal(vor(DVo::getSerialNo, StringController::getDB));
+    }
+
+    private void finishApp(){
+        if (TextUtils.equals(getMainApp(), MAIN_APP)) {
+            dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
+                dialog.dismiss();
+                getActivity().finish();
+            }, (bean1, v, dialog) -> {
+                dialog.dismiss();
+                activityLifecycleApi().finishAllActivity();
+            });
+        } else {
+            Message message = new Message();
+            message.what = 0x123;
+            activityLifecycleApi().finishActivity(message, getClass());
+        }
     }
 
     private void again() {

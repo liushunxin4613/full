@@ -94,7 +94,7 @@ public class ImageListController<T extends ImageListController> extends AddContr
         if (TextUtils.check(getData())) {
             for (ImageVo vo : getData()) {
                 if (TextUtils.check(vo) && !TextUtils.check(
-                        vo.getImageID(), vo.getSerialNo())) {
+                        vo.getImageID())) {
                     return false;
                 }
             }
