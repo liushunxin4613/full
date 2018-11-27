@@ -154,8 +154,8 @@ public abstract class CoreRouteApi extends HasCoreControllerApi<CoreRouteApi> im
             commandMap, Map<String, String> paramsMap) {
         String path = getPath(module, activity, api, viewApi);
         if (TextUtils.check(path)) {
-            String query = getQuery(map(map -> map.put(COMMAND, LogUtil.getLog(false, commandMap))
-                    .put(PARAMS, LogUtil.getLog(false, paramsMap))));
+            String query = getQuery(map(map -> map.put(COMMAND, TextUtils.toGsonString(commandMap))
+                    .put(PARAMS, TextUtils.toGsonString(paramsMap))));
             String url = String.format("%s/%s%s", URL_START, path, no(query));
             LogUtil.ii(this, "uri <== " + url);
             LogUtil.ee(this, "uri <== " + url);

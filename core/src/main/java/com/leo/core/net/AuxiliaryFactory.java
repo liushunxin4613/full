@@ -120,7 +120,7 @@ public class AuxiliaryFactory {
             if (!TextUtils.isEmpty(actionMap)) {
                 for (Map.Entry<String, Object> entry : actionMap.entrySet()) {
                     if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
-                        map.put(entry.getKey(), LogUtil.getLog(false, entry.getValue()));
+                        map.put(entry.getKey(), TextUtils.toGsonString(entry.getValue()));
                     }
                 }
                 return map;

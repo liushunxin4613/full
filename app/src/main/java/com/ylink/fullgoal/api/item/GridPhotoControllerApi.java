@@ -48,13 +48,22 @@ public class GridPhotoControllerApi<C> extends NormControllerApi<GridPhotoContro
                                     TextUtils.isEmpty(vo.getAmount()) ? "0" : vo.getAmount()));
                         }
                         onError(vo.isError());
-                        vo.setProgressListener(this::onLoading).setErrorAction(this::onError);
+                        vo.setErrorAction(this::onError);
+                        vo.setProgressListener(this::init, this::onLoading);
                     }
                 })
                 .setLayoutParams(iconIv, new FrameLayout.LayoutParams(-1, norm.getUnit()))
                 .setVisibility(nameTv, norm.isVisible() ? View.VISIBLE : View.GONE)
                 .setOnClickListener(norm.getOnClickListener())
                 .setOnLongClickListener(norm.getOnLongClickListener());
+    }
+
+    private void init(){
+        if(progressBar.getProgress() <= 20){
+            progressBar.setProgress(20);
+        }
+        progressBar.show();
+        setVisibility(progressBar, errorIv.isShown() ? View.GONE : View.VISIBLE);
     }
 
     private void onLoading(long progress, long total) {

@@ -2,8 +2,6 @@ package com.leo.core.api.api;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.leo.core.iapi.api.ILogApi;
 import com.leo.core.util.ClassApiUtil;
 import com.leo.core.util.JsonShowUtil;
@@ -21,13 +19,11 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
     private final static String DEFAULT = "";
     private final static String INTERVAL = ", ";
     private String name;
-    private Gson gson;
 
     @Override
     public LogApi openLog() {
         debug = true;
         exclude = new ArrayList<>();
-        gson = new GsonBuilder().disableHtmlEscaping().create();
         return this;
     }
 
@@ -53,23 +49,15 @@ public class LogApi implements ILogApi<LogApi, Object, Object> {
 
     @Override
     public String getLog(boolean json, Object obj) {
+        String text = null;
         if (obj instanceof String) {
-            return (String) obj;
+            text = (String) obj;
         } else if (obj instanceof Comparable) {
-            return String.valueOf(obj);
+            text = String.valueOf(obj);
         } else if (obj != null) {
-            try {
-                String text = gson.toJson(obj);
-                if (json) {
-                    return "\n" + JsonShowUtil.getShowJson(text);
-                } else {
-                    return text;
-                }
-            } catch (Exception e) {
-                return obj.toString();
-            }
+            text = TextUtils.toGsonString(obj);
         }
-        return DEFAULT;
+        return text != null ? JsonShowUtil.getShowJson(text) : DEFAULT;
     }
 
     @Override

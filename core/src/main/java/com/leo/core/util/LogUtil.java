@@ -5,7 +5,6 @@ import com.leo.core.iapi.api.ILogApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.other.MMap;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class LogUtil {
@@ -32,10 +31,6 @@ public class LogUtil {
 
     public synchronized static String getLog(Object obj) {
         return getApi().getLog(obj);
-    }
-
-    public synchronized static String getLog(boolean json, Object obj) {
-        return getApi().getLog(json, obj);
     }
 
     public synchronized static String getLog(Object... args) {

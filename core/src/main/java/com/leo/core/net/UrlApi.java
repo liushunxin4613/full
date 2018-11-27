@@ -2,12 +2,11 @@ package com.leo.core.net;
 
 import com.leo.core.api.main.CoreControllerApi;
 import com.leo.core.api.main.HasCoreControllerApi;
-import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.api.IUrlApi;
+import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.IUrlAction;
 import com.leo.core.other.MMap;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.util.HashMap;
@@ -124,7 +123,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
             if (!TextUtils.isEmpty(actionMap)) {
                 for (Map.Entry<String, Object> entry : actionMap.entrySet()) {
                     if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
-                        map.put(entry.getKey(), LogUtil.getLog(false, entry.getValue()));
+                        map.put(entry.getKey(), TextUtils.toGsonString(entry.getValue()));
                     }
                 }
                 return map;
@@ -143,7 +142,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
 
     protected void postParams(String type, String url, String path, IObjAction<Map<String, Object>> action) {
         Map<String, String> map = getActionMap(action);
-        observable(type, url, null, path, map, WHAT_DEFAULT, LogUtil.getLog(false, map), (a, u, p, m)
+        observable(type, url, null, path, map, WHAT_DEFAULT, TextUtils.toGsonString(map), (a, u, p, m)
                 -> a.post(p, m));
     }
 
@@ -183,7 +182,7 @@ public class UrlApi<T extends UrlApi> extends HasCoreControllerApi<T> implements
         Map<String, Object> mp;
         executeNon(mp = new HashMap<>(), action);
         if (!TextUtils.isEmpty(mp)) {
-            return map -> map.put(REQINFO, LogUtil.getLog(false, mp));
+            return map -> map.put(REQINFO, TextUtils.toGsonString(mp));
         }
         return null;
     }

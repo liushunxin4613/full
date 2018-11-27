@@ -8,6 +8,7 @@ public class JsonShowUtil {
 
     public static String getShowJson(String json) {
         if (!TextUtils.isNotJsonString(json)) {
+            json = TextUtils.toGsonString(TextUtils.toJSONMap(json));
             int tab = 0;
             Boolean is = null;
             Boolean ts = null;

@@ -9,7 +9,6 @@ import com.leo.core.iapi.api.IActivityLifecycleCallbacksApi;
 import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.inter.IbolAction;
 import com.leo.core.iapi.main.IControllerApi;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
 
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class ActivityLifecycleCallbacksApi extends VsApi<ActivityLifecycleCallba
     }
 
     private void putExtra(@NonNull Activity activity, Object obj) {
-        vs(activity, Activity::getIntent, intent -> intent.putExtra(FINISH, LogUtil.getLog(false, obj)));
+        vs(activity, Activity::getIntent, intent -> intent.putExtra(FINISH, TextUtils.toGsonString(obj)));
     }
 
     @Override

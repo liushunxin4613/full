@@ -49,13 +49,14 @@ public class MRequestBody extends RequestBody implements IProgressListener {
         if (sink instanceof Buffer) {
             mRequestBody.writeTo(sink);
         } else {
+            long contentLength = contentLength();
             BufferedSink bufferedSink = Okio.buffer(new ForwardingSink(sink) {
                 private long sum = 0;
 
                 @Override
                 public void write(Buffer source, long byteCount) throws IOException {
                     super.write(source, byteCount);
-                    handler.post(() -> onLoading(sum += byteCount, contentLength()));
+                    handler.post(() -> onLoading(sum += byteCount, contentLength));
                 }
             });
             mRequestBody.writeTo(bufferedSink);//写入

@@ -9,7 +9,7 @@ public class UrlConfig {
 
     private final static String FULL_TEST_HTTP = "http://192.168.41.123:7001/applications/";
     private final static String FULL_TEST1_HTTP = "http://192.168.8.114:8080/fuguo/";
-    private final static String FULL_TEST2_HTTP = "http://192.168.42.111:7001/applications/";//test
+    private final static String FULL_TEST2_HTTP = "http://192.168.42.111:7001/ssca/";//applications
     private final static String FULL_TEST_WWW_HTTP = "https://budget.fullgoal.com.cn:8000/ssca/";
     public final static String FG_ROOT_URL = LOCAL ? FULL_TEST2_HTTP : FULL_TEST_WWW_HTTP;
 

@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,7 +26,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.v4.app.Fragment;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.api.api.FileApi;
@@ -1238,9 +1238,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void onPause() {
-        if(isRootLayer()){
-            vs(getActivity(), Activity::getIntent, obj -> obj.removeExtra(FINISH));
-        }
         executeViewControllerApi(IControllerApi::onPause);
     }
 
@@ -2223,7 +2220,6 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         api().get(type, url, obj, path, action, what, tag);
     }
 
-    @Override
     public <B> void post(String type, String url, B obj, String path, IObjAction<Map<String, Object>> action,
                          int what, String tag) {
         api().post(type, url, obj, path, action, what, tag);

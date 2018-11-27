@@ -9,7 +9,7 @@ public class Config {
     public final static String APP_XML = "app://xml/";
 
     //超时时间(单位:秒)
-    public final static int TIME_OUT_SECONDS = 20;
+    public final static int TIME_OUT_SECONDS = 60;
     private final static int FPS = 60;//FPS
     private final static int MAX_FPS = 80;//FPS
     public final static float FPS_TIME = (float) 1000 / FPS;//FPS时间

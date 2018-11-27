@@ -1,5 +1,6 @@
 package com.ylink.fullgoal.vo;
 
+import com.leo.core.iapi.inter.IAction;
 import com.leo.core.iapi.inter.IProgressListener;
 import com.leo.core.iapi.inter.IbooleanAction;
 import com.leo.core.util.TextUtils;
@@ -62,6 +63,7 @@ public class ImageVo implements IProgressListener {
     private transient int invoiceUseType;
     private transient IProgressListener listener;
     private transient IbooleanAction errorAction;
+    private transient IAction action;
 
     public ImageVo() {
     }
@@ -78,9 +80,17 @@ public class ImageVo implements IProgressListener {
         this.invoiceUse = getValue(invoiceUseType);
     }
 
-    public ImageVo setProgressListener(IProgressListener listener) {
+    public ImageVo setProgressListener(IAction action, IProgressListener listener) {
+        this.action = action;
         this.listener = listener;
+        this.init();
         return this;
+    }
+
+    public void init(){
+        if(action != null && !TextUtils.check(imageID) && !isError()){
+            action.execute();
+        }
     }
 
     public void setErrorAction(IbooleanAction errorAction) {

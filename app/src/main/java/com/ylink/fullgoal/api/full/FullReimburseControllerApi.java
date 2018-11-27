@@ -696,6 +696,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             if (photoNorm.getObj() instanceof ImageVo) {
                 ImageVo vo = (ImageVo) photoNorm.getObj();
                 vo.onError(false);
+                vo.init();
                 api().imageUpload(vor(DVo::getFirst, obj -> obj.getUB(TP)),
                         vo.getInvoiceUseType(), vord(DVo::getSerialNo),
                         new File(vo.getPath()), vo.getPath(), vo);

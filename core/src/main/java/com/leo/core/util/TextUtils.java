@@ -4,13 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
+import com.alibaba.fastjson.JSON;
+import com.google.gson.GsonBuilder;
 import com.leo.core.iapi.inter.IMapAction;
-import com.leo.core.iapi.inter.INewWhatAction;
 import com.leo.core.iapi.inter.IObjAction;
-import com.leo.core.iapi.inter.IbolAction;
 import com.leo.core.other.MMap;
 
 import org.json.JSONArray;
@@ -901,6 +900,30 @@ public class TextUtils {
             return (A) obj;
         }
         return null;
+    }
+
+    public static String toString(Object obj) {
+        if (obj == null) {
+            return null;
+        } else if (obj instanceof String) {
+            return (String) obj;
+        } else if (obj instanceof Comparable) {
+            return String.valueOf(obj);
+        } else {
+            return JSON.toJSONString(obj);
+        }
+    }
+
+    public static String toGsonString(Object obj) {
+        if (obj == null) {
+            return null;
+        } else if (obj instanceof String) {
+            return (String) obj;
+        } else if (obj instanceof Comparable) {
+            return String.valueOf(obj);
+        } else {
+            return new GsonBuilder().disableHtmlEscaping().create().toJson(obj);
+        }
     }
 
 }
