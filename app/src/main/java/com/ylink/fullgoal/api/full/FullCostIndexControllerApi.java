@@ -285,6 +285,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             if (poor > 0) {
                 show(String.format("你还有%s没有分摊", getMoneyString(poor)));
                 return false;
+            } else if (poor < 0){
+                show("你的分摊比例不能超过100%");
+                return false;
             }
             return true;
         }
