@@ -20,6 +20,7 @@ import static com.leo.core.config.Config.APP_JSON;
 import static com.leo.core.util.TextUtils.check;
 import static com.ylink.fullgoal.api.config.ParseTypeBean.getName;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
+import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_VIEW_NO;
 import static com.ylink.fullgoal.config.UrlConfig.FG_ROOT_URL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_APPEAL;
 import static com.ylink.fullgoal.config.UrlConfig.FULL_IMAGE_UPLOAD;
@@ -324,7 +325,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     public void submitNoLoadingReimburse(Map<String, Object> map) {
         if (!TextUtils.isEmpty(map)) {
             api().ii("报销数据", map);
-            post(CLASS_DATA_FG, ROOT_URL, FULL_REIMBURSE_SUBMIT, g(mp -> mp.putAll(map)), SHOW_LOADING_NO);
+            post(CLASS_DATA_FG, ROOT_URL, FULL_REIMBURSE_SUBMIT, g(mp -> mp.putAll(map)), SHOW_LOADING_VIEW_NO);
         }
     }
 

@@ -17,6 +17,7 @@ import com.ylink.fullgoal.norm.ImageNorm;
 import com.ylink.fullgoal.vo.RVo;
 
 import static com.ylink.fullgoal.config.ComConfig.FQ;
+import static com.ylink.fullgoal.config.Config.DEBUG;
 import static com.ylink.fullgoal.config.Config.FULL_STATUS;
 
 /**
@@ -48,6 +49,9 @@ public class MainViewControllerApi<T extends MainViewControllerApi, C> extends R
         String username = intent.getStringExtra("username");
         String cookieStr = intent.getStringExtra("cookieStr");
         String portalPac = intent.getStringExtra("portalPac");
+        if(DEBUG){
+            userId = "fujianjun";
+        }
         if (TextUtils.check(userId)) {
             api().queryUserName(userId);
             initUser(new UserBean(taskId, name, cookie, userId,

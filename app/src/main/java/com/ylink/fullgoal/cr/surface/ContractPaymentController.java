@@ -34,4 +34,9 @@ public class ContractPaymentController<T extends ContractPaymentController> exte
         return super.getOnUBKey(key);
     }
 
+    @Override
+    protected ContractPaymentFg getNoneDB() {
+        return new ContractPaymentFg();
+    }
+
 }

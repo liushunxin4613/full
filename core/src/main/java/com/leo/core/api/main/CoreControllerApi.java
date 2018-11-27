@@ -692,7 +692,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     public T dialogShow() {
         if (isDialog() && !getDialog().isShowing()
                 && !getActivity().isFinishing()) {
-            getDialog().show();
+            try {
+                getDialog().show();
+            }catch (Exception e){
+            }
         }
         return getThis();
     }
@@ -700,7 +703,10 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public T dismiss() {
         if (isDialog() && !getActivity().isFinishing()) {
-            getDialog().dismiss();
+            try {
+                getDialog().dismiss();
+            }catch (Exception e){
+            }
         }
         return getThis();
     }
@@ -1254,6 +1260,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
     @Override
     public void onDestroy() {
         executeViewControllerApi(IControllerApi::onDestroy);
+        dismiss();
     }
 
     @Override

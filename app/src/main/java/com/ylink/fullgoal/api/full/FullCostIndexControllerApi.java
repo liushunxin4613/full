@@ -15,6 +15,7 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.other.Number;
 import com.leo.core.util.JavaTypeUtil;
+import com.leo.core.util.LogUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -157,7 +158,6 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             vs(getCostItemController(api), c -> c.initDB(vo.getValue(), vo.getObj()));
             initAddVgBean(api);
         });
-
     }
 
     @Override
@@ -259,7 +259,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             Map<String, Object> map = getVo().getCheckMap(QR);
             if (check(map, dataMap)) {
                 dataMap.putAll(map);
-                api().submitReimburse(dataMap);
+                api().submitNoLoadingReimburse(dataMap);
             }
         }
     }
@@ -390,6 +390,12 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
         setText(yetCompleteTv, getVo().getOtherRatio());
     }
 
+    private void initAllApi(){
+        List<RecycleControllerApi> data = adapter.getApi().getData();
+        execute(count(data), false, data::get, this::initAddVgBean);
+    }
+
+    @SuppressLint("DefaultLocale")
     private void initAddVgBean(RecycleControllerApi controllerApi) {
         executeNon(controllerApi, api -> {
             api.clear();
@@ -404,7 +410,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         if (TextUtils.isEmpty(text)) {
                             bean.setMax(getVo().getRestMoney(api));
                         }
+                        LogUtil.ee(this, String.format("text: %s", text));
                         double itemMoney = JavaTypeUtil.getdouble(text, 0);
+                        LogUtil.ee(this, String.format("itemMoney: %f %n", itemMoney));
                         updateOtherMoney(api, itemMoney);
                         setText(blNorm.getTextView(), getVo().getRatio(itemMoney));
                         vos(CostVo::getPager, obj -> obj.update(api, itemMoney));
@@ -443,10 +451,11 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
             vo.getItem().getMap().putAll(map);
         }
         vos(CostVo::getPager, obj -> obj.initDB(api, vo));
+        initAllApi();
         initAddVgBean(api);
         setOnClickListener(findViewById(api.getRootView(), R.id.delete_tv), v -> {
             remove(api);
-            initAddVgBean(getThisApi());
+            initAllApi();
         });
         return api;
     }

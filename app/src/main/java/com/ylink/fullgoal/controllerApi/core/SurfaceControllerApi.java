@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -90,14 +89,16 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return true;
     }
 
-    public void showLoading() {
+    public void showLoading(boolean hide) {
         if (isLoading()) {
             if (!(check(getDialogApi()) && check(getDialogApi().getDialog())
                     && getDialogApi().getDialog().isShowing())) {
                 setDialogApi((LoadingDialogControllerApi) getDialogControllerApi(getActivity(),
                         LoadingDialogControllerApi.class).dialogShow());
-                if (this instanceof ContentControllerApi) {
-                    ((ContentControllerApi) this).hideViews();
+                if(hide){
+                    if (this instanceof ContentControllerApi) {
+                        ((ContentControllerApi) this).hideViews();
+                    }
                 }
                 getTimeFactory().start();
             }

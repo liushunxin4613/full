@@ -1,5 +1,6 @@
 package com.leo.core.util;
 
+import android.annotation.SuppressLint;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ public class HelperUtil {
 
     public static void addMoneyTextChangedListener(EditText editText, IGetAction<Double> get, ITextAction action) {
         if (editText != null) {
+            LogUtil.ee("addMoneyTextChangedListener", "editText: " + editText.getText());
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence text, int start, int count, int after) {
@@ -28,6 +30,7 @@ public class HelperUtil {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private static void onAfterTextChanged(Editable text, IGetAction<Double> get, ITextAction action) {
         String temp = text.toString();
         int posDot = temp.indexOf(".");
@@ -49,7 +52,7 @@ public class HelperUtil {
             Double gg = get.get();
             if(gg != null){
                 double f = JavaTypeUtil.getdouble(temp, 0);
-                if (f > gg && !TextUtils.isEmpty(temp)) {
+                if ((f - gg) > 0.001 && !TextUtils.isEmpty(temp)) {
                     text.delete(temp.length() - 1, temp.length());
                     return;
                 }

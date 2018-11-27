@@ -37,6 +37,11 @@ public class ProjectController<T extends ProjectController> extends BaseStringCo
     }
 
     @Override
+    protected ProjectFg getNoneDB() {
+        return new ProjectFg();
+    }
+
+    @Override
     public String getApiCode() {
         return vor(ProjectFg::getProjectCode);
     }

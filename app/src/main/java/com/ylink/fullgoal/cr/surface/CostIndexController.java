@@ -126,7 +126,7 @@ public class CostIndexController<T extends CostIndexController> extends BaseCont
 
     @Override
     protected CostFg getOnUB(String key) {
-        return toUB(db -> {
+        return getExecute(getDB(), new CostFg(), db -> {
             switch (key) {
                 case YB:
                 case CC:

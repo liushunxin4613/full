@@ -23,5 +23,6 @@ public class ComConfig {
     public final static int WHAT_DEFAULT = -1;//开启显示动画
     public final static int SHOW_LOADING_YES = 0x10068;//开启显示动画
     public final static int SHOW_LOADING_NO = 0x10079;//不开启显示动画
+    public final static int SHOW_LOADING_VIEW_NO = 0x10080;//不开启显示动画
 
 }

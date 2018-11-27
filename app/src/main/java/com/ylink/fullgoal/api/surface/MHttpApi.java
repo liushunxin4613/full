@@ -20,6 +20,7 @@ import rx.Observable;
 
 import static com.leo.core.util.TextUtils.getUriParams;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_NO;
+import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_VIEW_NO;
 import static com.ylink.fullgoal.config.ComConfig.SHOW_LOADING_YES;
 import static com.ylink.fullgoal.config.Config.HTTP_CACHE;
 import static com.ylink.fullgoal.config.Config.SIMULATE_HTTP;
@@ -31,9 +32,9 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
         super(controllerApi, newTransformer);
     }
 
-    private void showLoading() {
+    private void showLoading(boolean hide) {
         if (controllerApi() instanceof SurfaceControllerApi) {
-            ((SurfaceControllerApi) controllerApi()).showLoading();
+            ((SurfaceControllerApi) controllerApi()).showLoading(hide);
         }
     }
 
@@ -90,13 +91,16 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
     private void showLoading(int what, String path) {
         switch (what) {
             case SHOW_LOADING_YES:
-                showLoading();
+                showLoading(true);
                 break;
             case SHOW_LOADING_NO:
                 break;
+            case SHOW_LOADING_VIEW_NO:
+                showLoading(false);
+                break;
             default:
                 if (TextUtils.getListData(UrlConfig.LOADING_DIALOGS).contains(path)) {
-                    showLoading();
+                    showLoading(true);
                 }
                 break;
         }

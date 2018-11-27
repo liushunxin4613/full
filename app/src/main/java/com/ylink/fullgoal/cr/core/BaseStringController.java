@@ -15,9 +15,17 @@ public class BaseStringController<T extends BaseStringController, DB> extends Ba
         switch (key){
             case YB:
             case CC:
-                return getDB();
+                DB db = getDB();
+                if(db == null){
+                    db = getNoneDB();
+                }
+                return db;
         }
         return super.getOnUB(key);
+    }
+
+    protected DB getNoneDB(){
+        return null;
     }
 
 }
