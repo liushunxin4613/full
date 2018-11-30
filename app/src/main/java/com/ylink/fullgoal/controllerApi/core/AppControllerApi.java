@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.config.MVCFactory;
 import com.ylink.fullgoal.db.core.AppDatabase;
 import com.ylink.fullgoal.factory.BankFactory;
@@ -40,7 +41,9 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
         super.onCreate(savedInstanceState);
         FlowManager.init(new FlowConfig.Builder(getContext()).build());
         MainManage.init(getApplication());//主
-        LogUtil.openLog();//log
+        if(Config.LOCAL){
+            LogUtil.openLog();//log
+        }
         AppDatabase.init();//初始化
         FilesFactory.getInstance().init(getThis());
         FilesFactory.getInstance().initAssets();

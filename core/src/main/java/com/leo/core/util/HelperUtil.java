@@ -12,7 +12,6 @@ public class HelperUtil {
 
     public static void addMoneyTextChangedListener(EditText editText, IGetAction<Double> get, ITextAction action) {
         if (editText != null) {
-            LogUtil.ee("addMoneyTextChangedListener", "editText: " + editText.getText());
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence text, int start, int count, int after) {

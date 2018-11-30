@@ -19,24 +19,15 @@ public class MD5Util {
 			'7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	public static String getFileMD5(File file) {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(file);
+		try (FileInputStream in = new FileInputStream(file)) {
 			FileChannel ch = in.getChannel();
 			return MD5(ch.map(FileChannel.MapMode.READ_ONLY, 0, file.length()));
 		} catch (FileNotFoundException e) {
 			return null;
 		} catch (IOException e) {
 			return null;
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					// 关闭流产生的错误一般都可以忽略
-				}
-			}
 		}
+		// 关闭流产生的错误一般都可以忽略
 	}
 
 	/**

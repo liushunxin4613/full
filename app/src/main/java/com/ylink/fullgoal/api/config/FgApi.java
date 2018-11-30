@@ -77,7 +77,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     public void queryUserName(String agent) {
         if (TextUtils.check(agent)) {
             post(CLASS_DATA_FG, ROOT_URL, PATH_QUERY_USER_DATA, g(map -> map.put("agent", agent)),
-                    SHOW_LOADING_NO);
+                    SHOW_LOADING_VIEW_NO);
         }
     }
 

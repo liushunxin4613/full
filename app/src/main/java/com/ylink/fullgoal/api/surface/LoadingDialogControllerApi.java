@@ -2,7 +2,6 @@ package com.ylink.fullgoal.api.surface;
 
 import com.ylink.fullgoal.R;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
-import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.ZLoadingView;
 
 import butterknife.Bind;

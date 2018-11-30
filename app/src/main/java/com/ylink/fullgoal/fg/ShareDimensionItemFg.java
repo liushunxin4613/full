@@ -6,6 +6,9 @@ public class ShareDimensionItemFg {
     private String enumCode;//维度详细信息编号
     private String enumName;//维度详细信息名称
 
+    public ShareDimensionItemFg(){
+    }
+
     public ShareDimensionItemFg(String dimensionCode, String enumCode, String enumName) {
         this.dimensionCode = dimensionCode;
         this.enumCode = enumCode;

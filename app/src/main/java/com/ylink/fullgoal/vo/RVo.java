@@ -32,6 +32,9 @@ public class RVo extends MessageBackFg implements IGet<DVo> {
             if (TextUtils.check(getSerialNo())) {
                 vo.getSerialNo().initDB(getSerialNo());
             }
+            //2018-11-28 22:42 ---------------
+            vo.getShare().initDB(getShareList());
+            //---------------- <<<
             vo.getSame().initDB(vo.getInfoMap());//添加相似初始化数据
         }
         return vo;

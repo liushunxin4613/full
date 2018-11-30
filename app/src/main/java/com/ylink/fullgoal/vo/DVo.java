@@ -26,6 +26,7 @@ import com.ylink.fullgoal.cr.surface.RuleController;
 import com.ylink.fullgoal.cr.surface.SameController;
 import com.ylink.fullgoal.cr.surface.SbumitFlagController;
 import com.ylink.fullgoal.cr.surface.SerialNoController;
+import com.ylink.fullgoal.cr.surface.ShareListController;
 import com.ylink.fullgoal.cr.surface.TaskTypeController;
 import com.ylink.fullgoal.cr.surface.TravelFormController;
 import com.ylink.fullgoal.cr.surface.UserController;
@@ -99,6 +100,8 @@ public class DVo extends NewFieldBean {
     private SameController same;
     //申请单
     private ApplyMapControllerV2 apply;
+    //2018-11-28 22:27生成
+    private ShareListController share;
 
     @Override
     protected boolean isOther(@NonNull Field field) {
@@ -360,6 +363,14 @@ public class DVo extends NewFieldBean {
 
     public void setApply(ApplyMapControllerV2 apply) {
         this.apply = apply;
+    }
+
+    public ShareListController getShare() {
+        return share;
+    }
+
+    public void setShare(ShareListController share) {
+        this.share = share;
     }
 
 }

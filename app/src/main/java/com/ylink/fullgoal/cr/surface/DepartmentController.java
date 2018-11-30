@@ -35,11 +35,6 @@ public class DepartmentController<T extends DepartmentController> extends BaseSt
     }
 
     @Override
-    protected DepartmentFg getNoneDB() {
-        return new DepartmentFg();
-    }
-
-    @Override
     public String getViewBean() {
         return vor(DepartmentFg::getDepartmentName);
     }

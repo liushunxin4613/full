@@ -84,8 +84,8 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
     @Override
     protected void onObservable(@NonNull Observable observable, String type, String baseUrl, String path,
                                 Map<String, String> map, int what, String tag) {
+        showLoading(what, path);//必须放在具体请求之前
         super.onObservable(observable, type, baseUrl, path, map, what, tag);
-        showLoading(what, path);
     }
 
     private void showLoading(int what, String path) {

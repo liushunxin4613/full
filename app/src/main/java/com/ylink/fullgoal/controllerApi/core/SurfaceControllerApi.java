@@ -89,6 +89,12 @@ public class SurfaceControllerApi<T extends SurfaceControllerApi, C> extends Con
         return true;
     }
 
+    @Override
+    protected void executeViewControllerApi(IObjAction<IControllerApi> api) {
+        super.executeViewControllerApi(api);
+        executeNon(getDialogApi(), api);
+    }
+
     public void showLoading(boolean hide) {
         if (isLoading()) {
             if (!(check(getDialogApi()) && check(getDialogApi().getDialog())

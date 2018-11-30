@@ -55,6 +55,16 @@ public class MessageBackFg extends StatusCodeFg {
     private String message;
     //审核节点
     private List<NodeFg> taskNode;
+    //2018-11-28 22:27生成
+    private List<ShareDimenListFg> shareList;
+
+    public List<ShareDimenListFg> getShareList() {
+        return shareList;
+    }
+
+    public void setShareList(List<ShareDimenListFg> shareList) {
+        this.shareList = shareList;
+    }
 
     public UserFg getAgent() {
         return agent;

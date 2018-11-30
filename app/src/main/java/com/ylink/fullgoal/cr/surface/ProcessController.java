@@ -34,9 +34,4 @@ public class ProcessController<T extends ProcessController> extends BaseStringCo
         return super.getOnUBKey(key);
     }
 
-    @Override
-    protected ProcessFg getNoneDB() {
-        return super.getNoneDB();
-    }
-
 }

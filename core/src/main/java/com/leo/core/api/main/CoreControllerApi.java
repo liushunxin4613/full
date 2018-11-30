@@ -696,15 +696,16 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
                 getDialog().show();
             }catch (Exception e){
             }
+            getDialog().show();
         }
         return getThis();
     }
 
     @Override
     public T dismiss() {
-        if (isDialog() && !getActivity().isFinishing()) {
+        if (isDialog() && getDialog().isShowing()) {
             try {
-                getDialog().dismiss();
+                getDialog().cancel();
             }catch (Exception e){
             }
         }
@@ -2122,7 +2123,7 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
         return fileApi().getAssetsString(file);
     }
 
-    private void executeViewControllerApi(IObjAction<IControllerApi> api) {
+    protected void executeViewControllerApi(IObjAction<IControllerApi> api) {
         executeViewControllerApi(getRootView(), api);
     }
 

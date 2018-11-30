@@ -32,11 +32,6 @@ public class UserController<T extends UserController> extends BaseStringControll
     }
 
     @Override
-    protected UserFg getNoneDB() {
-        return new UserFg();
-    }
-
-    @Override
     public String getViewBean() {
         return vor(UserFg::getUserName);
     }

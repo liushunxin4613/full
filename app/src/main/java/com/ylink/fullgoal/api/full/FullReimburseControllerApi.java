@@ -224,6 +224,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     vos(DVo::getIsShare, obj -> obj.initDB(!TextUtils.isEmpty(bean.getDimen())));
                     break;
             }
+            dismissLoading();
         });
         add(RVo.class, (type, baseUrl, path, map, what, msg, field, bean) -> {
             switch (path) {
@@ -290,11 +291,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                     setVisibility(View.VISIBLE, alterVg).setOnClickListener(sqtpTv, v -> {
                         //申请特批
                         vos(DVo::getLogo, obj -> obj.initDB(XG1));
-                        submit(true);
+                        submit(false, true);
                     }).setOnClickListener(wbylTv, v -> {
                         //我不要了
                         vos(DVo::getLogo, obj -> obj.initDB(XG2));
-                        submit(true);
+                        submit(false, true);
                     }).setOnClickListener(xgtjTv, v -> {
                         //修改提交
                         vos(DVo::getLogo, obj -> obj.initDB(XG3));
@@ -440,7 +441,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         api().appeal(vor(DVo::getSerialNo, StringController::getDB));
     }
 
-    private void finishApp(){
+    private void finishApp() {
         if (TextUtils.equals(getMainApp(), MAIN_APP)) {
             dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
                 dialog.dismiss();
@@ -480,21 +481,33 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         return gridData;
     }
 
+    private void submit(boolean special){
+        submit(special, false);
+    }
+
     /**
      * 提交数据
      */
-    private void submit(boolean special) {
+    private void submit(boolean special, boolean isFlag) {
         boolean imageFinsih = vor(DVo::getImageList, ImageListController::isFinish);
-        if(!imageFinsih){
+        if (!imageFinsih) {
             show("您还有图片未上传完毕或上传成功");
             return;
         }
-        vos(DVo::getSbumitFlag, obj -> obj.initDB(String.valueOf(getFlag())));
+        int flag = getFlag();
+        if(isFlag){
+            switch (flag){
+                case 1:
+                    show("您的报销含有新影像,请修改提交");
+                    return;
+            }
+        }
+        vos(DVo::getSbumitFlag, obj -> obj.initDB(String.valueOf(flag)));
         vos(DVo::getCostIndex, obj -> obj.update((String) vor(DVo::getMoney,
                 DoubleController::getDBMoney)));
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
-            checkAction(special, () -> {
+            checkAction(special, () -> api().submitNoLoadingReimburse(map), () -> {
                 if (getVo().getIsShare().is() && !getVo().getSbumitFlag().isOpen()) {
                     vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
                             CostIndexController::getDB)));//更新分摊金额
@@ -516,12 +529,12 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         return 3;//有修改
     }
 
-    private void checkAction(boolean special, IAction action) {
-        if (action == null) {
+    private void checkAction(boolean special, IAction act, IAction action) {
+        if (act == null || action == null) {
             return;
         }
         if (special) {
-            action.execute();
+            act.execute();
             return;
         }
         String departmentName = vor(DVo::getBudgetDepartment, DepartmentController::getDepartmentName);

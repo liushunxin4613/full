@@ -2,9 +2,9 @@ package com.ylink.fullgoal.api.full;
 
 import android.annotation.SuppressLint;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.leo.core.adapter.BasePagerAdapter;
@@ -15,7 +15,6 @@ import com.leo.core.iapi.inter.IObjAction;
 import com.leo.core.iapi.main.IControllerApi;
 import com.leo.core.other.Number;
 import com.leo.core.util.JavaTypeUtil;
-import com.leo.core.util.LogUtil;
 import com.leo.core.util.SoftInputUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
@@ -219,6 +218,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                     show(bean.getMessage());
                 }
             }
+            dismissLoading();
         });
     }
 
@@ -410,9 +410,7 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
                         if (TextUtils.isEmpty(text)) {
                             bean.setMax(getVo().getRestMoney(api));
                         }
-                        LogUtil.ee(this, String.format("text: %s", text));
                         double itemMoney = JavaTypeUtil.getdouble(text, 0);
-                        LogUtil.ee(this, String.format("itemMoney: %f %n", itemMoney));
                         updateOtherMoney(api, itemMoney);
                         setText(blNorm.getTextView(), getVo().getRatio(itemMoney));
                         vos(CostVo::getPager, obj -> obj.update(api, itemMoney));
