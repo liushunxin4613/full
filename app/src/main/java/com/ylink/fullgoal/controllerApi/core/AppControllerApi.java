@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.blankj.utilcode.util.Utils;
 import com.leo.core.core.BaseControllerApiApp;
@@ -39,6 +40,7 @@ public class AppControllerApi extends ControllerApi<AppControllerApi, BaseContro
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("APP版本号", Config.DEBUG_VERSION);
         FlowManager.init(new FlowConfig.Builder(getContext()).build());
         MainManage.init(getApplication());//主
         if(Config.LOCAL){

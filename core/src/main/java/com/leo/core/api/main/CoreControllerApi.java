@@ -1204,11 +1204,11 @@ public class CoreControllerApi<T extends CoreControllerApi, C> extends AttachApi
 
     @Override
     public void init(Bundle savedInstanceState) {
+        initAddAction();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        initAddAction();
         initView();
         initData();
     }

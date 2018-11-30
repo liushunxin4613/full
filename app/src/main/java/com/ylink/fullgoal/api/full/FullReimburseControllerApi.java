@@ -21,6 +21,7 @@ import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
+import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.SurfaceNorm;
@@ -489,6 +490,13 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 提交数据
      */
     private void submit(boolean special, boolean isFlag) {
+        if(Config.UP){
+            boolean imageEmpty = vor(DVo::getImageList, ImageListController::isEmpty);
+            if (imageEmpty && TextUtils.equals(state, FQ)) {
+                show("票据不能为空");
+                return;
+            }
+        }
         boolean imageFinsih = vor(DVo::getImageList, ImageListController::isFinish);
         if (!imageFinsih) {
             show("您还有图片未上传完毕或上传成功");
