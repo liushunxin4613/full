@@ -9,6 +9,7 @@ import com.leo.core.net.RetrofitSubscriber;
 import com.leo.core.util.JsonShowUtil;
 import com.leo.core.util.LogUtil;
 import com.leo.core.util.TextUtils;
+import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.config.UrlConfig;
 import com.ylink.fullgoal.controllerApi.core.SurfaceControllerApi;
 import com.ylink.fullgoal.db.table.Request;
@@ -96,7 +97,9 @@ public class MHttpApi<T extends MHttpApi> extends HttpApi<T> {
             case SHOW_LOADING_NO:
                 break;
             case SHOW_LOADING_VIEW_NO:
-                showLoading(false);
+                if(!Config.DEBUG){
+                    showLoading(false);
+                }
                 break;
             default:
                 if (TextUtils.getListData(UrlConfig.LOADING_DIALOGS).contains(path)) {

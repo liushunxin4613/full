@@ -207,7 +207,7 @@ public class FgApi<T extends FgApi> extends UrlApi<T> {
     public void queryNoShowLoadingMessageBack(String serialNo) {
         post(CLASS_RVO, ROOT_URL, PATH_QUERY_MESSAGE_BACK_DATA,
                 g(map -> map.put("serialNo", serialNo)),
-                SHOW_LOADING_NO, serialNo);
+                SHOW_LOADING_VIEW_NO, serialNo);
     }
 
     /**

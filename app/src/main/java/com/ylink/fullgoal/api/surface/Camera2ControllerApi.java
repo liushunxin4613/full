@@ -376,26 +376,21 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         }
         Camera.Size previewSize = CameraUtil.findBestPreviewResolution(camera);
-        Camera.Size pictrueSize = CameraUtil.getInstance().getPropPictureSize(
-                parameters.getSupportedPictureSizes(), 1000);
-        parameters.setPreviewSize(previewSize.width, previewSize.height);
         previewSizeWidth = previewSize.width;
         previewSizeHeight = previewSize.height;
-        parameters.setPictureSize(previewSize.width, previewSize.height);
+        parameters.setPreviewSize(previewSizeWidth, previewSizeHeight);
+        Camera.Size pictrueSize = CameraUtil.getInstance().getPropPictureSize(
+                parameters.getSupportedPictureSizes(), 1000);
+        parameters.setPictureSize(pictrueSize.width, pictrueSize.height);
         try {
             camera.setParameters(parameters);
-        } catch (Exception e) {
-            parameters.setPictureSize(pictrueSize.width, pictrueSize.height);
-            try {
-                camera.setParameters(parameters);
-            } catch (Exception ee) {
-                ee.printStackTrace();
-            }
+        } catch (Exception ee) {
+            ee.printStackTrace();
         }
-        int picHeight = CameraUtil.SCREEN_WIDTH * previewSize.width / previewSize.height;
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(CameraUtil.SCREEN_WIDTH, picHeight);
-        mySurfaceView.setLayoutParams(params);
-        maskView.initCenterRect(CameraUtil.SCREEN_WIDTH, picHeight);
+        int picWidth = CameraUtil.SCREEN_WIDTH;
+        int picHeight = CameraUtil.SCREEN_WIDTH * previewSizeWidth / previewSizeHeight;
+        mySurfaceView.setLayoutParams(new FrameLayout.LayoutParams(picWidth, picHeight));
+        maskView.initCenterRect(picWidth, picHeight);
     }
 
     //将bitmap保存在本地，然后通知图库更新
@@ -419,14 +414,22 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
     private Bitmap jz(Bitmap bitmap) {
         if (bitmap != null && previewSizeWidth > 0 && previewSizeHeight > 0
                 && bitmap.getHeight() > 0 && bitmap.getWidth() > 0) {
-            double sa = (double) previewSizeWidth / previewSizeHeight;
+            Matrix matrix = new Matrix();
+            if(bitmap.getWidth() > bitmap.getHeight()){
+                matrix.preRotate(90);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                        bitmap.getHeight(), matrix, true);
+            }
+            int pmw = previewSizeWidth > previewSizeHeight ? previewSizeHeight : previewSizeWidth;
+            int pwh = previewSizeWidth > previewSizeHeight ? previewSizeWidth : previewSizeHeight;
+            double sa = (double) pmw / pwh;
             double sb = (double) bitmap.getHeight() / bitmap.getWidth();
             if (sa > sb) {
-                double ds = (double) bitmap.getWidth() * previewSizeHeight / previewSizeWidth;
+                double ds = (double) bitmap.getWidth() * pwh / pmw;
                 double offset = (bitmap.getHeight() - ds) / 2;
                 return Bitmap.createBitmap(bitmap, 0, (int) offset, bitmap.getWidth(), (int) ds);
             } else if (sa < sb) {
-                double ds = (double) bitmap.getHeight() * previewSizeWidth / previewSizeHeight;
+                double ds = (double) bitmap.getHeight() * pmw / pwh;
                 double offset = (bitmap.getWidth() - ds) / 2;
                 return Bitmap.createBitmap(bitmap, (int) offset, 0, (int) ds, bitmap.getHeight());
             }
@@ -439,19 +442,10 @@ public class Camera2ControllerApi<T extends Camera2ControllerApi, C> extends Sur
         try {
             //将照片改为竖直方向
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            Matrix matrix = new Matrix();
-            switch (cameraPosition) {
-                case 0://前
-                    matrix.preRotate(90);
-                    break;
-                case 1:
-                    matrix.preRotate(90);
-                    break;
-            }
             bitmap = jz(bitmap);
-            Rec rec = maskView.newRec(bitmap.getHeight(), bitmap.getWidth());
-            bitmap = Bitmap.createBitmap(bitmap, rec.getY(), rec.getX(), rec.getH(),
-                    rec.getW(), matrix, true);
+            Rec rec = maskView.newRec(bitmap.getWidth(), bitmap.getHeight());
+            bitmap = Bitmap.createBitmap(bitmap, rec.getX(), rec.getY(), rec.getW(),
+                    rec.getH(), new Matrix(), true);
             File file = saveImageToGallery(bitmap);
             if (file != null) {
                 runOnUiThread(() -> routeApi().tailor(imageType, file.getPath()));

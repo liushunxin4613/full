@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.gson.GsonBuilder;
 import com.leo.core.iapi.inter.IMapAction;
 import com.leo.core.iapi.inter.IObjAction;
@@ -910,7 +911,7 @@ public class TextUtils {
         } else if (obj instanceof Comparable) {
             return String.valueOf(obj);
         } else {
-            return JSON.toJSONString(obj);
+            return JSON.toJSONString(obj, SerializerFeature.DisableCircularReferenceDetect);
         }
     }
 

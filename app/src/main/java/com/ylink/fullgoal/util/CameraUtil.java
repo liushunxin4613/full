@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
-import android.util.DisplayMetrics;
 import android.view.Surface;
 
 import java.util.ArrayList;
@@ -24,13 +23,14 @@ public class CameraUtil {
     private CameraAscendSizeComparator ascendSizeComparator = new CameraAscendSizeComparator();
 
     public static void init(Context context) {
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        if (dm.widthPixels < dm.heightPixels) {
-            SCREEN_WIDTH = dm.widthPixels;
-            SCREEN_HEIGHT = dm.heightPixels;
+        int dmw = DisUtils.getScreenRealWidth(context);
+        int dmh = DisUtils.getScreenRealHeight(context);
+        if (dmw < dmh) {
+            SCREEN_WIDTH = dmw;
+            SCREEN_HEIGHT = dmh;
         } else {
-            SCREEN_WIDTH = dm.heightPixels;
-            SCREEN_HEIGHT = dm.widthPixels;
+            SCREEN_WIDTH = dmh;
+            SCREEN_HEIGHT = dmw;
         }
     }
 

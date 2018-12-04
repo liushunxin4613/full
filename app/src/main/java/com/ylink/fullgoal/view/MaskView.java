@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.leo.core.rect.Rec;
+import com.leo.core.util.LogUtil;
 
 public class MaskView extends View {
 
@@ -55,6 +56,8 @@ public class MaskView extends View {
         int x2 = (int) ((1 + RATIO) / 2 * width);
         int y1 = (int) ((1 - RATIO) / 2 * height);
         int y2 = (int) ((1 + RATIO) / 2 * height);
+        LogUtil.ee("MaskView newRectssss width", width * RATIO);
+        LogUtil.ee("MaskView newRectssss height", height * RATIO);
         return new Rect(x1, y1, x2, y2);
     }
 
@@ -64,6 +67,8 @@ public class MaskView extends View {
         } else {
             height = (int) ((float) width * HEIGHT_BI / WIDTH_BI);
         }
+        LogUtil.ee("newRec => width", width);
+        LogUtil.ee("newRec => height", height);
         int x = (int) ((1 - RATIO) / 2 * width);
         int y = (int) ((1 - RATIO) / 2 * height);
         int w = (int) (RATIO * width);

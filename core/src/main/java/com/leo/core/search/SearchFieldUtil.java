@@ -1,5 +1,9 @@
 package com.leo.core.search;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.leo.core.util.TextUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashSet;
@@ -7,9 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import com.alibaba.fastjson.JSON;
-import com.leo.core.util.TextUtils;
 
 public class SearchFieldUtil {
 
@@ -32,7 +33,7 @@ public class SearchFieldUtil {
         if (obj instanceof String) {
             return (String) obj;
         } else if (obj != null) {
-            return JSON.toJSONString(obj);
+            return JSON.toJSONString(obj, SerializerFeature.DisableCircularReferenceDetect);
         }
         return null;
     }

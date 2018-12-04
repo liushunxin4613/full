@@ -1,6 +1,7 @@
 package com.leo.core.api.api;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.leo.core.iapi.api.IGsonDecodeApi;
 
 import java.lang.reflect.Type;
@@ -9,7 +10,7 @@ public class JsonDecodeApi implements IGsonDecodeApi<JsonDecodeApi, Object, Obje
 
     @Override
     public String encode(Object obj) {
-        return JSON.toJSONString(obj);
+        return JSON.toJSONString(obj, SerializerFeature.DisableCircularReferenceDetect);
     }
 
     @Override

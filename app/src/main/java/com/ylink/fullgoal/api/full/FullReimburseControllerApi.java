@@ -21,7 +21,6 @@ import com.leo.core.util.JavaTypeUtil;
 import com.leo.core.util.ResUtil;
 import com.leo.core.util.TextUtils;
 import com.ylink.fullgoal.R;
-import com.ylink.fullgoal.config.Config;
 import com.ylink.fullgoal.controllerApi.surface.RecycleBarControllerApi;
 import com.ylink.fullgoal.controllerApi.surface.RecycleControllerApi;
 import com.ylink.fullgoal.core.SurfaceNorm;
@@ -148,8 +147,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     @Override
     public void onBackPressed() {
-//        routeApi().main();
-        super.onBackPressed();
+        finishBack(super::onBackPressed);
     }
 
     /**
@@ -442,6 +440,20 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         api().appeal(vor(DVo::getSerialNo, StringController::getDB));
     }
 
+    private void finishBack(IAction action){
+        if (TextUtils.equals(getMainApp(), MAIN_APP)) {
+            dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
+                dialog.dismiss();
+                getActivity().finish();
+            }, (bean1, v, dialog) -> {
+                dialog.dismiss();
+                activityLifecycleApi().finishAllActivity();
+            });
+        } else {
+            execute(action);
+        }
+    }
+
     private void finishApp() {
         if (TextUtils.equals(getMainApp(), MAIN_APP)) {
             dialog("是否留在报销平台", "是", "否", (bean1, v, dialog) -> {
@@ -476,7 +488,7 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
         execute(data, obj -> gridData.add(newGridPhotoBean(data, obj).setEnable(isEnable())
                 .setVisible(isNoneInitiateEnable())));
         if (isEnable()) {
-            gridData.add(new GridPhotoNorm(R.mipmap.posting_add, null, (bean, view)
+            gridData.add(new GridPhotoNorm(R.mipmap.ps, null, (bean, view)
                     -> routeApi().camera(type), null));
         }
         return gridData;
@@ -490,13 +502,6 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
      * 提交数据
      */
     private void submit(boolean special, boolean isFlag) {
-        if(Config.UP){
-            boolean imageEmpty = vor(DVo::getImageList, ImageListController::isEmpty);
-            if (imageEmpty && TextUtils.equals(state, FQ)) {
-                show("票据不能为空");
-                return;
-            }
-        }
         boolean imageFinsih = vor(DVo::getImageList, ImageListController::isFinish);
         if (!imageFinsih) {
             show("您还有图片未上传完毕或上传成功");
@@ -515,6 +520,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
                 DoubleController::getDBMoney)));
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
+            boolean imageEmpty = vor(DVo::getImageList, ImageListController::isEmpty);
+            if (imageEmpty && TextUtils.equals(state, FQ)) {
+                show("票据不能为空");
+                return;
+            }
             checkAction(special, () -> api().submitNoLoadingReimburse(map), () -> {
                 if (getVo().getIsShare().is() && !getVo().getSbumitFlag().isOpen()) {
                     vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
@@ -598,8 +608,8 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
 
     private Map<String, Object> getSubmitMap() {
         return getCheckMap(getVo().getCheckMap(getBType(), getState()),
-                getSetData("报销流水号", "报销类型", "经办人", "报销人", "预算归属", "事由",
-                        "费用指标"));
+                getSetData("报销类型", "经办人", "报销人", "预算归属",
+                        "费用指标", "事由", "报销流水号"));
 
     }
 
