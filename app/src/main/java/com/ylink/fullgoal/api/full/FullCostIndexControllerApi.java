@@ -297,9 +297,9 @@ public class FullCostIndexControllerApi<T extends FullCostIndexControllerApi, C>
     private void initCast() {
         vos(CostVo::getCost, CostIndexController::getDB, fg
                 -> setText(nameTv, fg.getCostIndex())
-                .setText(detailTv, fg.getAmount())
+                .setText(detailTv, fg.getExTaxAmount())
                 .setText(taxTv, fg.getTaxAmount())
-                .setText(noneTaxMoneyTv, fg.getExTaxAmount())
+                .setText(noneTaxMoneyTv, fg.getAmount())
                 .setText(yetCompleteTv, getVo().getOtherRatio()));
     }
 

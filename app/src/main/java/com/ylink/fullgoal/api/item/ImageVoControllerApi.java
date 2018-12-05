@@ -67,7 +67,7 @@ public class ImageVoControllerApi<C> extends NormControllerApi<ImageVoController
                 .setOnClickListener(toRightTv, view -> setImage(photoIv, norm.getPhoto(),
                         ImageFactory.getInstance().getRotate(norm.getPhoto(), 90),
                         (path, iv, rotate, success) -> ImageFactory.getInstance().save(path, rotate)))
-                .execute(() -> hVg.setListenOnClickListener(SoftInputUtil::hidSoftInput));
+                .execute(() -> executeNon(hVg, hg -> hg.setListenOnClickListener(SoftInputUtil::hidSoftInput)));
     }
 
 }

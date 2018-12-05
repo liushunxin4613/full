@@ -182,18 +182,18 @@ public class ImageListController<T extends ImageListController> extends AddContr
                 if (TextUtils.check(item.getImageType(), detail)) {
                     switch (item.getImageType()) {
                         case "增值税专用发票":
-                            map.put("amount", JavaTypeUtil.getdouble(detail.getNoTaxInvoice(), 0)
-                                    + JavaTypeUtil.getdouble(map.get("amount"), 0));
+                            map.put("noTaxInvoice", JavaTypeUtil.getdouble(detail.getNoTaxInvoice(), 0)
+                                    + JavaTypeUtil.getdouble(map.get("noTaxInvoice"), 0));
                             break;
                         default:
-                            map.put("amount", JavaTypeUtil.getdouble(item.getAmount(), 0)
-                                    + JavaTypeUtil.getdouble(map.get("amount"), 0));
+                            map.put("noTaxInvoice", JavaTypeUtil.getdouble(item.getAmount(), 0)
+                                    + JavaTypeUtil.getdouble(map.get("noTaxInvoice"), 0));
                             break;
                     }
+                    map.put("amount", JavaTypeUtil.getdouble(detail.getAmount(), 0)
+                            + JavaTypeUtil.getdouble(map.get("amount"), 0));
                     map.put("invoiceTax", JavaTypeUtil.getdouble(detail.getInvoiceTax(), 0)
                             + JavaTypeUtil.getdouble(map.get("invoiceTax"), 0));
-                    map.put("noTaxInvoice", JavaTypeUtil.getdouble(detail.getNoTaxInvoice(), 0)
-                            + JavaTypeUtil.getdouble(map.get("noTaxInvoice"), 0));
                 }
             });
             cost.setAmount(TextUtils.getMoneyString(map.get("amount")));

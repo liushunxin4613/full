@@ -31,7 +31,7 @@ public class CostVo extends NewFieldBean {
     }
 
     public void updateAllMoney() {
-        initAllMoney(JavaTypeUtil.getdouble(vr(getCost().getDB(), CostFg::getAmount), 0));
+        initAllMoney(JavaTypeUtil.getdouble(vr(getCost().getDB(), CostFg::getExTaxAmount), 0));
     }
 
     public void initAllMoney(double allMoney) {

@@ -516,8 +516,10 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
         }
         vos(DVo::getSbumitFlag, obj -> obj.initDB(String.valueOf(flag)));
-        vos(DVo::getCostIndex, obj -> obj.update((String) vor(DVo::getMoney,
-                DoubleController::getDBMoney)));
+//        vos(DVo::getCostIndex, obj -> obj.update((String) vor(DVo::getMoney,
+//                DoubleController::getDBMoney)));
+        vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
+                CostIndexController::getDB)));//更新分摊金额
         Map<String, Object> map = getSubmitMap();
         if (!TextUtils.isEmpty(map)) {
             boolean imageEmpty = vor(DVo::getImageList, ImageListController::isEmpty);
@@ -527,12 +529,11 @@ public abstract class FullReimburseControllerApi<T extends FullReimburseControll
             }
             checkAction(special, () -> api().submitNoLoadingReimburse(map), () -> {
                 if (getVo().getIsShare().is() && !getVo().getSbumitFlag().isOpen()) {
-                    vos(DVo::getImageList, obj -> obj.updateCostFg(vor(DVo::getCostIndex,
-                            CostIndexController::getDB)));//更新分摊金额
                     routeApi().costIndex(m -> m.put(DATA_QR, encode(map))
                             .put(MAIN_APP, getMainApp()));
                 } else {
-                    api().submitNoLoadingReimburse(map);
+//                    api().submitNoLoadingReimburse(map);
+                    ee(map);
                 }
             });
         }

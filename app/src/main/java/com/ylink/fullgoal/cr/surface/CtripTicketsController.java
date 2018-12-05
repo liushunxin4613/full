@@ -1,6 +1,7 @@
 package com.ylink.fullgoal.cr.surface;
 
 import com.leo.core.iapi.main.IOnCom;
+import com.leo.core.util.JavaTypeUtil;
 import com.ylink.fullgoal.cr.core.AddController;
 import com.ylink.fullgoal.fg.CtripTicketsFg;
 
@@ -39,6 +40,12 @@ public class CtripTicketsController<T extends CtripTicketsController> extends Ad
     @Override
     protected String getOnUBKey(String key) {
         return "ctrip";
+    }
+
+    public double getSum(){
+        double[] ds = new double[]{0};
+        execute(getData(), obj -> ds[0] += JavaTypeUtil.getdouble(obj.getTicket(), 0));
+        return ds[0];
     }
 
 }

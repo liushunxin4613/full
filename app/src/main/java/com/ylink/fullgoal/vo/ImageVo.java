@@ -43,13 +43,11 @@ public class ImageVo implements IProgressListener {
     }
 
     /**
-     * amount : 11
      * imageID : 4028948163e2b8180163e3793f530004
      * imageURL : http://192.168.8.108:8088/ssca/public/20180609\001\1528529764086527.jpg
      * invoiceUse : 交通费
      */
 
-    private String amount;
     private String imageID;
     private String imageURL;
     private String invoiceUse;
@@ -112,16 +110,8 @@ public class ImageVo implements IProgressListener {
         return error;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
     public String getPath() {
         return path;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
     }
 
     public String getImageID() {
@@ -130,6 +120,16 @@ public class ImageVo implements IProgressListener {
 
     public void setImageID(String imageID) {
         this.imageID = imageID;
+    }
+
+    public String getAmount(){
+        return TextUtils.check(getDetail()) ? getDetail().getAmount() : null;
+    }
+
+    public void setAmount(String amount){
+       if(TextUtils.check(getDetail())){
+           getDetail().setAmount(amount);
+       }
     }
 
     public String getImageURL() {
